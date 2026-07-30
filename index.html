@@ -4,7 +4,6 @@
 <head>
 
 <meta charset="UTF-8">
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Private Capital | سرمایه‌گذاری خصوصی</title>
@@ -12,135 +11,107 @@
 <style>
 
 body{
-
 margin:0;
-
 font-family:Tahoma,sans-serif;
-
 background:#f5f5f5;
-
 color:#222;
-
 line-height:1.8;
-
 }
 
 header{
-
 background:#071A2E;
-
 color:white;
-
 padding:25px;
-
 text-align:center;
-
 border-bottom:4px solid #C9A227;
-
 }
 
 header h1{
-
 margin:0;
-
 font-size:40px;
-
 letter-spacing:2px;
-
 }
 
 header p{
-
 color:#d8d8d8;
-
 }
 
 nav{
-
 background:#0B2545;
-
 padding:15px;
-
 text-align:center;
-
 }
 
 nav a{
-
 color:white;
-
 text-decoration:none;
-
 margin:15px;
-
 font-weight:bold;
-
 }
 
 nav a:hover{
-
 color:#C9A227;
-
 }
 
 section{
-
 max-width:1000px;
-
 margin:auto;
-
 background:white;
-
 padding:40px;
-
 margin-top:25px;
-
 border-radius:10px;
-
 box-shadow:0 0 10px rgba(0,0,0,.1);
-
 }
 
 h2{
-
 color:#071A2E;
-
 border-bottom:2px solid #C9A227;
-
 padding-bottom:10px;
-
 }
 
 footer{
-
 margin-top:40px;
-
 background:#071A2E;
-
 color:white;
-
 text-align:center;
-
 padding:20px;
-
 }
 
 .button{
-
 display:inline-block;
-
 padding:12px 25px;
-
 background:#C9A227;
-
 color:white;
-
 text-decoration:none;
-
 border-radius:5px;
-
 margin-top:20px;
+}
 
+.button:hover{
+background:#a88718;
+}
+
+.article-card{
+border:1px solid #ddd;
+border-radius:8px;
+padding:20px;
+margin-top:20px;
+background:#fafafa;
+}
+
+.article-card h3{
+margin-top:0;
+color:#071A2E;
+}
+
+.article-card a{
+color:#0B2545;
+font-weight:bold;
+text-decoration:none;
+}
+
+.article-card a:hover{
+color:#C9A227;
 }
 
 </style>
@@ -160,17 +131,11 @@ margin-top:20px;
 <nav>
 
 <a href="#">خانه</a>
-
 <a href="#">درباره ما</a>
-
 <a href="#">خدمات</a>
-
-<a href="#">مقالات</a>
-
+<a href="#articles">مقالات</a>
 <a href="#">منابع</a>
-
 <a href="#">عضویت ویژه</a>
-
 <a href="#">تماس</a>
 
 </nav>
@@ -180,14 +145,13 @@ margin-top:20px;
 <h2>درباره Private Capital</h2>
 
 <p>
-
 Private Capital با هدف توسعه دانش سرمایه‌گذاری خصوصی (Private Equity)،
-
 ارائه مقالات تخصصی، تحقیقات کاربردی و خدمات مشاوره تأسیس شده است.
-
 </p>
 
-<a class="button" href="#">مشاهده مقالات</a>
+<a class="button" href="articles/first-article.html">
+مشاهده اولین مقاله
+</a>
 
 </section>
 
@@ -198,18 +162,35 @@ Private Capital با هدف توسعه دانش سرمایه‌گذاری خصو
 <ul>
 
 <li>مقالات آموزشی رایگان</li>
-
 <li>محتوای تخصصی ویژه اعضا</li>
-
 <li>تحقیقات سرمایه‌گذاری</li>
-
 <li>مشاوره خرید و فروش شرکت</li>
-
 <li>ارزش‌گذاری کسب‌وکار</li>
-
 <li>Private Equity Advisory</li>
 
 </ul>
+
+</section>
+
+<section id="articles">
+
+<h2>آخرین مقالات</h2>
+
+<div class="article-card">
+
+<h3>
+Private Capital: The Strategic Force Reshaping Global Investment Markets
+</h3>
+
+<p>
+تحلیلی درباره رشد سرمایه خصوصی، روندهای جهانی، فرصت‌ها، چالش‌ها و پیامدهای راهبردی برای مدیران و سرمایه‌گذاران.
+</p>
+
+<a href="articles/first-article.html">
+مطالعه مقاله →
+</a>
+
+</div>
 
 </section>
 
