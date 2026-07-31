@@ -1,40 +1,57 @@
-/* ====== General ====== */
+/* ===================================================
+   Private Capital
+   Version 1.0
+=================================================== */
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
 }
 
-body {
-
-    direction: rtl;
-
-    font-family: Tahoma, sans-serif;
-
-    background: #081320;
-
-    color: #f5f5f5;
-
-    line-height: 1.9;
+html{
+    scroll-behavior:smooth;
 }
+
+body{
+
+    direction:rtl;
+
+    font-family:Tahoma, sans-serif;
+
+    background:#081320;
+
+    color:#F4F6F8;
+
+    line-height:2;
+
+}
+
+/* ========================= */
 
 .container{
 
-    width:90%;
+    width:92%;
 
-    max-width:1100px;
+    max-width:1150px;
 
     margin:auto;
+
 }
 
-/* ===== Header ===== */
+/* ========================= */
 
 header{
 
     background:#07111F;
 
     border-bottom:1px solid #C9A227;
+
+    position:sticky;
+
+    top:0;
+
+    z-index:1000;
 
 }
 
@@ -46,19 +63,17 @@ header .container{
 
     align-items:center;
 
-    padding:22px 0;
+    min-height:82px;
 
 }
 
 .logo{
 
-    font-size:24px;
+    font-size:28px;
 
-    font-weight:bold;
+    font-weight:700;
 
     color:#C9A227;
-
-    letter-spacing:1px;
 
 }
 
@@ -66,7 +81,7 @@ nav{
 
     display:flex;
 
-    gap:24px;
+    gap:28px;
 
 }
 
@@ -88,11 +103,11 @@ nav a:hover{
 
 }
 
-/* ===== Hero ===== */
+/* ========================= */
 
 .hero{
 
-    padding:110px 0;
+    padding:120px 0;
 
     text-align:center;
 
@@ -100,25 +115,31 @@ nav a:hover{
 
 .hero h1{
 
-    font-size:42px;
+    font-size:46px;
 
-    margin-bottom:25px;
+    margin-bottom:24px;
+
+    font-weight:700;
 
 }
 
 .hero p{
 
-    color:#b9c1cc;
+    color:#BFC8D2;
 
-    font-size:20px;
+    font-size:22px;
 
     margin-bottom:45px;
 
 }
 
+/* ========================= */
+
 .button{
 
     display:inline-block;
+
+    padding:14px 34px;
 
     background:#C9A227;
 
@@ -126,37 +147,133 @@ nav a:hover{
 
     text-decoration:none;
 
-    padding:14px 34px;
-
-    border-radius:4px;
+    border-radius:6px;
 
     font-weight:bold;
+
+    transition:.3s;
 
 }
 
 .button:hover{
 
-    opacity:.9;
+    transform:translateY(-2px);
 
 }
 
-/* ===== Footer ===== */
+/* ========================= */
 
-footer{
+section{
 
-    margin-top:120px;
+    padding:70px 0;
 
-    border-top:1px solid #222;
+}
 
-    padding:30px 0;
+section h2{
+
+    font-size:34px;
+
+    margin-bottom:25px;
+
+}
+
+section h3{
+
+    color:#C9A227;
+
+    margin-bottom:15px;
+
+}
+
+section p{
+
+    color:#CDD5DE;
+
+}
+
+/* ========================= */
+
+.grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+
+    gap:25px;
+
+    margin-top:35px;
+
+}
+
+.card{
+
+    background:#0D1A2B;
+
+    border:1px solid #223347;
+
+    border-radius:8px;
+
+    padding:30px;
+
+    transition:.35s;
+
+}
+
+.card:hover{
+
+    border-color:#C9A227;
+
+    transform:translateY(-4px);
+
+}
+
+/* ========================= */
+
+.timeline{
+
+    padding-right:22px;
+
+    margin-top:20px;
+
+}
+
+.timeline li{
+
+    margin-bottom:18px;
+
+}
+
+/* ========================= */
+
+.cta{
 
     text-align:center;
 
-    color:#9da6b3;
+}
+
+/* ========================= */
+
+footer{
+
+    margin-top:80px;
+
+    padding:40px 0;
+
+    text-align:center;
+
+    border-top:1px solid #233347;
+
+    color:#8F99A7;
 
 }
 
-/* ===== Responsive ===== */
+footer p{
+
+    margin:8px 0;
+
+}
+
+/* ========================= */
 
 @media(max-width:900px){
 
@@ -164,7 +281,9 @@ header .container{
 
 flex-direction:column;
 
-gap:20px;
+justify-content:center;
+
+padding:20px 0;
 
 }
 
@@ -174,100 +293,40 @@ flex-wrap:wrap;
 
 justify-content:center;
 
+gap:18px;
+
+margin-top:15px;
+
 }
 
 .hero{
 
-padding:70px 0;
+padding:80px 0;
 
 }
 
 .hero h1{
 
-font-size:30px;
+font-size:34px;
 
 }
 
 .hero p{
 
-font-size:17px;
+font-size:18px;
 
 }
-
-}
-/* ==========================
-   Sections
-========================== */
 
 section{
-    margin:80px 0;
+
+padding:50px 0;
+
 }
 
 section h2{
-    font-size:32px;
-    margin-bottom:24px;
-    color:#ffffff;
-}
 
-section h3{
-    color:#C9A227;
-    margin-bottom:12px;
-}
-
-section p{
-    color:#c8d0da;
-}
-
-/* ==========================
-   Cards
-========================== */
-
-.grid{
-
-    display:grid;
-
-    grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
-
-    gap:24px;
+font-size:28px;
 
 }
-
-.card{
-
-    background:#0d1a2b;
-
-    border:1px solid #243347;
-
-    border-radius:8px;
-
-    padding:28px;
-
-    transition:.3s;
-
-}
-
-.card:hover{
-
-    border-color:#C9A227;
-
-    transform:translateY(-3px);
-
-}
-
-/* ==========================
-   Timeline
-========================== */
-
-.timeline{
-
-    padding-right:25px;
-
-}
-
-.timeline li{
-
-    margin-bottom:18px;
-
-    color:#d7dde5;
 
 }
