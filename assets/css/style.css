@@ -1,6 +1,6 @@
 /* ===================================================
    Private Capital
-   Version 1.0
+   Version 2.0
 =================================================== */
 
 *{
@@ -17,7 +17,7 @@ body{
 
     direction:rtl;
 
-    font-family:Tahoma, sans-serif;
+    font-family:Tahoma,sans-serif;
 
     background:#081320;
 
@@ -33,7 +33,7 @@ body{
 
     width:92%;
 
-    max-width:1150px;
+    max-width:1180px;
 
     margin:auto;
 
@@ -43,15 +43,17 @@ body{
 
 header{
 
-    background:#07111F;
-
-    border-bottom:1px solid #C9A227;
-
     position:sticky;
 
     top:0;
 
     z-index:1000;
+
+    background:rgba(7,17,31,.95);
+
+    backdrop-filter:blur(12px);
+
+    border-bottom:1px solid rgba(201,162,39,.25);
 
 }
 
@@ -69,11 +71,13 @@ header .container{
 
 .logo{
 
-    font-size:28px;
+    font-size:30px;
 
     font-weight:700;
 
     color:#C9A227;
+
+    letter-spacing:1px;
 
 }
 
@@ -81,19 +85,41 @@ nav{
 
     display:flex;
 
-    gap:28px;
+    gap:30px;
 
 }
 
 nav a{
 
-    color:white;
+    color:#ffffff;
 
     text-decoration:none;
 
-    transition:.3s;
+    transition:.25s;
 
-    font-size:15px;
+    position:relative;
+
+    padding:6px 0;
+
+}
+
+nav a::after{
+
+    content:"";
+
+    position:absolute;
+
+    right:0;
+
+    bottom:-6px;
+
+    width:0;
+
+    height:2px;
+
+    background:#C9A227;
+
+    transition:.25s;
 
 }
 
@@ -103,33 +129,56 @@ nav a:hover{
 
 }
 
+nav a:hover::after{
+
+    width:100%;
+
+}
+
 /* ========================= */
 
 .hero{
 
-    padding:120px 0;
+    min-height:78vh;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
 
     text-align:center;
+
+    background:
+    radial-gradient(circle at top,#17304f 0%,#081320 60%);
+
+    border-bottom:1px solid #1d3046;
 
 }
 
 .hero h1{
 
-    font-size:46px;
-
-    margin-bottom:24px;
+    font-size:58px;
 
     font-weight:700;
+
+    line-height:1.35;
+
+    max-width:900px;
+
+    margin:auto;
 
 }
 
 .hero p{
 
-    color:#BFC8D2;
+    max-width:760px;
 
-    font-size:22px;
+    margin:32px auto 45px;
 
-    margin-bottom:45px;
+    font-size:21px;
+
+    color:#C7D0D9;
 
 }
 
@@ -139,17 +188,17 @@ nav a:hover{
 
     display:inline-block;
 
-    padding:14px 34px;
+    padding:16px 38px;
 
     background:#C9A227;
 
-    color:#07111F;
+    color:#081320;
 
     text-decoration:none;
 
     border-radius:6px;
 
-    font-weight:bold;
+    font-weight:700;
 
     transition:.3s;
 
@@ -157,7 +206,9 @@ nav a:hover{
 
 .button:hover{
 
-    transform:translateY(-2px);
+    transform:translateY(-3px);
+
+    box-shadow:0 14px 35px rgba(201,162,39,.25);
 
 }
 
@@ -165,15 +216,15 @@ nav a:hover{
 
 section{
 
-    padding:70px 0;
+    padding:90px 0;
 
 }
 
 section h2{
 
-    font-size:34px;
+    font-size:36px;
 
-    margin-bottom:25px;
+    margin-bottom:24px;
 
 }
 
@@ -181,13 +232,13 @@ section h3{
 
     color:#C9A227;
 
-    margin-bottom:15px;
+    margin-bottom:16px;
 
 }
 
 section p{
 
-    color:#CDD5DE;
+    color:#CBD5DF;
 
 }
 
@@ -197,23 +248,25 @@ section p{
 
     display:grid;
 
-    grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
 
-    gap:25px;
+    gap:30px;
 
-    margin-top:35px;
+    margin-top:45px;
 
 }
 
+/* ========================= */
+
 .card{
 
-    background:#0D1A2B;
+    background:#0E1B2D;
 
-    border:1px solid #223347;
+    border:1px solid #23384D;
 
-    border-radius:8px;
+    border-radius:12px;
 
-    padding:30px;
+    padding:35px;
 
     transition:.35s;
 
@@ -221,9 +274,11 @@ section p{
 
 .card:hover{
 
+    transform:translateY(-6px);
+
     border-color:#C9A227;
 
-    transform:translateY(-4px);
+    box-shadow:0 20px 45px rgba(0,0,0,.35);
 
 }
 
@@ -231,9 +286,9 @@ section p{
 
 .timeline{
 
-    padding-right:22px;
-
     margin-top:20px;
+
+    padding-right:22px;
 
 }
 
@@ -255,19 +310,21 @@ section p{
 
 footer{
 
-    margin-top:80px;
+    margin-top:100px;
 
-    padding:40px 0;
+    padding:55px 0;
+
+    border-top:1px solid #203244;
+
+    background:#07111F;
 
     text-align:center;
-
-    border-top:1px solid #233347;
-
-    color:#8F99A7;
 
 }
 
 footer p{
+
+    color:#97A3B0;
 
     margin:8px 0;
 
@@ -280,8 +337,6 @@ footer p{
 header .container{
 
 flex-direction:column;
-
-justify-content:center;
 
 padding:20px 0;
 
@@ -301,13 +356,15 @@ margin-top:15px;
 
 .hero{
 
-padding:80px 0;
+min-height:65vh;
+
+padding:60px 0;
 
 }
 
 .hero h1{
 
-font-size:34px;
+font-size:36px;
 
 }
 
@@ -319,13 +376,13 @@ font-size:18px;
 
 section{
 
-padding:50px 0;
+padding:60px 0;
 
 }
 
 section h2{
 
-font-size:28px;
+font-size:30px;
 
 }
 
