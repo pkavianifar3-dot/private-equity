@@ -1,389 +1,214 @@
+@font-face {
+    font-family: 'Vazirmatn';
+    src: url('../Vazirmatn-Regular.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Vazirmatn';
+    src: url('../Vazirmatn-Bold.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
 /* ===================================================
    Private Capital
    Version 2.0
 =================================================== */
-
 *{
     margin:0;
     padding:0;
     box-sizing:border-box;
 }
-
 html{
     scroll-behavior:smooth;
 }
-
 body{
-
     direction:rtl;
-
-    font-family:Tahoma,sans-serif;
-
+    font-family:'Vazirmatn',Tahoma,sans-serif;
     background:#081320;
-
     color:#F4F6F8;
-
     line-height:2;
-
 }
-
 /* ========================= */
-
 .container{
-
     width:92%;
-
     max-width:1180px;
-
     margin:auto;
-
 }
-
 /* ========================= */
-
 header{
-
     position:sticky;
-
     top:0;
-
     z-index:1000;
-
     background:rgba(7,17,31,.95);
-
     backdrop-filter:blur(12px);
-
     border-bottom:1px solid rgba(201,162,39,.25);
-
 }
-
 header .container{
-
     display:flex;
-
     justify-content:space-between;
-
     align-items:center;
-
     min-height:82px;
-
 }
-
 .logo{
-
     font-size:30px;
-
     font-weight:700;
-
     color:#C9A227;
-
     letter-spacing:1px;
-
 }
-
 nav{
-
     display:flex;
-
     gap:30px;
-
 }
-
 nav a{
-
     color:#ffffff;
-
     text-decoration:none;
-
     transition:.25s;
-
     position:relative;
-
     padding:6px 0;
-
 }
-
 nav a::after{
-
     content:"";
-
     position:absolute;
-
     right:0;
-
     bottom:-6px;
-
     width:0;
-
     height:2px;
-
     background:#C9A227;
-
     transition:.25s;
-
 }
-
 nav a:hover{
-
     color:#C9A227;
-
 }
-
 nav a:hover::after{
-
     width:100%;
-
 }
-
 /* ========================= */
-
 .hero{
-
     min-height:78vh;
-
     display:flex;
-
     align-items:center;
-
     justify-content:center;
-
     text-align:center;
-
     background:
     radial-gradient(circle at top,#17304f 0%,#081320 60%);
-
     border-bottom:1px solid #1d3046;
-
 }
-
 .hero h1{
-
     font-size:58px;
-
     font-weight:700;
-
     line-height:1.35;
-
     max-width:900px;
-
     margin:auto;
-
 }
-
 .hero p{
-
     max-width:760px;
-
     margin:32px auto 45px;
-
     font-size:21px;
-
     color:#C7D0D9;
-
 }
-
 /* ========================= */
-
 .button{
-
     display:inline-block;
-
     padding:16px 38px;
-
     background:#C9A227;
-
     color:#081320;
-
     text-decoration:none;
-
     border-radius:6px;
-
     font-weight:700;
-
     transition:.3s;
-
 }
-
 .button:hover{
-
     transform:translateY(-3px);
-
     box-shadow:0 14px 35px rgba(201,162,39,.25);
-
 }
-
 /* ========================= */
-
 section{
-
     padding:90px 0;
-
 }
-
 section h2{
-
     font-size:36px;
-
     margin-bottom:24px;
-
 }
-
 section h3{
-
     color:#C9A227;
-
     margin-bottom:16px;
-
 }
-
 section p{
-
     color:#CBD5DF;
-
 }
-
 /* ========================= */
-
 .grid{
-
     display:grid;
-
     grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-
     gap:30px;
-
     margin-top:45px;
-
 }
-
 /* ========================= */
-
 .card{
-
     background:#0E1B2D;
-
     border:1px solid #23384D;
-
     border-radius:12px;
-
     padding:35px;
-
     transition:.35s;
-
 }
-
 .card:hover{
-
     transform:translateY(-6px);
-
     border-color:#C9A227;
-
     box-shadow:0 20px 45px rgba(0,0,0,.35);
-
 }
-
 /* ========================= */
-
 .timeline{
-
     margin-top:20px;
-
     padding-right:22px;
-
 }
-
 .timeline li{
-
     margin-bottom:18px;
-
 }
-
 /* ========================= */
-
 .cta{
-
     text-align:center;
-
 }
-
 /* ========================= */
-
 footer{
-
     margin-top:100px;
-
     padding:55px 0;
-
     border-top:1px solid #203244;
-
     background:#07111F;
-
     text-align:center;
-
 }
-
 footer p{
-
     color:#97A3B0;
-
     margin:8px 0;
-
 }
-
 /* ========================= */
-
 @media(max-width:900px){
-
 header .container{
-
 flex-direction:column;
-
 padding:20px 0;
-
 }
-
 nav{
-
 flex-wrap:wrap;
-
 justify-content:center;
-
 gap:18px;
-
 margin-top:15px;
-
 }
-
 .hero{
-
 min-height:65vh;
-
 padding:60px 0;
-
 }
-
 .hero h1{
-
 font-size:36px;
-
 }
-
 .hero p{
-
 font-size:18px;
-
 }
-
 section{
-
 padding:60px 0;
-
 }
-
 section h2{
-
 font-size:30px;
-
 }
-
 }
