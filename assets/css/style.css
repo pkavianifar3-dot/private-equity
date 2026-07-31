@@ -195,3 +195,79 @@ font-size:17px;
 }
 
 }
+/* ==========================
+   Sections
+========================== */
+
+section{
+    margin:80px 0;
+}
+
+section h2{
+    font-size:32px;
+    margin-bottom:24px;
+    color:#ffffff;
+}
+
+section h3{
+    color:#C9A227;
+    margin-bottom:12px;
+}
+
+section p{
+    color:#c8d0da;
+}
+
+/* ==========================
+   Cards
+========================== */
+
+.grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+
+    gap:24px;
+
+}
+
+.card{
+
+    background:#0d1a2b;
+
+    border:1px solid #243347;
+
+    border-radius:8px;
+
+    padding:28px;
+
+    transition:.3s;
+
+}
+
+.card:hover{
+
+    border-color:#C9A227;
+
+    transform:translateY(-3px);
+
+}
+
+/* ==========================
+   Timeline
+========================== */
+
+.timeline{
+
+    padding-right:25px;
+
+}
+
+.timeline li{
+
+    margin-bottom:18px;
+
+    color:#d7dde5;
+
+}
