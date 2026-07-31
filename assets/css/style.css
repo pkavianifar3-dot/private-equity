@@ -212,3 +212,17 @@ section h2{
 font-size:30px;
 }
 }
+.page-hero{
+    min-height:auto;
+    padding:70px 0 50px;
+}
+.page-hero h1{
+    font-size:44px;
+    margin-bottom:16px;
+}
+.page-hero p{
+    max-width:700px;
+    margin:0 auto;
+    font-size:18px;
+    color:#C7D0D9;
+}
