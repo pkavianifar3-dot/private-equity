@@ -226,3 +226,16 @@ font-size:30px;
     font-size:18px;
     color:#C7D0D9;
 }
+.logo{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    font-size:26px;
+    font-weight:700;
+}
+
+.logo img{
+    height:52px;
+    width:auto;
+    display:block;
+}
