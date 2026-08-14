@@ -140,6 +140,31 @@ section p{
     color:#CBD5DF;
 }
 /* ========================= */
+/* Content & Footer Links */
+main a:not(.button),
+footer a{
+    color:#C9A227;
+    text-decoration:none;
+    transition:.25s;
+}
+
+main a:not(.button):visited,
+footer a:visited{
+    color:#C9A227;
+}
+
+main a:not(.button):hover,
+footer a:hover{
+    color:#FFFFFF;
+    text-decoration:underline;
+}
+
+main a.button,
+footer a.button{
+    color:#081320;
+    text-decoration:none;
+}
+/* ========================= */
 .grid{
     display:grid;
     grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
