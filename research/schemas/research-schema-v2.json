@@ -83,7 +83,7 @@
       "type": "array",
       "description": "References to canonical Atlas Entity IDs. Research does not duplicate Entity records.",
       "items": {
-        "$ref": "#/$defs/atlasRef"
+        "$ref": "#/$defs/atlasEntityRef"
       },
       "uniqueItems": true
     },
@@ -149,10 +149,10 @@
       "additionalProperties": false
     },
 
-    "atlasRef": {
-      "type": "string",
-      "pattern": "^[a-z]+:[a-z0-9]+(?:-[a-z0-9]+)*$"
-    },
+    "atlasEntityRef": {
+  "type": "string",
+  "pattern": "^(person|organization|company|investment|project):[a-z0-9]+(?:-[a-z0-9]+)*$"
+}
 
     "claimRef": {
       "type": "string",
@@ -203,7 +203,7 @@
         "entityRefs": {
           "type": "array",
           "items": {
-            "$ref": "#/$defs/atlasRef"
+            "$ref": "#/$defs/atlasEntityRef"
           },
           "uniqueItems": true
         },
@@ -279,7 +279,7 @@
         "entityRef": {
           "anyOf": [
             {
-              "$ref": "#/$defs/atlasRef"
+              "$ref": "#/$defs/atlasEntityRef"
             },
             {
               "type": "null"
