@@ -1,0 +1,61 @@
+{
+  "version": "1.0",
+  "sources": [
+    {
+      "id": "source:ali-sanginian-personal-website",
+      "type": "Source",
+      "source_type": "personal_website",
+      "title_fa": "وب‌سایت شخصی علی سنگینیان",
+      "publisher": "Ali Sanginian",
+      "url": null
+    },
+    {
+      "id": "source:kian-direct-interview-1405",
+      "type": "Source",
+      "source_type": "direct_interview",
+      "title_fa": "مصاحبه مستقیم علی سنگینیان درباره سرمایه‌گذاری خصوصی کیان",
+      "publisher": "Kian",
+      "url": null
+    },
+    {
+      "id": "source:amin-capital-archive",
+      "type": "Source",
+      "source_type": "official_corporate",
+      "title_fa": "منبع شرکتی و آرشیوی تأمین سرمایه امین",
+      "publisher": "Amin Investment Bank",
+      "url": null
+    },
+    {
+      "id": "source:amin-capital-market-report-1395",
+      "type": "Source",
+      "source_type": "news_media",
+      "title_fa": "گزارش دوره مدیریت تأمین سرمایه امین",
+      "publisher": null,
+      "url": null
+    },
+    {
+      "id": "source:tourism-bank-board-history",
+      "type": "Source",
+      "source_type": "historical_market_data",
+      "title_fa": "داده تاریخی ترکیب هیئت‌مدیره بانک گردشگری",
+      "publisher": "شاخص‌بان",
+      "url": null
+    },
+    {
+      "id": "source:kayson-official",
+      "type": "Source",
+      "source_type": "official_corporate",
+      "title_fa": "اطلاع‌رسانی رسمی گروه کیسون",
+      "publisher": "Kayson",
+      "url": null
+    },
+    {
+      "id": "source:kian-private-equity-company-registry",
+      "type": "Source",
+      "source_type": "registry",
+      "title_fa": "اطلاعات ثبتی شرکت مدیریت سهام خصوصی کیان",
+      "publisher": "Rasmio",
+      "url": "https://rasmio.com/News/130016646/"
+    }
+  ]
+}
