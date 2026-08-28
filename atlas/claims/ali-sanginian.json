@@ -121,14 +121,7 @@
       "subject": "person:ali-sanginian",
       "predicate": "INVESTMENT_EXECUTIVE_OF",
       "object": "organization:kayson-group",
-      "context": {
-        "investment_target": "company:achareh",
-        "amount": {
-          "value": 720000000000,
-          "currency": "IRR",
-          "raw": "720 میلیارد ریال"
-        }
-      },
+    
       "status": "VERIFIED",
       "confidence": "HIGH"
     },
