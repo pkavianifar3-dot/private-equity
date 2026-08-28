@@ -1,0 +1,131 @@
+{
+  "version": "1.0",
+  "entities": [
+    {
+      "id": "person:ali-sanginian",
+      "type": "Person",
+      "name": {
+        "fa": "علی سنگینیان",
+        "en": "Ali Sanginian"
+      },
+      "status": "REVIEW"
+    },
+    {
+      "id": "organization:kian-financial-group",
+      "type": "Organization",
+      "name": {
+        "fa": "گروه مالی کیان",
+        "en": "Kian Financial Group"
+      },
+      "status": "REVIEW"
+    },
+    {
+      "id": "organization:kian-private-equity-management",
+      "type": "Organization",
+      "name": {
+        "fa": "شرکت سهامی خاص مدیریت سهام خصوصی کیان",
+        "en": "Kian Private Equity Management"
+      },
+      "status": "REVIEW"
+    },
+    {
+      "id": "organization:amin-investment-bank",
+      "type": "Organization",
+      "name": {
+        "fa": "تأمین سرمایه امین",
+        "en": "Amin Investment Bank"
+      },
+      "status": "REVIEW"
+    },
+    {
+      "id": "organization:semega",
+      "type": "Organization",
+      "name": {
+        "fa": "سمگا",
+        "en": "SEMEGA"
+      },
+      "status": "REVIEW"
+    },
+    {
+      "id": "organization:tourism-bank",
+      "type": "Organization",
+      "name": {
+        "fa": "بانک گردشگری",
+        "en": "Tourism Bank"
+      },
+      "status": "REVIEW"
+    },
+    {
+      "id": "organization:iran-farabourse",
+      "type": "Organization",
+      "name": {
+        "fa": "فرابورس ایران",
+        "en": "Iran Fara Bourse"
+      },
+      "status": "REVIEW"
+    },
+    {
+      "id": "organization:kayson-group",
+      "type": "Organization",
+      "name": {
+        "fa": "گروه کیسون",
+        "en": "Kayson Group"
+      },
+      "status": "REVIEW"
+    },
+    {
+      "id": "company:achareh",
+      "type": "Organization",
+      "name": {
+        "fa": "آچاره",
+        "en": "Achareh"
+      },
+      "status": "REVIEW"
+    },
+    {
+      "id": "project:dadman",
+      "type": "Project",
+      "name": {
+        "fa": "دادمان",
+        "en": "Dadman"
+      },
+      "status": "REVIEW"
+    },
+    {
+      "id": "sector:private-equity",
+      "type": "Sector",
+      "name": {
+        "fa": "سرمایه‌گذاری خصوصی",
+        "en": "Private Equity"
+      },
+      "status": "REVIEW"
+    },
+    {
+      "id": "sector:capital-market",
+      "type": "Sector",
+      "name": {
+        "fa": "بازار سرمایه",
+        "en": "Capital Market"
+      },
+      "status": "REVIEW"
+    },
+    {
+      "id": "sector:investment-banking",
+      "type": "Sector",
+      "name": {
+        "fa": "بانکداری سرمایه‌گذاری",
+        "en": "Investment Banking"
+      },
+      "status": "REVIEW"
+    },
+    {
+      "id": "sector:corporate-investment",
+      "type": "Sector",
+      "name": {
+        "fa": "سرمایه‌گذاری شرکتی",
+        "en": "Corporate Investment"
+      },
+      "status": "REVIEW"
+    }
+  ]
+}
