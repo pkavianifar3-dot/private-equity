@@ -343,7 +343,119 @@
         </section>
     `;
 }
+function renderTimelineSection(claims, entityIndex) {
+    const datedClaims = claims
+        .filter(claim => {
+            return (
+                claim.subject &&
+                claim.temporal &&
+                (
+                    claim.temporal.start ||
+                    claim.temporal.end
+                )
+            );
+        })
+        .sort((a, b) => {
+            const aDate =
+                a.temporal?.start ||
+                a.temporal?.end ||
+                "";
 
+            const bDate =
+                b.temporal?.start ||
+                b.temporal?.end ||
+                "";
+
+            return bDate.localeCompare(aDate);
+        });
+
+    if (!datedClaims.length) {
+        return "";
+    }
+
+    return `
+        <section class="atlas-section">
+
+            <div class="container">
+
+                <h2>خط زمانی حرفه‌ای</h2>
+
+                <div class="atlas-timeline">
+
+                    ${datedClaims
+                        .map(claim => {
+
+                            const entityName =
+                                getEntityName(
+                                    entityIndex,
+                                    claim.object
+                                );
+
+                            const period =
+                                formatTemporal(
+                                    claim.temporal
+                                );
+
+                            return `
+                                <article
+                                    class="card atlas-timeline-item"
+                                >
+
+                                    <div class="atlas-timeline-date">
+                                        ${period}
+                                    </div>
+
+                                    <div class="atlas-timeline-content">
+
+                                        <div class="atlas-claim-label">
+                                            ${escapeHTML(
+                                                relationLabel(
+                                                    claim.predicate
+                                                )
+                                            )}
+                                        </div>
+
+                                        <h3>
+                                            ${escapeHTML(
+                                                entityName
+                                            )}
+                                        </h3>
+
+                                        ${
+                                            claim.role
+                                                ? `
+                                                    <p class="atlas-meta">
+                                                        <strong>نقش:</strong>
+                                                        ${escapeHTML(
+                                                            claim.role
+                                                        )}
+                                                    </p>
+                                                `
+                                                : ""
+                                        }
+
+                                        <div class="atlas-status">
+                                            ${escapeHTML(
+                                                statusLabel(
+                                                    claim.status
+                                                )
+                                            )}
+                                        </div>
+
+                                    </div>
+
+                                </article>
+                            `;
+                        })
+                        .join("")}
+
+                </div>
+
+            </div>
+
+        </section>
+    `;
+}
     function renderClaimsSection(title, claims, entityIndex) {
         if (!claims.length) {
             return "";
@@ -715,11 +827,16 @@ function renderEvidenceSection(
 
             ${renderSummary(content)}
 
-            ${renderClaimsSection(
-                "مسیر حرفه‌ای و سمت‌های اجرایی",
-                executiveClaims,
-                entityIndex
-            )}
+${renderTimelineSection(
+    personClaims,
+    entityIndex
+)}
+
+${renderClaimsSection(
+    "مسیر حرفه‌ای و سمت‌های اجرایی",
+    executiveClaims,
+    entityIndex
+)}
 
             ${renderClaimsSection(
                 "عضویت‌ها و نقش‌های هیئت‌مدیره",
