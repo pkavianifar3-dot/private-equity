@@ -1,0 +1,168 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Private Capital Research Schema v1",
+  "description": "Core data contract for structured research documents in the Private Capital knowledge system.",
+  "type": "object",
+  "required": [
+    "id",
+    "type",
+    "url",
+    "status"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^research:[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+
+    "type": {
+      "const": "Research"
+    },
+
+    "url": {
+      "type": "string",
+      "format": "uri"
+    },
+
+    "status": {
+      "type": "string",
+      "enum": [
+        "DRAFT",
+        "REVIEW",
+        "PUBLISHED",
+        "ARCHIVED"
+      ]
+    },
+
+    "title": {
+      "type": "object",
+      "properties": {
+        "fa": {
+          "type": "string"
+        },
+        "en": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "summary": {
+      "type": "object",
+      "properties": {
+        "fa": {
+          "type": "string"
+        },
+        "en": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "publication": {
+      "type": "object",
+      "properties": {
+        "datePublished": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "dateModified": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "authorRefs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "entityRefs": {
+      "type": "array",
+      "description": "References to canonical Atlas Entity IDs. Research does not duplicate Entity records.",
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z]+:[a-z0-9]+(?:-[a-z0-9]+)*$"
+      },
+      "uniqueItems": true
+    },
+
+    "claimRefs": {
+      "type": "array",
+      "description": "References to canonical Atlas Claim IDs. Research does not duplicate Claim records.",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+
+    "evidenceRefs": {
+      "type": "array",
+      "description": "References to canonical Atlas Evidence IDs.",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+
+    "sourceRefs": {
+      "type": "array",
+      "description": "References to canonical Atlas Source IDs.",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+
+    "relatedResearchRefs": {
+      "type": "array",
+      "description": "References to other Research records.",
+      "items": {
+        "type": "string",
+        "pattern": "^research:[a-z0-9]+(?:-[a-z0-9]+)*$"
+      },
+      "uniqueItems": true
+    },
+
+    "sections": {
+      "type": "array",
+      "description": "Structured sections of the human-readable research document.",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "title"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+          },
+          "title": {
+            "type": "object",
+            "properties": {
+              "fa": {
+                "type": "string"
+              },
+              "en": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+
+  "additionalProperties": false
+}
