@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Private Capital Atlas Evidence Schema v1",
+  "type": "object",
+  "required": [
+    "id",
+    "claim",
+    "source",
+    "evidence_type",
+    "strength"
+  ],
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "claim": {
+      "type": "string"
+    },
+    "source": {
+      "type": "string"
+    },
+    "evidence_type": {
+      "type": "string"
+    },
+    "strength": {
+      "enum": [
+        "strong",
+        "moderate",
+        "weak"
+      ]
+    },
+    "locator": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}
