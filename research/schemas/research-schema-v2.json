@@ -3,6 +3,7 @@
   "title": "Private Capital Research Schema v2",
   "description": "Structured data contract for Research documents in the Private Capital knowledge system.",
   "type": "object",
+
   "required": [
     "id",
     "type",
@@ -14,6 +15,7 @@
     "publication",
     "sections"
   ],
+
   "properties": {
     "id": {
       "type": "string",
@@ -79,18 +81,18 @@
 
     "entityRefs": {
       "type": "array",
-      "description": "References to canonical Atlas Entity IDs.",
+      "description": "References to canonical Atlas Entity IDs. Research does not duplicate Entity records.",
       "items": {
-        "type": "string"
+        "$ref": "#/$defs/atlasRef"
       },
       "uniqueItems": true
     },
 
     "claimRefs": {
       "type": "array",
-      "description": "References to canonical Atlas Claim IDs.",
+      "description": "References to canonical Atlas Claim IDs. Research does not duplicate Claim records.",
       "items": {
-        "type": "string"
+        "$ref": "#/$defs/claimRef"
       },
       "uniqueItems": true
     },
@@ -99,16 +101,16 @@
       "type": "array",
       "description": "References to canonical Atlas Evidence IDs.",
       "items": {
-        "type": "string"
+        "$ref": "#/$defs/evidenceRef"
       },
       "uniqueItems": true
     },
 
     "sourceRefs": {
       "type": "array",
-      "description": "References to canonical Atlas Source IDs.",
+      "description": "References to canonical Source IDs.",
       "items": {
-        "type": "string"
+        "$ref": "#/$defs/sourceRef"
       },
       "uniqueItems": true
     },
@@ -117,8 +119,7 @@
       "type": "array",
       "description": "References to other Research documents.",
       "items": {
-        "type": "string",
-        "pattern": "^research:[a-z0-9]+(?:-[a-z0-9]+)*$"
+        "$ref": "#/$defs/researchRef"
       },
       "uniqueItems": true
     },
@@ -148,12 +149,39 @@
       "additionalProperties": false
     },
 
+    "atlasRef": {
+      "type": "string",
+      "pattern": "^[a-z]+:[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+
+    "claimRef": {
+      "type": "string",
+      "pattern": "^claim:[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+
+    "evidenceRef": {
+      "type": "string",
+      "pattern": "^evidence:[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+
+    "sourceRef": {
+      "type": "string",
+      "pattern": "^source:[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+
+    "researchRef": {
+      "type": "string",
+      "pattern": "^research:[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+
     "section": {
       "type": "object",
+
       "required": [
         "id",
         "title"
       ],
+
       "properties": {
         "id": {
           "type": "string",
@@ -168,33 +196,14 @@
           "type": "array",
           "description": "Ordered content blocks belonging to this section.",
           "items": {
-            "type": "object",
-            "required": [
-              "type"
-            ],
-            "properties": {
-              "type": {
-                "type": "string",
-                "enum": [
-                  "paragraph"
-                ]
-              },
-              "text": {
-                "type": "string"
-              }
-            },
-            "required": [
-              "type",
-              "text"
-            ],
-            "additionalProperties": false
+            "$ref": "#/$defs/contentBlock"
           }
         },
 
         "entityRefs": {
           "type": "array",
           "items": {
-            "type": "string"
+            "$ref": "#/$defs/atlasRef"
           },
           "uniqueItems": true
         },
@@ -202,7 +211,7 @@
         "claimRefs": {
           "type": "array",
           "items": {
-            "type": "string"
+            "$ref": "#/$defs/claimRef"
           },
           "uniqueItems": true
         },
@@ -210,7 +219,7 @@
         "sourceRefs": {
           "type": "array",
           "items": {
-            "type": "string"
+            "$ref": "#/$defs/sourceRef"
           },
           "uniqueItems": true
         },
@@ -227,13 +236,36 @@
       "additionalProperties": false
     },
 
+    "contentBlock": {
+      "type": "object",
+
+      "required": [
+        "type",
+        "text"
+      ],
+
+      "properties": {
+        "type": {
+          "const": "paragraph"
+        },
+
+        "text": {
+          "type": "string"
+        }
+      },
+
+      "additionalProperties": false
+    },
+
     "mention": {
       "type": "object",
+
       "required": [
         "id",
         "text",
         "resolutionStatus"
       ],
+
       "properties": {
         "id": {
           "type": "string",
@@ -245,9 +277,13 @@
         },
 
         "entityRef": {
-          "type": [
-            "string",
-            "null"
+          "anyOf": [
+            {
+              "$ref": "#/$defs/atlasRef"
+            },
+            {
+              "type": "null"
+            }
           ]
         },
 
