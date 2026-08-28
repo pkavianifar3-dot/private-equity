@@ -1,7 +1,10 @@
 (function () {
     "use strict";
 
-    const ATLAS_ROOT = "atlas";
+    const ATLAS_ROOT =
+    window.location.pathname.includes("/atlas/")
+        ? "."
+        : "atlas";
 
     async function loadJSON(path) {
         const response = await fetch(path, {
