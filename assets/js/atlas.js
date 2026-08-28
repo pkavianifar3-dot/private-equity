@@ -367,151 +367,167 @@
         `;
     }
 
-    function renderEvidenceSection(
+function renderEvidenceSection(
     claims,
     evidenceData,
     sourceData,
     entityIndex
 ) {
-        if (!evidenceData?.evidence?.length) {
-            return "";
+    if (!evidenceData?.evidence?.length) {
+        return "";
+    }
+
+    const evidenceByClaim = {};
+
+    evidenceData.evidence.forEach(item => {
+        if (!evidenceByClaim[item.claim]) {
+            evidenceByClaim[item.claim] = [];
         }
 
-        const evidenceByClaim = {};
+        evidenceByClaim[item.claim].push(item);
+    });
 
-        evidenceData.evidence.forEach(item => {
-            if (!evidenceByClaim[item.claim]) {
-                evidenceByClaim[item.claim] = [];
-            }
+    const sourceIndex = {};
 
-            evidenceByClaim[item.claim].push(item);
-        });
+    (sourceData?.sources || []).forEach(source => {
+        sourceIndex[source.id] = source;
+    });
 
-        const sourceIndex = {};
+    const sourceMap = {};
 
-        (sourceData?.sources || []).forEach(source => {
-            sourceIndex[source.id] = source;
-        });
+    evidenceData.evidence.forEach(evidence => {
+        const source = sourceIndex[evidence.source];
 
-        const visibleClaims = claims.filter(
-            claim => evidenceByClaim[claim.id]
-        );
-
-        if (!visibleClaims.length) {
-            return "";
+        if (!source) {
+            return;
         }
 
-        return `
-            <section class="atlas-section">
+        if (!sourceMap[source.id]) {
+            sourceMap[source.id] = {
+                source: source,
+                claims: []
+            };
+        }
 
-                <div class="container">
+        if (!sourceMap[source.id].claims.includes(evidence.claim)) {
+            sourceMap[source.id].claims.push(evidence.claim);
+        }
+    });
 
-                    <h2>منابع و شواهد</h2>
+    const sources = Object.values(sourceMap);
 
-                    <div class="atlas-sources-list">
+    if (!sources.length) {
+        return "";
+    }
 
-                        ${visibleClaims
-                            .map(claim => {
+    return `
+        <section class="atlas-section">
 
-                                const evidenceItems =
-                                    evidenceByClaim[claim.id] || [];
+            <div class="container">
 
-                                const evidenceHTML = evidenceItems
-                                    .map(evidence => {
+                <h2>منابع و شواهد</h2>
 
-                                        const source =
-                                            sourceIndex[evidence.source];
+                <div class="atlas-sources-list">
 
-                                        if (!source) {
-                                            return "";
+                    ${sources
+                        .map(item => {
+
+                            const source = item.source;
+
+                            const citationRefs =
+                                source.citation_refs || [];
+
+                            const citationLabel =
+                                citationRefs.length
+                                    ? citationRefs
+                                        .map(
+                                            ref =>
+                                                `[${escapeHTML(ref)}]`
+                                        )
+                                        .join(" ")
+                                    : "";
+
+                            const anchorId =
+                                citationRefs.length
+                                    ? `source-${escapeHTML(
+                                        citationRefs[0]
+                                    )}`
+                                    : `source-${escapeHTML(
+                                        source.id
+                                    )}`;
+
+                            return `
+                                <article
+                                    class="card atlas-evidence-card"
+                                >
+
+                                    <div
+                                        class="atlas-source-item"
+                                        id="${anchorId}"
+                                    >
+
+                                        <div>
+                                            ${
+                                                citationLabel
+                                                    ? `
+                                                        <strong>
+                                                            ${citationLabel}
+                                                        </strong>
+                                                    `
+                                                    : ""
+                                            }
+
+                                            ${escapeHTML(
+                                                source.title_fa
+                                            )}
+                                        </div>
+
+                                        ${
+                                            source.publisher
+                                                ? `
+                                                    <small>
+                                                        ${escapeHTML(
+                                                            source.publisher
+                                                        )}
+                                                    </small>
+                                                `
+                                                : ""
                                         }
 
-                                        return `
-                                            <div
-    class="atlas-source-item"
-    id="source-${escapeHTML(
-        (source.citation_refs || [evidence.source])[0]
-    )}"
->
+                                        ${
+                                            source.url
+                                                ? `
+                                                    <a
+                                                        href="${escapeHTML(
+                                                            source.url
+                                                        )}"
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                    >
+                                                        مشاهده منبع
+                                                    </a>
+                                                `
+                                                : `
+                                                    <small>
+                                                        لینک منبع هنوز ثبت نشده است.
+                                                    </small>
+                                                `
+                                        }
 
-    <div>
-        ${
-            source.citation_refs?.length
-                ? `
-                    <strong>
-                        ${source.citation_refs
-                            .map(ref => `[${escapeHTML(ref)}]`)
-                            .join(" ")
-                        }
-                    </strong>
-                `
-                : ""
-        }
+                                    </div>
 
-        ${escapeHTML(source.title_fa)}
-    </div>
-
-                                                ${
-                                                    source.publisher
-                                                        ? `
-                                                            <small>
-                                                                ${escapeHTML(
-                                                                    source.publisher
-                                                                )}
-                                                            </small>
-                                                        `
-                                                        : ""
-                                                }
-
-                                                ${
-                                                    source.url
-                                                        ? `
-                                                            <a
-                                                                href="${escapeHTML(source.url)}"
-                                                                target="_blank"
-                                                                rel="noopener noreferrer"
-                                                            >
-                                                                مشاهده منبع
-                                                            </a>
-                                                        `
-                                                        : ""
-                                                }
-
-                                            </div>
-                                        `;
-                                    })
-                                    .join("");
-
-                                return `
-                                    <article class="card atlas-evidence-card">
-
-                                        <h3>
-                                            ${escapeHTML(
-                                                relationLabel(claim.predicate)
-                                            )}
-                                            :
-                                            ${escapeHTML(
-                                                getEntityName(
-    entityIndex,
-    claim.object
-)
-                                            )}
-                                        </h3>
-
-                                        ${evidenceHTML}
-
-                                    </article>
-                                `;
-                            })
-                            .join("")}
-
-                    </div>
+                                </article>
+                            `;
+                        })
+                        .join("")}
 
                 </div>
 
-            </section>
-        `;
-    }
+            </div>
+
+        </section>
+    `;
+}
 
     function renderIdentity(entity) {
         return `
