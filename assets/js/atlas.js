@@ -550,7 +550,121 @@ const objectURL =
             </section>
         `;
     }
+function renderDataQualitySection(content, claims) {
+    const dataQuality = content?.data_quality;
 
+    if (!dataQuality && !content?.last_reviewed) {
+        return "";
+    }
+
+    const statusCounts = {
+        VERIFIED: 0,
+        SUPPORTED: 0,
+        REPORTED: 0,
+        DISPUTED: 0
+    };
+
+    claims.forEach(claim => {
+        if (statusCounts[claim.status] !== undefined) {
+            statusCounts[claim.status]++;
+        }
+    });
+
+    return `
+        <section class="atlas-section">
+
+            <div class="container">
+
+                <h2>وضعیت داده</h2>
+
+                <div class="card atlas-data-quality">
+
+                    ${
+                        dataQuality?.text
+                            ? `
+                                <p class="atlas-content-paragraph">
+                                    ${escapeHTML(dataQuality.text)}
+                                </p>
+                            `
+                            : ""
+                    }
+
+                    ${
+                        content?.last_reviewed
+                            ? `
+                                <div class="atlas-identity-row">
+                                    <strong>آخرین بازبینی</strong>
+                                    <span>
+                                        ${escapeHTML(content.last_reviewed)}
+                                    </span>
+                                </div>
+                            `
+                            : ""
+                    }
+
+                    <div class="atlas-quality-stats">
+
+                        ${
+                            statusCounts.VERIFIED
+                                ? `
+                                    <div class="atlas-quality-stat">
+                                        <strong>
+                                            ${statusCounts.VERIFIED}
+                                        </strong>
+                                        <span>تأییدشده</span>
+                                    </div>
+                                `
+                                : ""
+                        }
+
+                        ${
+                            statusCounts.SUPPORTED
+                                ? `
+                                    <div class="atlas-quality-stat">
+                                        <strong>
+                                            ${statusCounts.SUPPORTED}
+                                        </strong>
+                                        <span>پشتیبانی‌شده</span>
+                                    </div>
+                                `
+                                : ""
+                        }
+
+                        ${
+                            statusCounts.REPORTED
+                                ? `
+                                    <div class="atlas-quality-stat">
+                                        <strong>
+                                            ${statusCounts.REPORTED}
+                                        </strong>
+                                        <span>گزارش‌شده</span>
+                                    </div>
+                                `
+                                : ""
+                        }
+
+                        ${
+                            statusCounts.DISPUTED
+                                ? `
+                                    <div class="atlas-quality-stat">
+                                        <strong>
+                                            ${statusCounts.DISPUTED}
+                                        </strong>
+                                        <span>مورد اختلاف</span>
+                                    </div>
+                                `
+                                : ""
+                        }
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+    `;
+}
 function renderEvidenceSection(
     claims,
     evidenceData,
@@ -1069,6 +1183,11 @@ ${
 }
 
 ${renderContentSections(content)}
+
+${renderDataQualitySection(
+    content,
+    allClaims
+)}
 
 ${renderEvidenceSection(
     allClaims,
