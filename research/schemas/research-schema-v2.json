@@ -151,7 +151,7 @@
 
     "atlasEntityRef": {
   "type": "string",
-  "pattern": "^(person|organization|company|investment|project):[a-z0-9]+(?:-[a-z0-9]+)*$"
+  "pattern": "^(person|organization|company|investment|project|sector):[a-z0-9]+(?:-[a-z0-9]+)*$"
 }
 
     "claimRef": {
