@@ -1,0 +1,51 @@
+{
+  "entity": "person:ali-sanginian",
+  "title": {
+    "fa": "علی سنگینیان",
+    "en": "Ali Sanginian"
+  },
+  "summary": "علی سنگینیان از مدیران و فعالان باسابقه بازار سرمایه ایران است که سابقه فعالیت در حوزه‌های بازار سرمایه، تأمین مالی، بانکداری سرمایه‌گذاری، سرمایه‌گذاری و مدیریت سرمایه‌گذاری را دارد.",
+  "sections": [
+    {
+      "id": "career",
+      "title_fa": "مسیر حرفه‌ای",
+      "title_en": "Career"
+    },
+    {
+      "id": "investment-banking",
+      "title_fa": "تأمین سرمایه و بانکداری سرمایه‌گذاری",
+      "title_en": "Investment Banking"
+    },
+    {
+      "id": "tourism-bank",
+      "title_fa": "حضور در هیئت‌مدیره بانک گردشگری",
+      "title_en": "Tourism Bank Board"
+    },
+    {
+      "id": "tehran-chamber",
+      "title_fa": "نقش در اتاق تهران",
+      "title_en": "Tehran Chamber"
+    },
+    {
+      "id": "kayson",
+      "title_fa": "فعالیت در گروه کیسون",
+      "title_en": "Kayson Group"
+    },
+    {
+      "id": "private-equity",
+      "title_fa": "ورود به حوزه Private Equity",
+      "title_en": "Private Equity"
+    },
+    {
+      "id": "pipeline",
+      "title_fa": "پروژه‌های در دست بررسی",
+      "title_en": "Investment Pipeline"
+    },
+    {
+      "id": "approach",
+      "title_fa": "رویکرد سرمایه‌گذاری",
+      "title_en": "Investment Approach"
+    }
+  ],
+  "last_reviewed": "1405-05"
+}
