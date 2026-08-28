@@ -155,10 +155,19 @@ case "company":
 
         return entity.name?.en || "";
     }
+function entityURL(entityId) {
+    const parts = entityId.split(":");
+    const type = parts[0];
 
+    if (type === "organization" || type === "company") {
+        return `organization.html?id=${encodeURIComponent(entityId)}`;
+    }
+
+    return null;
+}
     function renderClaimCard(claim, entityIndex) {
         const object = entityIndex[claim.object];
-
+const objectURL = entityURL(claim.object);
         if (!object) {
             return "";
         }
@@ -173,12 +182,56 @@ case "company":
                 </div>
 
                 <h3>
-                    ${escapeHTML(getEntityName(entityIndex, claim.object))}
-                </h3>
+    ${
+        objectURL
+            ? `
+                <a href="${objectURL}">
+                    ${escapeHTML(
+                        getEntityName(
+                            entityIndex,
+                            claim.object
+                        )
+                    )}
+                </a>
+            `
+            : `
+                ${escapeHTML(
+                    getEntityName(
+                        entityIndex,
+                        claim.object
+                    )
+                )}
+            `
+    }
+</h3>
 
                 ${
                     getEntityEnglishName(entityIndex, claim.object)
-                        ? `<p>${escapeHTML(getEntityEnglishName(entityIndex, claim.object))}</p>`
+    ? `
+        <p>
+            ${
+                objectURL
+                    ? `
+                        <a href="${objectURL}">
+                            ${escapeHTML(
+                                getEntityEnglishName(
+                                    entityIndex,
+                                    claim.object
+                                )
+                            )}
+                        </a>
+                    `
+                    : `
+                        ${escapeHTML(
+                            getEntityEnglishName(
+                                entityIndex,
+                                claim.object
+                            )
+                        )}
+                    `
+            }
+        </p>
+    `
                         : ""
                 }
 
@@ -219,7 +272,7 @@ case "company":
         }
 
         const organizationName = getEntityName(entityIndex, claim.object);
-
+const organizationURL = entityURL(claim.object);
         return `
             <div class="card atlas-current-role">
 
@@ -232,8 +285,16 @@ case "company":
                 </h2>
 
                 <p class="atlas-current-organization">
+    ${
+        organizationURL
+            ? `
+                <a href="${organizationURL}">
                     ${escapeHTML(organizationName)}
-                </p>
+                </a>
+            `
+            : escapeHTML(organizationName)
+    }
+</p>
 
                 ${
                     getEntityEnglishName(entityIndex, claim.object)
@@ -391,7 +452,8 @@ function renderTimelineSection(claims, entityIndex) {
                                     entityIndex,
                                     claim.object
                                 );
-
+const objectURL =
+    entityURL(claim.object);
                             const period =
                                 formatTemporal(
                                     claim.temporal
@@ -417,10 +479,16 @@ function renderTimelineSection(claims, entityIndex) {
                                         </div>
 
                                         <h3>
-                                            ${escapeHTML(
-                                                entityName
-                                            )}
-                                        </h3>
+    ${
+        objectURL
+            ? `
+                <a href="${objectURL}">
+                    ${escapeHTML(entityName)}
+                </a>
+            `
+            : escapeHTML(entityName)
+    }
+</h3>
 
                                         ${
                                             claim.role
