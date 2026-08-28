@@ -793,14 +793,21 @@ font-size:30px;
     }
 
 }
-/* Atlas mobile timeline fix */
+/* ===================================================
+   Atlas — Final Responsive Overrides
+=================================================== */
+
+/* Mobile */
 @media (max-width: 900px) {
+
     .atlas-page .atlas-timeline-item {
         grid-template-columns: 1fr;
         gap: 8px;
     }
+
 }
-/* Atlas desktop rhythm refinement */
+
+/* Desktop */
 @media (min-width: 901px) {
 
     .atlas-page .atlas-section {
@@ -810,11 +817,12 @@ font-size:30px;
 
     .atlas-page .page-hero + .atlas-section {
         padding-top: 34px;
+        padding-bottom: 28px;
     }
 
-}
-/* Atlas — Professional timeline refinement */
-@media (min-width: 901px) {
+    .atlas-page .atlas-current-role {
+        min-height: 235px;
+    }
 
     .atlas-page .atlas-timeline {
         max-width: 1040px;
