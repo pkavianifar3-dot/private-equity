@@ -1,0 +1,54 @@
+{
+  "version": "1.0",
+  "predicate_types": [
+    {
+      "id": "BROADER_THAN",
+      "label_fa": "دامنه‌ای گسترده‌تر از",
+      "label_en": "Broader Than",
+      "category": "CONCEPTUAL",
+      "status": "REVIEW"
+    },
+    {
+      "id": "INCLUDES",
+      "label_fa": "در بر می‌گیرد",
+      "label_en": "Includes",
+      "category": "CONCEPTUAL",
+      "status": "REVIEW"
+    },
+    {
+      "id": "HAS_NON_UNIFORM_CLASSIFICATION",
+      "label_fa": "طبقه‌بندی یکنواختی ندارد",
+      "label_en": "Has Non-Uniform Classification",
+      "category": "CLASSIFICATION",
+      "status": "REVIEW"
+    },
+    {
+      "id": "HAS_INVESTOR_POSITION",
+      "label_fa": "دارای جایگاه سرمایه‌گذار",
+      "label_en": "Has Investor Position",
+      "category": "STRUCTURAL",
+      "status": "REVIEW"
+    },
+    {
+      "id": "RETURN_DEPENDS_ON",
+      "label_fa": "بازده وابسته است به",
+      "label_en": "Return Depends On",
+      "category": "MECHANISM",
+      "status": "REVIEW"
+    },
+    {
+      "id": "LINKED_TO",
+      "label_fa": "مرتبط است با",
+      "label_en": "Linked To",
+      "category": "CONCEPTUAL",
+      "status": "REVIEW"
+    },
+    {
+      "id": "CHARACTERIZED_BY",
+      "label_fa": "با این ویژگی شناخته می‌شود",
+      "label_en": "Characterized By",
+      "category": "CHARACTERIZATION",
+      "status": "REVIEW"
+    }
+  ]
+}
