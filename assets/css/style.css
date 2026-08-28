@@ -793,3 +793,10 @@ font-size:30px;
     }
 
 }
+/* Atlas mobile timeline fix */
+@media (max-width: 900px) {
+    .atlas-page .atlas-timeline-item {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+}
