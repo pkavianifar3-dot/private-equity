@@ -4,6 +4,7 @@
   "status": "REVIEW",
   "candidates": [
     {
+      "id": "candidate:private-capital",
       "label": "سرمایه خصوصی",
       "labelEn": "Private Capital",
       "role": "PRIMARY_CONCEPT",
@@ -12,6 +13,7 @@
       "note": "No canonical Atlas Entity currently exists."
     },
     {
+      "id": "candidate:private-equity",
       "label": "سرمایه‌گذاری خصوصی",
       "labelEn": "Private Equity",
       "role": "RELATED_CONCEPT",
@@ -19,6 +21,7 @@
       "decision": "EXISTING_ENTITY"
     },
     {
+      "id": "candidate:venture-capital",
       "label": "سرمایه‌گذاری خطرپذیر",
       "labelEn": "Venture Capital",
       "role": "SUBDOMAIN_OR_STRATEGY",
@@ -26,6 +29,7 @@
       "decision": "NOT_REGISTERED"
     },
     {
+      "id": "candidate:growth-capital",
       "label": "سرمایه رشد",
       "labelEn": "Growth Capital",
       "role": "STRATEGY",
@@ -33,6 +37,7 @@
       "decision": "NOT_REGISTERED"
     },
     {
+      "id": "candidate:private-credit",
       "label": "اعتبار خصوصی",
       "labelEn": "Private Credit",
       "role": "SUBDOMAIN",
@@ -40,6 +45,7 @@
       "decision": "NOT_REGISTERED"
     },
     {
+      "id": "candidate:real-assets",
       "label": "دارایی‌های واقعی",
       "labelEn": "Real Assets",
       "role": "ASSET_CATEGORY",
@@ -47,6 +53,7 @@
       "decision": "NOT_REGISTERED"
     },
     {
+      "id": "candidate:leveraged-buyout",
       "label": "خرید اهرمی",
       "labelEn": "Leveraged Buyout",
       "role": "STRATEGY",
@@ -54,6 +61,7 @@
       "decision": "NOT_REGISTERED"
     },
     {
+      "id": "candidate:direct-lending",
       "label": "وام‌دهی مستقیم",
       "labelEn": "Direct Lending",
       "role": "STRATEGY",
@@ -61,6 +69,7 @@
       "decision": "NOT_REGISTERED"
     },
     {
+   "id": "candidate:private-capital-classification",   
   "label": "طبقه‌بندی سرمایه خصوصی",
   "labelEn": "Private Capital Classification",
   "role": "CLASSIFICATION_FRAME",
@@ -68,6 +77,8 @@
   "decision": "NOT_REGISTERED"
 },
 {
+  
+  "id": "candidate:lender",
   "label": "اعتباردهنده",
   "labelEn": "Lender",
   "role": "INVESTOR_POSITION",
@@ -75,6 +86,7 @@
   "decision": "NOT_REGISTERED"
 },
 {
+  "id": "candidate:contractual-components",
   "label": "اجزای قراردادی",
   "labelEn": "Contractual Components",
   "role": "RETURN_COMPONENT",
@@ -82,6 +94,7 @@
   "decision": "NOT_REGISTERED"
 },
 {
+  "id": "candidate:physical-assets",
   "label": "دارایی‌های فیزیکی",
   "labelEn": "Physical Assets",
   "role": "ASSET_CATEGORY",
@@ -89,6 +102,7 @@
   "decision": "NOT_REGISTERED"
 },
 {
+  "id": "candidate:private-market-access",
   "label": "دسترسی به بازار خصوصی",
   "labelEn": "Private Market Access",
   "role": "MARKET_CHARACTERISTIC",
