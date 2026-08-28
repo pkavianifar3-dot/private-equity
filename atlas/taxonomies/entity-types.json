@@ -1,0 +1,60 @@
+{
+  "version": "1.0",
+  "entity_types": [
+    {
+      "id": "Person",
+      "label_fa": "شخص",
+      "label_en": "Person"
+    },
+    {
+      "id": "Organization",
+      "label_fa": "سازمان",
+      "label_en": "Organization"
+    },
+    {
+      "id": "OrganizationUnit",
+      "label_fa": "واحد سازمانی",
+      "label_en": "Organization Unit"
+    },
+    {
+      "id": "Project",
+      "label_fa": "پروژه",
+      "label_en": "Project"
+    },
+    {
+      "id": "Investment",
+      "label_fa": "سرمایه‌گذاری",
+      "label_en": "Investment"
+    },
+    {
+      "id": "Fund",
+      "label_fa": "صندوق",
+      "label_en": "Fund"
+    },
+    {
+      "id": "Role",
+      "label_fa": "سمت / نقش",
+      "label_en": "Role"
+    },
+    {
+      "id": "Sector",
+      "label_fa": "حوزه / صنعت",
+      "label_en": "Sector"
+    },
+    {
+      "id": "InvestorCategory",
+      "label_fa": "دسته سرمایه‌گذار",
+      "label_en": "Investor Category"
+    },
+    {
+      "id": "Source",
+      "label_fa": "منبع",
+      "label_en": "Source"
+    },
+    {
+      "id": "Claim",
+      "label_fa": "ادعا / گزاره",
+      "label_en": "Claim"
+    }
+  ]
+}
