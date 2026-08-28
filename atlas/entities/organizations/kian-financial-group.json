@@ -1,0 +1,15 @@
+{
+  "id": "organization:kian-financial-group",
+  "type": "Organization",
+  "name": {
+    "fa": "گروه مالی کیان",
+    "en": "Kian Financial Group"
+  },
+  "aliases": [],
+  "status": "REVIEW",
+  "metadata": {
+    "organization_type": "financial_group",
+    "national_id": null,
+    "registration_number": null
+  }
+}
