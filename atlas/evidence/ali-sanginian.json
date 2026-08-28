@@ -30,6 +30,13 @@
       "strength": "strong"
     },
     {
+  "id": "evidence:kayson-invested-achareh-01",
+  "claim": "claim:kayson-invested-in-achareh",
+  "source": "source:kayson-official",
+  "evidence_type": "investment_announcement",
+  "strength": "strong"
+},
+    {
       "id": "evidence:ali-ceo-semega-01",
       "claim": "claim:ali-sanginian-ceo-semega",
       "source": "source:tourism-bank-board-history",
