@@ -1,0 +1,100 @@
+{
+  "version": "1.0",
+  "rules": [
+    {
+      "relation": "WORKED_AT",
+      "subject_types": ["Person"],
+      "object_types": ["Organization"]
+    },
+    {
+      "relation": "EXECUTIVE_ROLE_AT",
+      "subject_types": ["Person"],
+      "object_types": ["Organization"]
+    },
+    {
+      "relation": "CEO_OF",
+      "subject_types": ["Person"],
+      "object_types": ["Organization"]
+    },
+    {
+      "relation": "BOARD_MEMBER_OF",
+      "subject_types": ["Person"],
+      "object_types": ["Organization"]
+    },
+    {
+      "relation": "CHAIR_OF",
+      "subject_types": ["Person"],
+      "object_types": ["OrganizationUnit"]
+    },
+    {
+      "relation": "VICE_CHAIR_OF",
+      "subject_types": ["Person"],
+      "object_types": ["Organization"]
+    },
+    {
+      "relation": "BOARD_SECRETARY_OF",
+      "subject_types": ["Person"],
+      "object_types": ["Organization"]
+    },
+    {
+      "relation": "REPRESENTED",
+      "subject_types": ["Person", "Organization"],
+      "object_types": ["Organization"]
+    },
+    {
+      "relation": "SUBSIDIARY_OF",
+      "subject_types": ["Organization"],
+      "object_types": ["Organization"]
+    },
+    {
+      "relation": "PART_OF",
+      "subject_types": ["Organization", "OrganizationUnit"],
+      "object_types": ["Organization", "OrganizationUnit"]
+    },
+    {
+      "relation": "INVESTED_IN",
+      "subject_types": ["Organization", "Person"],
+      "object_types": ["Organization", "Project"]
+    },
+    {
+      "relation": "INVESTMENT_EXECUTIVE_OF",
+      "subject_types": ["Person"],
+      "object_types": ["Organization"]
+    },
+    {
+      "relation": "MANAGES",
+      "subject_types": ["Person", "Organization"],
+      "object_types": ["Organization", "Project", "Fund"]
+    },
+    {
+      "relation": "HAS_PROJECT",
+      "subject_types": ["Organization"],
+      "object_types": ["Project"]
+    },
+    {
+      "relation": "PROJECT_OF",
+      "subject_types": ["Project"],
+      "object_types": ["Organization"]
+    },
+    {
+      "relation": "OPERATES_IN",
+      "subject_types": ["Organization", "Person"],
+      "object_types": ["Sector"]
+    },
+    {
+      "relation": "TARGETS_SECTOR",
+      "subject_types": ["Organization"],
+      "object_types": ["Sector"]
+    },
+    {
+      "relation": "TARGETS_INVESTOR_CATEGORY",
+      "subject_types": ["Organization"],
+      "object_types": ["InvestorCategory"]
+    },
+    {
+      "relation": "SUPPORTED_BY",
+      "subject_types": ["Claim"],
+      "object_types": ["Source", "Evidence"]
+    }
+  ]
+}
