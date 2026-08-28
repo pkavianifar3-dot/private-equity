@@ -24,23 +24,15 @@
             .replace(/'/g, "&#039;");
     }
 
-    function formatDate(date) {
-        if (!date) return "";
-
-        if (date === "present") {
-            return "اکنون";
-        }
-
-        return escapeHTML(date);
-    }
-
     function getEntityIdFromURL() {
         const params = new URLSearchParams(window.location.search);
         return params.get("id");
     }
 
     function entityFilePath(entityId) {
-        const [type, slug] = entityId.split(":");
+        const parts = entityId.split(":");
+        const type = parts[0];
+        const slug = parts.slice(1).join(":");
 
         if (!type || !slug) {
             throw new Error("Invalid Atlas entity ID.");
@@ -54,24 +46,476 @@
                 return `${ATLAS_ROOT}/entities/organizations/${slug}.json`;
 
             default:
-                throw new Error(`Unsupported Atlas entity type: ${type}`);
+                throw new Error(`Unsupported entity type: ${type}`);
         }
     }
 
     function claimsFilePath(entityId) {
-        const [type, slug] = entityId.split(":");
+        const parts = entityId.split(":");
 
-        if (type !== "person") {
-            throw new Error("Claim loading currently supports Person entities only.");
+        if (parts[0] !== "person") {
+            throw new Error("Claims currently support Person entities only.");
         }
 
+        const slug = parts.slice(1).join(":");
         return `${ATLAS_ROOT}/claims/${slug}.json`;
+    }
+
+    function relationLabel(predicate) {
+        const labels = {
+            CEO_OF: "مدیرعامل",
+            EXECUTIVE_ROLE_AT: "سمت اجرایی",
+            BOARD_MEMBER_OF: "عضو هیئت‌مدیره",
+            CHAIR_OF: "رئیس",
+            VICE_CHAIR_OF: "نایب‌رئیس",
+            BOARD_SECRETARY_OF: "دبیر هیئت‌مدیره",
+            WORKED_AT: "فعالیت در",
+            REPRESENTED: "نمایندگی",
+            SUBSIDIARY_OF: "زیرمجموعه",
+            PART_OF: "بخشی از",
+            INVESTED_IN: "سرمایه‌گذاری",
+            INVESTMENT_EXECUTIVE_OF: "مدیر سرمایه‌گذاری در",
+            MANAGES: "مدیریت",
+            HAS_PROJECT: "پروژه",
+            PROJECT_OF: "پروژه متعلق به",
+            OPERATES_IN: "فعالیت در حوزه",
+            TARGETS_SECTOR: "هدف‌گذاری حوزه",
+            TARGETS_INVESTOR_CATEGORY: "هدف‌گذاری نوع سرمایه‌گذار",
+            SUPPORTED_BY: "پشتیبانی‌شده توسط"
+        };
+
+        return labels[predicate] || predicate;
+    }
+
+    function statusLabel(status) {
+        const labels = {
+            VERIFIED: "تأییدشده",
+            SUPPORTED: "پشتیبانی‌شده",
+            REPORTED: "گزارش‌شده",
+            DISPUTED: "مورد اختلاف"
+        };
+
+        return labels[status] || status;
+    }
+
+    function confidenceLabel(confidence) {
+        const labels = {
+            HIGH: "اطمینان بالا",
+            MEDIUM: "اطمینان متوسط",
+            LOW: "اطمینان پایین",
+            UNKNOWN: "نامشخص"
+        };
+
+        return labels[confidence] || confidence;
+    }
+
+    function formatTemporal(temporal) {
+        if (!temporal) {
+            return "";
+        }
+
+        const start = temporal.start || "";
+        let end = temporal.end || "";
+
+        if (!end && temporal.status === "current") {
+            end = "اکنون";
+        }
+
+        if (!start && !end) {
+            return "";
+        }
+
+        if (start && end) {
+            return `${escapeHTML(start)} — ${escapeHTML(end)}`;
+        }
+
+        return escapeHTML(start || end);
+    }
+
+    function getEntityName(entityIndex, id) {
+        const entity = entityIndex[id];
+
+        if (!entity) {
+            return id;
+        }
+
+        return entity.name?.fa || entity.name?.en || id;
+    }
+
+    function getEntityEnglishName(entityIndex, id) {
+        const entity = entityIndex[id];
+
+        if (!entity) {
+            return "";
+        }
+
+        return entity.name?.en || "";
+    }
+
+    function renderClaimCard(claim, entityIndex) {
+        const object = entityIndex[claim.object];
+
+        if (!object) {
+            return "";
+        }
+
+        const temporal = formatTemporal(claim.temporal);
+
+        return `
+            <article class="card atlas-claim">
+
+                <div class="atlas-claim-label">
+                    ${escapeHTML(relationLabel(claim.predicate))}
+                </div>
+
+                <h3>
+                    ${escapeHTML(getEntityName(entityIndex, claim.object))}
+                </h3>
+
+                ${
+                    getEntityEnglishName(entityIndex, claim.object)
+                        ? `<p>${escapeHTML(getEntityEnglishName(entityIndex, claim.object))}</p>`
+                        : ""
+                }
+
+                ${
+                    claim.role
+                        ? `
+                            <p class="atlas-meta">
+                                <strong>نقش:</strong>
+                                ${escapeHTML(claim.role)}
+                            </p>
+                        `
+                        : ""
+                }
+
+                ${
+                    temporal
+                        ? `
+                            <p class="atlas-meta">
+                                <strong>دوره:</strong>
+                                ${temporal}
+                            </p>
+                        `
+                        : ""
+                }
+
+                <div class="atlas-status">
+                    ${escapeHTML(statusLabel(claim.status))}
+                    ${claim.confidence ? ` · ${escapeHTML(confidenceLabel(claim.confidence))}` : ""}
+                </div>
+
+            </article>
+        `;
+    }
+
+    function renderCurrentRole(claim, entityIndex) {
+        if (!claim) {
+            return "";
+        }
+
+        const organizationName = getEntityName(entityIndex, claim.object);
+
+        return `
+            <div class="card atlas-current-role">
+
+                <div class="atlas-kicker">
+                    سمت فعلی
+                </div>
+
+                <h2>
+                    ${escapeHTML(relationLabel(claim.predicate))}
+                </h2>
+
+                <p class="atlas-current-organization">
+                    ${escapeHTML(organizationName)}
+                </p>
+
+                ${
+                    getEntityEnglishName(entityIndex, claim.object)
+                        ? `<p>${escapeHTML(getEntityEnglishName(entityIndex, claim.object))}</p>`
+                        : ""
+                }
+
+                <div class="atlas-status">
+                    ${escapeHTML(statusLabel(claim.status))}
+                </div>
+
+            </div>
+        `;
+    }
+
+    function renderSummary(content) {
+        if (!content?.summary) {
+            return "";
+        }
+
+        return `
+            <section class="atlas-section">
+
+                <div class="container">
+
+                    <h2>معرفی</h2>
+
+                    <div class="card atlas-summary">
+                        <p>
+                            ${escapeHTML(content.summary)}
+                        </p>
+                    </div>
+
+                </div>
+
+            </section>
+        `;
+    }
+
+    function renderContentSections(content) {
+        if (!content?.sections?.length) {
+            return "";
+        }
+
+        return `
+            <section class="atlas-section">
+
+                <div class="container">
+
+                    <h2>درباره</h2>
+
+                    <div class="grid atlas-content-grid">
+
+                        ${content.sections
+                            .map(section => `
+                                <article class="card atlas-content-section">
+
+                                    <h3>
+                                        ${escapeHTML(section.title_fa)}
+                                    </h3>
+
+                                    ${
+                                        section.title_en
+                                            ? `<p>${escapeHTML(section.title_en)}</p>`
+                                            : ""
+                                    }
+
+                                </article>
+                            `)
+                            .join("")}
+
+                    </div>
+
+                </div>
+
+            </section>
+        `;
+    }
+
+    function renderClaimsSection(title, claims, entityIndex) {
+        if (!claims.length) {
+            return "";
+        }
+
+        return `
+            <section class="atlas-section">
+
+                <div class="container">
+
+                    <h2>${escapeHTML(title)}</h2>
+
+                    <div class="grid atlas-claims-grid">
+
+                        ${claims
+                            .map(claim => renderClaimCard(claim, entityIndex))
+                            .join("")}
+
+                    </div>
+
+                </div>
+
+            </section>
+        `;
+    }
+
+    function renderEvidenceSection(claims, evidenceData, sourceData) {
+        if (!evidenceData?.evidence?.length) {
+            return "";
+        }
+
+        const evidenceByClaim = {};
+
+        evidenceData.evidence.forEach(item => {
+            if (!evidenceByClaim[item.claim]) {
+                evidenceByClaim[item.claim] = [];
+            }
+
+            evidenceByClaim[item.claim].push(item);
+        });
+
+        const sourceIndex = {};
+
+        (sourceData?.sources || []).forEach(source => {
+            sourceIndex[source.id] = source;
+        });
+
+        const visibleClaims = claims.filter(
+            claim => evidenceByClaim[claim.id]
+        );
+
+        if (!visibleClaims.length) {
+            return "";
+        }
+
+        return `
+            <section class="atlas-section">
+
+                <div class="container">
+
+                    <h2>منابع و شواهد</h2>
+
+                    <div class="atlas-sources-list">
+
+                        ${visibleClaims
+                            .map(claim => {
+
+                                const evidenceItems =
+                                    evidenceByClaim[claim.id] || [];
+
+                                const evidenceHTML = evidenceItems
+                                    .map(evidence => {
+
+                                        const source =
+                                            sourceIndex[evidence.source];
+
+                                        if (!source) {
+                                            return "";
+                                        }
+
+                                        return `
+                                            <div class="atlas-source-item">
+
+                                                <div>
+                                                    ${escapeHTML(
+                                                        source.title_fa
+                                                    )}
+                                                </div>
+
+                                                ${
+                                                    source.publisher
+                                                        ? `
+                                                            <small>
+                                                                ${escapeHTML(
+                                                                    source.publisher
+                                                                )}
+                                                            </small>
+                                                        `
+                                                        : ""
+                                                }
+
+                                                ${
+                                                    source.url
+                                                        ? `
+                                                            <a
+                                                                href="${escapeHTML(source.url)}"
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                            >
+                                                                مشاهده منبع
+                                                            </a>
+                                                        `
+                                                        : ""
+                                                }
+
+                                            </div>
+                                        `;
+                                    })
+                                    .join("");
+
+                                return `
+                                    <article class="card atlas-evidence-card">
+
+                                        <h3>
+                                            ${escapeHTML(
+                                                relationLabel(claim.predicate)
+                                            )}
+                                            :
+                                            ${escapeHTML(
+                                                getEntityName(
+                                                    Object.fromEntries(
+                                                        []
+                                                    ),
+                                                    claim.object
+                                                )
+                                            )}
+                                        </h3>
+
+                                        ${evidenceHTML}
+
+                                    </article>
+                                `;
+                            })
+                            .join("")}
+
+                    </div>
+
+                </div>
+
+            </section>
+        `;
+    }
+
+    function renderIdentity(entity) {
+        return `
+            <section class="atlas-section">
+
+                <div class="container">
+
+                    <div class="card atlas-identity-card">
+
+                        <div class="atlas-kicker">
+                            شناسه
+                        </div>
+
+                        <div class="atlas-identity-row">
+                            <strong>نام فارسی</strong>
+                            <span>${escapeHTML(entity.name?.fa)}</span>
+                        </div>
+
+                        <div class="atlas-identity-row">
+                            <strong>نام انگلیسی</strong>
+                            <span>${escapeHTML(entity.name?.en)}</span>
+                        </div>
+
+                        ${
+                            entity.honorific?.fa
+                                ? `
+                                    <div class="atlas-identity-row">
+                                        <strong>عنوان</strong>
+                                        <span>
+                                            ${escapeHTML(entity.honorific.fa)}
+                                        </span>
+                                    </div>
+                                `
+                                : ""
+                        }
+
+                        <div class="atlas-identity-row">
+                            <strong>ID</strong>
+                            <span>${escapeHTML(entity.id)}</span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+        `;
     }
 
     function renderError(message) {
         const root = document.getElementById("atlas-root");
 
-        if (!root) return;
+        if (!root) {
+            return;
+        }
 
         root.innerHTML = `
             <div class="card">
@@ -81,86 +525,22 @@
         `;
     }
 
-    function relationLabel(predicate) {
-        const labels = {
-            "CEO_OF": "مدیرعامل",
-            "EXECUTIVE_ROLE_AT": "سمت اجرایی",
-            "BOARD_MEMBER_OF": "عضو هیئت‌مدیره",
-            "CHAIR_OF": "رئیس",
-            "VICE_CHAIR_OF": "نایب‌رئیس",
-            "BOARD_SECRETARY_OF": "دبیر هیئت‌مدیره",
-            "WORKED_AT": "فعالیت در",
-            "SUBSIDIARY_OF": "زیرمجموعه",
-            "OPERATES_IN": "فعالیت در حوزه",
-            "HAS_PROJECT": "پروژه"
-        };
-
-        return labels[predicate] || predicate;
-    }
-
-    function statusLabel(status) {
-        const labels = {
-            "VERIFIED": "تأییدشده",
-            "SUPPORTED": "پشتیبانی‌شده",
-            "REPORTED": "گزارش‌شده",
-            "DISPUTED": "مورد اختلاف"
-        };
-
-        return labels[status] || status;
-    }
-
-    function renderClaim(claim, entityIndex) {
-        const object = entityIndex[claim.object];
-
-        if (!object) {
-            return "";
-        }
-
-        let meta = "";
-
-        if (claim.temporal) {
-            const start = formatDate(claim.temporal.start);
-            const end = claim.temporal.end
-                ? formatDate(claim.temporal.end)
-                : (claim.temporal.status === "current" ? "اکنون" : "");
-
-            if (start || end) {
-                meta = `
-                    <div class="atlas-claim-meta">
-                        ${start}${start && end ? " — " : ""}${end}
-                    </div>
-                `;
-            }
-        }
-
-        return `
-            <div class="card atlas-claim">
-                <h3>${escapeHTML(relationLabel(claim.predicate))}</h3>
-
-                <p class="atlas-object-name">
-                    ${escapeHTML(object.name.fa)}
-                </p>
-
-                ${claim.role ? `
-                    <p>
-                        <strong>نقش:</strong>
-                        ${escapeHTML(claim.role)}
-                    </p>
-                ` : ""}
-
-                ${meta}
-
-                <p class="atlas-claim-status">
-                    ${escapeHTML(statusLabel(claim.status))}
-                </p>
-            </div>
-        `;
-    }
-
     async function renderPerson(entityId) {
-        const entity = await loadJSON(entityFilePath(entityId));
-        const claimsData = await loadJSON(claimsFilePath(entityId));
-        const registry = await loadJSON(`${ATLAS_ROOT}/entities/index.json`);
+        const [
+            entity,
+            claimsData,
+            registry,
+            content,
+            evidenceData,
+            sourceData
+        ] = await Promise.all([
+            loadJSON(entityFilePath(entityId)),
+            loadJSON(claimsFilePath(entityId)),
+            loadJSON(`${ATLAS_ROOT}/entities/index.json`),
+            loadJSON(`${ATLAS_ROOT}/content/persons/${entityId.split(":").slice(1).join(":")}.json`),
+            loadJSON(`${ATLAS_ROOT}/evidence/${entityId.split(":").slice(1).join(":")}.json`),
+            loadJSON(`${ATLAS_ROOT}/sources/${entityId.split(":").slice(1).join(":")}.json`)
+        ]);
 
         const entityIndex = {};
 
@@ -168,69 +548,139 @@
             entityIndex[item.id] = item;
         });
 
+        const allClaims = claimsData.claims || [];
+
+        const personClaims = allClaims.filter(
+            claim => claim.subject === entityId
+        );
+
+        const currentRoleClaim = personClaims.find(
+            claim =>
+                claim.predicate === "CEO_OF" &&
+                claim.temporal?.status === "current"
+        );
+
+        const executiveClaims = personClaims.filter(claim =>
+            [
+                "WORKED_AT",
+                "EXECUTIVE_ROLE_AT",
+                "CEO_OF",
+                "INVESTMENT_EXECUTIVE_OF"
+            ].includes(claim.predicate)
+        );
+
+        const boardClaims = personClaims.filter(claim =>
+            [
+                "BOARD_MEMBER_OF",
+                "CHAIR_OF",
+                "VICE_CHAIR_OF",
+                "BOARD_SECRETARY_OF",
+                "REPRESENTED"
+            ].includes(claim.predicate)
+        );
+
+        const investmentClaims = personClaims.filter(claim =>
+            [
+                "INVESTED_IN",
+                "INVESTMENT_EXECUTIVE_OF",
+                "HAS_PROJECT",
+                "MANAGES"
+            ].includes(claim.predicate)
+        );
+
+        const relatedOrganizationClaims = allClaims.filter(
+            claim =>
+                claim.subject !== entityId &&
+                (
+                    claim.predicate === "SUBSIDIARY_OF" ||
+                    claim.predicate === "PART_OF"
+                )
+        );
+
         const root = document.getElementById("atlas-root");
 
         if (!root) {
             throw new Error("Atlas root element not found.");
         }
 
-        const claimsHTML = claimsData.claims
-            .map(claim => renderClaim(claim, entityIndex))
-            .filter(Boolean)
-            .join("");
-
         root.innerHTML = `
+
             <section class="page-hero">
+
                 <div class="container">
-                    <h1>${escapeHTML(entity.name.fa)}</h1>
-                    <p>${escapeHTML(entity.name.en)}</p>
+
+                    <h1>
+                        ${escapeHTML(entity.name.fa)}
+                    </h1>
+
+                    ${
+                        entity.name.en
+                            ? `
+                                <p>
+                                    ${escapeHTML(entity.name.en)}
+                                </p>
+                            `
+                            : ""
+                    }
+
                 </div>
+
             </section>
 
-            <section>
+            <section class="atlas-section">
+
                 <div class="container">
 
-                    <div class="card atlas-identity-card">
+                    <div class="grid atlas-top-grid">
 
-                        <h2>شناسه</h2>
+                        ${renderCurrentRole(currentRoleClaim, entityIndex)}
 
-                        <p>
-                            <strong>نام:</strong>
-                            ${escapeHTML(entity.name.fa)}
-                        </p>
-
-                        <p>
-                            <strong>نام انگلیسی:</strong>
-                            ${escapeHTML(entity.name.en)}
-                        </p>
-
-                        ${entity.honorific && entity.honorific.fa ? `
-                            <p>
-                                <strong>عنوان:</strong>
-                                ${escapeHTML(entity.honorific.fa)}
-                            </p>
-                        ` : ""}
+                        ${renderIdentity(entity)}
 
                     </div>
 
                 </div>
+
             </section>
 
-            <section>
-                <div class="container">
+            ${renderSummary(content)}
 
-                    <h2>سوابق و روابط</h2>
+            ${renderClaimsSection(
+                "مسیر حرفه‌ای و سمت‌های اجرایی",
+                executiveClaims,
+                entityIndex
+            )}
 
-                    <div class="grid">
-                        ${claimsHTML || `
-                            <div class="card">
-                                <p>هنوز داده‌ای برای نمایش ثبت نشده است.</p>
-                            </div>
-                        `}
-                    </div>
+            ${renderClaimsSection(
+                "عضویت‌ها و نقش‌های هیئت‌مدیره",
+                boardClaims,
+                entityIndex
+            )}
 
-                </div>
-            </section>
+            ${renderClaimsSection(
+                "فعالیت‌های سرمایه‌گذاری و پروژه‌ها",
+                investmentClaims,
+                entityIndex
+            )}
+
+            ${
+                relatedOrganizationClaims.length
+                    ? renderClaimsSection(
+                        "ساختار سازمانی مرتبط",
+                        relatedOrganizationClaims,
+                        entityIndex
+                    )
+                    : ""
+            }
+
+            ${renderContentSections(content)}
+
+            ${renderEvidenceSection(
+                allClaims,
+                evidenceData,
+                sourceData
+            )}
+
         `;
     }
 
@@ -247,7 +697,9 @@
                 return;
             }
 
-            throw new Error("Entity type is not supported yet.");
+            throw new Error(
+                "این نوع Entity هنوز توسط Renderer پشتیبانی نمی‌شود."
+            );
 
         } catch (error) {
             console.error("Atlas Renderer Error:", error);
@@ -258,4 +710,5 @@
     window.Atlas = {
         init: initAtlas
     };
+
 })();
