@@ -270,44 +270,69 @@
     }
 
     function renderContentSections(content) {
-        if (!content?.sections?.length) {
-            return "";
-        }
-
-        return `
-            <section class="atlas-section">
-
-                <div class="container">
-
-                    <h2>درباره</h2>
-
-                    <div class="grid atlas-content-grid">
-
-                        ${content.sections
-                            .map(section => `
-                                <article class="card atlas-content-section">
-
-                                    <h3>
-                                        ${escapeHTML(section.title_fa)}
-                                    </h3>
-
-                                    ${
-                                        section.title_en
-                                            ? `<p>${escapeHTML(section.title_en)}</p>`
-                                            : ""
-                                    }
-
-                                </article>
-                            `)
-                            .join("")}
-
-                    </div>
-
-                </div>
-
-            </section>
-        `;
+    if (!content?.sections?.length) {
+        return "";
     }
+
+    return `
+        <section class="atlas-section">
+
+            <div class="container">
+
+                <h2>متن دانشنامه‌ای</h2>
+
+                ${content.sections
+                    .map(section => `
+                        <article class="card atlas-content-section">
+
+                            <h3>
+                                ${escapeHTML(section.title_fa)}
+                            </h3>
+
+                            ${
+                                section.title_en
+                                    ? `
+                                        <div class="atlas-section-en">
+                                            ${escapeHTML(section.title_en)}
+                                        </div>
+                                    `
+                                    : ""
+                            }
+
+                            ${
+                                section.paragraphs?.length
+                                    ? section.paragraphs
+                                        .map(paragraph => `
+                                            <p class="atlas-content-paragraph">
+                                                ${escapeHTML(paragraph.text)}
+
+                                                ${
+                                                    paragraph.source_refs?.length
+                                                        ? `
+                                                            <span class="atlas-inline-sources">
+                                                                ${paragraph.source_refs
+                                                                    .map(ref => `[${escapeHTML(ref)}]`)
+                                                                    .join(" ")
+                                                                }
+                                                            </span>
+                                                        `
+                                                        : ""
+                                                }
+                                            </p>
+                                        `)
+                                        .join("")
+                                    : ""
+                            }
+
+                        </article>
+                    `)
+                    .join("")}
+
+            </div>
+
+        </section>
+    `;
+}
 
     function renderClaimsSection(title, claims, entityIndex) {
         if (!claims.length) {
