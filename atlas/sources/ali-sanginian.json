@@ -7,7 +7,8 @@
       "source_type": "personal_website",
       "title_fa": "وب‌سایت شخصی علی سنگینیان",
       "publisher": "Ali Sanginian",
-      "url": "https://sanginian.com/"
+      "url": "https://sanginian.com/",
+      "citation_refs": ["1"]
     },
     {
       "id": "source:ali-sanginian-interviews",
@@ -15,31 +16,17 @@
       "source_type": "personal_website",
       "title_fa": "آرشیو مصاحبه‌های علی سنگینیان",
       "publisher": "Ali Sanginian",
-      "url": "https://sanginian.com/interview/"
+      "url": "https://sanginian.com/interview/",
+      "citation_refs": ["2"]
     },
     {
-      "id": "source:tehran-chamber-commission-interview-1395",
+      "id": "source:kian-direct-interview-1405",
       "type": "Source",
-      "source_type": "personal_website",
-      "title_fa": "رئیس کمیسیون بازار پول سرمایه اتاق تهران در پاسخ به جهان صنعت",
-      "publisher": "Ali Sanginian",
-      "url": "https://sanginian.com/2016/07/06/%D8%B1%D9%8A%D9%8A%D8%B3-%D9%83%D9%85%D9%8A%D8%B3%D9%8A%D9%88%D9%86-%D8%A8%D8%A7%D8%B2%D8%A7%D8%B1-%D9%BE%D9%88%D9%84-%D8%B3%D8%B1%D9%85%D8%A7%D9%8A%D9%87-%D8%A7%D8%AA%D8%A7%D9%82-%D8%AA%D9%87%D8%B1%D8%A7%D9%86/"
-    },
-    {
-  "id": "source:kian-direct-interview-1405",
-  "type": "Source",
-  "source_type": "direct_interview",
-  "title_fa": "مصاحبه مستقیم علی سنگینیان درباره Private Equity کیان",
-  "publisher": "Kian",
-  "url": null
-},
-    {
-      "id": "source:amin-capital-archive",
-      "type": "Source",
-      "source_type": "official_corporate",
-      "title_fa": "دکتر علی سنگینیان، مدیرعامل شرکت تأمین سرمایه امین",
-      "publisher": "Amin Investment Bank",
-      "url": "https://hminc.ir/?cid=CMSContent&content=610"
+      "source_type": "direct_interview",
+      "title_fa": "مصاحبه مستقیم علی سنگینیان درباره Private Equity کیان",
+      "publisher": "Kian",
+      "url": null,
+      "citation_refs": ["3", "10"]
     },
     {
       "id": "source:amin-capital-market-report-1395",
@@ -47,7 +34,26 @@
       "source_type": "news_media",
       "title_fa": "گزارش دوره مدیریت تأمین سرمایه امین",
       "publisher": null,
-      "url": null
+      "url": null,
+      "citation_refs": ["4"]
+    },
+    {
+      "id": "source:amin-capital-archive",
+      "type": "Source",
+      "source_type": "official_corporate",
+      "title_fa": "دکتر علی سنگینیان، مدیرعامل شرکت تأمین سرمایه امین",
+      "publisher": "Amin Investment Bank",
+      "url": "https://hminc.ir/?cid=CMSContent&content=610",
+      "citation_refs": ["5"]
+    },
+    {
+      "id": "source:ali-sanginian-personal-articles",
+      "type": "Source",
+      "source_type": "personal_website",
+      "title_fa": "مقالات و یادداشت‌های وب‌سایت شخصی علی سنگینیان",
+      "publisher": "Ali Sanginian",
+      "url": "https://sanginian.com/articles/",
+      "citation_refs": ["6"]
     },
     {
       "id": "source:tourism-bank-board-history",
@@ -55,15 +61,17 @@
       "source_type": "historical_market_data",
       "title_fa": "داده تاریخی ترکیب هیئت‌مدیره بانک گردشگری",
       "publisher": "شاخص‌بان",
-      "url": "https://turkish.shakhesban.com/markets/stock/%D9%88%DA%AF%D8%B1%D8%AF%D8%B4/specification"
+      "url": "https://turkish.shakhesban.com/markets/stock/%D9%88%DA%AF%D8%B1%D8%AF%D8%B4/specification",
+      "citation_refs": ["7"]
     },
     {
       "id": "source:tehran-chamber-independent-report",
       "type": "Source",
       "source_type": "news_media",
-      "title_fa": "فراز و فرودهای تأمین مالی شرکت‌های فولادی",
+      "title_fa": "گزارش حرفه‌ای درباره نقش علی سنگینیان در اتاق تهران و بازار سرمایه",
       "publisher": "چیلان آنلاین",
-      "url": "https://chilanonline.com/2016/06/29/5716/"
+      "url": "https://chilanonline.com/2016/06/29/5716/",
+      "citation_refs": ["8"]
     },
     {
       "id": "source:kayson-official",
@@ -71,7 +79,8 @@
       "source_type": "official_corporate",
       "title_fa": "اطلاع‌رسانی رسمی گروه کیسون درباره سرمایه‌گذاری در آچاره",
       "publisher": "Kayson Inc.",
-      "url": "https://www.linkedin.com/posts/kayson_%D8%AF%D8%B1-%D9%86%D8%B4%D8%B3%D8%AA-%D8%AE%D8%A8%D8%B1%DB%8C-%D8%A7%D9%85%D8%B1%D9%88%D8%B2-17-%D8%AF%DB%8C%D9%85%D8%A7%D9%87-%D8%A8%D8%A7-%D8%AD%D8%B6%D9%88%D8%B1-%D8%AF%DA%A9%D8%AA%D8%B1-activity-7149750285211500544-1FzY"
+      "url": "https://www.linkedin.com/posts/kayson_%D8%AF%D8%B1-%D9%86%D8%B4%D8%B3%D8%AA-%D8%AE%D8%A8%D8%B1%DB%8C-%D8%A7%D9%85%D8%B1%D9%88%D8%B2-17-%D8%AF%DB%8C%D9%85%D8%A7%D9%87-%D8%A8%D8%A7-%D8%AD%D8%B6%D9%88%D8%B1-%D8%AF%DA%A9%D8%AA%D8%B1-activity-7149750285211500544-1FzY",
+      "citation_refs": ["9"]
     },
     {
       "id": "source:kian-private-equity-company-registry",
@@ -79,7 +88,8 @@
       "source_type": "registry",
       "title_fa": "اطلاعات ثبتی شرکت مدیریت سهام خصوصی کیان",
       "publisher": "Rasmio",
-      "url": "https://rasmio.com/News/130016646/"
+      "url": "https://rasmio.com/News/130016646/",
+      "citation_refs": []
     }
   ]
 }
