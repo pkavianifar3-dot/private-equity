@@ -427,13 +427,29 @@
                                         }
 
                                         return `
-                                            <div class="atlas-source-item">
+                                            <div
+    class="atlas-source-item"
+    id="source-${escapeHTML(
+        (source.citation_refs || [evidence.source])[0]
+    )}"
+>
 
-                                                <div>
-                                                    ${escapeHTML(
-                                                        source.title_fa
-                                                    )}
-                                                </div>
+    <div>
+        ${
+            source.citation_refs?.length
+                ? `
+                    <strong>
+                        ${source.citation_refs
+                            .map(ref => `[${escapeHTML(ref)}]`)
+                            .join(" ")
+                        }
+                    </strong>
+                `
+                : ""
+        }
+
+        ${escapeHTML(source.title_fa)}
+    </div>
 
                                                 ${
                                                     source.publisher
