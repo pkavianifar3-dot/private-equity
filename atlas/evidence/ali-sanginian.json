@@ -72,12 +72,12 @@
       "strength": "strong"
     },
     {
-      "id": "evidence:ali-achareh-01",
-      "claim": "claim:ali-sanginian-investment-executive-kayson",
-      "source": "source:kayson-official",
-      "evidence_type": "investment_announcement",
-      "strength": "strong"
-    },
+  "id": "evidence:ali-investment-executive-kayson-01",
+  "claim": "claim:ali-sanginian-investment-executive-kayson",
+  "source": "source:kayson-official",
+  "evidence_type": "investment_announcement",
+  "strength": "strong"
+},
     {
       "id": "evidence:ali-private-equity-01",
       "claim": "claim:kian-private-equity-operates-private-equity",
