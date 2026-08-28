@@ -1,0 +1,277 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Private Capital Research Schema v2",
+  "description": "Structured data contract for Research documents in the Private Capital knowledge system.",
+  "type": "object",
+  "required": [
+    "id",
+    "type",
+    "schemaVersion",
+    "url",
+    "status",
+    "title",
+    "summary",
+    "publication",
+    "sections"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^research:[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+
+    "type": {
+      "const": "Research"
+    },
+
+    "schemaVersion": {
+      "const": "2.0"
+    },
+
+    "url": {
+      "type": "string",
+      "format": "uri-reference"
+    },
+
+    "status": {
+      "type": "string",
+      "enum": [
+        "DRAFT",
+        "REVIEW",
+        "PUBLISHED",
+        "ARCHIVED"
+      ]
+    },
+
+    "title": {
+      "$ref": "#/$defs/localizedText"
+    },
+
+    "summary": {
+      "$ref": "#/$defs/localizedText"
+    },
+
+    "publication": {
+      "type": "object",
+      "properties": {
+        "datePublished": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "dateModified": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "authorRefs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "entityRefs": {
+      "type": "array",
+      "description": "References to canonical Atlas Entity IDs.",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+
+    "claimRefs": {
+      "type": "array",
+      "description": "References to canonical Atlas Claim IDs.",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+
+    "evidenceRefs": {
+      "type": "array",
+      "description": "References to canonical Atlas Evidence IDs.",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+
+    "sourceRefs": {
+      "type": "array",
+      "description": "References to canonical Atlas Source IDs.",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+
+    "relatedResearchRefs": {
+      "type": "array",
+      "description": "References to other Research documents.",
+      "items": {
+        "type": "string",
+        "pattern": "^research:[a-z0-9]+(?:-[a-z0-9]+)*$"
+      },
+      "uniqueItems": true
+    },
+
+    "sections": {
+      "type": "array",
+      "description": "Ordered structured sections of the Research document.",
+      "items": {
+        "$ref": "#/$defs/section"
+      }
+    }
+  },
+
+  "additionalProperties": false,
+
+  "$defs": {
+    "localizedText": {
+      "type": "object",
+      "properties": {
+        "fa": {
+          "type": "string"
+        },
+        "en": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "section": {
+      "type": "object",
+      "required": [
+        "id",
+        "title"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+
+        "title": {
+          "$ref": "#/$defs/localizedText"
+        },
+
+        "content": {
+          "type": "array",
+          "description": "Ordered content blocks belonging to this section.",
+          "items": {
+            "type": "object",
+            "required": [
+              "type"
+            ],
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "paragraph"
+                ]
+              },
+              "text": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "type",
+              "text"
+            ],
+            "additionalProperties": false
+          }
+        },
+
+        "entityRefs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        },
+
+        "claimRefs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        },
+
+        "sourceRefs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        },
+
+        "mentions": {
+          "type": "array",
+          "description": "Semantic mentions found in this section.",
+          "items": {
+            "$ref": "#/$defs/mention"
+          }
+        }
+      },
+
+      "additionalProperties": false
+    },
+
+    "mention": {
+      "type": "object",
+      "required": [
+        "id",
+        "text",
+        "resolutionStatus"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+
+        "text": {
+          "type": "string"
+        },
+
+        "entityRef": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+
+        "resolutionStatus": {
+          "type": "string",
+          "enum": [
+            "UNRESOLVED",
+            "RESOLVED",
+            "REJECTED"
+          ]
+        },
+
+        "start": {
+          "type": "integer",
+          "minimum": 0
+        },
+
+        "end": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+
+      "additionalProperties": false
+    }
+  }
+}
