@@ -519,3 +519,277 @@ font-size:30px;
     }
 
 }
+/* ===================================================
+   Atlas — Safe Visual Refinement
+   Scoped only to Atlas pages
+=================================================== */
+
+.atlas-page #atlas-root {
+    overflow: hidden;
+}
+
+/* ---------- Atlas hero ---------- */
+
+.atlas-page .page-hero {
+    padding: 58px 0 34px;
+    background:
+        radial-gradient(
+            circle at 82% 18%,
+            rgba(201,162,39,.08),
+            transparent 24%
+        ),
+        linear-gradient(
+            180deg,
+            #0A1727 0%,
+            #081320 100%
+        );
+    border-bottom: 1px solid rgba(201,162,39,.18);
+}
+
+.atlas-page .page-hero h1 {
+    font-size: clamp(34px, 4.5vw, 52px);
+    line-height: 1.3;
+    margin-bottom: 8px;
+    letter-spacing: -0.4px;
+}
+
+.atlas-page .page-hero p {
+    font-size: 16px;
+    color: #9EABB8;
+}
+
+/* ---------- First Atlas block ---------- */
+
+.atlas-page .page-hero + .atlas-section {
+    padding-top: 38px;
+}
+
+/* ---------- Main profile cards ---------- */
+
+.atlas-page .atlas-top-grid {
+    grid-template-columns:
+        minmax(0, 1.15fr)
+        minmax(300px, .85fr);
+    gap: 24px;
+    align-items: stretch;
+}
+
+.atlas-page .atlas-top-grid > .card {
+    height: 100%;
+}
+
+.atlas-page .atlas-current-role,
+.atlas-page .atlas-identity-card {
+    padding: 32px;
+}
+
+.atlas-page .atlas-current-role {
+    min-height: 270px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.atlas-page .atlas-current-role h2 {
+    font-size: 29px;
+    line-height: 1.5;
+}
+
+.atlas-page .atlas-current-organization {
+    font-size: 19px;
+    line-height: 1.8;
+}
+
+/* ---------- Identity card ---------- */
+
+.atlas-page .atlas-identity-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.atlas-page .atlas-identity-row {
+    padding: 13px 0;
+}
+
+.atlas-page .atlas-identity-row span {
+    color: #EEF2F5;
+}
+
+/* ---------- Summary ---------- */
+
+.atlas-page .atlas-summary {
+    max-width: 980px;
+    margin-inline: auto;
+    padding: 30px 36px;
+}
+
+.atlas-page .atlas-summary p {
+    font-size: 17px;
+    line-height: 2.15;
+}
+
+/* ---------- Timeline ---------- */
+
+.atlas-page .atlas-timeline {
+    position: relative;
+    max-width: 1080px;
+    margin: 26px auto 0;
+    padding-right: 34px;
+}
+
+.atlas-page .atlas-timeline::before {
+    content: "";
+    position: absolute;
+    top: 8px;
+    bottom: 8px;
+    right: 10px;
+    width: 1px;
+    background: rgba(201,162,39,.22);
+}
+
+.atlas-page .atlas-timeline-item {
+    position: relative;
+    padding: 26px 28px;
+    grid-template-columns: 170px minmax(0, 1fr);
+    gap: 24px;
+}
+
+.atlas-page .atlas-timeline-item::before {
+    content: "";
+    position: absolute;
+    top: 31px;
+    right: -29px;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    border: 2px solid #C9A227;
+    background: #081320;
+}
+
+.atlas-page .atlas-timeline-content h3 {
+    font-size: 19px;
+    line-height: 1.7;
+    margin: 5px 0 8px;
+}
+
+.atlas-page .atlas-timeline-date {
+    font-size: 14px;
+}
+
+/* ---------- Claims ---------- */
+
+@media (min-width: 901px) {
+
+    .atlas-page .atlas-claims-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+        gap: 22px;
+    }
+
+}
+
+/* ---------- Hover: restrained and professional ---------- */
+
+.atlas-page .card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 28px rgba(0,0,0,.24);
+}
+
+/* ===================================================
+   Atlas — Mobile
+=================================================== */
+
+@media (max-width: 900px) {
+
+    .atlas-page .atlas-top-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .atlas-page .atlas-current-role {
+        min-height: 0;
+    }
+
+}
+
+@media (max-width: 600px) {
+
+    .atlas-page header .container {
+        min-height: 0;
+        padding: 12px 0 10px;
+    }
+
+    .atlas-page .logo {
+        font-size: 22px;
+    }
+
+    .atlas-page nav {
+        gap: 7px 14px;
+        margin-top: 8px;
+        max-width: 340px;
+    }
+
+    .atlas-page nav a {
+        font-size: 13px;
+        padding: 2px 0;
+    }
+
+    .atlas-page .page-hero {
+        padding: 42px 0 24px;
+    }
+
+    .atlas-page .page-hero h1 {
+        font-size: 32px;
+    }
+
+    .atlas-page .page-hero p {
+        font-size: 14px;
+    }
+
+    .atlas-page .page-hero + .atlas-section {
+        padding-top: 30px;
+    }
+
+    .atlas-page .atlas-section {
+        padding: 44px 0;
+    }
+
+    .atlas-page .atlas-current-role,
+    .atlas-page .atlas-identity-card {
+        padding: 25px 22px;
+    }
+
+    .atlas-page .atlas-current-role h2 {
+        font-size: 25px;
+    }
+
+    .atlas-page .atlas-current-organization {
+        font-size: 17px;
+    }
+
+    .atlas-page .atlas-summary {
+        padding: 25px 21px;
+    }
+
+    .atlas-page .atlas-summary p {
+        font-size: 15px;
+        line-height: 2.05;
+    }
+
+    .atlas-page .atlas-timeline {
+        padding-right: 26px;
+    }
+
+    .atlas-page .atlas-timeline-item {
+        padding: 22px 20px;
+    }
+
+    .atlas-page .atlas-timeline-item::before {
+        right: -23px;
+    }
+
+    .atlas-page .atlas-timeline-content h3 {
+        font-size: 17px;
+    }
+
+}
