@@ -1,0 +1,13 @@
+{
+  "id": "organization:kayson-group",
+  "type": "Organization",
+  "name": {
+    "fa": "گروه کیسون",
+    "en": "Kayson Group"
+  },
+  "aliases": [
+    "کیسون",
+    "Kayson"
+  ],
+  "status": "REVIEW"
+}
