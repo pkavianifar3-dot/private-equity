@@ -298,7 +298,9 @@ const organizationURL = entityURL(claim.object);
 
                 ${
                     getEntityEnglishName(entityIndex, claim.object)
-                        ? `<p>${escapeHTML(getEntityEnglishName(entityIndex, claim.object))}</p>`
+                        ? `<p class="atlas-english">
+    ${escapeHTML(getEntityEnglishName(entityIndex, claim.object))}
+</p>`
                         : ""
                 }
 
