@@ -1,0 +1,14 @@
+{
+  "version": "1.0",
+  "claims": [
+    {
+      "id": "claim:kayson-invested-in-achareh",
+      "subject": "organization:kayson-group",
+      "predicate": "INVESTED_IN",
+      "object": "company:achareh",
+      "investment": "investment:kayson-achareh",
+      "status": "VERIFIED",
+      "confidence": "HIGH"
+    }
+  ]
+}
