@@ -1,0 +1,100 @@
+{
+  "version": "1.0",
+  "relation_types": [
+    {
+      "id": "WORKED_AT",
+      "label_fa": "در سازمان فعالیت داشته",
+      "label_en": "Worked At"
+    },
+    {
+      "id": "EXECUTIVE_ROLE_AT",
+      "label_fa": "سمت اجرایی در",
+      "label_en": "Executive Role At"
+    },
+    {
+      "id": "CEO_OF",
+      "label_fa": "مدیرعامل",
+      "label_en": "CEO Of"
+    },
+    {
+      "id": "BOARD_MEMBER_OF",
+      "label_fa": "عضو هیئت‌مدیره",
+      "label_en": "Board Member Of"
+    },
+    {
+      "id": "CHAIR_OF",
+      "label_fa": "رئیس",
+      "label_en": "Chair Of"
+    },
+    {
+      "id": "VICE_CHAIR_OF",
+      "label_fa": "نایب‌رئیس",
+      "label_en": "Vice Chair Of"
+    },
+    {
+      "id": "BOARD_SECRETARY_OF",
+      "label_fa": "دبیر هیئت‌مدیره",
+      "label_en": "Board Secretary Of"
+    },
+    {
+      "id": "REPRESENTED",
+      "label_fa": "نمایندگی کرده",
+      "label_en": "Represented"
+    },
+    {
+      "id": "SUBSIDIARY_OF",
+      "label_fa": "زیرمجموعه",
+      "label_en": "Subsidiary Of"
+    },
+    {
+      "id": "PART_OF",
+      "label_fa": "بخشی از",
+      "label_en": "Part Of"
+    },
+    {
+      "id": "INVESTED_IN",
+      "label_fa": "سرمایه‌گذاری کرده",
+      "label_en": "Invested In"
+    },
+    {
+      "id": "INVESTMENT_EXECUTIVE_OF",
+      "label_fa": "مدیر سرمایه‌گذاریِ",
+      "label_en": "Investment Executive Of"
+    },
+    {
+      "id": "MANAGES",
+      "label_fa": "مدیریت می‌کند",
+      "label_en": "Manages"
+    },
+    {
+      "id": "HAS_PROJECT",
+      "label_fa": "دارای پروژه",
+      "label_en": "Has Project"
+    },
+    {
+      "id": "PROJECT_OF",
+      "label_fa": "پروژه متعلق به",
+      "label_en": "Project Of"
+    },
+    {
+      "id": "OPERATES_IN",
+      "label_fa": "فعالیت در",
+      "label_en": "Operates In"
+    },
+    {
+      "id": "TARGETS_SECTOR",
+      "label_fa": "هدف‌گذاری حوزه",
+      "label_en": "Targets Sector"
+    },
+    {
+      "id": "TARGETS_INVESTOR_CATEGORY",
+      "label_fa": "هدف‌گذاری نوع سرمایه‌گذار",
+      "label_en": "Targets Investor Category"
+    },
+    {
+      "id": "SUPPORTED_BY",
+      "label_fa": "پشتیبانی‌شده توسط",
+      "label_en": "Supported By"
+    }
+  ]
+}
