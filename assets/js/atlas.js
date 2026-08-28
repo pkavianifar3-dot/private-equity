@@ -26,7 +26,214 @@
             .replace(/"/g, "&quot;")
             .replace(/'/g, "&#039;");
     }
+    const SITE_ORIGIN = "https://privatecapital.ir";
 
+    // Claim statuses allowed to appear in public structured data (JSON-LD).
+    // REPORTED / DISPUTED claims stay visible on the page but are kept out
+    // of machine-readable data until independently verified or supported.
+    const STRUCTURED_DATA_STATUSES = ["VERIFIED", "SUPPORTED"];
+
+    function setMeta(name, content) {
+        if (!content) {
+            return;
+        }
+
+        let el = document.querySelector(`meta[name="${name}"]`);
+
+        if (!el) {
+            el = document.createElement("meta");
+            el.setAttribute("name", name);
+            document.head.appendChild(el);
+        }
+
+        el.setAttribute("content", content);
+    }
+
+    function setMetaProperty(property, content) {
+        if (!content) {
+            return;
+        }
+
+        let el = document.querySelector(`meta[property="${property}"]`);
+
+        if (!el) {
+            el = document.createElement("meta");
+            el.setAttribute("property", property);
+            document.head.appendChild(el);
+        }
+
+        el.setAttribute("content", content);
+    }
+
+    function setCanonical(url) {
+        let el = document.querySelector('link[rel="canonical"]');
+
+        if (!el) {
+            el = document.createElement("link");
+            el.setAttribute("rel", "canonical");
+            document.head.appendChild(el);
+        }
+
+        el.setAttribute("href", url);
+    }
+
+    function injectJSONLD(data) {
+        let el = document.getElementById("atlas-jsonld");
+
+        if (!el) {
+            el = document.createElement("script");
+            el.type = "application/ld+json";
+            el.id = "atlas-jsonld";
+            document.head.appendChild(el);
+        }
+
+        el.textContent = JSON.stringify(data, null, 2);
+    }
+
+    function applyPageSEO({ title, description, url }) {
+        if (title) {
+            document.title = title;
+        }
+
+        setMeta("description", description);
+        setCanonical(url);
+        setMetaProperty("og:type", "profile");
+        setMetaProperty("og:title", title);
+        setMetaProperty("og:description", description);
+        setMetaProperty("og:url", url);
+    }
+
+    function buildRoleEntry(claim, entityIndex, roleProperty) {
+        const objectName =
+            getEntityEnglishName(entityIndex, claim.object) ||
+            getEntityName(entityIndex, claim.object);
+
+        if (!objectName) {
+            return null;
+        }
+
+        const role = {
+            "@type": "Role",
+            roleName: relationLabel(claim.predicate)
+        };
+
+        if (claim.temporal?.start) {
+            role.startDate = claim.temporal.start;
+        }
+
+        if (claim.temporal?.end) {
+            role.endDate = claim.temporal.end;
+        }
+
+        role[roleProperty] = {
+            "@type": "Organization",
+            name: objectName
+        };
+
+        return role;
+    }
+
+    function buildPersonJSONLD(entity, personClaims, entityIndex, entityId) {
+        const publishable = personClaims.filter(claim =>
+            STRUCTURED_DATA_STATUSES.includes(claim.status)
+        );
+
+        const worksFor = publishable
+            .filter(claim =>
+                [
+                    "CEO_OF",
+                    "EXECUTIVE_ROLE_AT",
+                    "WORKED_AT",
+                    "INVESTMENT_EXECUTIVE_OF"
+                ].includes(claim.predicate)
+            )
+            .map(claim => buildRoleEntry(claim, entityIndex, "worksFor"))
+            .filter(Boolean);
+
+        const memberOf = publishable
+            .filter(claim =>
+                [
+                    "BOARD_MEMBER_OF",
+                    "CHAIR_OF",
+                    "VICE_CHAIR_OF",
+                    "BOARD_SECRETARY_OF"
+                ].includes(claim.predicate)
+            )
+            .map(claim => buildRoleEntry(claim, entityIndex, "memberOf"))
+            .filter(Boolean);
+
+        const data = {
+            "@context": "https://schema.org",
+            "@type": "Person",
+            "name": entity.name?.fa || "",
+            "identifier": {
+                "@type": "PropertyValue",
+                "propertyID": "PrivateCapitalAtlasID",
+                "value": entity.id
+            },
+            "url": `${SITE_ORIGIN}/atlas/person.html?id=${encodeURIComponent(entityId)}`
+        };
+
+        if (entity.name?.en) {
+            data.alternateName = entity.name.en;
+        }
+
+        if (worksFor.length) {
+            data.worksFor = worksFor;
+        }
+
+        if (memberOf.length) {
+            data.memberOf = memberOf;
+        }
+
+        return data;
+    }
+
+    function buildOrganizationJSONLD(entity, entityIndex, entityId) {
+        const parentId = entity.metadata?.parent || entity.parent || null;
+
+        const data = {
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "name": entity.name?.fa || "",
+            "identifier": {
+                "@type": "PropertyValue",
+                "propertyID": "PrivateCapitalAtlasID",
+                "value": entity.id
+            },
+            "url": `${SITE_ORIGIN}/atlas/organization.html?id=${encodeURIComponent(entityId)}`
+        };
+
+        if (entity.name?.en) {
+            data.alternateName = entity.name.en;
+        }
+
+        if (entity.metadata?.national_id) {
+            data.identifier = [
+                data.identifier,
+                {
+                    "@type": "PropertyValue",
+                    "propertyID": "IranNationalID",
+                    "value": entity.metadata.national_id
+                }
+            ];
+        }
+
+        if (parentId) {
+            const parentName =
+                getEntityEnglishName(entityIndex, parentId) ||
+                getEntityName(entityIndex, parentId);
+
+            if (parentName) {
+                data.parentOrganization = {
+                    "@type": "Organization",
+                    name: parentName
+                };
+            }
+        }
+
+        return data;
+    }
     function getEntityIdFromURL() {
         const params = new URLSearchParams(window.location.search);
         return params.get("id");
@@ -1008,6 +1215,16 @@ async function renderOrganization(entityId) {
 
         </section>
     `;
+
+    applyPageSEO({
+        title: `${entity.name?.fa || ""} | اطلس | Private Capital`,
+        description: `صفحه اطلس ${entity.name?.fa || ""} در Private Capital.`,
+        url: `${SITE_ORIGIN}/atlas/organization.html?id=${encodeURIComponent(entityId)}`
+    });
+
+    injectJSONLD(
+        buildOrganizationJSONLD(entity, entityIndex, entityId)
+    );
 }
     function renderError(message) {
         const root = document.getElementById("atlas-root");
@@ -1191,6 +1408,17 @@ ${renderEvidenceSection(
 )}
 
         `;
+        applyPageSEO({
+            title: `${entity.name?.fa || ""} | اطلس | Private Capital`,
+            description: currentRoleClaim
+                ? `${entity.name?.fa || ""}؛ ${relationLabel(currentRoleClaim.predicate)} ${getEntityName(entityIndex, currentRoleClaim.object)}.`
+                : `صفحه اطلس ${entity.name?.fa || ""} در Private Capital.`,
+            url: `${SITE_ORIGIN}/atlas/person.html?id=${encodeURIComponent(entityId)}`
+        });
+
+        injectJSONLD(
+            buildPersonJSONLD(entity, personClaims, entityIndex, entityId)
+        );
     }
 
     async function initAtlas() {
