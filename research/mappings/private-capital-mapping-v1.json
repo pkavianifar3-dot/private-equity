@@ -2,25 +2,20 @@
   "researchId": "research:private-capital",
   "version": "1.1",
   "status": "REVIEW",
-
   "candidates": [
     {
       "label": "سرمایه خصوصی",
       "labelEn": "Private Capital",
       "role": "PRIMARY_CONCEPT",
       "atlasEntityId": null,
-      "atlasStatus": null,
-      "atlasType": null,
       "decision": "CONCEPT_REVIEW",
-      "note": "No corresponding Entity currently exists in the Atlas Registry."
+      "note": "No canonical Atlas Entity currently exists."
     },
     {
       "label": "سرمایه‌گذاری خصوصی",
       "labelEn": "Private Equity",
       "role": "SECTOR",
       "atlasEntityId": "sector:private-equity",
-      "atlasStatus": "REVIEW",
-      "atlasType": "Sector",
       "decision": "EXISTING_ENTITY"
     },
     {
@@ -28,8 +23,6 @@
       "labelEn": "Venture Capital",
       "role": "SUBDOMAIN_OR_STRATEGY",
       "atlasEntityId": null,
-      "atlasStatus": null,
-      "atlasType": null,
       "decision": "NOT_REGISTERED"
     },
     {
@@ -37,8 +30,6 @@
       "labelEn": "Growth Capital",
       "role": "STRATEGY",
       "atlasEntityId": null,
-      "atlasStatus": null,
-      "atlasType": null,
       "decision": "NOT_REGISTERED"
     },
     {
@@ -46,8 +37,6 @@
       "labelEn": "Private Credit",
       "role": "SUBDOMAIN",
       "atlasEntityId": null,
-      "atlasStatus": null,
-      "atlasType": null,
       "decision": "NOT_REGISTERED"
     },
     {
@@ -55,8 +44,6 @@
       "labelEn": "Real Assets",
       "role": "ASSET_CATEGORY",
       "atlasEntityId": null,
-      "atlasStatus": null,
-      "atlasType": null,
       "decision": "NOT_REGISTERED"
     },
     {
@@ -64,8 +51,6 @@
       "labelEn": "Leveraged Buyout",
       "role": "STRATEGY",
       "atlasEntityId": null,
-      "atlasStatus": null,
-      "atlasType": null,
       "decision": "NOT_REGISTERED"
     },
     {
@@ -73,8 +58,6 @@
       "labelEn": "Direct Lending",
       "role": "STRATEGY",
       "atlasEntityId": null,
-      "atlasStatus": null,
-      "atlasType": null,
       "decision": "NOT_REGISTERED"
     }
   ]
