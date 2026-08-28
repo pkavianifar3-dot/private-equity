@@ -1,0 +1,10 @@
+{
+  "id": "organization:tourism-bank",
+  "type": "Organization",
+  "name": {
+    "fa": "بانک گردشگری",
+    "en": "Tourism Bank"
+  },
+  "aliases": [],
+  "status": "REVIEW"
+}
