@@ -70,7 +70,15 @@
   "alt": "سرمایه خصوصی و ساختار بازارهای خصوصی",
   "caption": ""
 }
-  ]
+  ],
+      "mentions": [
+  {
+    "id": "mention-introduction-private-equity",
+    "text": "سرمایه‌گذاری خصوصی",
+    "entityRef": "sector:private-equity",
+    "resolutionStatus": "RESOLVED"
+  }
+]
 },
     {
   "id": "definition-and-scope",
