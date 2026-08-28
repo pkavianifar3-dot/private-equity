@@ -1,0 +1,19 @@
+{
+  "id": "organization:kian-private-equity-management",
+  "type": "Organization",
+  "name": {
+    "fa": "شرکت سهامی خاص مدیریت سهام خصوصی کیان",
+    "en": "Kian Private Equity Management"
+  },
+  "aliases": [
+    "شرکت مدیریت سهام خصوصی کیان",
+    "مدیریت سهام خصوصی کیان"
+  ],
+  "status": "REVIEW",
+  "metadata": {
+    "organization_type": "private_company",
+    "legal_name_status": "reported",
+    "national_id": null,
+    "registration_number": null
+  }
+}
