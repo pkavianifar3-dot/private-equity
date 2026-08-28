@@ -1,0 +1,25 @@
+{
+  "version": "1.0",
+  "claim_statuses": [
+    {
+      "id": "VERIFIED",
+      "label_fa": "تأییدشده",
+      "label_en": "Verified"
+    },
+    {
+      "id": "SUPPORTED",
+      "label_fa": "پشتیبانی‌شده",
+      "label_en": "Supported"
+    },
+    {
+      "id": "REPORTED",
+      "label_fa": "گزارش‌شده",
+      "label_en": "Reported"
+    },
+    {
+      "id": "DISPUTED",
+      "label_fa": "مورد اختلاف",
+      "label_en": "Disputed"
+    }
+  ]
+}
