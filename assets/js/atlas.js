@@ -335,7 +335,12 @@
         `;
     }
 
-    function renderEvidenceSection(claims, evidenceData, sourceData) {
+    function renderEvidenceSection(
+    claims,
+    evidenceData,
+    sourceData,
+    entityIndex
+) {
         if (!evidenceData?.evidence?.length) {
             return "";
         }
@@ -439,11 +444,9 @@
                                             :
                                             ${escapeHTML(
                                                 getEntityName(
-                                                    Object.fromEntries(
-                                                        []
-                                                    ),
-                                                    claim.object
-                                                )
+    entityIndex,
+    claim.object
+)
                                             )}
                                         </h3>
 
@@ -676,10 +679,11 @@
             ${renderContentSections(content)}
 
             ${renderEvidenceSection(
-                allClaims,
-                evidenceData,
-                sourceData
-            )}
+    allClaims,
+    evidenceData,
+    sourceData,
+    entityIndex
+)}
 
         `;
     }
