@@ -837,16 +837,12 @@ ${citationRefs
 
             <div class="atlas-identity-row">
                 <strong>نام فارسی</strong>
-                <span>
-                    ${escapeHTML(entity.name?.fa || "")}
-                </span>
+                <span>${escapeHTML(entity.name?.fa || "")}</span>
             </div>
 
             <div class="atlas-identity-row">
                 <strong>نام انگلیسی</strong>
-                <span>
-                    ${escapeHTML(entity.name?.en || "")}
-                </span>
+                <span>${escapeHTML(entity.name?.en || "")}</span>
             </div>
 
             ${
@@ -864,9 +860,7 @@ ${citationRefs
 
             <div class="atlas-identity-row">
                 <strong>ID</strong>
-                <span>
-                    ${escapeHTML(entity.id)}
-                </span>
+                <span>${escapeHTML(entity.id || "")}</span>
             </div>
 
         </div>
