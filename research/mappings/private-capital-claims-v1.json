@@ -1,6 +1,6 @@
 {
   "researchId": "research:private-capital",
-  "version": "1.1",
+  "version": "1.2",
   "status": "REVIEW",
 
   "claims": [
@@ -19,22 +19,46 @@
     },
 
     {
-      "id": "research-claim:private-capital-includes-private-equity-private-credit-real-assets",
-"researchId": "research:private-capital",
-      "subject": "candidate:private-capital",
-      "predicate": "INCLUDES",
-      "object": [
-        "sector:private-equity",
-        "candidate:private-credit",
-        "candidate:real-assets"
-      ],
-      "claimText": "مقاله سرمایه‌گذاری خصوصی، اعتبار خصوصی و دارایی‌های واقعی را در چارچوب سرمایه خصوصی قرار می‌دهد.",
-      "sourceRefs": [],
-      "evidenceRefs": [],
-      "status": "REVIEW",
-      "confidence": null,
-      "decision": "REVIEW"
-    },
+  "id": "research-claim:private-capital-includes-private-equity",
+  "researchId": "research:private-capital",
+  "subject": "candidate:private-capital",
+  "predicate": "INCLUDES",
+  "object": "sector:private-equity",
+  "claimText": "مقاله سرمایه‌گذاری خصوصی را در چارچوب سرمایه خصوصی قرار می‌دهد.",
+  "sourceRefs": [],
+  "evidenceRefs": [],
+  "status": "REVIEW",
+  "confidence": null,
+  "decision": "REVIEW"
+},
+
+{
+  "id": "research-claim:private-capital-includes-private-credit",
+  "researchId": "research:private-capital",
+  "subject": "candidate:private-capital",
+  "predicate": "INCLUDES",
+  "object": "candidate:private-credit",
+  "claimText": "مقاله اعتبار خصوصی را در چارچوب سرمایه خصوصی قرار می‌دهد.",
+  "sourceRefs": [],
+  "evidenceRefs": [],
+  "status": "REVIEW",
+  "confidence": null,
+  "decision": "REVIEW"
+},
+
+{
+  "id": "research-claim:private-capital-includes-real-assets",
+  "researchId": "research:private-capital",
+  "subject": "candidate:private-capital",
+  "predicate": "INCLUDES",
+  "object": "candidate:real-assets",
+  "claimText": "مقاله دارایی‌های واقعی را در چارچوب سرمایه خصوصی قرار می‌دهد.",
+  "sourceRefs": [],
+  "evidenceRefs": [],
+  "status": "REVIEW",
+  "confidence": null,
+  "decision": "REVIEW"
+},
 
     {
       "id": "research-claim:private-capital-includes-venture-capital",
