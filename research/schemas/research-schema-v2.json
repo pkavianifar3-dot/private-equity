@@ -5,16 +5,17 @@
   "type": "object",
 
   "required": [
-    "id",
-    "type",
-    "schemaVersion",
-    "url",
-    "status",
-    "title",
-    "summary",
-    "publication",
-    "sections"
-  ],
+  "id",
+  "type",
+  "schemaVersion",
+  "url",
+  "status",
+  "title",
+  "summary",
+  "publication",
+  "candidateClaimRefs",
+  "sections"
+],
 
   "properties": {
     "id": {
@@ -96,6 +97,14 @@
       },
       "uniqueItems": true
     },
+    "candidateClaimRefs": {
+  "type": "array",
+  "description": "References to research-level Candidate Claims that have not yet been promoted to the canonical Atlas.",
+  "items": {
+    "$ref": "#/$defs/candidateClaimRef"
+  },
+  "uniqueItems": true
+},
 
     "evidenceRefs": {
       "type": "array",
@@ -152,13 +161,16 @@
     "atlasEntityRef": {
   "type": "string",
   "pattern": "^(person|organization|company|investment|project|sector):[a-z0-9]+(?:-[a-z0-9]+)*$"
-}
+},
 
     "claimRef": {
       "type": "string",
       "pattern": "^claim:[a-z0-9]+(?:-[a-z0-9]+)*$"
     },
-
+"candidateClaimRef": {
+  "type": "string",
+  "pattern": "^research-claim:[a-z0-9]+(?:-[a-z0-9]+)*$"
+},
     "evidenceRef": {
       "type": "string",
       "pattern": "^evidence:[a-z0-9]+(?:-[a-z0-9]+)*$"
