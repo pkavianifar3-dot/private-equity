@@ -3,9 +3,10 @@
   "sections": {
     "people": [
       {
-        "entity": "person:ali-sanginian",
-        "url": "person.html?id=person:ali-sanginian"
-      }
+  "entity": "person:ali-sanginian",
+  "url": "person.html?id=person:ali-sanginian",
+  "status": "PUBLISHED"
+}
     ]
   }
 }
