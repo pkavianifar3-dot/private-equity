@@ -1,0 +1,12 @@
+{
+  "id": "organization:semega",
+  "type": "Organization",
+  "name": {
+    "fa": "گروه سرمایه‌گذاری میراث فرهنگی و گردشگری ایران (سمگا)",
+    "en": "SEMEGA"
+  },
+  "aliases": [
+    "سمگا"
+  ],
+  "status": "REVIEW"
+}
