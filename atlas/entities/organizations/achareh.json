@@ -1,0 +1,10 @@
+{
+  "id": "company:achareh",
+  "type": "Organization",
+  "name": {
+    "fa": "آچاره",
+    "en": "Achareh"
+  },
+  "aliases": [],
+  "status": "REVIEW"
+}
