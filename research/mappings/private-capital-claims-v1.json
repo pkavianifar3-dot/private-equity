@@ -97,7 +97,7 @@
 "researchId": "research:private-capital",
       "subject": "candidate:private-credit",
       "predicate": "RETURN_DEPENDS_ON",
-      "object": "candidate:contractual_components",
+      "object": "candidate:contractual-components",
       "claimText": "بازده اعتبار خصوصی عمدتاً از بهره، کارمزد و دیگر اجزای قراردادی تأمین می‌شود.",
       "sourceRefs": [],
       "evidenceRefs": [],
