@@ -1,0 +1,75 @@
+{
+  "version": "1.0",
+  "evidence": [
+    {
+      "id": "evidence:ali-ceo-kian-01",
+      "claim": "claim:ali-sanginian-ceo-kian-private-equity-management",
+      "source": "source:kian-direct-interview-1405",
+      "evidence_type": "explicit_self_statement",
+      "strength": "strong"
+    },
+    {
+      "id": "evidence:kian-subsidiary-group-01",
+      "claim": "claim:kian-private-equity-management-subsidiary-kian-financial-group",
+      "source": "source:kian-private-equity-company-registry",
+      "evidence_type": "corporate_identity",
+      "strength": "strong"
+    },
+    {
+      "id": "evidence:ali-ceo-amin-01",
+      "claim": "claim:ali-sanginian-ceo-amin-investment-bank",
+      "source": "source:amin-capital-archive",
+      "evidence_type": "explicit_corporate_statement",
+      "strength": "strong"
+    },
+    {
+      "id": "evidence:ali-ceo-amin-02",
+      "claim": "claim:ali-sanginian-ceo-amin-investment-bank",
+      "source": "source:amin-capital-market-report-1395",
+      "evidence_type": "explicit_media_report",
+      "strength": "strong"
+    },
+    {
+      "id": "evidence:ali-ceo-semega-01",
+      "claim": "claim:ali-sanginian-ceo-semega",
+      "source": "source:tourism-bank-board-history",
+      "evidence_type": "historical_corporate_record",
+      "strength": "strong"
+    },
+    {
+      "id": "evidence:ali-board-tourism-bank-01",
+      "claim": "claim:ali-sanginian-board-tourism-bank",
+      "source": "source:tourism-bank-board-history",
+      "evidence_type": "historical_board_record",
+      "strength": "strong"
+    },
+    {
+      "id": "evidence:ali-kayson-01",
+      "claim": "claim:ali-sanginian-deputy-investment-kayson",
+      "source": "source:kayson-official",
+      "evidence_type": "explicit_corporate_statement",
+      "strength": "strong"
+    },
+    {
+      "id": "evidence:ali-achareh-01",
+      "claim": "claim:ali-sanginian-investment-executive-kayson-achareh",
+      "source": "source:kayson-official",
+      "evidence_type": "investment_announcement",
+      "strength": "strong"
+    },
+    {
+      "id": "evidence:ali-private-equity-01",
+      "claim": "claim:kian-private-equity-operates-private-equity",
+      "source": "source:kian-direct-interview-1405",
+      "evidence_type": "explicit_self_statement",
+      "strength": "strong"
+    },
+    {
+      "id": "evidence:kian-dadman-01",
+      "claim": "claim:kian-private-equity-has-dadman",
+      "source": "source:kian-direct-interview-1405",
+      "evidence_type": "project_statement",
+      "strength": "strong"
+    }
+  ]
+}
