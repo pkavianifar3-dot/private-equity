@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Private Capital Candidate Claims Schema v1",
+  "description": "Collection schema for research-level candidate claims that have not yet been promoted to the canonical Atlas.",
+  "type": "object",
+
+  "required": [
+    "researchId",
+    "version",
+    "status",
+    "claims"
+  ],
+
+  "properties": {
+    "researchId": {
+      "type": "string",
+      "pattern": "^research:[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+
+    "version": {
+      "type": "string"
+    },
+
+    "status": {
+      "type": "string",
+      "enum": [
+        "DRAFT",
+        "REVIEW",
+        "ACCEPTED",
+        "ARCHIVED"
+      ]
+    },
+
+    "claims": {
+      "type": "array",
+      "items": {
+        "$ref": "candidate-claim-schema-v1.json"
+      }
+    }
+  },
+
+  "additionalProperties": false
+}
