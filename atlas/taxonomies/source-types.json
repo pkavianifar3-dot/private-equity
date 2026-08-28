@@ -1,0 +1,50 @@
+{
+  "version": "1.0",
+  "source_types": [
+    {
+      "id": "official_corporate",
+      "label_fa": "منبع رسمی شرکتی",
+      "label_en": "Official Corporate"
+    },
+    {
+      "id": "regulatory",
+      "label_fa": "منبع نهاد ناظر",
+      "label_en": "Regulatory"
+    },
+    {
+      "id": "registry",
+      "label_fa": "منبع ثبتی",
+      "label_en": "Registry"
+    },
+    {
+      "id": "historical_market_data",
+      "label_fa": "داده تاریخی بازار سرمایه",
+      "label_en": "Historical Market Data"
+    },
+    {
+      "id": "professional_profile",
+      "label_fa": "پروفایل حرفه‌ای",
+      "label_en": "Professional Profile"
+    },
+    {
+      "id": "personal_website",
+      "label_fa": "وب‌سایت شخصی",
+      "label_en": "Personal Website"
+    },
+    {
+      "id": "direct_interview",
+      "label_fa": "مصاحبه مستقیم",
+      "label_en": "Direct Interview"
+    },
+    {
+      "id": "news_media",
+      "label_fa": "رسانه خبری",
+      "label_en": "News Media"
+    },
+    {
+      "id": "secondary",
+      "label_fa": "منبع ثانویه",
+      "label_en": "Secondary"
+    }
+  ]
+}
