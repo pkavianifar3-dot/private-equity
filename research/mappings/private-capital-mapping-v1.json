@@ -14,7 +14,7 @@
     {
       "label": "سرمایه‌گذاری خصوصی",
       "labelEn": "Private Equity",
-      "role": "SECTOR",
+      "role": "RELATED_CONCEPT",
       "atlasEntityId": "sector:private-equity",
       "decision": "EXISTING_ENTITY"
     },
@@ -59,6 +59,41 @@
       "role": "STRATEGY",
       "atlasEntityId": null,
       "decision": "NOT_REGISTERED"
-    }
+    },
+    {
+  "label": "طبقه‌بندی سرمایه خصوصی",
+  "labelEn": "Private Capital Classification",
+  "role": "CLASSIFICATION_FRAME",
+  "atlasEntityId": null,
+  "decision": "NOT_REGISTERED"
+},
+{
+  "label": "اعتباردهنده",
+  "labelEn": "Lender",
+  "role": "INVESTOR_POSITION",
+  "atlasEntityId": null,
+  "decision": "NOT_REGISTERED"
+},
+{
+  "label": "اجزای قراردادی",
+  "labelEn": "Contractual Components",
+  "role": "RETURN_COMPONENT",
+  "atlasEntityId": null,
+  "decision": "NOT_REGISTERED"
+},
+{
+  "label": "دارایی‌های فیزیکی",
+  "labelEn": "Physical Assets",
+  "role": "ASSET_CATEGORY",
+  "atlasEntityId": null,
+  "decision": "NOT_REGISTERED"
+},
+{
+  "label": "دسترسی به بازار خصوصی",
+  "labelEn": "Private Market Access",
+  "role": "MARKET_CHARACTERISTIC",
+  "atlasEntityId": null,
+  "decision": "NOT_REGISTERED"
+}
   ]
 }
