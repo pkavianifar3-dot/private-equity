@@ -37,6 +37,20 @@
       "strength": "strong"
     },
     {
+  "id": "evidence:ali-chair-tehran-chamber-01",
+  "claim": "claim:ali-sanginian-chair-tehran-chamber-commission",
+  "source": "source:tehran-chamber-commission-interview-1395",
+  "evidence_type": "explicit_title_statement",
+  "strength": "strong"
+},
+{
+  "id": "evidence:ali-chair-tehran-chamber-02",
+  "claim": "claim:ali-sanginian-chair-tehran-chamber-commission",
+  "source": "source:tehran-chamber-independent-report",
+  "evidence_type": "independent_media_report",
+  "strength": "strong"
+},
+    {
       "id": "evidence:ali-board-tourism-bank-01",
       "claim": "claim:ali-sanginian-board-tourism-bank",
       "source": "source:tourism-bank-board-history",
