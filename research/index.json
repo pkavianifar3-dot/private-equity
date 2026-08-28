@@ -1,0 +1,17 @@
+{
+  "version": "1.0",
+  "research": [
+    {
+      "id": "research:private-capital",
+      "type": "Research",
+      "url": "/articles/private-capital.html",
+      "status": "PUBLISHED"
+    },
+    {
+      "id": "research:private-equity",
+      "type": "Research",
+      "url": "/articles/what-is-private-equity.html",
+      "status": "PUBLISHED"
+    }
+  ]
+}
