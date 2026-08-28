@@ -208,29 +208,29 @@ const objectURL = entityURL(claim.object);
                 ${
                     getEntityEnglishName(entityIndex, claim.object)
     ? `
-        <p>
-            ${
-                objectURL
-                    ? `
-                        <a href="${objectURL}">
-                            ${escapeHTML(
-                                getEntityEnglishName(
-                                    entityIndex,
-                                    claim.object
-                                )
-                            )}
-                        </a>
-                    `
-                    : `
-                        ${escapeHTML(
-                            getEntityEnglishName(
-                                entityIndex,
-                                claim.object
-                            )
-                        )}
-                    `
-            }
-        </p>
+        <p class="atlas-english">
+    ${
+        objectURL
+            ? `
+                <a href="${objectURL}">
+                    ${escapeHTML(
+                        getEntityEnglishName(
+                            entityIndex,
+                            claim.object
+                        )
+                    )}
+                </a>
+            `
+            : `
+                ${escapeHTML(
+                    getEntityEnglishName(
+                        entityIndex,
+                        claim.object
+                    )
+                )}
+            `
+    }
+</p>
     `
                         : ""
                 }
