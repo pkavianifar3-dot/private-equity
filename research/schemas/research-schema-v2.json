@@ -331,17 +331,22 @@
         },
 
         "entityRef": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/atlasEntityRef"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
+  "anyOf": [
+    {
+      "$ref": "#/$defs/atlasEntityRef"
+    },
+    {
+      "type": "null"
+    }
+  ]
+},
 
-        "resolutionStatus": {
+"contentBlockId": {
+  "type": "string",
+  "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+},
+
+"resolutionStatus": {
           "type": "string",
           "enum": [
             "UNRESOLVED",
