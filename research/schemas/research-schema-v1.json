@@ -20,9 +20,9 @@
     },
 
     "url": {
-      "type": "string",
-      "format": "uri"
-    },
+  "type": "string",
+  "format": "uri-reference"
+},
 
     "status": {
       "type": "string",
