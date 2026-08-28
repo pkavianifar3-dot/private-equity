@@ -73,7 +73,7 @@
     },
     {
       "id": "evidence:ali-achareh-01",
-      "claim": "claim:ali-sanginian-investment-executive-kayson-achareh",
+      "claim": "claim:ali-sanginian-investment-executive-kayson",
       "source": "source:kayson-official",
       "evidence_type": "investment_announcement",
       "strength": "strong"
