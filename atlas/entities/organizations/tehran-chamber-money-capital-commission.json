@@ -1,0 +1,12 @@
+{
+  "id": "organization:tehran-chamber-money-capital-commission",
+  "type": "OrganizationUnit",
+  "name": {
+    "fa": "کمیسیون بازار پول و سرمایه اتاق بازرگانی تهران",
+    "en": "Money and Capital Market Commission of Tehran Chamber of Commerce"
+  },
+  "aliases": [
+    "کمیسیون بازار پول و سرمایه اتاق تهران"
+  ],
+  "status": "REVIEW"
+}
