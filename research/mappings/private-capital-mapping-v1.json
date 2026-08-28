@@ -1,6 +1,6 @@
 {
   "researchId": "research:private-capital",
-  "version": "1.0",
+  "version": "1.1",
   "status": "REVIEW",
 
   "candidates": [
@@ -9,56 +9,73 @@
       "labelEn": "Private Capital",
       "role": "PRIMARY_CONCEPT",
       "atlasEntityId": null,
-      "decision": "REVIEW"
+      "atlasStatus": null,
+      "atlasType": null,
+      "decision": "CONCEPT_REVIEW",
+      "note": "No corresponding Entity currently exists in the Atlas Registry."
     },
     {
       "label": "سرمایه‌گذاری خصوصی",
       "labelEn": "Private Equity",
-      "role": "SUBDOMAIN",
-      "atlasEntityId": null,
-      "decision": "REVIEW"
+      "role": "SECTOR",
+      "atlasEntityId": "sector:private-equity",
+      "atlasStatus": "REVIEW",
+      "atlasType": "Sector",
+      "decision": "EXISTING_ENTITY"
     },
     {
       "label": "سرمایه‌گذاری خطرپذیر",
       "labelEn": "Venture Capital",
-      "role": "STRATEGY_OR_SUBDOMAIN",
+      "role": "SUBDOMAIN_OR_STRATEGY",
       "atlasEntityId": null,
-      "decision": "REVIEW"
+      "atlasStatus": null,
+      "atlasType": null,
+      "decision": "NOT_REGISTERED"
     },
     {
       "label": "سرمایه رشد",
       "labelEn": "Growth Capital",
       "role": "STRATEGY",
       "atlasEntityId": null,
-      "decision": "REVIEW"
+      "atlasStatus": null,
+      "atlasType": null,
+      "decision": "NOT_REGISTERED"
     },
     {
       "label": "اعتبار خصوصی",
       "labelEn": "Private Credit",
       "role": "SUBDOMAIN",
       "atlasEntityId": null,
-      "decision": "REVIEW"
+      "atlasStatus": null,
+      "atlasType": null,
+      "decision": "NOT_REGISTERED"
     },
     {
       "label": "دارایی‌های واقعی",
       "labelEn": "Real Assets",
       "role": "ASSET_CATEGORY",
       "atlasEntityId": null,
-      "decision": "REVIEW"
+      "atlasStatus": null,
+      "atlasType": null,
+      "decision": "NOT_REGISTERED"
     },
     {
       "label": "خرید اهرمی",
       "labelEn": "Leveraged Buyout",
       "role": "STRATEGY",
       "atlasEntityId": null,
-      "decision": "REVIEW"
+      "atlasStatus": null,
+      "atlasType": null,
+      "decision": "NOT_REGISTERED"
     },
     {
       "label": "وام‌دهی مستقیم",
       "labelEn": "Direct Lending",
-      "role": "PRIVATE_CREDIT_STRATEGY",
+      "role": "STRATEGY",
       "atlasEntityId": null,
-      "decision": "REVIEW"
+      "atlasStatus": null,
+      "atlasType": null,
+      "decision": "NOT_REGISTERED"
     }
   ]
 }
