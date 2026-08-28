@@ -1,6 +1,7 @@
 {
   "id": "research:private-capital",
   "type": "Research",
+  "schemaVersion": "2.0",
   "url": "/articles/private-capital.html",
   "status": "PUBLISHED",
 
