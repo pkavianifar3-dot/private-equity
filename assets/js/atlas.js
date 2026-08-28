@@ -308,15 +308,22 @@
 
                                                 ${
                                                     paragraph.source_refs?.length
-                                                        ? `
-                                                            <span class="atlas-inline-sources">
-                                                                ${paragraph.source_refs
-                                                                    .map(ref => `[${escapeHTML(ref)}]`)
-                                                                    .join(" ")
-                                                                }
-                                                            </span>
-                                                        `
-                                                        : ""
+    ? `
+        <span class="atlas-inline-sources">
+            ${paragraph.source_refs
+                .map(ref => `
+                    <a
+                        href="#source-${escapeHTML(ref)}"
+                        class="atlas-source-ref"
+                    >
+                        [${escapeHTML(ref)}]
+                    </a>
+                `)
+                .join(" ")
+            }
+        </span>
+    `
+    : ""
                                                 }
                                             </p>
                                         `)
