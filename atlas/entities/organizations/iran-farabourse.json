@@ -1,0 +1,12 @@
+{
+  "id": "organization:iran-farabourse",
+  "type": "Organization",
+  "name": {
+    "fa": "فرابورس ایران",
+    "en": "Iran Fara Bourse"
+  },
+  "aliases": [
+    "فرابورس"
+  ],
+  "status": "REVIEW"
+}
