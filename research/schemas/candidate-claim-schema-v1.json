@@ -36,19 +36,8 @@
     },
 
     "object": {
-      "anyOf": [
-        {
-          "$ref": "#/$defs/knowledgeRef"
-        },
-        {
-          "type": "array",
-          "items": {
-            "$ref": "#/$defs/knowledgeRef"
-          },
-          "minItems": 1
-        }
-      ]
-    },
+  "$ref": "#/$defs/knowledgeRef"
+},
 
     "claimText": {
       "type": "string",
