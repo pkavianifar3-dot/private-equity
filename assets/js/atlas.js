@@ -47,7 +47,8 @@
 
             case "organization":
                 return `${ATLAS_ROOT}/entities/organizations/${slug}.json`;
-
+case "company":
+    return `${ATLAS_ROOT}/entities/organizations/${slug}.json`;
             default:
                 throw new Error(`Unsupported entity type: ${type}`);
         }
@@ -691,7 +692,147 @@ ${citationRefs
             </section>
         `;
     }
+async function renderOrganization(entityId) {
+    const [
+        entity,
+        registry
+    ] = await Promise.all([
+        loadJSON(entityFilePath(entityId)),
+        loadJSON(`${ATLAS_ROOT}/entities/index.json`)
+    ]);
 
+    const entityIndex = {};
+
+    registry.entities.forEach(item => {
+        entityIndex[item.id] = item;
+    });
+
+    const root = document.getElementById("atlas-root");
+
+    if (!root) {
+        throw new Error("Atlas root element not found.");
+    }
+
+    const parentId =
+        entity.metadata?.parent ||
+        entity.parent ||
+        null;
+
+    const parentName =
+        parentId
+            ? getEntityName(entityIndex, parentId)
+            : "";
+
+    root.innerHTML = `
+        <section class="page-hero">
+
+            <div class="container">
+
+                <h1>
+                    ${escapeHTML(entity.name?.fa || "")}
+                </h1>
+
+                ${
+                    entity.name?.en
+                        ? `
+                            <p>
+                                ${escapeHTML(entity.name.en)}
+                            </p>
+                        `
+                        : ""
+                }
+
+            </div>
+
+        </section>
+
+        <section class="atlas-section">
+
+            <div class="container">
+
+                <div class="card atlas-identity-card">
+
+                    <div class="atlas-kicker">
+                        سازمان
+                    </div>
+
+                    <div class="atlas-identity-row">
+                        <strong>نام فارسی</strong>
+                        <span>
+                            ${escapeHTML(entity.name?.fa || "")}
+                        </span>
+                    </div>
+
+                    ${
+                        entity.name?.en
+                            ? `
+                                <div class="atlas-identity-row">
+                                    <strong>نام انگلیسی</strong>
+                                    <span>
+                                        ${escapeHTML(entity.name.en)}
+                                    </span>
+                                </div>
+                            `
+                            : ""
+                    }
+
+                    ${
+                        entity.metadata?.organization_type
+                            ? `
+                                <div class="atlas-identity-row">
+                                    <strong>نوع سازمان</strong>
+                                    <span>
+                                        ${escapeHTML(
+                                            entity.metadata.organization_type
+                                        )}
+                                    </span>
+                                </div>
+                            `
+                            : ""
+                    }
+
+                    ${
+                        entity.metadata?.national_id
+                            ? `
+                                <div class="atlas-identity-row">
+                                    <strong>شناسه ملی</strong>
+                                    <span>
+                                        ${escapeHTML(
+                                            entity.metadata.national_id
+                                        )}
+                                    </span>
+                                </div>
+                            `
+                            : ""
+                    }
+
+                    ${
+                        parentId
+                            ? `
+                                <div class="atlas-identity-row">
+                                    <strong>ارتباط سازمانی</strong>
+                                    <span>
+                                        ${escapeHTML(parentName)}
+                                    </span>
+                                </div>
+                            `
+                            : ""
+                    }
+
+                    <div class="atlas-identity-row">
+                        <strong>ID</strong>
+                        <span>
+                            ${escapeHTML(entity.id)}
+                        </span>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+    `;
+}
     function renderError(message) {
         const root = document.getElementById("atlas-root");
 
@@ -880,13 +1021,21 @@ ${renderEvidenceSection(
             }
 
             if (entityId.startsWith("person:")) {
-                await renderPerson(entityId);
-                return;
-            }
+    await renderPerson(entityId);
+    return;
+}
 
-            throw new Error(
-                "این نوع Entity هنوز توسط Renderer پشتیبانی نمی‌شود."
-            );
+if (
+    entityId.startsWith("organization:") ||
+    entityId.startsWith("company:")
+) {
+    await renderOrganization(entityId);
+    return;
+}
+
+throw new Error(
+    "این نوع Entity هنوز توسط Renderer پشتیبانی نمی‌شود."
+);
 
         } catch (error) {
             console.error("Atlas Renderer Error:", error);
