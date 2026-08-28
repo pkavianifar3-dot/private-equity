@@ -1,0 +1,141 @@
+{
+  "researchId": "research:private-capital",
+  "version": "1.0",
+  "status": "REVIEW",
+
+  "claims": [
+    {
+      "id": "research-claim:private-capital-broader-than-private-equity",
+      "subject": "candidate:private-capital",
+      "predicate": "BROADER_THAN",
+      "object": "sector:private-equity",
+      "claimText": "سرمایه خصوصی دامنه‌ای وسیع‌تر نسبت به سرمایه‌گذاری خصوصی دارد.",
+      "sourceRefs": [],
+      "evidenceRefs": [],
+      "status": "REVIEW",
+      "confidence": null,
+      "decision": "REVIEW"
+    },
+
+    {
+      "id": "research-claim:private-capital-includes-private-equity-private-credit-real-assets",
+      "subject": "candidate:private-capital",
+      "predicate": "INCLUDES",
+      "object": [
+        "sector:private-equity",
+        "candidate:private-credit",
+        "candidate:real-assets"
+      ],
+      "claimText": "مقاله سرمایه‌گذاری خصوصی، اعتبار خصوصی و دارایی‌های واقعی را در چارچوب سرمایه خصوصی قرار می‌دهد.",
+      "sourceRefs": [],
+      "evidenceRefs": [],
+      "status": "REVIEW",
+      "confidence": null,
+      "decision": "REVIEW"
+    },
+
+    {
+      "id": "research-claim:private-capital-includes-venture-capital",
+      "subject": "candidate:private-capital",
+      "predicate": "INCLUDES",
+      "object": "candidate:venture-capital",
+      "claimText": "مقاله سرمایه‌گذاری خطرپذیر را در دامنه سرمایه خصوصی قرار می‌دهد.",
+      "sourceRefs": [],
+      "evidenceRefs": [],
+      "status": "REVIEW",
+      "confidence": null,
+      "decision": "REVIEW"
+    },
+
+    {
+      "id": "research-claim:private-capital-includes-growth-capital",
+      "subject": "candidate:private-capital",
+      "predicate": "INCLUDES",
+      "object": "candidate:growth-capital",
+      "claimText": "مقاله سرمایه رشد را یکی از بلوک‌های سرمایه خصوصی معرفی می‌کند.",
+      "sourceRefs": [],
+      "evidenceRefs": [],
+      "status": "REVIEW",
+      "confidence": null,
+      "decision": "REVIEW"
+    },
+
+    {
+      "id": "research-claim:private-capital-boundaries-vary",
+      "subject": "candidate:private-capital",
+      "predicate": "HAS_NON_UNIFORM_CLASSIFICATION",
+      "object": "candidate:private-capital-classification",
+      "claimText": "مرزبندی بلوک‌های سرمایه خصوصی در منابع مختلف یکسان نیست.",
+      "sourceRefs": [],
+      "evidenceRefs": [],
+      "status": "REVIEW",
+      "confidence": null,
+      "decision": "REVIEW"
+    },
+
+    {
+      "id": "research-claim:private-credit-lender-position",
+      "subject": "candidate:private-credit",
+      "predicate": "HAS_INVESTOR_POSITION",
+      "object": "candidate:lender",
+      "claimText": "در اعتبار خصوصی، سرمایه‌گذار عمدتاً در جایگاه اعتباردهنده قرار دارد.",
+      "sourceRefs": [],
+      "evidenceRefs": [],
+      "status": "REVIEW",
+      "confidence": null,
+      "decision": "REVIEW"
+    },
+
+    {
+      "id": "research-claim:private-credit-return-contractual",
+      "subject": "candidate:private-credit",
+      "predicate": "RETURN_DEPENDS_ON",
+      "object": "candidate:contractual_components",
+      "claimText": "بازده اعتبار خصوصی عمدتاً از بهره، کارمزد و دیگر اجزای قراردادی تأمین می‌شود.",
+      "sourceRefs": [],
+      "evidenceRefs": [],
+      "status": "REVIEW",
+      "confidence": null,
+      "decision": "REVIEW"
+    },
+
+    {
+      "id": "research-claim:private-credit-and-private-equity-linked",
+      "subject": "candidate:private-credit",
+      "predicate": "LINKED_TO",
+      "object": "sector:private-equity",
+      "claimText": "اعتبار خصوصی و سرمایه‌گذاری خصوصی در برخی معاملات از نظر تأمین مالی به یکدیگر پیوند عملیاتی دارند.",
+      "sourceRefs": [],
+      "evidenceRefs": [],
+      "status": "REVIEW",
+      "confidence": null,
+      "decision": "REVIEW"
+    },
+
+    {
+      "id": "research-claim:real-assets-include-physical-assets",
+      "subject": "candidate:real-assets",
+      "predicate": "INCLUDES",
+      "object": "candidate:physical-assets",
+      "claimText": "دارایی‌های واقعی طیفی از دارایی‌های عینی و فیزیکی از جمله املاک و مستغلات، زیرساخت‌ها و منابع طبیعی را دربرمی‌گیرد.",
+      "sourceRefs": [],
+      "evidenceRefs": [],
+      "status": "REVIEW",
+      "confidence": null,
+      "decision": "REVIEW"
+    },
+
+    {
+      "id": "research-claim:private-capital-private-access",
+      "subject": "candidate:private-capital",
+      "predicate": "CHARACTERIZED_BY",
+      "object": "candidate:private-market-access",
+      "claimText": "در چارچوب مقاله، ویژگی بنیادین سرمایه خصوصی اتکا به فرصت‌های سرمایه‌گذاری با دسترسی خصوصی و خارج از بازارهای عمومی سرمایه است.",
+      "sourceRefs": [],
+      "evidenceRefs": [],
+      "status": "REVIEW",
+      "confidence": null,
+      "decision": "REVIEW"
+    }
+  ]
+}
