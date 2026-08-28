@@ -943,11 +943,11 @@ async function renderOrganization(entityId) {
                         entity.name?.en
                             ? `
                                 <div class="atlas-identity-row">
-                                    <strong>نام انگلیسی</strong>
-                                    <span>
-                                        ${escapeHTML(entity.name.en)}
-                                    </span>
-                                </div>
+    <strong>نام انگلیسی</strong>
+    <span class="atlas-english">
+        ${escapeHTML(entity.name.en)}
+    </span>
+</div>
                             `
                             : ""
                     }
