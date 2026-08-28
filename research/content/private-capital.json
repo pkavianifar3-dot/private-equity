@@ -26,7 +26,18 @@
   ],
 
   "claimRefs": [],
-
+"candidateClaimRefs": [
+  "research-claim:private-capital-broader-than-private-equity",
+  "research-claim:private-capital-includes-private-equity-private-credit-real-assets",
+  "research-claim:private-capital-includes-venture-capital",
+  "research-claim:private-capital-includes-growth-capital",
+  "research-claim:private-capital-boundaries-vary",
+  "research-claim:private-credit-lender-position",
+  "research-claim:private-credit-return-contractual",
+  "research-claim:private-credit-and-private-equity-linked",
+  "research-claim:real-assets-include-physical-assets",
+  "research-claim:private-capital-private-access"
+],
   "evidenceRefs": [],
 
   "sourceRefs": [],
