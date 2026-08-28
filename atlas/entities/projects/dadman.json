@@ -1,0 +1,13 @@
+{
+  "id": "project:dadman",
+  "type": "Project",
+  "name": {
+    "fa": "دادمان",
+    "en": "Dadman"
+  },
+  "status": "REVIEW",
+  "metadata": {
+    "project_type": "real_estate",
+    "investment_stage": "reported_first_private_equity_project"
+  }
+}
