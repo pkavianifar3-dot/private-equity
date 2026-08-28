@@ -305,3 +305,217 @@ font-size:30px;
         gap:10px;
     }
 }
+/* ===================================================
+   Atlas
+=================================================== */
+
+.atlas-section{
+    padding:70px 0;
+}
+
+.atlas-top-grid{
+    align-items:stretch;
+    gap:30px;
+}
+
+.atlas-top-grid > .card{
+    height:100%;
+}
+
+.atlas-current-role h2{
+    font-size:28px;
+    margin-bottom:10px;
+}
+
+.atlas-current-organization{
+    font-size:20px;
+    font-weight:700;
+    margin:12px 0 4px;
+}
+
+.atlas-kicker{
+    font-size:13px;
+    font-weight:700;
+    color:#C9A227;
+    margin-bottom:8px;
+}
+
+.atlas-identity-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:24px;
+    padding:11px 0;
+    border-bottom:1px solid rgba(255,255,255,.08);
+}
+
+.atlas-identity-row:last-child{
+    border-bottom:none;
+}
+
+.atlas-identity-row strong{
+    color:#97A3B0;
+    font-weight:700;
+}
+
+.atlas-summary{
+    max-width:950px;
+    line-height:2.15;
+}
+
+.atlas-content-grid{
+    gap:24px;
+}
+
+.atlas-content-section{
+    height:100%;
+}
+
+.atlas-content-section h3{
+    margin-bottom:8px;
+}
+
+.atlas-section-en{
+    direction:ltr;
+    text-align:left;
+    font-size:13px;
+    color:#7F8B99;
+    margin-bottom:20px;
+}
+
+.atlas-content-paragraph{
+    line-height:2.15;
+    margin-bottom:20px;
+}
+
+.atlas-inline-sources{
+    white-space:nowrap;
+    margin-right:5px;
+}
+
+.atlas-source-ref{
+    font-weight:700;
+}
+
+.atlas-timeline{
+    display:grid;
+    gap:18px;
+}
+
+.atlas-timeline-item{
+    display:grid;
+    grid-template-columns:190px minmax(0,1fr);
+    gap:28px;
+    align-items:start;
+}
+
+.atlas-timeline-date{
+    color:#C9A227;
+    font-weight:700;
+    padding-top:3px;
+}
+
+.atlas-timeline-content{
+    min-width:0;
+}
+
+.atlas-timeline-content h3{
+    margin:7px 0 10px;
+}
+
+.atlas-claim{
+    height:100%;
+}
+
+.atlas-claim-label{
+    color:#C9A227;
+    font-size:14px;
+    font-weight:700;
+    margin-bottom:8px;
+}
+
+.atlas-meta{
+    color:#97A3B0;
+    font-size:14px;
+}
+
+.atlas-status{
+    margin-top:14px;
+    color:#7F8B99;
+    font-size:12px;
+}
+
+.atlas-sources-list{
+    display:grid;
+    gap:16px;
+}
+
+.atlas-evidence-card{
+    scroll-margin-top:110px;
+}
+
+.atlas-source-item{
+    line-height:1.9;
+}
+
+.atlas-source-item strong{
+    color:#C9A227;
+    margin-left:8px;
+}
+
+.atlas-source-item small{
+    display:block;
+    color:#97A3B0;
+    margin-top:4px;
+}
+
+.atlas-source-item a{
+    display:inline-block;
+    margin-top:8px;
+    font-weight:700;
+}
+
+.atlas-source-anchor{
+    display:block;
+    position:relative;
+    top:-110px;
+    visibility:hidden;
+}
+
+@media(max-width:900px){
+
+    .atlas-top-grid{
+        grid-template-columns:1fr;
+    }
+
+    .atlas-timeline-item{
+        grid-template-columns:1fr;
+        gap:8px;
+    }
+
+    .atlas-timeline-date{
+        padding-top:0;
+    }
+
+}
+
+@media(max-width:600px){
+
+    .atlas-section{
+        padding:48px 0;
+    }
+
+    .atlas-identity-row{
+        display:block;
+    }
+
+    .atlas-identity-row strong{
+        display:block;
+        margin-bottom:3px;
+    }
+
+    .atlas-content-paragraph{
+        line-height:2;
+    }
+
+}
