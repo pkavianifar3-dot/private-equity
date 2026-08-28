@@ -800,3 +800,16 @@ font-size:30px;
         gap: 8px;
     }
 }
+/* Atlas desktop rhythm refinement */
+@media (min-width: 901px) {
+
+    .atlas-page .atlas-section {
+        padding-top: 54px;
+        padding-bottom: 54px;
+    }
+
+    .atlas-page .page-hero + .atlas-section {
+        padding-top: 34px;
+    }
+
+}
