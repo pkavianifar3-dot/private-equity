@@ -1,0 +1,81 @@
+{
+  "id": "research:private-capital",
+  "type": "Research",
+  "url": "/articles/private-capital.html",
+  "status": "PUBLISHED",
+
+  "title": {
+    "fa": "سرمایه خصوصی (Private Capital) چیست؟ | راهنمای جامع مفهومی",
+    "en": "What Is Private Capital? | A Comprehensive Conceptual Guide"
+  },
+
+  "summary": {
+    "fa": "راهنمای مفهومی درباره سرمایه خصوصی، دامنه آن و تمایز میان سرمایه‌گذاری خصوصی، اعتبار خصوصی و دارایی‌های واقعی.",
+    "en": "A conceptual guide to private capital, its scope, and the distinction between private equity, private credit, and real assets."
+  },
+
+  "publication": {
+    "datePublished": "2026-08-13T00:00:00+03:30",
+    "dateModified": "2026-08-13T00:00:00+03:30",
+    "authorRefs": []
+  },
+
+  "entityRefs": [
+    "sector:private-equity"
+  ],
+
+  "claimRefs": [],
+
+  "evidenceRefs": [],
+
+  "sourceRefs": [],
+
+  "relatedResearchRefs": [
+    "research:private-equity"
+  ],
+
+  "sections": [
+    {
+      "id": "definition-and-scope",
+      "title": {
+        "fa": "تعریف و دامنه سرمایه خصوصی",
+        "en": "Definition and Scope of Private Capital"
+      }
+    },
+    {
+      "id": "main-blocks",
+      "title": {
+        "fa": "بلوک‌های اصلی سرمایه خصوصی",
+        "en": "Main Blocks of Private Capital"
+      }
+    },
+    {
+      "id": "private-equity",
+      "title": {
+        "fa": "سرمایه‌گذاری خصوصی (Private Equity)",
+        "en": "Private Equity"
+      }
+    },
+    {
+      "id": "private-credit",
+      "title": {
+        "fa": "اعتبار خصوصی (Private Credit)",
+        "en": "Private Credit"
+      }
+    },
+    {
+      "id": "real-assets",
+      "title": {
+        "fa": "دارایی‌های واقعی (Real Assets)",
+        "en": "Real Assets"
+      }
+    },
+    {
+      "id": "conclusion",
+      "title": {
+        "fa": "جمع‌بندی",
+        "en": "Conclusion"
+      }
+    }
+  ]
+}
