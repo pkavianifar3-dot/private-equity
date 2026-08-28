@@ -762,13 +762,12 @@ function renderEvidenceSection(
         );
 
         const investmentClaims = personClaims.filter(claim =>
-            [
-                "INVESTED_IN",
-                "INVESTMENT_EXECUTIVE_OF",
-                "HAS_PROJECT",
-                "MANAGES"
-            ].includes(claim.predicate)
-        );
+    [
+        "INVESTED_IN",
+        "INVESTMENT_EXECUTIVE_OF",
+        "MANAGES"
+    ].includes(claim.predicate)
+);
 
         const relatedOrganizationClaims = allClaims.filter(
             claim =>
@@ -833,36 +832,36 @@ ${renderTimelineSection(
 )}
 
 ${renderClaimsSection(
-    "مسیر حرفه‌ای و سمت‌های اجرایی",
+    "سوابق اجرایی و مدیریتی",
     executiveClaims,
     entityIndex
 )}
 
-            ${renderClaimsSection(
-                "عضویت‌ها و نقش‌های هیئت‌مدیره",
-                boardClaims,
-                entityIndex
-            )}
+${renderClaimsSection(
+    "عضویت‌ها و نقش‌های هیئت‌مدیره",
+    boardClaims,
+    entityIndex
+)}
 
-            ${renderClaimsSection(
-                "فعالیت‌های سرمایه‌گذاری و پروژه‌ها",
-                investmentClaims,
-                entityIndex
-            )}
+${renderClaimsSection(
+    "فعالیت‌های سرمایه‌گذاری",
+    investmentClaims,
+    entityIndex
+)}
 
-            ${
-                relatedOrganizationClaims.length
-                    ? renderClaimsSection(
-                        "ساختار سازمانی مرتبط",
-                        relatedOrganizationClaims,
-                        entityIndex
-                    )
-                    : ""
-            }
+${
+    relatedOrganizationClaims.length
+        ? renderClaimsSection(
+            "ساختار سازمانی مرتبط",
+            relatedOrganizationClaims,
+            entityIndex
+        )
+        : ""
+}
 
-            ${renderContentSections(content)}
+${renderContentSections(content)}
 
-            ${renderEvidenceSection(
+${renderEvidenceSection(
     allClaims,
     evidenceData,
     sourceData,
