@@ -828,52 +828,44 @@ ${citationRefs
 }
 
     function renderIdentity(entity) {
-        return `
-            <section class="atlas-section">
+    return `
+        <div class="card atlas-identity-card">
 
-                <div class="container">
+            <div class="atlas-kicker">
+                شناسه
+            </div>
 
-                    <div class="card atlas-identity-card">
+            <div class="atlas-identity-row">
+                <strong>نام فارسی</strong>
+                <span>${escapeHTML(entity.name?.fa || "")}</span>
+            </div>
 
-                        <div class="atlas-kicker">
-                            شناسه
-                        </div>
+            <div class="atlas-identity-row">
+                <strong>نام انگلیسی</strong>
+                <span>${escapeHTML(entity.name?.en || "")}</span>
+            </div>
 
+            ${
+                entity.honorific?.fa
+                    ? `
                         <div class="atlas-identity-row">
-                            <strong>نام فارسی</strong>
-                            <span>${escapeHTML(entity.name?.fa)}</span>
+                            <strong>عنوان</strong>
+                            <span>
+                                ${escapeHTML(entity.honorific.fa)}
+                            </span>
                         </div>
+                    `
+                    : ""
+            }
 
-                        <div class="atlas-identity-row">
-                            <strong>نام انگلیسی</strong>
-                            <span>${escapeHTML(entity.name?.en)}</span>
-                        </div>
+            <div class="atlas-identity-row">
+                <strong>ID</strong>
+                <span>${escapeHTML(entity.id || "")}</span>
+            </div>
 
-                        ${
-                            entity.honorific?.fa
-                                ? `
-                                    <div class="atlas-identity-row">
-                                        <strong>عنوان</strong>
-                                        <span>
-                                            ${escapeHTML(entity.honorific.fa)}
-                                        </span>
-                                    </div>
-                                `
-                                : ""
-                        }
-
-                        <div class="atlas-identity-row">
-                            <strong>ID</strong>
-                            <span>${escapeHTML(entity.id)}</span>
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </section>
-        `;
-    }
+        </div>
+    `;
+}
 async function renderOrganization(entityId) {
     const [
         entity,
