@@ -579,7 +579,6 @@ ${citationRefs
 }
                                     <div
                                         class="atlas-source-item"
-                                        id="${anchorId}"
                                     >
 
                                         <div>
