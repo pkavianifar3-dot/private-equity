@@ -1,0 +1,23 @@
+{
+  "id": "person:ali-sanginian",
+  "type": "Person",
+  "name": {
+    "fa": "علی سنگینیان",
+    "en": "Ali Sanginian"
+  },
+  "honorific": {
+    "fa": "دکتر"
+  },
+  "aliases": [],
+  "domains": [
+    "sector:capital-market",
+    "sector:investment-banking",
+    "sector:corporate-investment",
+    "sector:private-equity"
+  ],
+  "status": "REVIEW",
+  "metadata": {
+    "entity_role": "executive_and_board_member",
+    "last_reviewed": "1405-06"
+  }
+}
