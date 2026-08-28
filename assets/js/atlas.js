@@ -313,18 +313,18 @@
                                                     paragraph.source_refs?.length
     ? `
         <span class="atlas-inline-sources">
-            ${paragraph.source_refs
-                .map(ref => `
-                    <a
-                        href="#source-${escapeHTML(ref)}"
-                        class="atlas-source-ref"
-                    >
-                        [${escapeHTML(ref)}]
-                    </a>
-                `)
-                .join(" ")
-            }
-        </span>
+    ${paragraph.source_refs
+        .map(ref => `
+            <a
+                href="#source-${escapeHTML(ref)}"
+                class="atlas-source-ref"
+            >
+                [${escapeHTML(ref)}]
+            </a>
+        `)
+        .join(" ")
+    }
+</span>
     `
     : ""
                                                 }
@@ -562,20 +562,21 @@ function renderEvidenceSection(
                                         .join(" ")
                                     : "";
 
-                            const anchorId =
-                                citationRefs.length
-                                    ? `source-${escapeHTML(
-                                        citationRefs[0]
-                                    )}`
-                                    : `source-${escapeHTML(
-                                        source.id
-                                    )}`;
+                            
 
                             return `
                                 <article
                                     class="card atlas-evidence-card"
                                 >
-
+${citationRefs
+    .map(ref => `
+        <span
+            id="source-${escapeHTML(ref)}"
+            class="atlas-source-anchor"
+        ></span>
+    `)
+    .join("")
+}
                                     <div
                                         class="atlas-source-item"
                                         id="${anchorId}"
