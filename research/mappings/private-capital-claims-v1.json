@@ -1,11 +1,12 @@
 {
   "researchId": "research:private-capital",
-  "version": "1.0",
+  "version": "1.1",
   "status": "REVIEW",
 
   "claims": [
     {
       "id": "research-claim:private-capital-broader-than-private-equity",
+      "researchId": "research:private-capital",
       "subject": "candidate:private-capital",
       "predicate": "BROADER_THAN",
       "object": "sector:private-equity",
@@ -19,6 +20,7 @@
 
     {
       "id": "research-claim:private-capital-includes-private-equity-private-credit-real-assets",
+"researchId": "research:private-capital",
       "subject": "candidate:private-capital",
       "predicate": "INCLUDES",
       "object": [
@@ -36,6 +38,7 @@
 
     {
       "id": "research-claim:private-capital-includes-venture-capital",
+"researchId": "research:private-capital",
       "subject": "candidate:private-capital",
       "predicate": "INCLUDES",
       "object": "candidate:venture-capital",
@@ -49,6 +52,7 @@
 
     {
       "id": "research-claim:private-capital-includes-growth-capital",
+"researchId": "research:private-capital",
       "subject": "candidate:private-capital",
       "predicate": "INCLUDES",
       "object": "candidate:growth-capital",
@@ -62,6 +66,7 @@
 
     {
       "id": "research-claim:private-capital-boundaries-vary",
+"researchId": "research:private-capital",
       "subject": "candidate:private-capital",
       "predicate": "HAS_NON_UNIFORM_CLASSIFICATION",
       "object": "candidate:private-capital-classification",
@@ -75,6 +80,7 @@
 
     {
       "id": "research-claim:private-credit-lender-position",
+"researchId": "research:private-capital",
       "subject": "candidate:private-credit",
       "predicate": "HAS_INVESTOR_POSITION",
       "object": "candidate:lender",
@@ -88,6 +94,7 @@
 
     {
       "id": "research-claim:private-credit-return-contractual",
+"researchId": "research:private-capital",
       "subject": "candidate:private-credit",
       "predicate": "RETURN_DEPENDS_ON",
       "object": "candidate:contractual_components",
@@ -101,6 +108,7 @@
 
     {
       "id": "research-claim:private-credit-and-private-equity-linked",
+"researchId": "research:private-capital",
       "subject": "candidate:private-credit",
       "predicate": "LINKED_TO",
       "object": "sector:private-equity",
@@ -114,6 +122,7 @@
 
     {
       "id": "research-claim:real-assets-include-physical-assets",
+"researchId": "research:private-capital",
       "subject": "candidate:real-assets",
       "predicate": "INCLUDES",
       "object": "candidate:physical-assets",
@@ -127,6 +136,7 @@
 
     {
       "id": "research-claim:private-capital-private-access",
+ "researchId": "research:private-capital",
       "subject": "candidate:private-capital",
       "predicate": "CHARACTERIZED_BY",
       "object": "candidate:private-market-access",
