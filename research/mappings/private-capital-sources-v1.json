@@ -1,0 +1,36 @@
+{
+  "researchId": "research:private-capital",
+  "version": "1.0",
+  "status": "REVIEW",
+
+  "sources": [
+    {
+      "candidateId": "research-source:ecb-private-markets-public-risk",
+      "title": "Private markets, public risk? Financial stability implications of alternative funding sources",
+      "publisher": "European Central Bank",
+      "url": "https://www.ecb.europa.eu/press/financial-stability-publications/fsr/special/html/ecb.fsrart202405_03~bc23a48dbc.sl.html",
+      "atlasSourceId": null,
+      "decision": "NEW_SOURCE_REVIEW"
+    },
+
+    {
+      "candidateId": "research-source:mckinsey-global-private-markets-report-2025",
+      "title": "Global Private Markets Report 2025: Braced for shifting weather",
+      "publisher": "McKinsey & Company",
+      "publicationDate": "2025-05-20",
+      "url": "https://www.mckinsey.com/industries/private-capital/our-insights/global-private-markets-report-2025",
+      "atlasSourceId": null,
+      "decision": "NEW_SOURCE_REVIEW"
+    },
+
+    {
+      "candidateId": "research-source:ecb-private-credit-stress-2026",
+      "title": "Stress in global private credit markets and its implications for euro area financial stability",
+      "publisher": "European Central Bank",
+      "publicationDate": "2026",
+      "url": "https://www.ecb.europa.eu/press/financial-stability-publications/fsr/special/html/ecb.fsrart202605_04~3f2135af91.et.html",
+      "atlasSourceId": null,
+      "decision": "NEW_SOURCE_REVIEW"
+    }
+  ]
+}
