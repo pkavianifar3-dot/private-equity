@@ -854,3 +854,8 @@ font-size:30px;
     }
 
 }
+/* Atlas — English text alignment */
+.atlas-page .atlas-english {
+    direction: ltr;
+    text-align: left;
+}
