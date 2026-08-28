@@ -249,25 +249,67 @@
     },
 
     "contentBlock": {
-      "type": "object",
+  "type": "object",
 
-      "required": [
-        "type",
-        "text"
-      ],
+  "required": [
+    "type"
+  ],
 
-      "properties": {
-        "type": {
-          "const": "paragraph"
-        },
+  "properties": {
+    "type": {
+      "type": "string",
+      "enum": [
+        "paragraph",
+        "subheading",
+        "figure",
+        "list",
+        "table"
+      ]
+    },
 
-        "text": {
+    "text": {
+      "type": "string"
+    },
+
+    "caption": {
+      "type": "string"
+    },
+
+    "src": {
+      "type": "string"
+    },
+
+    "alt": {
+      "type": "string"
+    },
+
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+
+    "columns": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+
+    "rows": {
+      "type": "array",
+      "items": {
+        "type": "array",
+        "items": {
           "type": "string"
         }
-      },
+      }
+    }
+  },
 
-      "additionalProperties": false
-    },
+  "additionalProperties": false
+},
 
     "mention": {
       "type": "object",
