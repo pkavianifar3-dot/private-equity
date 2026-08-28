@@ -1,0 +1,13 @@
+{
+  "id": "organization:amin-investment-bank",
+  "type": "Organization",
+  "name": {
+    "fa": "شرکت تأمین سرمایه امین",
+    "en": "Amin Investment Bank"
+  },
+  "aliases": [
+    "تأمین سرمایه امین",
+    "Amin"
+  ],
+  "status": "REVIEW"
+}
