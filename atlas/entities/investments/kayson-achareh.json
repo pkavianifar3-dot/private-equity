@@ -9,12 +9,6 @@
   "metadata": {
     "investor": "organization:kayson-group",
     "target": "organization:achareh",
-    "amount": {
-      "value": 720000000000,
-      "currency": "IRR",
-      "unit": "amount",
-      "raw": "۷۲۰ میلیارد ریال"
-    },
     "investment_status": "announced",
     "date_status": "unknown"
   }
