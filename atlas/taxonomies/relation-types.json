@@ -125,6 +125,11 @@
   "id": "RELATED_TO",
   "label_fa": "مرتبط با",
   "label_en": "Related To"
+},
+    {
+  "id": "INCLUDES",
+  "label_fa": "شامل می‌شود",
+  "label_en": "Includes"
 }
   ]
 }
