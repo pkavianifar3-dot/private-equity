@@ -95,6 +95,26 @@
       "id": "SUPPORTED_BY",
       "label_fa": "پشتیبانی‌شده توسط",
       "label_en": "Supported By"
-    }
+    },
+    {
+  "id": "HAS_AUM",
+  "label_fa": "دارای ارزش دارایی تحت مدیریت",
+  "label_en": "Has Assets Under Management"
+},
+{
+  "id": "INVESTMENT_AMOUNT",
+  "label_fa": "مبلغ سرمایه‌گذاری",
+  "label_en": "Investment Amount"
+},
+{
+  "id": "REPORTED_IRR",
+  "label_fa": "نرخ بازده داخلی گزارش‌شده",
+  "label_en": "Reported IRR"
+},
+{
+  "id": "REPORTED_DEAL_COUNT",
+  "label_fa": "تعداد معاملات گزارش‌شده",
+  "label_en": "Reported Deal Count"
+}
   ]
 }
