@@ -253,8 +253,6 @@
                 return `${ATLAS_ROOT}/entities/persons/${slug}.json`;
 
             case "organization":
-                return `${ATLAS_ROOT}/entities/organizations/${slug}.json`;
-case "company":
     return `${ATLAS_ROOT}/entities/organizations/${slug}.json`;
             default:
                 throw new Error(`Unsupported entity type: ${type}`);
@@ -366,9 +364,9 @@ function entityURL(entityId) {
     const parts = entityId.split(":");
     const type = parts[0];
 
-    if (type === "organization" || type === "company") {
-        return `organization.html?id=${encodeURIComponent(entityId)}`;
-    }
+    if (type === "organization") {
+    return `organization.html?id=${encodeURIComponent(entityId)}`;
+}
 
     return null;
 }
@@ -1434,10 +1432,7 @@ ${renderEvidenceSection(
     return;
 }
 
-if (
-    entityId.startsWith("organization:") ||
-    entityId.startsWith("company:")
-) {
+if (entityId.startsWith("organization:")) {
     await renderOrganization(entityId);
     return;
 }
