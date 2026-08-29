@@ -198,6 +198,15 @@
     "en": "Real Assets"
   },
   "lifecycleStatus": "REVIEW"
+},
+    {
+  "id": "concept:private-capital-classification",
+  "type": "Concept",
+  "name": {
+    "fa": "طبقه‌بندی سرمایه خصوصی",
+    "en": "Private Capital Classification"
+  },
+  "lifecycleStatus": "REVIEW"
 }
   ]
 }
