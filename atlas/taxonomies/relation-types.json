@@ -130,6 +130,11 @@
   "id": "INCLUDES",
   "label_fa": "شامل می‌شود",
   "label_en": "Includes"
+},
+    {
+  "id": "HAS_NON_UNIFORM_CLASSIFICATION",
+  "label_fa": "دارای طبقه‌بندی غیریکنواخت",
+  "label_en": "Has Non-Uniform Classification"
 }
   ]
 }
