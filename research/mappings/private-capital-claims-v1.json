@@ -45,15 +45,20 @@
 {
   "id": "research-claim:private-capital-includes-private-credit",
   "researchId": "research:private-capital",
-  "subject": "candidate:private-capital",
-  "predicate": "INCLUDES",
-  "object": "concept:private-credit",
-  "claimText": "مقاله اعتبار خصوصی را در چارچوب سرمایه خصوصی قرار می‌دهد.",
-  "sourceRefs": [],
-  "evidenceRefs": [],
-  "status": "REVIEW",
-  "confidence": null,
-  "decision": "REVIEW"
+  "subject": "concept:private-capital",
+"predicate": "INCLUDES",
+"object": "concept:private-credit",
+"claimText": "مقاله اعتبار خصوصی را در چارچوب سرمایه خصوصی قرار می‌دهد.",
+"sourceRefs": [
+  "source:ecb-private-markets-public-risk"
+],
+"evidenceRefs": [
+  "evidence:private-capital-includes-private-credit-01"
+],
+"status": "REVIEW",
+"confidence": "HIGH",
+"decision": "PROMOTED_TO_ATLAS",
+"canonicalClaimRef": "claim:private-capital-includes-private-credit"
 },
 
 {
