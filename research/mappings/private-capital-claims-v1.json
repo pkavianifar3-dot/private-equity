@@ -5,20 +5,23 @@
 
   "claims": [
     {
-      "id": "research-claim:private-capital-broader-than-private-equity",
-      "researchId": "research:private-capital",
-      "subject": "concept:private-capital",
-"sourceRefs": [
-  "source:ecb-private-markets-public-risk"
-],
-"evidenceRefs": [
-  "evidence:private-capital-broader-than-private-equity-01"
-],
-"status": "PROMOTED",
-"confidence": "HIGH",
-"decision": "PROMOTE_TO_ATLAS",
-"canonicalClaimRef": "claim:private-capital-broader-than-private-equity"
-    },
+  "id": "research-claim:private-capital-broader-than-private-equity",
+  "researchId": "research:private-capital",
+  "subject": "concept:private-capital",
+  "predicate": "BROADER_THAN",
+  "object": "concept:private-equity",
+  "claimText": "سرمایه خصوصی دامنه‌ای وسیع‌تر نسبت به سرمایه‌گذاری خصوصی دارد.",
+  "sourceRefs": [
+    "source:ecb-private-markets-public-risk"
+  ],
+  "evidenceRefs": [
+    "evidence:private-capital-broader-than-private-equity-01"
+  ],
+  "status": "PROMOTED",
+  "confidence": "HIGH",
+  "decision": "PROMOTE_TO_ATLAS",
+  "canonicalClaimRef": "claim:private-capital-broader-than-private-equity"
+},
 
     {
   "id": "research-claim:private-capital-includes-private-equity",
