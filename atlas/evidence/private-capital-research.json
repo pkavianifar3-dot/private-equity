@@ -66,6 +66,17 @@
     "section": "Overview of private market segments and strategies",
     "paragraph": 2
   }
+},
+    {
+  "id": "evidence:private-capital-boundaries-vary-01",
+  "claim": "claim:private-capital-boundaries-vary",
+  "source": "source:ecb-private-markets-public-risk",
+  "evidence_type": "authoritative_publication",
+  "strength": "strong",
+  "locator": {
+    "section": "Overview of private market segments and strategies",
+    "paragraph": 2
+  }
 }
   ]
 }
