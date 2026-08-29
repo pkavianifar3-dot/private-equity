@@ -14,18 +14,62 @@ def load_json(path):
 def main():
     errors = []
 
+    # ---------------------------------------------------------
+    # Load canonical entity registry
+    # ---------------------------------------------------------
+
     index = load_json(ROOT / "entities" / "index.json")
 
-    entity_ids = {
-        entity["id"]
-        for entity in index.get("entities", [])
+    entities = index.get("entities", [])
+
+    entity_by_id = {
+        entity["id"]: entity
+        for entity in entities
         if "id" in entity
     }
 
-    claim_ids = set()
+    entity_ids = set(entity_by_id.keys())
+
+    # ---------------------------------------------------------
+    # Load relation taxonomy
+    # ---------------------------------------------------------
+
+    relation_types_data = load_json(
+        ROOT / "taxonomies" / "relation-types.json"
+    )
+
+    relation_types = {
+        item["id"]
+        for item in relation_types_data.get("relation_types", [])
+        if "id" in item
+    }
+
+    relation_rules_data = load_json(
+        ROOT / "taxonomies" / "relation-rules.json"
+    )
+
+    relation_rules = {
+        rule["relation"]: rule
+        for rule in relation_rules_data.get("rules", [])
+        if "relation" in rule
+    }
+
+    # ---------------------------------------------------------
+    # Validate taxonomy consistency
+    # ---------------------------------------------------------
+
+    for relation in relation_rules:
+        if relation not in relation_types:
+            errors.append(
+                f"Relation rule references unknown predicate: {relation}"
+            )
+
+    # ---------------------------------------------------------
+    # Collect sources
+    # ---------------------------------------------------------
+
     source_ids = set()
 
-    # Collect all sources
     sources_dir = ROOT / "sources"
 
     for path in sources_dir.glob("*.json"):
@@ -34,20 +78,34 @@ def main():
         for source in data.get("sources", []):
             source_id = source.get("id")
 
-            if source_id:
-                if source_id in source_ids:
-                    errors.append(
-                        f"Duplicate source ID: {source_id}"
-                    )
-                source_ids.add(source_id)
+            if not source_id:
+                errors.append(
+                    f"{path}: source without id"
+                )
+                continue
 
+            if source_id in source_ids:
+                errors.append(
+                    f"Duplicate source ID: {source_id}"
+                )
+
+            source_ids.add(source_id)
+
+    # ---------------------------------------------------------
     # Collect and validate claims
+    # ---------------------------------------------------------
+
+    claim_ids = set()
+    claims = []
+
     claims_dir = ROOT / "claims"
 
     for path in claims_dir.glob("*.json"):
         data = load_json(path)
 
         for claim in data.get("claims", []):
+            claims.append(claim)
+
             claim_id = claim.get("id")
 
             if not claim_id:
@@ -63,6 +121,41 @@ def main():
 
             claim_ids.add(claim_id)
 
+            subject_id = claim.get("subject")
+            predicate = claim.get("predicate")
+
+            # -------------------------------------------------
+            # Subject validation
+            # -------------------------------------------------
+
+            if not subject_id:
+                errors.append(
+                    f"{claim_id}: missing subject"
+                )
+
+            elif subject_id not in entity_ids:
+                errors.append(
+                    f"{claim_id}: unknown subject entity {subject_id}"
+                )
+
+            # -------------------------------------------------
+            # Predicate validation
+            # -------------------------------------------------
+
+            if not predicate:
+                errors.append(
+                    f"{claim_id}: missing predicate"
+                )
+
+            elif predicate not in relation_types:
+                errors.append(
+                    f"{claim_id}: unknown predicate {predicate}"
+                )
+
+            # -------------------------------------------------
+            # object/value exclusivity
+            # -------------------------------------------------
+
             has_object = "object" in claim
             has_value = "value" in claim
 
@@ -71,47 +164,135 @@ def main():
                     f"{claim_id}: exactly one of object/value is required"
                 )
 
-            subject = claim.get("subject")
+            # -------------------------------------------------
+            # Object validation
+            # -------------------------------------------------
 
-            if not subject:
-                errors.append(
-                    f"{claim_id}: missing subject"
+            if has_object:
+                object_id = claim.get("object")
+
+                if not isinstance(object_id, str):
+                    errors.append(
+                        f"{claim_id}: object must be a string entity ID"
+                    )
+
+                elif object_id not in entity_ids:
+                    errors.append(
+                        f"{claim_id}: unknown object entity {object_id}"
+                    )
+
+            # -------------------------------------------------
+            # Rule validation
+            # -------------------------------------------------
+
+            rule = relation_rules.get(predicate)
+
+            if rule and subject_id in entity_ids:
+                subject_type = entity_by_id[subject_id].get("type")
+
+                allowed_subject_types = rule.get(
+                    "subject_types",
+                    []
                 )
 
-    # Validate references inside evidence
+                if (
+                    allowed_subject_types
+                    and subject_type not in allowed_subject_types
+                ):
+                    errors.append(
+                        f"{claim_id}: subject type "
+                        f"{subject_type} is not allowed for "
+                        f"{predicate}"
+                    )
+
+                # ---------------------------------------------
+                # Object type validation for relation claims
+                # ---------------------------------------------
+
+                if has_object:
+                    object_id = claim.get("object")
+
+                    if object_id in entity_by_id:
+                        object_type = entity_by_id[
+                            object_id
+                        ].get("type")
+
+                        allowed_object_types = rule.get(
+                            "object_types",
+                            []
+                        )
+
+                        if (
+                            allowed_object_types
+                            and object_type
+                            not in allowed_object_types
+                        ):
+                            errors.append(
+                                f"{claim_id}: object type "
+                                f"{object_type} is not allowed "
+                                f"for {predicate}"
+                            )
+
+                # ---------------------------------------------
+                # Value type validation for quantitative claims
+                # ---------------------------------------------
+
+                if has_value:
+                    expected_value_type = rule.get("value_type")
+
+                    value = claim.get("value")
+
+                    if not isinstance(value, dict):
+                        errors.append(
+                            f"{claim_id}: value must be an object"
+                        )
+                    else:
+                        actual_unit = value.get("unit")
+
+                        if (
+                            expected_value_type
+                            and actual_unit
+                            != expected_value_type
+                        ):
+                            errors.append(
+                                f"{claim_id}: value unit "
+                                f"{actual_unit} does not match "
+                                f"expected type "
+                                f"{expected_value_type}"
+                            )
+
+    # ---------------------------------------------------------
+    # Validate evidence references
+    # ---------------------------------------------------------
+
     evidence_dir = ROOT / "evidence"
 
     for path in evidence_dir.glob("*.json"):
         data = load_json(path)
 
         for evidence in data.get("evidence", []):
+            evidence_id = evidence.get("id")
             claim_id = evidence.get("claim")
             source_id = evidence.get("source")
 
+            if not evidence_id:
+                errors.append(
+                    f"{path}: evidence without id"
+                )
+
             if claim_id not in claim_ids:
                 errors.append(
-                    f"{evidence.get('id')}: unknown claim {claim_id}"
+                    f"{evidence_id}: unknown claim {claim_id}"
                 )
 
             if source_id not in source_ids:
                 errors.append(
-                    f"{evidence.get('id')}: unknown source {source_id}"
+                    f"{evidence_id}: unknown source {source_id}"
                 )
 
-    # Validate claim object references
-    for path in claims_dir.glob("*.json"):
-        data = load_json(path)
-
-        for claim in data.get("claims", []):
-            claim_id = claim.get("id")
-
-            if "object" in claim:
-                object_id = claim["object"]
-
-                if object_id not in entity_ids:
-                    errors.append(
-                        f"{claim_id}: unknown object entity {object_id}"
-                    )
+    # ---------------------------------------------------------
+    # Final result
+    # ---------------------------------------------------------
 
     if errors:
         print("Atlas validation FAILED")
