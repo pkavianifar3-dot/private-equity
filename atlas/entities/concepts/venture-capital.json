@@ -1,0 +1,10 @@
+{
+  "id": "concept:venture-capital",
+  "type": "Concept",
+  "name": {
+    "fa": "سرمایه‌گذاری خطرپذیر",
+    "en": "Venture Capital"
+  },
+  "aliases": [],
+  "lifecycleStatus": "REVIEW"
+}
