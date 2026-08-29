@@ -1,0 +1,12 @@
+{
+  "claims": [
+    {
+      "id": "claim:private-capital-includes-real-assets",
+      "subject": "concept:private-capital",
+      "predicate": "INCLUDES",
+      "object": "concept:real-assets",
+      "status": "SUPPORTED",
+      "confidence": "HIGH"
+    }
+  ]
+}
