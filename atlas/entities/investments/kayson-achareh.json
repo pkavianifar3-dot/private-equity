@@ -5,7 +5,7 @@
     "fa": "سرمایه‌گذاری گروه کیسون در آچاره",
     "en": "Kayson Investment in Achareh"
   },
-  lifecycleStatus": "REVIEW",
+  "lifecycleStatus": "REVIEW",
   "metadata": {
     "investor": "organization:kayson-group",
     "target": "organization:achareh",
