@@ -140,6 +140,16 @@
   "id": "HAS_INVESTOR_POSITION",
   "label_fa": "دارای جایگاه سرمایه‌گذار",
   "label_en": "Has Investor Position"
+},
+    {
+  "id": "RETURN_DEPENDS_ON",
+  "label_fa": "بازده وابسته به",
+  "label_en": "Return Depends On"
+},
+{
+  "id": "LINKED_TO",
+  "label_fa": "پیوند دارد با",
+  "label_en": "Linked To"
 }
   ]
 }
