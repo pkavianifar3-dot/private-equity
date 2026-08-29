@@ -9,8 +9,8 @@
       "title": "Private markets, public risk? Financial stability implications of alternative funding sources",
       "publisher": "European Central Bank",
       "url": "https://www.ecb.europa.eu/press/financial-stability-publications/fsr/special/html/ecb.fsrart202405_03~bc23a48dbc.sl.html",
-      "atlasSourceId": null,
-      "decision": "NEW_SOURCE_REVIEW"
+      "atlasSourceId": "source:ecb-private-markets-public-risk",
+"decision": "EXISTING_SOURCE"
     },
 
     {
@@ -19,8 +19,8 @@
       "publisher": "McKinsey & Company",
       "publicationDate": "2025-05-20",
       "url": "https://www.mckinsey.com/industries/private-capital/our-insights/global-private-markets-report-2025",
-      "atlasSourceId": null,
-      "decision": "NEW_SOURCE_REVIEW"
+      "atlasSourceId": "source:mckinsey-global-private-markets-report-2025",
+"decision": "EXISTING_SOURCE"
     },
 
     {
