@@ -226,13 +226,7 @@
   },
   "lifecycleStatus": "REVIEW"
 },
-    {
-  "id": "concept:real-assets",
-  "type": "Concept",
-  "name": {
-    "fa": "دارایی‌های واقعی",
-    "en": "Real Assets"
-  },
+    
   "lifecycleStatus": "REVIEW"
 },
 {
