@@ -135,6 +135,11 @@
   "id": "HAS_NON_UNIFORM_CLASSIFICATION",
   "label_fa": "دارای طبقه‌بندی غیریکنواخت",
   "label_en": "Has Non-Uniform Classification"
+},
+    {
+  "id": "HAS_INVESTOR_POSITION",
+  "label_fa": "دارای جایگاه سرمایه‌گذار",
+  "label_en": "Has Investor Position"
 }
   ]
 }
