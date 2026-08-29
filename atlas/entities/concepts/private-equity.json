@@ -1,0 +1,10 @@
+{
+  "id": "concept:private-equity",
+  "type": "Concept",
+  "name": {
+    "fa": "سرمایه‌گذاری خصوصی",
+    "en": "Private Equity"
+  },
+  "aliases": [],
+  "lifecycleStatus": "REVIEW"
+}
