@@ -115,6 +115,16 @@
   "relation": "REPORTED_DEAL_COUNT",
   "subject_types": ["Fund", "Organization"],
   "value_type": "count"
+},
+    {
+  "relation": "BROADER_THAN",
+  "subject_types": ["Concept"],
+  "object_types": ["Concept"]
+},
+{
+  "relation": "RELATED_TO",
+  "subject_types": ["Concept"],
+  "object_types": ["Concept"]
 }
   ]
 }
