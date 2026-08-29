@@ -165,7 +165,9 @@
   "sourceRefs": [
     "source:federal-reserve-private-credit-2024"
   ],
-  "evidenceRefs": [],
+  "evidenceRefs": [
+  "evidence:private-credit-return-contractual-01"
+],
   "status": "REVIEW",
   "confidence": null,
   "decision": "REVIEW"
@@ -181,7 +183,9 @@
   "sourceRefs": [
     "source:federal-reserve-private-credit-2024"
   ],
-  "evidenceRefs": [],
+  "evidenceRefs": [
+  "evidence:private-credit-and-private-equity-linked-01"
+],
   "status": "REVIEW",
   "confidence": null,
   "decision": "REVIEW"
