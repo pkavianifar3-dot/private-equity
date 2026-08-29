@@ -33,6 +33,17 @@
     "section": "Overview of private market segments and strategies",
     "paragraph": 2
   }
+},
+    {
+  "id": "evidence:private-capital-includes-real-assets-01",
+  "claim": "claim:private-capital-includes-real-assets",
+  "source": "source:ecb-private-markets-public-risk",
+  "evidence_type": "authoritative_publication",
+  "strength": "strong",
+  "locator": {
+    "section": "Overview of private market segments and strategies",
+    "paragraph": 2
+  }
 }
   ]
 }
