@@ -9,7 +9,7 @@
     "شرکت مدیریت سهام خصوصی کیان",
     "مدیریت سهام خصوصی کیان"
   ],
-  "status": "REVIEW",
+  "lifecycleStatus": "REVIEW",
   "metadata": {
     "organization_type": "private_company",
     "legal_name_status": "reported",
