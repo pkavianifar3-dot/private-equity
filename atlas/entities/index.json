@@ -225,6 +225,24 @@
     "en": "Contractual Components"
   },
   "lifecycleStatus": "REVIEW"
+},
+    {
+  "id": "concept:real-assets",
+  "type": "Concept",
+  "name": {
+    "fa": "دارایی‌های واقعی",
+    "en": "Real Assets"
+  },
+  "lifecycleStatus": "REVIEW"
+},
+{
+  "id": "concept:physical-assets",
+  "type": "Concept",
+  "name": {
+    "fa": "دارایی‌های فیزیکی",
+    "en": "Physical Assets"
+  },
+  "lifecycleStatus": "REVIEW"
 }
   ]
 }
