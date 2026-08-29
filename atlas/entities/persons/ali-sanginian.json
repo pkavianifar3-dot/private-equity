@@ -15,7 +15,7 @@
     "sector:corporate-investment",
     "sector:private-equity"
   ],
-  "status": "PUBLISHED",
+  "lifecycleStatus": "PUBLISHED",
   "metadata": {
     "entity_role": "executive_and_board_member",
     "last_reviewed": "1405-06"
