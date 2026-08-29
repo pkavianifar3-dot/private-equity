@@ -8,7 +8,7 @@
   "status": "REVIEW",
   "metadata": {
     "investor": "organization:kayson-group",
-    "target": "company:achareh",
+    "target": "organization:achareh",
     "amount": {
       "value": 720000000000,
       "currency": "IRR",
