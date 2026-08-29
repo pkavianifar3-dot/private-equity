@@ -137,18 +137,23 @@
 },
 
     {
-      "id": "research-claim:private-credit-lender-position",
-"researchId": "research:private-capital",
-      "subject": "concept:private-credit",
-"predicate": "HAS_INVESTOR_POSITION",
-"object": "concept:lender",
-"claimText": "در اعتبار خصوصی، سرمایه‌گذار عمدتاً در جایگاه اعتباردهنده قرار دارد.",
-      "sourceRefs": [],
-      "evidenceRefs": [],
-      "status": "REVIEW",
-      "confidence": null,
-      "decision": "REVIEW"
-    },
+  "id": "research-claim:private-credit-lender-position",
+  "researchId": "research:private-capital",
+  "subject": "concept:private-credit",
+  "predicate": "HAS_INVESTOR_POSITION",
+  "object": "concept:lender",
+  "claimText": "در اعتبار خصوصی، سرمایه‌گذار عمدتاً در جایگاه اعتباردهنده قرار دارد.",
+  "sourceRefs": [
+    "source:federal-reserve-private-credit-2024"
+  ],
+  "evidenceRefs": [
+    "evidence:private-credit-lender-position-01"
+  ],
+  "status": "PROMOTED",
+  "confidence": "HIGH",
+  "decision": "PROMOTED_TO_ATLAS",
+  "canonicalClaimRef": "claim:private-credit-lender-position"
+},
 
     {
       "id": "research-claim:private-credit-return-contractual",
