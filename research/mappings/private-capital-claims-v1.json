@@ -156,32 +156,36 @@
 },
 
     {
-      "id": "research-claim:private-credit-return-contractual",
-"researchId": "research:private-capital",
-      "subject": "candidate:private-credit",
-      "predicate": "RETURN_DEPENDS_ON",
-      "object": "candidate:contractual-components",
-      "claimText": "بازده اعتبار خصوصی عمدتاً از بهره، کارمزد و دیگر اجزای قراردادی تأمین می‌شود.",
-      "sourceRefs": [],
-      "evidenceRefs": [],
-      "status": "REVIEW",
-      "confidence": null,
-      "decision": "REVIEW"
-    },
+  "id": "research-claim:private-credit-return-contractual",
+  "researchId": "research:private-capital",
+  "subject": "concept:private-credit",
+  "predicate": "RETURN_DEPENDS_ON",
+  "object": "concept:contractual-components",
+  "claimText": "بازده اعتبار خصوصی عمدتاً از بهره، کارمزد و دیگر اجزای قراردادی تأمین می‌شود.",
+  "sourceRefs": [
+    "source:federal-reserve-private-credit-2024"
+  ],
+  "evidenceRefs": [],
+  "status": "REVIEW",
+  "confidence": null,
+  "decision": "REVIEW"
+},
 
     {
-      "id": "research-claim:private-credit-and-private-equity-linked",
-"researchId": "research:private-capital",
-      "subject": "candidate:private-credit",
-      "predicate": "LINKED_TO",
-      "object": "concept:private-equity",
-      "claimText": "اعتبار خصوصی و سرمایه‌گذاری خصوصی در برخی معاملات از نظر تأمین مالی به یکدیگر پیوند عملیاتی دارند.",
-      "sourceRefs": [],
-      "evidenceRefs": [],
-      "status": "REVIEW",
-      "confidence": null,
-      "decision": "REVIEW"
-    },
+  "id": "research-claim:private-credit-and-private-equity-linked",
+  "researchId": "research:private-capital",
+  "subject": "concept:private-credit",
+  "predicate": "LINKED_TO",
+  "object": "concept:private-equity",
+  "claimText": "اعتبار خصوصی و سرمایه‌گذاری خصوصی در برخی معاملات از نظر تأمین مالی به یکدیگر پیوند عملیاتی دارند.",
+  "sourceRefs": [
+    "source:federal-reserve-private-credit-2024"
+  ],
+  "evidenceRefs": [],
+  "status": "REVIEW",
+  "confidence": null,
+  "decision": "REVIEW"
+},
 
     {
       "id": "research-claim:real-assets-include-physical-assets",
