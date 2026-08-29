@@ -125,6 +125,11 @@
   "relation": "RELATED_TO",
   "subject_types": ["Concept"],
   "object_types": ["Concept"]
+},
+    {
+  "relation": "INCLUDES",
+  "subject_types": ["Concept"],
+  "object_types": ["Concept"]
 }
   ]
 }
