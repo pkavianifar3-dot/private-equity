@@ -379,7 +379,29 @@ def main():
                         f"{claim_id}: unknown research "
                         f"predicate {predicate}"
                     )
+            # ---------------------------------------------
+            # Canonical Atlas claim reference validation
+            # ---------------------------------------------
 
+            canonical_claim_ref = claim.get(
+                "canonicalClaimRef"
+            )
+
+            if canonical_claim_ref:
+                if canonical_claim_ref not in claim_ids:
+                    errors.append(
+                        f"{claim_id}: unknown canonical "
+                        f"claim {canonical_claim_ref}"
+                    )
+
+            if (
+                claim.get("status") == "PROMOTED"
+                and not canonical_claim_ref
+            ):
+                errors.append(
+                    f"{claim_id}: PROMOTED research claim "
+                    f"must have canonicalClaimRef"
+                )
     # ---------------------------------------------------------
     # Validate Research source mappings
     # ---------------------------------------------------------
