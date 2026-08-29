@@ -168,9 +168,10 @@
   "evidenceRefs": [
   "evidence:private-credit-return-contractual-01"
 ],
-  "status": "REVIEW",
-  "confidence": null,
-  "decision": "REVIEW"
+  "status": "PROMOTED",
+"confidence": "HIGH",
+"decision": "PROMOTED_TO_ATLAS",
+"canonicalClaimRef": "claim:private-credit-return-contractual"
 },
 
     {
@@ -186,9 +187,10 @@
   "evidenceRefs": [
   "evidence:private-credit-and-private-equity-linked-01"
 ],
-  "status": "REVIEW",
-  "confidence": null,
-  "decision": "REVIEW"
+  "status": "PROMOTED",
+"confidence": "HIGH",
+"decision": "PROMOTED_TO_ATLAS",
+"canonicalClaimRef": "claim:private-credit-and-private-equity-linked""
 },
 
     {
