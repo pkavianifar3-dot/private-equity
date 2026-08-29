@@ -95,6 +95,26 @@
       "relation": "SUPPORTED_BY",
       "subject_types": ["Claim"],
       "object_types": ["Source", "Evidence"]
-    }
+    },
+    {
+  "relation": "HAS_AUM",
+  "subject_types": ["Fund", "Organization"],
+  "value_type": "amount"
+},
+{
+  "relation": "INVESTMENT_AMOUNT",
+  "subject_types": ["Investment"],
+  "value_type": "amount"
+},
+{
+  "relation": "REPORTED_IRR",
+  "subject_types": ["Fund", "Investment"],
+  "value_type": "percentage"
+},
+{
+  "relation": "REPORTED_DEAL_COUNT",
+  "subject_types": ["Fund", "Organization"],
+  "value_type": "count"
+}
   ]
 }
