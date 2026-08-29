@@ -17,9 +17,9 @@
   "evidenceRefs": [
     "evidence:private-capital-broader-than-private-equity-01"
   ],
-  "status": "PROMOTED",
-  "confidence": "HIGH",
-  "decision": "PROMOTE_TO_ATLAS",
+  "status": "REVIEW",
+"confidence": "HIGH",
+"decision": "PROMOTED_TO_ATLAS",
   "canonicalClaimRef": "claim:private-capital-broader-than-private-equity"
 },
 
@@ -36,9 +36,9 @@
 "evidenceRefs": [
   "evidence:private-capital-includes-private-equity-01"
 ],
-"status": "PROMOTED",
+"status": "REVIEW",
 "confidence": "HIGH",
-"decision": "PROMOTE_TO_ATLAS",
+"decision": "PROMOTED_TO_ATLAS",
 "canonicalClaimRef": "claim:private-capital-includes-private-equity"
     },
 
