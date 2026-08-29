@@ -1,0 +1,10 @@
+{
+  "id": "concept:private-capital",
+  "type": "Concept",
+  "name": {
+    "fa": "سرمایه خصوصی",
+    "en": "Private Capital"
+  },
+  "aliases": [],
+  "lifecycleStatus": "REVIEW"
+}
