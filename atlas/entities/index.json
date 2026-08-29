@@ -144,6 +144,51 @@
         "en": "Corporate Investment"
       },
       "lifecycleStatus": "REVIEW"
-    }
+    },
+    {
+  "id": "concept:private-capital",
+  "type": "Concept",
+  "name": {
+    "fa": "سرمایه خصوصی",
+    "en": "Private Capital"
+  },
+  "lifecycleStatus": "REVIEW"
+},
+{
+  "id": "concept:private-equity",
+  "type": "Concept",
+  "name": {
+    "fa": "سرمایه‌گذاری خصوصی",
+    "en": "Private Equity"
+  },
+  "lifecycleStatus": "REVIEW"
+},
+{
+  "id": "concept:private-credit",
+  "type": "Concept",
+  "name": {
+    "fa": "اعتبار خصوصی",
+    "en": "Private Credit"
+  },
+  "lifecycleStatus": "REVIEW"
+},
+{
+  "id": "concept:venture-capital",
+  "type": "Concept",
+  "name": {
+    "fa": "سرمایه‌گذاری خطرپذیر",
+    "en": "Venture Capital"
+  },
+  "lifecycleStatus": "REVIEW"
+},
+{
+  "id": "concept:growth-capital",
+  "type": "Concept",
+  "name": {
+    "fa": "سرمایه رشد",
+    "en": "Growth Capital"
+  },
+  "lifecycleStatus": "REVIEW"
+}
   ]
 }
