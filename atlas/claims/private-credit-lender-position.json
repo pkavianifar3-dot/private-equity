@@ -1,0 +1,12 @@
+{
+  "claims": [
+    {
+      "id": "claim:private-credit-lender-position",
+      "subject": "concept:private-credit",
+      "predicate": "HAS_INVESTOR_POSITION",
+      "object": "concept:lender",
+      "claimText": "در اعتبار خصوصی، سرمایه‌گذار عمدتاً در جایگاه اعتباردهنده قرار دارد.",
+      "status": "REVIEW"
+    }
+  ]
+}
