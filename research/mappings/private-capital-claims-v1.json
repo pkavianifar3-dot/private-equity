@@ -196,9 +196,9 @@
     {
       "id": "research-claim:real-assets-include-physical-assets",
 "researchId": "research:private-capital",
-      "subject": "candidate:real-assets",
+     "subject": "concept:real-assets",
       "predicate": "INCLUDES",
-      "object": "candidate:physical-assets",
+      "object": "concept:physical-assets",
       "claimText": "دارایی‌های واقعی طیفی از دارایی‌های عینی و فیزیکی از جمله املاک و مستغلات، زیرساخت‌ها و منابع طبیعی را دربرمی‌گیرد.",
       "sourceRefs": [],
       "evidenceRefs": [],
