@@ -289,7 +289,122 @@ def main():
                 errors.append(
                     f"{evidence_id}: unknown source {source_id}"
                 )
+    # ---------------------------------------------------------
+    # Validate Research mappings
+    # ---------------------------------------------------------
 
+    research_root = ROOT.parent / "research"
+
+    research_claims_path = (
+        research_root
+        / "mappings"
+        / "private-capital-claims-v1.json"
+    )
+
+    research_sources_path = (
+        research_root
+        / "mappings"
+        / "private-capital-sources-v1.json"
+    )
+
+    research_predicates_path = (
+        research_root
+        / "taxonomies"
+        / "research-predicate-types-v1.json"
+    )
+
+    if research_claims_path.exists():
+        research_claims_data = load_json(
+            research_claims_path
+        )
+
+        for claim in research_claims_data.get(
+            "claims",
+            []
+        ):
+            claim_id = claim.get("id")
+
+            if not claim_id:
+                errors.append(
+                    "Research claim without id"
+                )
+                continue
+
+            subject = claim.get("subject")
+            predicate = claim.get("predicate")
+            object_id = claim.get("object")
+
+            # ---------------------------------------------
+            # Research subject/object references
+            # ---------------------------------------------
+
+            if subject and not (
+                subject in entity_ids
+                or subject.startswith("candidate:")
+            ):
+                errors.append(
+                    f"{claim_id}: unknown research subject "
+                    f"{subject}"
+                )
+
+            if object_id and not (
+                object_id in entity_ids
+                or object_id.startswith("candidate:")
+            ):
+                errors.append(
+                    f"{claim_id}: unknown research object "
+                    f"{object_id}"
+                )
+
+            # ---------------------------------------------
+            # Research predicate validation
+            # ---------------------------------------------
+
+            if research_predicates_path.exists():
+                predicate_data = load_json(
+                    research_predicates_path
+                )
+
+                research_predicates = {
+                    item["id"]
+                    for item in predicate_data.get(
+                        "predicate_types",
+                        []
+                    )
+                    if "id" in item
+                }
+
+                if predicate not in research_predicates:
+                    errors.append(
+                        f"{claim_id}: unknown research "
+                        f"predicate {predicate}"
+                    )
+
+    # ---------------------------------------------------------
+    # Validate Research source mappings
+    # ---------------------------------------------------------
+
+    if research_sources_path.exists():
+        research_sources_data = load_json(
+            research_sources_path
+        )
+
+        for item in research_sources_data.get(
+            "sources",
+            []
+        ):
+            atlas_source_id = item.get("atlasSourceId")
+            decision = item.get("decision")
+
+            if (
+                decision == "EXISTING_SOURCE"
+                and atlas_source_id
+                and atlas_source_id not in source_ids
+            ):
+                errors.append(
+                    f"{item.get('candidateId')}: unknown "
+                    f"Atlas source {atlas_source_id}"
+                )
     # ---------------------------------------------------------
     # Final result
     # ---------------------------------------------------------
