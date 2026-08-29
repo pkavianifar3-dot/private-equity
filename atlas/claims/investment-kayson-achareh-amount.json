@@ -1,0 +1,18 @@
+{
+  "claims": [
+    {
+      "id": "claim:kayson-achareh-investment-amount",
+      "subject": "investment:kayson-achareh",
+      "predicate": "INVESTMENT_AMOUNT",
+      "value": {
+        "amount": 720000000000,
+        "currency": "IRR",
+        "unit": "amount",
+        "raw": "۷۲۰ میلیارد ریال",
+        "period_type": "reported"
+      },
+      "status": "REPORTED",
+      "confidence": "HIGH"
+    }
+  ]
+}
