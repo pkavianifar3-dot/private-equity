@@ -76,12 +76,14 @@
   ],
       "mentions": [
   {
-    "id": "mention-introduction-private-equity",
-    "text": "سرمایه‌گذاری خصوصی",
-    "entityRef": "sector:private-equity",
-    "contentBlockId": "intro-paragraph-02",
-    "resolutionStatus": "RESOLVED"
-  }
+  "id": "mention-introduction-private-equity",
+  "text": "سرمایه‌گذاری خصوصی",
+  "entityRef": "sector:private-equity",
+  "contentBlockId": "intro-paragraph-02",
+  "start": 151,
+  "end": 169,
+  "resolutionStatus": "RESOLVED"
+}
 ]
 },
     {
