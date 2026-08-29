@@ -125,11 +125,6 @@
   "id": "RELATED_TO",
   "label_fa": "مرتبط با",
   "label_en": "Related To"
-},
-{
-  "id": "PART_OF",
-  "label_fa": "بخشی از",
-  "label_en": "Part Of"
 }
   ]
 }
