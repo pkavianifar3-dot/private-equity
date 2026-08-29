@@ -11,6 +11,17 @@
         "section": "Overview of private market segments and strategies",
         "paragraph": 2
       }
+    },
+    {
+      "id": "evidence:private-capital-broader-than-private-equity-01",
+      "claim": "claim:private-capital-broader-than-private-equity",
+      "source": "source:ecb-private-markets-public-risk",
+      "evidence_type": "authoritative_publication",
+      "strength": "strong",
+      "locator": {
+        "section": "Overview of private market segments and strategies",
+        "paragraph": 2
+      }
     }
   ]
 }
