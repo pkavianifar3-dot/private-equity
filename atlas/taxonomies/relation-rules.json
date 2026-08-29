@@ -130,6 +130,15 @@
   "relation": "INCLUDES",
   "subject_types": ["Concept"],
   "object_types": ["Concept"]
+},
+    {
+  "relation": "HAS_INVESTOR_POSITION",
+  "subject_types": [
+    "Concept"
+  ],
+  "object_types": [
+    "Concept"
+  ]
 }
   ]
 }
