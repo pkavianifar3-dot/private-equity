@@ -6,7 +6,7 @@
     "en": "Kian Financial Group"
   },
   "aliases": [],
-  "status": "REVIEW",
+  "lifecycleStatus": "REVIEW",
   "metadata": {
     "organization_type": "financial_group",
     "national_id": null,
