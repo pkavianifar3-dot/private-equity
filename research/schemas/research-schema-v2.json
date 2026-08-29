@@ -252,8 +252,9 @@
   "type": "object",
 
   "required": [
-    "type"
-  ],
+  "id",
+  "type"
+],
 
   "properties": {
 "id": {
