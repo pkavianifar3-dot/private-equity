@@ -2,52 +2,96 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Private Capital Atlas Claim Schema v1",
   "type": "object",
+
   "required": [
     "id",
     "subject",
     "predicate",
-    "object",
     "status",
     "confidence"
   ],
+
   "properties": {
     "id": {
       "type": "string"
     },
+
     "subject": {
       "type": "string"
     },
+
     "predicate": {
       "type": "string"
     },
+
     "object": {
       "type": "string"
     },
+
+    "value": {
+      "type": "object",
+      "required": [
+        "amount",
+        "currency",
+        "unit",
+        "raw",
+        "period_type"
+      ],
+      "properties": {
+        "amount": {
+          "type": "number"
+        },
+
+        "currency": {
+          "type": "string"
+        },
+
+        "unit": {
+          "type": "string"
+        },
+
+        "raw": {
+          "type": "string"
+        },
+
+        "period_type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+
     "role": {
       "type": "string"
     },
+
     "temporal": {
       "type": "object",
       "properties": {
         "start": {
           "type": ["string", "null"]
         },
+
         "end": {
           "type": ["string", "null"]
         },
+
         "precision": {
           "type": "string"
         },
+
         "status": {
           "type": "string"
         }
       },
       "additionalProperties": true
     },
+
     "context": {
       "type": "object",
       "additionalProperties": true
     },
+
     "status": {
       "enum": [
         "VERIFIED",
@@ -56,6 +100,7 @@
         "DISPUTED"
       ]
     },
+
     "confidence": {
       "enum": [
         "HIGH",
@@ -65,5 +110,21 @@
       ]
     }
   },
+
+  "oneOf": [
+    {
+      "required": ["object"],
+      "not": {
+        "required": ["value"]
+      }
+    },
+    {
+      "required": ["value"],
+      "not": {
+        "required": ["object"]
+      }
+    }
+  ],
+
   "additionalProperties": false
 }
