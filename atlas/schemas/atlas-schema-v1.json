@@ -4,11 +4,11 @@
   "description": "Core data contract for the Private Capital financial knowledge graph.",
   "type": "object",
   "required": [
-    "id",
-    "type",
-    "name",
-    "status"
-  ],
+  "id",
+  "type",
+  "name",
+  "lifecycleStatus"
+],
   "properties": {
     "id": {
       "type": "string",
@@ -48,15 +48,15 @@
       },
       "additionalProperties": false
     },
-    "status": {
-      "type": "string",
-      "enum": [
-        "DRAFT",
-        "REVIEW",
-        "PUBLISHED",
-        "ARCHIVED"
-      ]
-    },
+    "lifecycleStatus": {
+  "type": "string",
+  "enum": [
+    "DRAFT",
+    "REVIEW",
+    "PUBLISHED",
+    "ARCHIVED"
+  ]
+},
     "domains": {
       "type": "array",
       "items": {
