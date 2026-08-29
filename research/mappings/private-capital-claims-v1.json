@@ -118,18 +118,23 @@
 },
 
     {
-      "id": "research-claim:private-capital-boundaries-vary",
-"researchId": "research:private-capital",
-      "subject": "concept:private-capital",
-      "predicate": "HAS_NON_UNIFORM_CLASSIFICATION",
-      "object": "concept:private-capital-classification",
-      "claimText": "مرزبندی بلوک‌های سرمایه خصوصی در منابع مختلف یکسان نیست.",
-      "sourceRefs": [],
-      "evidenceRefs": [],
-      "status": "REVIEW",
-      "confidence": null,
-      "decision": "REVIEW"
-    },
+  "id": "research-claim:private-capital-boundaries-vary",
+  "researchId": "research:private-capital",
+  "subject": "concept:private-capital",
+  "predicate": "HAS_NON_UNIFORM_CLASSIFICATION",
+  "object": "concept:private-capital-classification",
+  "claimText": "مرزبندی بلوک‌های سرمایه خصوصی در منابع مختلف یکسان نیست.",
+  "sourceRefs": [
+    "source:ecb-private-markets-public-risk"
+  ],
+  "evidenceRefs": [
+    "evidence:private-capital-boundaries-vary-01"
+  ],
+  "status": "REVIEW",
+  "confidence": "HIGH",
+  "decision": "PROMOTED_TO_ATLAS",
+  "canonicalClaimRef": "claim:private-capital-boundaries-vary"
+},
 
     {
       "id": "research-claim:private-credit-lender-position",
