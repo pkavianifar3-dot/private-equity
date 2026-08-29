@@ -1,0 +1,12 @@
+{
+  "claims": [
+    {
+      "id": "claim:private-credit-return-contractual",
+      "subject": "concept:private-credit",
+      "predicate": "RETURN_DEPENDS_ON",
+      "object": "concept:contractual-components",
+      "claimText": "بازده اعتبار خصوصی عمدتاً از بهره، کارمزد و دیگر اجزای قراردادی تأمین می‌شود.",
+      "status": "REVIEW"
+    }
+  ]
+}
