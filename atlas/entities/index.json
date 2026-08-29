@@ -101,6 +101,15 @@
       "lifecycleStatus": "REVIEW"
     },
     {
+  "id": "investment:kayson-achareh",
+  "type": "Investment",
+  "name": {
+    "fa": "سرمایه‌گذاری گروه کیسون در آچاره",
+    "en": "Kayson Investment in Achareh"
+  },
+  "lifecycleStatus": "REVIEW"
+},
+    {
       "id": "sector:private-equity",
       "type": "Sector",
       "name": {
