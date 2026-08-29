@@ -42,6 +42,11 @@
       "label_en": "Sector"
     },
     {
+  "id": "Concept",
+  "label_fa": "مفهوم",
+  "label_en": "Concept"
+},
+    {
       "id": "InvestorCategory",
       "label_fa": "دسته سرمایه‌گذار",
       "label_en": "Investor Category"
