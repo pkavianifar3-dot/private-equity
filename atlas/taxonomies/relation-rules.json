@@ -139,6 +139,24 @@
   "object_types": [
     "Concept"
   ]
+},
+    {
+  "relation": "RETURN_DEPENDS_ON",
+  "subject_types": [
+    "Concept"
+  ],
+  "object_types": [
+    "Concept"
+  ]
+},
+{
+  "relation": "LINKED_TO",
+  "subject_types": [
+    "Concept"
+  ],
+  "object_types": [
+    "Concept"
+  ]
 }
   ]
 }
