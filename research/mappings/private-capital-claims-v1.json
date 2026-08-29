@@ -200,8 +200,12 @@
       "predicate": "INCLUDES",
       "object": "concept:physical-assets",
       "claimText": "دارایی‌های واقعی طیفی از دارایی‌های عینی و فیزیکی از جمله املاک و مستغلات، زیرساخت‌ها و منابع طبیعی را دربرمی‌گیرد.",
-      "sourceRefs": [],
-      "evidenceRefs": [],
+      "sourceRefs": [
+  "source:ecb-private-markets-public-risk"
+],
+"evidenceRefs": [
+  "evidence:real-assets-include-physical-assets-01"
+],
       "status": "REVIEW",
       "confidence": null,
       "decision": "REVIEW"
