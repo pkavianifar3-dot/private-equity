@@ -80,18 +80,23 @@
 },
 
     {
-      "id": "research-claim:private-capital-includes-venture-capital",
-"researchId": "research:private-capital",
-      "subject": "candidate:private-capital",
-      "predicate": "INCLUDES",
-      "object": "concept:venture-capital",
-      "claimText": "مقاله سرمایه‌گذاری خطرپذیر را در دامنه سرمایه خصوصی قرار می‌دهد.",
-      "sourceRefs": [],
-      "evidenceRefs": [],
-      "status": "REVIEW",
-      "confidence": null,
-      "decision": "REVIEW"
-    },
+  "id": "research-claim:private-capital-includes-venture-capital",
+  "researchId": "research:private-capital",
+  "subject": "concept:private-capital",
+  "predicate": "INCLUDES",
+  "object": "concept:venture-capital",
+  "claimText": "مقاله سرمایه‌گذاری خطرپذیر را در دامنه سرمایه خصوصی قرار می‌دهد.",
+  "sourceRefs": [
+    "source:ecb-private-markets-public-risk"
+  ],
+  "evidenceRefs": [
+    "evidence:private-capital-includes-venture-capital-01"
+  ],
+  "status": "REVIEW",
+  "confidence": "HIGH",
+  "decision": "PROMOTED_TO_ATLAS",
+  "canonicalClaimRef": "claim:private-capital-includes-venture-capital"
+},
 
     {
       "id": "research-claim:private-capital-includes-growth-capital",
