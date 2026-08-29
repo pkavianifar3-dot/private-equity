@@ -225,11 +225,8 @@
     "en": "Contractual Components"
   },
   "lifecycleStatus": "REVIEW"
-},
-    
-  "lifecycleStatus": "REVIEW"
-},
-{
+    },
+    {
   "id": "concept:physical-assets",
   "type": "Concept",
   "name": {
