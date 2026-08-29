@@ -1,0 +1,16 @@
+{
+  "version": "1.0",
+  "evidence": [
+    {
+      "id": "evidence:private-capital-includes-private-equity-01",
+      "claim": "claim:private-capital-includes-private-equity",
+      "source": "source:ecb-private-markets-public-risk",
+      "evidence_type": "authoritative_publication",
+      "strength": "strong",
+      "locator": {
+        "section": "Overview of private market segments and strategies",
+        "paragraph": 2
+      }
+    }
+  ]
+}
