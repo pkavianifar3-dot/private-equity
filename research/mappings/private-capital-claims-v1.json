@@ -99,18 +99,23 @@
 },
 
     {
-      "id": "research-claim:private-capital-includes-growth-capital",
-"researchId": "research:private-capital",
-      "subject": "candidate:private-capital",
-      "predicate": "INCLUDES",
-      "object": "concept:growth-capital",
-      "claimText": "مقاله سرمایه رشد را یکی از بلوک‌های سرمایه خصوصی معرفی می‌کند.",
-      "sourceRefs": [],
-      "evidenceRefs": [],
-      "status": "REVIEW",
-      "confidence": null,
-      "decision": "REVIEW"
-    },
+  "id": "research-claim:private-capital-includes-growth-capital",
+  "researchId": "research:private-capital",
+  "subject": "concept:private-capital",
+  "predicate": "INCLUDES",
+  "object": "concept:growth-capital",
+  "claimText": "مقاله سرمایه رشد را یکی از بلوک‌های سرمایه خصوصی معرفی می‌کند.",
+  "sourceRefs": [
+    "source:ecb-private-markets-public-risk"
+  ],
+  "evidenceRefs": [
+    "evidence:private-capital-includes-growth-capital-01"
+  ],
+  "status": "REVIEW",
+  "confidence": "HIGH",
+  "decision": "PROMOTED_TO_ATLAS",
+  "canonicalClaimRef": "claim:private-capital-includes-growth-capital"
+},
 
     {
       "id": "research-claim:private-capital-boundaries-vary",
