@@ -83,14 +83,14 @@
   "status": "REVIEW"
 },
     {
-      "id": "company:achareh",
-      "type": "Organization",
-      "name": {
-        "fa": "آچاره",
-        "en": "Achareh"
-      },
-      "status": "REVIEW"
-    },
+  "id": "organization:achareh",
+  "type": "Organization",
+  "name": {
+    "fa": "آچاره",
+    "en": "Achareh"
+  },
+  "status": "REVIEW"
+},
     {
       "id": "project:dadman",
       "type": "Project",
