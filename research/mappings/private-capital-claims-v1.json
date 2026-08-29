@@ -206,9 +206,10 @@
 "evidenceRefs": [
   "evidence:real-assets-include-physical-assets-01"
 ],
-      "status": "REVIEW",
-      "confidence": null,
-      "decision": "REVIEW"
+      "status": "PROMOTED",
+"confidence": "HIGH",
+"decision": "PROMOTED_TO_ATLAS",
+"canonicalClaimRef": "claim:real-assets-include-physical-assets"
     },
 
     {
