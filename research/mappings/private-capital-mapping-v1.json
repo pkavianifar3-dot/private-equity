@@ -4,45 +4,44 @@
   "status": "REVIEW",
   "candidates": [
     {
-      "id": "candidate:private-capital",
-      "label": "سرمایه خصوصی",
-      "labelEn": "Private Capital",
-      "role": "PRIMARY_CONCEPT",
-      "atlasEntityId": null,
-      "decision": "CONCEPT_REVIEW",
-      "note": "No canonical Atlas Entity currently exists."
-    },
+  "id": "candidate:private-capital",
+  "label": "سرمایه خصوصی",
+  "labelEn": "Private Capital",
+  "role": "PRIMARY_CONCEPT",
+  "atlasEntityId": "concept:private-capital",
+  "decision": "EXISTING_ENTITY"
+},
     {
       "id": "candidate:private-equity",
       "label": "سرمایه‌گذاری خصوصی",
       "labelEn": "Private Equity",
       "role": "RELATED_CONCEPT",
-      "atlasEntityId": "sector:private-equity",
-      "decision": "EXISTING_ENTITY"
+      "atlasEntityId": "concept:private-equity",
+"decision": "EXISTING_ENTITY"
     },
     {
       "id": "candidate:venture-capital",
       "label": "سرمایه‌گذاری خطرپذیر",
       "labelEn": "Venture Capital",
       "role": "SUBDOMAIN_OR_STRATEGY",
-      "atlasEntityId": null,
-      "decision": "NOT_REGISTERED"
+      "atlasEntityId": "concept:venture-capital",
+"decision": "EXISTING_ENTITY"
     },
     {
       "id": "candidate:growth-capital",
       "label": "سرمایه رشد",
       "labelEn": "Growth Capital",
       "role": "STRATEGY",
-      "atlasEntityId": null,
-      "decision": "NOT_REGISTERED"
+      "atlasEntityId": "concept:growth-capital",
+"decision": "EXISTING_ENTITY"
     },
     {
       "id": "candidate:private-credit",
       "label": "اعتبار خصوصی",
       "labelEn": "Private Credit",
       "role": "SUBDOMAIN",
-      "atlasEntityId": null,
-      "decision": "NOT_REGISTERED"
+      "atlasEntityId": "concept:private-credit",
+"decision": "EXISTING_ENTITY"
     },
     {
       "id": "candidate:real-assets",
