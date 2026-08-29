@@ -120,9 +120,9 @@
     {
       "id": "research-claim:private-capital-boundaries-vary",
 "researchId": "research:private-capital",
-      "subject": "candidate:private-capital",
+      "subject": "concept:private-capital",
       "predicate": "HAS_NON_UNIFORM_CLASSIFICATION",
-      "object": "candidate:private-capital-classification",
+      "object": "concept:private-capital-classification",
       "claimText": "مرزبندی بلوک‌های سرمایه خصوصی در منابع مختلف یکسان نیست.",
       "sourceRefs": [],
       "evidenceRefs": [],
