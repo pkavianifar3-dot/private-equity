@@ -207,6 +207,24 @@
     "en": "Private Capital Classification"
   },
   "lifecycleStatus": "REVIEW"
+},
+    {
+  "id": "concept:lender",
+  "type": "Concept",
+  "name": {
+    "fa": "اعتباردهنده",
+    "en": "Lender"
+  },
+  "lifecycleStatus": "REVIEW"
+},
+{
+  "id": "concept:contractual-components",
+  "type": "Concept",
+  "name": {
+    "fa": "اجزای قراردادی",
+    "en": "Contractual Components"
+  },
+  "lifecycleStatus": "REVIEW"
 }
   ]
 }
