@@ -64,9 +64,9 @@
 {
   "id": "research-claim:private-capital-includes-real-assets",
   "researchId": "research:private-capital",
-  "subject": "candidate:private-capital",
-  "predicate": "INCLUDES",
-  "object": "candidate:real-assets",
+  "subject": "concept:private-capital",
+"predicate": "INCLUDES",
+"object": "concept:real-assets",
   "claimText": "مقاله دارایی‌های واقعی را در چارچوب سرمایه خصوصی قرار می‌دهد.",
   "sourceRefs": [],
   "evidenceRefs": [],
