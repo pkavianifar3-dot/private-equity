@@ -8,7 +8,7 @@
         "fa": "علی سنگینیان",
         "en": "Ali Sanginian"
       },
-      "status": "REVIEW"
+      "lifecycleStatus": "REVIEW"
     },
     {
       "id": "organization:kian-financial-group",
@@ -17,7 +17,7 @@
         "fa": "گروه مالی کیان",
         "en": "Kian Financial Group"
       },
-      "status": "REVIEW"
+      "lifecycleStatus": "REVIEW"
     },
     {
       "id": "organization:kian-private-equity-management",
@@ -26,7 +26,7 @@
         "fa": "شرکت سهامی خاص مدیریت سهام خصوصی کیان",
         "en": "Kian Private Equity Management"
       },
-      "status": "REVIEW"
+      "lifecycleStatus": "REVIEW"
     },
     {
       "id": "organization:amin-investment-bank",
@@ -35,7 +35,7 @@
         "fa": "تأمین سرمایه امین",
         "en": "Amin Investment Bank"
       },
-      "status": "REVIEW"
+      "lifecycleStatus": "REVIEW"
     },
     {
       "id": "organization:semega",
@@ -44,7 +44,7 @@
         "fa": "سمگا",
         "en": "SEMEGA"
       },
-      "status": "REVIEW"
+      "lifecycleStatus": "REVIEW"
     },
     {
       "id": "organization:tourism-bank",
@@ -53,7 +53,7 @@
         "fa": "بانک گردشگری",
         "en": "Tourism Bank"
       },
-      "status": "REVIEW"
+      "lifecycleStatus": "REVIEW"
     },
     {
       "id": "organization:iran-farabourse",
@@ -62,7 +62,7 @@
         "fa": "فرابورس ایران",
         "en": "Iran Fara Bourse"
       },
-      "status": "REVIEW"
+      "lifecycleStatus": "REVIEW"
     },
     {
       "id": "organization:kayson-group",
@@ -71,7 +71,7 @@
         "fa": "گروه کیسون",
         "en": "Kayson Group"
       },
-      "status": "REVIEW"
+      "lifecycleStatus": "REVIEW"
     },
     {
   "id": "organization:tehran-chamber-money-capital-commission",
@@ -80,7 +80,7 @@
     "fa": "کمیسیون بازار پول و سرمایه اتاق بازرگانی تهران",
     "en": "Money and Capital Market Commission of Tehran Chamber of Commerce"
   },
-  "status": "REVIEW"
+  "lifecycleStatus": "REVIEW"
 },
     {
   "id": "organization:achareh",
@@ -89,7 +89,7 @@
     "fa": "آچاره",
     "en": "Achareh"
   },
-  "status": "REVIEW"
+  "lifecycleStatus": "REVIEW"
 },
     {
       "id": "project:dadman",
@@ -98,7 +98,7 @@
         "fa": "دادمان",
         "en": "Dadman"
       },
-      "status": "REVIEW"
+      "lifecycleStatus": "REVIEW"
     },
     {
       "id": "sector:private-equity",
@@ -107,7 +107,7 @@
         "fa": "سرمایه‌گذاری خصوصی",
         "en": "Private Equity"
       },
-      "status": "REVIEW"
+      "lifecycleStatus": "REVIEW"
     },
     {
       "id": "sector:capital-market",
@@ -116,7 +116,7 @@
         "fa": "بازار سرمایه",
         "en": "Capital Market"
       },
-      "status": "REVIEW"
+      "lifecycleStatus": "REVIEW"
     },
     {
       "id": "sector:investment-banking",
@@ -125,7 +125,7 @@
         "fa": "بانکداری سرمایه‌گذاری",
         "en": "Investment Banking"
       },
-      "status": "REVIEW"
+      "lifecycleStatus": "REVIEW"
     },
     {
       "id": "sector:corporate-investment",
@@ -134,7 +134,7 @@
         "fa": "سرمایه‌گذاری شرکتی",
         "en": "Corporate Investment"
       },
-      "status": "REVIEW"
+      "lifecycleStatus": "REVIEW"
     }
   ]
 }
