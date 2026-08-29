@@ -36,7 +36,8 @@
 "status": "PROMOTED",
 "confidence": "HIGH",
 "decision": "PROMOTE_TO_ATLAS"
-},
+"canonicalClaimRef": "claim:private-capital-includes-private-equity"
+    },
 
 {
   "id": "research-claim:private-capital-includes-private-credit",
