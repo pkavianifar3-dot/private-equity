@@ -1,0 +1,10 @@
+{
+  "id": "concept:private-credit",
+  "type": "Concept",
+  "name": {
+    "fa": "اعتبار خصوصی",
+    "en": "Private Credit"
+  },
+  "aliases": [],
+  "lifecycleStatus": "REVIEW"
+}
