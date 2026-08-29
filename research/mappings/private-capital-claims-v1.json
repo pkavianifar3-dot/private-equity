@@ -67,12 +67,16 @@
   "subject": "concept:private-capital",
 "predicate": "INCLUDES",
 "object": "concept:real-assets",
-  "claimText": "مقاله دارایی‌های واقعی را در چارچوب سرمایه خصوصی قرار می‌دهد.",
-  "sourceRefs": [],
-  "evidenceRefs": [],
-  "status": "REVIEW",
-  "confidence": null,
-  "decision": "REVIEW"
+"sourceRefs": [
+  "source:ecb-private-markets-public-risk"
+],
+"evidenceRefs": [
+  "evidence:private-capital-includes-real-assets-01"
+],
+"status": "REVIEW",
+"confidence": "HIGH",
+"decision": "PROMOTED_TO_ATLAS",
+"canonicalClaimRef": "claim:private-capital-includes-real-assets"
 },
 
     {
