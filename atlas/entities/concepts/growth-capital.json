@@ -1,0 +1,10 @@
+{
+  "id": "concept:growth-capital",
+  "type": "Concept",
+  "name": {
+    "fa": "سرمایه رشد",
+    "en": "Growth Capital"
+  },
+  "aliases": [],
+  "lifecycleStatus": "REVIEW"
+}
