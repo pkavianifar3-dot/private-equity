@@ -7,6 +7,20 @@
       "source": "source:federal-reserve-private-credit-2024",
       "evidence_type": "authoritative_publication",
       "strength": "strong"
+    },
+    {
+      "id": "evidence:private-credit-return-contractual-01",
+      "claim": "claim:private-credit-return-contractual",
+      "source": "source:federal-reserve-private-credit-2024",
+      "evidence_type": "authoritative_publication",
+      "strength": "strong"
+    },
+    {
+      "id": "evidence:private-credit-and-private-equity-linked-01",
+      "claim": "claim:private-credit-and-private-equity-linked",
+      "source": "source:federal-reserve-private-credit-2024",
+      "evidence_type": "authoritative_publication",
+      "strength": "strong"
     }
   ]
 }
