@@ -2,7 +2,7 @@ import json
 import sys
 from pathlib import Path
 
-from jsonschema import Draft202012Validator
+from jsonschema import Draft202012Validator, RefResolver
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -18,7 +18,17 @@ def add_schema_errors(instance, schema_path, label, errors):
     try:
         schema = load_json(schema_path)
 
-        validator = Draft202012Validator(schema)
+from jsonschema import Draft202012Validator, RefResolver
+
+resolver = RefResolver(
+    schema_path.resolve().as_uri(),
+    schema
+)
+
+validator = Draft202012Validator(
+    schema,
+    resolver=resolver
+)
 
         for error in sorted(
             validator.iter_errors(instance),
