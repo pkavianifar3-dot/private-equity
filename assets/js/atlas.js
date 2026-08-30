@@ -490,7 +490,17 @@
 
         return labels[status] || status;
     }
-
+    function investmentStatusLabel(status) {
+        const labels = {
+            announced: "اعلام‌شده",
+            completed: "تکمیل‌شده",
+            cancelled: "لغوشده",
+            pending: "در انتظار",
+            unknown: "نامشخص"
+        };
+    
+        return labels[status] || status;
+    }
     function confidenceLabel(confidence) {
         const labels = {
             HIGH: "اطمینان بالا",
@@ -2029,10 +2039,14 @@ async function renderOrganization(entityId) {
                                             وضعیت
                                         </strong>
                                         <span>
+                                            
                                             ${escapeHTML(
-                                                entity.metadata
-                                                    .investment_status
+                                                investmentStatusLabel(
+                                                    entity.metadata.investment_status
+                                                )
                                             )}
+
+                                            
                                         </span>
                                     </div>
                                 `
