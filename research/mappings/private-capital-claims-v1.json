@@ -219,11 +219,15 @@
       "predicate": "CHARACTERIZED_BY",
       "object": "concept:private-market-access",
       "claimText": "در چارچوب مقاله، ویژگی بنیادین سرمایه خصوصی اتکا به فرصت‌های سرمایه‌گذاری با دسترسی خصوصی و خارج از بازارهای عمومی سرمایه است.",
-      "sourceRefs": [],
-      "evidenceRefs": [],
-      "status": "REVIEW",
-      "confidence": null,
-      "decision": "REVIEW"
+      "sourceRefs": [
+  "source:ecb-private-markets-public-risk"
+],
+"evidenceRefs": [
+  "evidence:private-capital-private-access-01"
+],
+"status": "REVIEW",
+"confidence": "HIGH",
+"decision": "REVIEW"
     }
   ]
 }
