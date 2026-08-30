@@ -1489,7 +1489,39 @@ async function renderOrganization(entityId) {
     
     const investmentIndex =
         await loadInvestmentEntities(registry);
+    const investmentSummaries = [];
     
+    for (const claim of organizationClaims) {
+        if (claim.predicate !== "INVESTED_IN") {
+            continue;
+        }
+    
+        const investment =
+            Object.values(investmentIndex).find(
+                item =>
+                    item.metadata?.investor === claim.subject &&
+                    item.metadata?.target === claim.object
+            );
+    
+        if (!investment) {
+            continue;
+        }
+    
+        const investmentClaims =
+            await loadClaimsForEntity(investment.id);
+    
+        const amountClaim =
+            investmentClaims.find(
+                item =>
+                    item.predicate === "INVESTMENT_AMOUNT"
+            );
+    
+        investmentSummaries.push({
+            claim,
+            investment,
+            amountClaim
+        });
+    }
     const evidenceList =
         await loadEvidenceForClaims(organizationClaims);
     
@@ -1531,7 +1563,93 @@ async function renderOrganization(entityId) {
         parentId
             ? getEntityName(entityIndex, parentId)
             : "";
-
+    const investmentSummaryHTML =
+        investmentSummaries.length
+            ? `
+                <section class="atlas-section">
+    
+                    <div class="container">
+    
+                        <h2>
+                            سرمایه‌گذاری‌ها
+                        </h2>
+    
+                        <div class="grid atlas-claims-grid">
+    
+                            ${investmentSummaries
+                                .map(item => {
+                                    const investmentURL =
+                                        entityURL(
+                                            item.investment.id
+                                        );
+    
+                                    const targetName =
+                                        getEntityName(
+                                            entityIndex,
+                                            item.claim.object
+                                        );
+    
+                                    return `
+                                        <article class="card atlas-claim">
+    
+                                            <div class="atlas-claim-label">
+                                                سرمایه‌گذاری
+                                            </div>
+    
+                                            <h3>
+                                                ${escapeHTML(
+                                                    targetName
+                                                )}
+                                            </h3>
+    
+                                            ${
+                                                item.amountClaim
+                                                    ? `
+                                                        <div class="atlas-value">
+                                                            <strong>
+                                                                مبلغ:
+                                                            </strong>
+    
+                                                            ${formatClaimValue(
+                                                                item.amountClaim.value
+                                                            )}
+                                                        </div>
+    
+                                                        <div class="atlas-status">
+                                                            ${escapeHTML(
+                                                                statusLabel(
+                                                                    item.amountClaim.status
+                                                                )
+                                                            )}
+                                                        </div>
+                                                    `
+                                                    : ""
+                                            }
+    
+                                            ${
+                                                investmentURL
+                                                    ? `
+                                                        <p class="atlas-meta">
+                                                            <a href="${investmentURL}">
+                                                                مشاهده جزئیات سرمایه‌گذاری
+                                                            </a>
+                                                        </p>
+                                                    `
+                                                    : ""
+                                            }
+    
+                                        </article>
+                                    `;
+                                })
+                                .join("")}
+    
+                        </div>
+    
+                    </div>
+    
+                </section>
+            `
+            : "";
     root.innerHTML = `
         <section class="page-hero">
 
@@ -1647,7 +1765,7 @@ async function renderOrganization(entityId) {
             entityIndex,
             investmentIndex
         )}
-        
+        ${investmentSummaryHTML}
         ${renderEvidenceSection(
             organizationClaims,
             evidenceData,
