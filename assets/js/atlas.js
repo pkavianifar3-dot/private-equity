@@ -1154,13 +1154,24 @@ function renderEvidenceSection(
                 return "";
             }
 
-            const claimTitle =
-                claim.object
-                    ? getEntityName(entityIndex, claim.object)
-                    : formatClaimValue(claim.value);
-
-            const claimLabel =
+            const relation =
                 relationLabel(claim.predicate);
+
+            const objectName =
+                claim.object
+                    ? getEntityName(
+                        entityIndex,
+                        claim.object
+                    )
+                    : "";
+
+            const objectEnglishName =
+                claim.object
+                    ? getEntityEnglishName(
+                        entityIndex,
+                        claim.object
+                    )
+                    : "";
 
             const evidenceHTML =
                 evidenceItems
@@ -1171,6 +1182,7 @@ function renderEvidenceSection(
                         if (!source) {
                             return `
                                 <div class="atlas-evidence-item">
+
                                     <div class="atlas-claim-label">
                                         شاهد
                                     </div>
@@ -1180,6 +1192,7 @@ function renderEvidenceSection(
                                             evidence.id
                                         )}
                                     </p>
+
                                 </div>
                             `;
                         }
@@ -1269,21 +1282,29 @@ function renderEvidenceSection(
                 <article class="card atlas-evidence-group">
 
                     <div class="atlas-claim-label">
-                        ${escapeHTML(claimLabel)}
+                        ${escapeHTML(relation)}
                     </div>
 
                     ${
-                        claim.object
+                        objectName
                             ? `
                                 <h3>
-                                    ${escapeHTML(claimTitle)}
+                                    ${escapeHTML(objectName)}
                                 </h3>
                             `
-                            : `
-                                <h3>
-                                    ${escapeHTML(claimLabel)}
-                                </h3>
+                            : ""
+                    }
+
+                    ${
+                        objectEnglishName
+                            ? `
+                                <p class="atlas-english">
+                                    ${escapeHTML(
+                                        objectEnglishName
+                                    )}
+                                </p>
                             `
+                            : ""
                     }
 
                     ${
@@ -1291,11 +1312,28 @@ function renderEvidenceSection(
                             ? `
                                 <div class="atlas-value">
                                     <strong>مقدار:</strong>
-                                    ${formatClaimValue(claim.value)}
+                                    ${formatClaimValue(
+                                        claim.value
+                                    )}
                                 </div>
                             `
                             : ""
                     }
+
+                    <div class="atlas-status">
+                        ${escapeHTML(
+                            statusLabel(claim.status)
+                        )}
+                        ${
+                            claim.confidence
+                                ? ` · ${escapeHTML(
+                                    confidenceLabel(
+                                        claim.confidence
+                                    )
+                                )}`
+                                : ""
+                        }
+                    </div>
 
                     <div class="atlas-evidence-list">
                         ${evidenceHTML}
