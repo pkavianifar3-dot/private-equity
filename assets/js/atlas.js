@@ -477,7 +477,7 @@
             OPERATES_IN: "فعالیت در حوزه",
             TARGETS_SECTOR: "هدف‌گذاری حوزه",
             TARGETS_INVESTOR_CATEGORY: "هدف‌گذاری نوع سرمایه‌گذار",
-            SUPPORTED_BY: "پشتیبانی‌شده توسط"
+            SUPPORTED_BY: "پشتیبانی‌شده توسط",
             BROADER_THAN: "کلی‌تر از",
             RELATED_TO: "مرتبط با",
             INCLUDES: "شامل",
@@ -1803,6 +1803,41 @@ async function renderOrganization(entityId) {
         buildOrganizationJSONLD(entity, entityIndex, entityId)
     );
 }
+function renderConceptRelationSection(
+    title,
+    claims,
+    entityIndex
+) {
+    if (!claims.length) {
+        return "";
+    }
+
+    return `
+        <section class="atlas-section">
+
+            <div class="container">
+
+                <h2>${escapeHTML(title)}</h2>
+
+                <div class="grid atlas-claims-grid">
+
+                    ${claims
+                        .map(claim =>
+                            renderClaimCard(
+                                claim,
+                                entityIndex
+                            )
+                        )
+                        .join("")}
+
+                </div>
+
+            </div>
+
+        </section>
+    `;
+}
+    
     async function renderConcept(entityId) {
         const [
             entity,
@@ -1833,7 +1868,23 @@ async function renderOrganization(entityId) {
         const sourceData = {
             sources: sourceList
         };
-    
+        const broaderClaims =
+            conceptClaims.filter(
+                claim =>
+                    claim.predicate === "BROADER_THAN"
+            );
+        
+        const relatedClaims =
+            conceptClaims.filter(
+                claim =>
+                    claim.predicate === "RELATED_TO"
+            );
+        
+        const includesClaims =
+            conceptClaims.filter(
+                claim =>
+                    claim.predicate === "INCLUDES"
+            );
         const root =
             document.getElementById("atlas-root");
     
@@ -1949,9 +2000,21 @@ async function renderOrganization(entityId) {
     
             </section>
     
-            ${renderClaimsSection(
-                "روابط و ادعاها",
-                conceptClaims,
+            ${renderConceptRelationSection(
+                "کلی‌تر از",
+                broaderClaims,
+                entityIndex
+            )}
+            
+            ${renderConceptRelationSection(
+                "مرتبط با",
+                relatedClaims,
+                entityIndex
+            )}
+            
+            ${renderConceptRelationSection(
+                "شامل",
+                includesClaims,
                 entityIndex
             )}
     
