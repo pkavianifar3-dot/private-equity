@@ -227,6 +227,8 @@ def collect_sources(errors):
     for path in sorted(
         (ROOT / "sources").glob("*.json")
     ):
+        if path.name == "index.json":
+            continue
         data = load_registry(path, errors)
 
         add_schema_errors(
@@ -272,6 +274,8 @@ def collect_evidence(errors):
     for path in sorted(
         (ROOT / "evidence").glob("*.json")
     ):
+        if path.name == "index.json":
+            continue
         data = load_registry(path, errors)
 
         add_schema_errors(
