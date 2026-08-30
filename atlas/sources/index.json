@@ -1,1 +1,19 @@
-
+{
+  "version": "1.0",
+  "sources": {
+    "source:ali-sanginian-interviews": "ali-sanginian.json",
+    "source:ali-sanginian-personal-articles": "ali-sanginian.json",
+    "source:ali-sanginian-personal-website": "ali-sanginian.json",
+    "source:amin-capital-archive": "ali-sanginian.json",
+    "source:amin-capital-market-report-1395": "ali-sanginian.json",
+    "source:ecb-private-markets-public-risk": "private-capital-research.json",
+    "source:federal-reserve-private-credit-2024": "federal-reserve-private-credit-2024.json",
+    "source:kayson-official": "ali-sanginian.json",
+    "source:kian-direct-interview-1405": "ali-sanginian.json",
+    "source:kian-private-equity-company-registry": "ali-sanginian.json",
+    "source:mckinsey-global-private-markets-report-2025": "private-capital-research.json",
+    "source:tehran-chamber-commission-interview-1395": "ali-sanginian.json",
+    "source:tehran-chamber-independent-report": "ali-sanginian.json",
+    "source:tourism-bank-board-history": "ali-sanginian.json"
+  }
+}
