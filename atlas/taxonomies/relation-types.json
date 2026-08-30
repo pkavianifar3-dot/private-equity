@@ -150,6 +150,11 @@
   "id": "LINKED_TO",
   "label_fa": "پیوند دارد با",
   "label_en": "Linked To"
+},
+    {
+  "id": "CHARACTERIZED_BY",
+  "label_fa": "با این ویژگی شناخته می‌شود",
+  "label_en": "Characterized By"
 }
   ]
 }
