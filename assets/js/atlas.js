@@ -1589,6 +1589,260 @@ async function renderOrganization(entityId) {
         buildOrganizationJSONLD(entity, entityIndex, entityId)
     );
 }
+
+    async function renderInvestment(entityId) {
+        const [
+            entity,
+            investmentClaims,
+            registry
+        ] = await Promise.all([
+            loadJSON(entityFilePath(entityId)),
+            loadClaimsForEntity(entityId),
+            loadJSON(`${ATLAS_ROOT}/entities/index.json`)
+        ]);
+    
+        const entityIndex = {};
+    
+        registry.entities.forEach(item => {
+            entityIndex[item.id] = item;
+        });
+    
+        const evidenceList =
+            await loadEvidenceForClaims(investmentClaims);
+    
+        const sourceList =
+            await loadSourcesForEvidence(evidenceList);
+    
+        const evidenceData = {
+            evidence: evidenceList
+        };
+    
+        const sourceData = {
+            sources: sourceList
+        };
+    
+        const investorId =
+            entity.metadata?.investor || null;
+    
+        const targetId =
+            entity.metadata?.target || null;
+    
+        const investorName =
+            investorId
+                ? getEntityName(entityIndex, investorId)
+                : "";
+    
+        const targetName =
+            targetId
+                ? getEntityName(entityIndex, targetId)
+                : "";
+    
+        const amountClaim =
+            investmentClaims.find(
+                claim =>
+                    claim.predicate === "INVESTMENT_AMOUNT"
+            );
+    
+        const root =
+            document.getElementById("atlas-root");
+    
+        if (!root) {
+            throw new Error(
+                "Atlas root element not found."
+            );
+        }
+    
+        root.innerHTML = `
+            <section class="page-hero">
+    
+                <div class="container">
+    
+                    <h1>
+                        ${escapeHTML(
+                            entity.name?.fa || ""
+                        )}
+                    </h1>
+    
+                    ${
+                        entity.name?.en
+                            ? `
+                                <p>
+                                    ${escapeHTML(
+                                        entity.name.en
+                                    )}
+                                </p>
+                            `
+                            : ""
+                    }
+    
+                </div>
+    
+            </section>
+    
+            <section class="atlas-section">
+    
+                <div class="container">
+    
+                    <div class="card atlas-identity-card">
+    
+                        <div class="atlas-kicker">
+                            سرمایه‌گذاری
+                        </div>
+    
+                        ${
+                            investorName
+                                ? `
+                                    <div class="atlas-identity-row">
+                                        <strong>
+                                            سرمایه‌گذار
+                                        </strong>
+                                        <span>
+                                            ${escapeHTML(
+                                                investorName
+                                            )}
+                                        </span>
+                                    </div>
+                                `
+                                : ""
+                        }
+    
+                        ${
+                            targetName
+                                ? `
+                                    <div class="atlas-identity-row">
+                                        <strong>
+                                            هدف سرمایه‌گذاری
+                                        </strong>
+                                        <span>
+                                            ${escapeHTML(
+                                                targetName
+                                            )}
+                                        </span>
+                                    </div>
+                                `
+                                : ""
+                        }
+    
+                        ${
+                            entity.metadata?.investment_status
+                                ? `
+                                    <div class="atlas-identity-row">
+                                        <strong>
+                                            وضعیت
+                                        </strong>
+                                        <span>
+                                            ${escapeHTML(
+                                                entity.metadata
+                                                    .investment_status
+                                            )}
+                                        </span>
+                                    </div>
+                                `
+                                : ""
+                        }
+    
+                        <div class="atlas-identity-row">
+                            <strong>
+                                ID
+                            </strong>
+                            <span>
+                                ${escapeHTML(
+                                    entity.id
+                                )}
+                            </span>
+                        </div>
+    
+                    </div>
+    
+                </div>
+    
+            </section>
+    
+            ${
+                amountClaim
+                    ? `
+                        <section class="atlas-section">
+    
+                            <div class="container">
+    
+                                <h2>
+                                    مبلغ سرمایه‌گذاری
+                                </h2>
+    
+                                <div class="card atlas-claim">
+    
+                                    <div class="atlas-claim-label">
+                                        ${escapeHTML(
+                                            relationLabel(
+                                                amountClaim.predicate
+                                            )
+                                        )}
+                                    </div>
+    
+                                    <div class="atlas-value">
+                                        <strong>
+                                            مقدار:
+                                        </strong>
+    
+                                        ${formatClaimValue(
+                                            amountClaim.value
+                                        )}
+                                    </div>
+    
+                                    <div class="atlas-status">
+                                        ${escapeHTML(
+                                            statusLabel(
+                                                amountClaim.status
+                                            )
+                                        )}
+                                        ${
+                                            amountClaim.confidence
+                                                ? ` · ${escapeHTML(
+                                                    confidenceLabel(
+                                                        amountClaim.confidence
+                                                    )
+                                                )}`
+                                                : ""
+                                        }
+                                    </div>
+    
+                                </div>
+    
+                            </div>
+    
+                        </section>
+                    `
+                    : ""
+            }
+    
+            ${renderClaimsSection(
+                "ادعاها و روابط",
+                investmentClaims,
+                entityIndex
+            )}
+    
+            ${renderEvidenceSection(
+                investmentClaims,
+                evidenceData,
+                sourceData,
+                entityIndex
+            )}
+        `;
+    
+        applyPageSEO({
+            title:
+                `${entity.name?.fa || ""} | اطلس | Private Capital`,
+    
+            description:
+                `صفحه سرمایه‌گذاری ${entity.name?.fa || ""} در Private Capital.`,
+    
+            url:
+                `${SITE_ORIGIN}/atlas/investment.html?id=${encodeURIComponent(
+                    entityId
+                )}`
+        });
+    }
+    
     function renderError(message) {
         const root = document.getElementById("atlas-root");
 
@@ -1811,6 +2065,11 @@ ${renderEvidenceSection(
 
 if (entityId.startsWith("organization:")) {
     await renderOrganization(entityId);
+    return;
+}
+
+if (entityId.startsWith("investment:")) {
+    await renderInvestment(entityId);
     return;
 }
 
