@@ -6,7 +6,6 @@
       "subject": "organization:kayson-group",
       "predicate": "INVESTED_IN",
       "object": "organization:achareh",
-      "investment": "investment:kayson-achareh",
       "status": "VERIFIED",
       "confidence": "HIGH"
     }
