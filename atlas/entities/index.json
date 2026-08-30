@@ -8,7 +8,7 @@
         "fa": "علی سنگینیان",
         "en": "Ali Sanginian"
       },
-      "lifecycleStatus": "REVIEW"
+      "lifecycleStatus": "PUBLISHED"
     },
     {
       "id": "organization:kian-financial-group",
@@ -32,18 +32,18 @@
       "id": "organization:amin-investment-bank",
       "type": "Organization",
       "name": {
-        "fa": "تأمین سرمایه امین",
-        "en": "Amin Investment Bank"
-      },
+  "fa": "شرکت تأمین سرمایه امین",
+  "en": "Amin Investment Bank"
+},
       "lifecycleStatus": "REVIEW"
     },
     {
       "id": "organization:semega",
       "type": "Organization",
       "name": {
-        "fa": "سمگا",
-        "en": "SEMEGA"
-      },
+  "fa": "گروه سرمایه‌گذاری میراث فرهنگی و گردشگری ایران (سمگا)",
+  "en": "SEMEGA"
+},
       "lifecycleStatus": "REVIEW"
     },
     {
