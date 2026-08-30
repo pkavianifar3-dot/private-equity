@@ -166,6 +166,15 @@
   "object_types": [
     "Concept"
   ]
+},
+    {
+  "relation": "HAS_NON_UNIFORM_CLASSIFICATION",
+  "subject_types": [
+    "Concept"
+  ],
+  "object_types": [
+    "Concept"
+  ]
 }
   ]
 }
