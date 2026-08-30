@@ -1,41 +1,53 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "Private Capital Atlas Schema v1",
-  "description": "Core data contract for the Private Capital financial knowledge graph.",
+  "title": "Private Capital Atlas Entity Schema v1",
+  "description": "Canonical data contract for Atlas entities.",
   "type": "object",
+
   "required": [
-  "id",
-  "type",
-  "name",
-  "lifecycleStatus"
-],
+    "id",
+    "type",
+    "name",
+    "lifecycleStatus"
+  ],
+
   "properties": {
     "id": {
       "type": "string",
       "pattern": "^[a-z]+:[a-z0-9]+(?:-[a-z0-9]+)*$"
     },
+
     "type": {
-      "type": "string"
+      "type": "string",
+      "minLength": 1
     },
+
     "name": {
       "type": "object",
-      "required": ["fa", "en"],
+      "required": [
+        "fa",
+        "en"
+      ],
       "properties": {
         "fa": {
-          "type": "string"
+          "type": "string",
+          "minLength": 1
         },
         "en": {
-          "type": "string"
+          "type": "string",
+          "minLength": 1
         }
       },
       "additionalProperties": false
     },
+
     "aliases": {
       "type": "array",
       "items": {
         "type": "string"
       }
     },
+
     "honorific": {
       "type": "object",
       "properties": {
@@ -48,25 +60,29 @@
       },
       "additionalProperties": false
     },
+
     "lifecycleStatus": {
-  "type": "string",
-  "enum": [
-    "DRAFT",
-    "REVIEW",
-    "PUBLISHED",
-    "ARCHIVED"
-  ]
-},
+      "type": "string",
+      "enum": [
+        "DRAFT",
+        "REVIEW",
+        "PUBLISHED",
+        "ARCHIVED"
+      ]
+    },
+
     "domains": {
       "type": "array",
       "items": {
         "type": "string"
       }
     },
+
     "metadata": {
       "type": "object",
       "additionalProperties": true
     }
   },
-  "additionalProperties": true
+
+  "additionalProperties": false
 }
