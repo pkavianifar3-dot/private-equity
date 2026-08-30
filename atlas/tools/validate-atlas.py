@@ -207,7 +207,7 @@ def collect_sources(errors):
 
         add_schema_errors(
             data,
-            SCHEMAS_DIR / "source-schema-v1.json",
+            SCHEMAS_DIR / "source-file-schema-v1.json",
             str(path.relative_to(ROOT)),
             errors
         )
@@ -252,7 +252,7 @@ def collect_evidence(errors):
 
         add_schema_errors(
             data,
-            SCHEMAS_DIR / "evidence-schema-v1.json",
+            SCHEMAS_DIR / "evidence-file-schema-v1.json",
             str(path.relative_to(ROOT)),
             errors
         )
