@@ -3,7 +3,7 @@ name: Validate Atlas
 on:
   push:
     branches:
-      - main
+      - "**"
   pull_request:
     branches:
       - main
@@ -21,5 +21,14 @@ jobs:
         with:
           python-version: "3.x"
 
+      - name: Install Python dependencies
+        run: pip install -r requirements.txt
+
       - name: Validate Atlas
         run: python atlas/tools/validate-atlas.py
+
+      - name: Generate entity index
+        run: python atlas/tools/build-index.py
+
+      - name: Check generated entity index
+        run: git diff --exit-code -- atlas/entities/index.json

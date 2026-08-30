@@ -1,0 +1,10 @@
+{
+  "id": "sector:capital-market",
+  "type": "Sector",
+  "name": {
+    "fa": "بازار سرمایه",
+    "en": "Capital Market"
+  },
+  "aliases": [],
+  "lifecycleStatus": "REVIEW"
+}

@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Private Capital Atlas Claim File Schema v1",
+  "type": "object",
+  "required": [
+    "version",
+    "claims"
+  ],
+  "properties": {
+    "version": {
+      "type": "string"
+    },
+    "claims": {
+      "type": "array",
+      "items": {
+        "$ref": "claim-schema-v1.json"
+      }
+    }
+  },
+  "additionalProperties": false
+}

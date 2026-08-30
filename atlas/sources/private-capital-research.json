@@ -3,6 +3,8 @@
   "sources": [
     {
       "id": "source:ecb-private-markets-public-risk",
+      "type": "Source",
+"source_type": "research",
       "title_fa": "بازارهای خصوصی، ریسک عمومی؟ پیامدهای ثبات مالی منابع تأمین مالی جایگزین",
       "title_en": "Private markets, public risk? Financial stability implications of alternative funding sources",
       "publisher": "European Central Bank",
@@ -11,6 +13,8 @@
     },
     {
       "id": "source:mckinsey-global-private-markets-report-2025",
+"type": "Source",
+"source_type": "research",
       "title_fa": "گزارش بازارهای خصوصی جهانی ۲۰۲۵",
       "title_en": "Global Private Markets Report 2025: Braced for shifting weather",
       "publisher": "McKinsey & Company",

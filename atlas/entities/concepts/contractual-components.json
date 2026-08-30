@@ -1,0 +1,10 @@
+{
+  "id": "concept:contractual-components",
+  "type": "Concept",
+  "name": {
+    "fa": "اجزای قراردادی",
+    "en": "Contractual Components"
+  },
+  "aliases": [],
+  "lifecycleStatus": "REVIEW"
+}

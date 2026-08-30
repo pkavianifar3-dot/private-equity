@@ -1,0 +1,10 @@
+{
+  "id": "sector:investment-banking",
+  "type": "Sector",
+  "name": {
+    "fa": "بانکداری سرمایه‌گذاری",
+    "en": "Investment Banking"
+  },
+  "aliases": [],
+  "lifecycleStatus": "REVIEW"
+}

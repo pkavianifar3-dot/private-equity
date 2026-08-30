@@ -1,0 +1,10 @@
+{
+  "id": "sector:corporate-investment",
+  "type": "Sector",
+  "name": {
+    "fa": "سرمایه‌گذاری شرکتی",
+    "en": "Corporate Investment"
+  },
+  "aliases": [],
+  "lifecycleStatus": "REVIEW"
+}

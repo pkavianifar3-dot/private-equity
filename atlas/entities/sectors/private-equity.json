@@ -1,0 +1,10 @@
+{
+  "id": "sector:private-equity",
+  "type": "Sector",
+  "name": {
+    "fa": "سرمایه‌گذاری خصوصی",
+    "en": "Private Equity"
+  },
+  "aliases": [],
+  "lifecycleStatus": "REVIEW"
+}

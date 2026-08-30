@@ -1,0 +1,10 @@
+{
+  "id": "concept:private-market-access",
+  "type": "Concept",
+  "name": {
+    "fa": "دسترسی به بازارهای خصوصی",
+    "en": "Private Market Access"
+  },
+  "aliases": [],
+  "lifecycleStatus": "REVIEW"
+}

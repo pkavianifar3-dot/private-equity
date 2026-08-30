@@ -2,31 +2,95 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Private Capital Atlas Source Schema v1",
   "type": "object",
+
   "required": [
-    "id",
-    "type",
-    "source_type",
-    "title_fa"
+    "version",
+    "sources"
   ],
+
   "properties": {
-    "id": {
+    "version": {
       "type": "string"
     },
-    "type": {
-      "const": "Source"
-    },
-    "source_type": {
-      "type": "string"
-    },
-    "title_fa": {
-      "type": "string"
-    },
-    "publisher": {
-      "type": ["string", "null"]
-    },
-    "url": {
-      "type": ["string", "null"]
+
+    "sources": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/sourceRecord"
+      }
     }
   },
-  "additionalProperties": false
+
+  "additionalProperties": false,
+
+  "$defs": {
+    "sourceRecord": {
+      "type": "object",
+
+      "required": [
+        "id",
+        "type",
+        "source_type",
+        "title_fa"
+      ],
+
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^source:[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+
+        "type": {
+          "const": "Source"
+        },
+
+        "source_type": {
+          "type": "string",
+          "minLength": 1
+        },
+
+        "title_fa": {
+          "type": "string",
+          "minLength": 1
+        },
+
+        "title_en": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+
+        "publisher": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+
+        "publication_date": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+
+        "url": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+
+        "citation_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+
+      "additionalProperties": false
+    }
+  }
 }
