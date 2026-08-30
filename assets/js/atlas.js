@@ -1301,10 +1301,10 @@ async function renderOrganization(entityId) {
             entityIndex[item.id] = item;
         });
 
-        const allClaims = personClaims;
-
         const personClaims = allClaims.filter(
-            claim => claim.subject === entityId
+            claim =>
+                claim.subject === entityId ||
+                claim.object === entityId
         );
 
         const currentRoleClaim = personClaims.find(
