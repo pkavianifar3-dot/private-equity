@@ -257,7 +257,10 @@
         
             case "investment":
                 return `${ATLAS_ROOT}/entities/investments/${slug}.json`;
-        
+            
+            case "concept":
+                return `${ATLAS_ROOT}/entities/concepts/${slug}.json`;
+            
             default:
                 throw new Error(`Unsupported entity type: ${type}`);
         }
@@ -610,7 +613,10 @@ function entityURL(entityId) {
 
         case "investment":
             return `investment.html?id=${encodeURIComponent(entityId)}`;
-
+        
+        case "concept":
+            return `concept.html?id=${encodeURIComponent(entityId)}`;
+        
         default:
             return null;
     }
