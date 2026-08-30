@@ -1241,6 +1241,20 @@ async function renderOrganization(entityId) {
         loadClaimsForEntity(entityId),
         loadJSON(`${ATLAS_ROOT}/entities/index.json`)
     ]);
+    
+    const evidenceList =
+        await loadEvidenceForClaims(organizationClaims);
+    
+    const sourceList =
+        await loadSourcesForEvidence(evidenceList);
+    
+    const evidenceData = {
+        evidence: evidenceList
+    };
+    
+    const sourceData = {
+        sources: sourceList
+    };
 
     const entityIndex = {};
 
@@ -1382,6 +1396,12 @@ async function renderOrganization(entityId) {
         ${renderClaimsSection(
             "روابط و ادعاها",
             claims,
+            entityIndex
+        )}
+        ${renderEvidenceSection(
+            organizationClaims,
+            evidenceData,
+            sourceData,
             entityIndex
         )}
     `;
