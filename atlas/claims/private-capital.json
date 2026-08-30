@@ -7,7 +7,7 @@
       "predicate": "INCLUDES",
       "object": "concept:private-equity",
       "status": "SUPPORTED",
-      "confidence": "HIGH"
+      "confidence": "INVALID"
     }
   ]
 }
