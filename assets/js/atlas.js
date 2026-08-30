@@ -589,22 +589,48 @@ function entityURL(entityId) {
             claim.object
                 ? entityIndex[claim.object]
                 : null;
-    
-        const objectURL =
-            claim.object
-                ? entityURL(claim.object)
+        
+        const linkedInvestment =
+            claim.predicate === "INVESTED_IN"
+                ? Object.values(entityIndex).find(
+                    entity =>
+                        entity.type === "Investment" &&
+                        entity.metadata?.investor === claim.subject &&
+                        entity.metadata?.target === claim.object
+                )
                 : null;
-    
-        const temporal = formatTemporal(claim.temporal);
-    
+        
+        const objectURL =
+            linkedInvestment
+                ? entityURL(linkedInvestment.id)
+                : (
+                    claim.object
+                        ? entityURL(claim.object)
+                        : null
+                );
+        
+        const displayObjectId =
+            linkedInvestment
+                ? linkedInvestment.id
+                : claim.object;
+        
+        const temporal =
+            formatTemporal(claim.temporal);
+        
         const objectName =
             claim.object
-                ? getEntityName(entityIndex, claim.object)
+                ? getEntityName(
+                    entityIndex,
+                    displayObjectId
+                )
                 : "";
-    
+        
         const objectEnglishName =
             claim.object
-                ? getEntityEnglishName(entityIndex, claim.object)
+                ? getEntityEnglishName(
+                    entityIndex,
+                    displayObjectId
+                )
                 : "";
     
         const valueHTML =
