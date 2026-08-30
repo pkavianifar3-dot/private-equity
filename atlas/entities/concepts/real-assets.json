@@ -1,0 +1,10 @@
+{
+  "id": "concept:real-assets",
+  "type": "Concept",
+  "name": {
+    "fa": "دارایی‌های واقعی",
+    "en": "Real Assets"
+  },
+  "aliases": [],
+  "lifecycleStatus": "REVIEW"
+}
