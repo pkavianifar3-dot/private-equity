@@ -251,9 +251,13 @@
         switch (type) {
             case "person":
                 return `${ATLAS_ROOT}/entities/persons/${slug}.json`;
-
+        
             case "organization":
-    return `${ATLAS_ROOT}/entities/organizations/${slug}.json`;
+                return `${ATLAS_ROOT}/entities/organizations/${slug}.json`;
+        
+            case "investment":
+                return `${ATLAS_ROOT}/entities/investments/${slug}.json`;
+        
             default:
                 throw new Error(`Unsupported entity type: ${type}`);
         }
@@ -568,11 +572,16 @@ function entityURL(entityId) {
     const parts = entityId.split(":");
     const type = parts[0];
 
-    if (type === "organization") {
-    return `organization.html?id=${encodeURIComponent(entityId)}`;
-}
+    switch (type) {
+        case "organization":
+            return `organization.html?id=${encodeURIComponent(entityId)}`;
 
-    return null;
+        case "investment":
+            return `investment.html?id=${encodeURIComponent(entityId)}`;
+
+        default:
+            return null;
+    }
 }
 
     function renderClaimCard(claim, entityIndex) {
