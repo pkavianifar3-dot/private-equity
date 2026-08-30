@@ -207,7 +207,53 @@ def collect_evidence_index():
         }
     }
 
+def collect_record_sources(directory, collection_key, record_label):
+    record_sources = {}
+    seen_ids = set()
 
+    for path in sorted(directory.glob("*.json")):
+        index_path = directory / "index.json"
+
+        if path == index_path:
+            continue
+
+        data = load_json(path)
+
+        if collection_key not in data:
+            raise ValueError(
+                f"{path.relative_to(ROOT)}: "
+                f"missing required field: {collection_key}"
+            )
+
+        records = data[collection_key]
+
+        if not isinstance(records, list):
+            raise ValueError(
+                f"{path.relative_to(ROOT)}: "
+                f"{collection_key} must be an array"
+            )
+
+        for record in records:
+            record_id = record.get("id")
+
+            if not record_id:
+                raise ValueError(
+                    f"{path.relative_to(ROOT)}: "
+                    f"{record_label} missing required field: id"
+                )
+
+            if record_id in seen_ids:
+                raise ValueError(
+                    f"Duplicate {record_label} ID: {record_id}"
+                )
+
+            seen_ids.add(record_id)
+            record_sources[record_id] = path.name
+
+    return {
+        record_id: record_sources[record_id]
+        for record_id in sorted(record_sources)
+    }
 def write_json(path, output):
     with path.open("w", encoding="utf-8") as f:
         json.dump(
