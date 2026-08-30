@@ -1280,20 +1280,20 @@ async function renderOrganization(entityId) {
 
     async function renderPerson(entityId) {
         const [
-    entity,
-    personClaims,
-    registry,
-    content,
-    evidenceData,
-    sourceData
-] = await Promise.all([
-    loadJSON(entityFilePath(entityId)),
-    loadClaimsForEntity(entityId),
-    loadJSON(`${ATLAS_ROOT}/entities/index.json`),
-    loadJSON(`${ATLAS_ROOT}/content/persons/${entityId.split(":").slice(1).join(":")}.json`),
-    loadJSON(`${ATLAS_ROOT}/evidence/${entityId.split(":").slice(1).join(":")}.json`),
-    loadJSON(`${ATLAS_ROOT}/sources/${entityId.split(":").slice(1).join(":")}.json`)
-]);
+            entity,
+            personClaims,
+            registry,
+            content,
+            evidenceData,
+            sourceData
+        ] = await Promise.all([
+            loadJSON(entityFilePath(entityId)),
+            loadClaimsForEntity(entityId),
+            loadJSON(`${ATLAS_ROOT}/entities/index.json`),
+            loadJSON(`${ATLAS_ROOT}/content/persons/${entityId.split(":").slice(1).join(":")}.json`),
+            loadJSON(`${ATLAS_ROOT}/evidence/${entityId.split(":").slice(1).join(":")}.json`),
+            loadJSON(`${ATLAS_ROOT}/sources/${entityId.split(":").slice(1).join(":")}.json`)
+        ]);
 
         const entityIndex = {};
 
