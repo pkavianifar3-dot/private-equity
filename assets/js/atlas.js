@@ -478,6 +478,9 @@
             TARGETS_SECTOR: "هدف‌گذاری حوزه",
             TARGETS_INVESTOR_CATEGORY: "هدف‌گذاری نوع سرمایه‌گذار",
             SUPPORTED_BY: "پشتیبانی‌شده توسط"
+            BROADER_THAN: "کلی‌تر از",
+            RELATED_TO: "مرتبط با",
+            INCLUDES: "شامل",
         };
 
         return labels[predicate] || predicate;
