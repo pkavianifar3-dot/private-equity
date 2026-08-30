@@ -1,0 +1,10 @@
+{
+  "id": "concept:lender",
+  "type": "Concept",
+  "name": {
+    "fa": "اعتباردهنده",
+    "en": "Lender"
+  },
+  "aliases": [],
+  "lifecycleStatus": "REVIEW"
+}
