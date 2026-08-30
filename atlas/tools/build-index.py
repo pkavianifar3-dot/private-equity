@@ -3,11 +3,18 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
+
 ENTITIES_DIR = ROOT / "entities"
 ENTITIES_INDEX_PATH = ENTITIES_DIR / "index.json"
 
 CLAIMS_DIR = ROOT / "claims"
 CLAIMS_INDEX_PATH = CLAIMS_DIR / "index.json"
+
+EVIDENCE_DIR = ROOT / "evidence"
+EVIDENCE_INDEX_PATH = EVIDENCE_DIR / "index.json"
+
+SOURCES_DIR = ROOT / "sources"
+SOURCES_INDEX_PATH = SOURCES_DIR / "index.json"
 
 
 def load_json(path):
@@ -101,7 +108,6 @@ def collect_claims_by_entity():
                 )
 
             seen_claim_ids.add(claim_id)
-
             claim_sources[claim_id] = path.name
 
             linked_entity_ids = set()
@@ -133,6 +139,55 @@ def collect_claims_by_entity():
     }
 
     return claims_by_entity, claim_sources
+
+
+def collect_record_sources(directory, collection_key, record_label):
+    record_sources = {}
+    seen_ids = set()
+
+    for path in sorted(directory.glob("*.json")):
+        index_path = directory / "index.json"
+
+        if path == index_path:
+            continue
+
+        data = load_json(path)
+
+        if collection_key not in data:
+            raise ValueError(
+                f"{path.relative_to(ROOT)}: "
+                f"missing required field: {collection_key}"
+            )
+
+        records = data[collection_key]
+
+        if not isinstance(records, list):
+            raise ValueError(
+                f"{path.relative_to(ROOT)}: "
+                f"{collection_key} must be an array"
+            )
+
+        for record in records:
+            record_id = record.get("id")
+
+            if not record_id:
+                raise ValueError(
+                    f"{path.relative_to(ROOT)}: "
+                    f"{record_label} missing required field: id"
+                )
+
+            if record_id in seen_ids:
+                raise ValueError(
+                    f"Duplicate {record_label} ID: {record_id}"
+                )
+
+            seen_ids.add(record_id)
+            record_sources[record_id] = path.name
+
+    return {
+        record_id: record_sources[record_id]
+        for record_id in sorted(record_sources)
+    }
 
 
 def write_json(path, output):
@@ -178,6 +233,38 @@ def main():
         claims_index_output
     )
 
+    evidence_sources = collect_record_sources(
+        EVIDENCE_DIR,
+        "evidence",
+        "evidence"
+    )
+
+    evidence_index_output = {
+        "version": "1.0",
+        "evidence": evidence_sources
+    }
+
+    write_json(
+        EVIDENCE_INDEX_PATH,
+        evidence_index_output
+    )
+
+    source_sources = collect_record_sources(
+        SOURCES_DIR,
+        "sources",
+        "source"
+    )
+
+    source_index_output = {
+        "version": "1.0",
+        "sources": source_sources
+    }
+
+    write_json(
+        SOURCES_INDEX_PATH,
+        source_index_output
+    )
+
     print(
         f"Generated {ENTITIES_INDEX_PATH.relative_to(ROOT)} "
         f"with {len(entities)} entities."
@@ -187,6 +274,16 @@ def main():
         f"Generated {CLAIMS_INDEX_PATH.relative_to(ROOT)} "
         f"with {len(claims_by_entity)} entities linked to claims "
         f"and {len(claim_sources)} claims indexed."
+    )
+
+    print(
+        f"Generated {EVIDENCE_INDEX_PATH.relative_to(ROOT)} "
+        f"with {len(evidence_sources)} evidence items indexed."
+    )
+
+    print(
+        f"Generated {SOURCES_INDEX_PATH.relative_to(ROOT)} "
+        f"with {len(source_sources)} sources indexed."
     )
 
 
