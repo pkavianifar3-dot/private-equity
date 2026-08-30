@@ -153,7 +153,28 @@ def collect_entities(errors):
                 f"{entity_id}: index lifecycleStatus does not "
                 f"match canonical entity file"
             )
+    canonical_entity_ids = set()
 
+    for path in sorted(
+        ROOT.joinpath("entities").rglob("*.json")
+    ):
+        if path.name == "index.json":
+            continue
+
+        data = load_registry(path, errors)
+
+        entity_id = data.get("id")
+
+        if entity_id:
+            canonical_entity_ids.add(entity_id)
+
+    for entity_id in sorted(
+        entity_ids - canonical_entity_ids
+    ):
+        errors.append(
+            f"{entity_id}: present in entities/index.json "
+            f"but missing from canonical entity file"
+        )
     return entity_by_id, entity_ids
 
 
