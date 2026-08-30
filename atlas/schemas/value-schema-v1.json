@@ -2,7 +2,6 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Private Capital Atlas Structured Value Schema v1",
   "type": "object",
-
   "required": [
     "amount",
     "currency",
@@ -10,16 +9,13 @@
     "raw",
     "period_type"
   ],
-
   "properties": {
     "amount": {
       "type": "number"
     },
-
     "currency": {
       "type": "string"
     },
-
     "unit": {
       "type": "string",
       "enum": [
@@ -29,11 +25,9 @@
         "ratio"
       ]
     },
-
     "raw": {
       "type": "string"
     },
-
     "period_type": {
       "type": "string",
       "enum": [
@@ -45,6 +39,5 @@
       ]
     }
   },
-
   "additionalProperties": false
 }
