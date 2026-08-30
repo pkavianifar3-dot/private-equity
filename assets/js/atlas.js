@@ -1800,7 +1800,179 @@ async function renderOrganization(entityId) {
         buildOrganizationJSONLD(entity, entityIndex, entityId)
     );
 }
-
+    async function renderConcept(entityId) {
+        const [
+            entity,
+            conceptClaims,
+            registry
+        ] = await Promise.all([
+            loadJSON(entityFilePath(entityId)),
+            loadClaimsForEntity(entityId),
+            loadJSON(`${ATLAS_ROOT}/entities/index.json`)
+        ]);
+    
+        const entityIndex = {};
+    
+        registry.entities.forEach(item => {
+            entityIndex[item.id] = item;
+        });
+    
+        const evidenceList =
+            await loadEvidenceForClaims(conceptClaims);
+    
+        const sourceList =
+            await loadSourcesForEvidence(evidenceList);
+    
+        const evidenceData = {
+            evidence: evidenceList
+        };
+    
+        const sourceData = {
+            sources: sourceList
+        };
+    
+        const root =
+            document.getElementById("atlas-root");
+    
+        if (!root) {
+            throw new Error(
+                "Atlas root element not found."
+            );
+        }
+    
+        root.innerHTML = `
+            <section class="page-hero">
+    
+                <div class="container">
+    
+                    <h1>
+                        ${escapeHTML(
+                            entity.name?.fa || ""
+                        )}
+                    </h1>
+    
+                    ${
+                        entity.name?.en
+                            ? `
+                                <p>
+                                    ${escapeHTML(
+                                        entity.name.en
+                                    )}
+                                </p>
+                            `
+                            : ""
+                    }
+    
+                </div>
+    
+            </section>
+    
+            <section class="atlas-section">
+    
+                <div class="container">
+    
+                    <div class="card atlas-identity-card">
+    
+                        <div class="atlas-kicker">
+                            مفهوم
+                        </div>
+    
+                        <div class="atlas-identity-row">
+                            <strong>
+                                نام فارسی
+                            </strong>
+    
+                            <span>
+                                ${escapeHTML(
+                                    entity.name?.fa || ""
+                                )}
+                            </span>
+                        </div>
+    
+                        ${
+                            entity.name?.en
+                                ? `
+                                    <div class="atlas-identity-row">
+                                        <strong>
+                                            نام انگلیسی
+                                        </strong>
+    
+                                        <span class="atlas-english">
+                                            ${escapeHTML(
+                                                entity.name.en
+                                            )}
+                                        </span>
+                                    </div>
+                                `
+                                : ""
+                        }
+    
+                        ${
+                            entity.aliases?.length
+                                ? `
+                                    <div class="atlas-identity-row">
+                                        <strong>
+                                            نام‌های دیگر
+                                        </strong>
+    
+                                        <span>
+                                            ${entity.aliases
+                                                .map(
+                                                    alias =>
+                                                        escapeHTML(alias)
+                                                )
+                                                .join("، ")}
+                                        </span>
+                                    </div>
+                                `
+                                : ""
+                        }
+    
+                        <div class="atlas-identity-row">
+                            <strong>
+                                ID
+                            </strong>
+    
+                            <span>
+                                ${escapeHTML(
+                                    entity.id
+                                )}
+                            </span>
+                        </div>
+    
+                    </div>
+    
+                </div>
+    
+            </section>
+    
+            ${renderClaimsSection(
+                "روابط و ادعاها",
+                conceptClaims,
+                entityIndex
+            )}
+    
+            ${renderEvidenceSection(
+                conceptClaims,
+                evidenceData,
+                sourceData,
+                entityIndex
+            )}
+        `;
+    
+        applyPageSEO({
+            title:
+                `${entity.name?.fa || ""} | اطلس | Private Capital`,
+    
+            description:
+                `صفحه مفهوم ${entity.name?.fa || ""} در Private Capital.`,
+    
+            url:
+                `${SITE_ORIGIN}/atlas/concept.html?id=${encodeURIComponent(
+                    entityId
+                )}`
+        });
+    }
     async function renderInvestment(entityId) {
         const [
             entity,
@@ -2388,6 +2560,11 @@ if (entityId.startsWith("organization:")) {
 
 if (entityId.startsWith("investment:")) {
     await renderInvestment(entityId);
+    return;
+}
+
+if (entityId.startsWith("concept:")) {
+    await renderConcept(entityId);
     return;
 }
 
