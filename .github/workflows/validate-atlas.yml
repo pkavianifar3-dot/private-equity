@@ -31,4 +31,4 @@ jobs:
         run: python atlas/tools/build-index.py
 
       - name: Check generated indexes
-        run: git diff --exit-code -- atlas/entities/index.json atlas/claims/index.json
+        run: git diff --exit-code -- atlas/entities/index.json atlas/claims/index.json atlas/evidence/index.json atlas/sources/index.json
