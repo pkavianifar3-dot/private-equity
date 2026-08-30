@@ -1816,7 +1816,14 @@ function renderConceptRelationSection(
     if (!claims.length) {
         return "";
     }
-
+    const uniqueClaims = Array.from(
+        new Map(
+            claims.map(claim => [
+                `${claim.predicate}|${claim.object || ""}|${claim.value?.raw || ""}`,
+                claim
+            ])
+        ).values()
+    );
     return `
         <section class="atlas-section">
 
@@ -1826,7 +1833,7 @@ function renderConceptRelationSection(
 
                 <div class="grid atlas-claims-grid">
 
-                    ${claims
+                    ${uniqueClaims
                         .map(claim => {
                             const objectId =
                                 claim.object || null;
