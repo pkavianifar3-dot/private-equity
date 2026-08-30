@@ -162,24 +162,27 @@ def collect_claims(errors):
     claims = []
 
     for path in sorted(
-    (ROOT / "claims").glob("*.json")
-):
-    data = load_registry(path, errors)
+        (ROOT / "claims").glob("*.json")
+    ):
+        data = load_registry(path, errors)
 
-    if "version" not in data:
-        errors.append(
-            f"{path.relative_to(ROOT)}: missing 'version'"
-        )
+        if "version" not in data:
+            errors.append(
+                f"{path.relative_to(ROOT)}: missing 'version'"
+            )
 
-    if not isinstance(data.get("claims"), list):
-        errors.append(
-            f"{path.relative_to(ROOT)}: "
-            f"'claims' must be an array"
-        )
-        continue
+        if not isinstance(data.get("claims"), list):
+            errors.append(
+                f"{path.relative_to(ROOT)}: "
+                f"'claims' must be an array"
+            )
+            continue
 
         for claim in data["claims"]:
-            claim_id = claim.get("id", "<missing-id>")
+            claim_id = claim.get(
+                "id",
+                "<missing-id>"
+            )
 
             add_schema_errors(
                 claim,
@@ -190,7 +193,8 @@ def collect_claims(errors):
 
             if "id" not in claim:
                 errors.append(
-                    f"{path.relative_to(ROOT)}: claim without id"
+                    f"{path.relative_to(ROOT)}: "
+                    f"claim without id"
                 )
                 continue
 
@@ -203,7 +207,6 @@ def collect_claims(errors):
             claims.append(claim)
 
     return claim_ids, claims
-
 
 def collect_sources(errors):
     source_ids = set()
