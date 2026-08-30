@@ -17,7 +17,7 @@
   "evidenceRefs": [
     "evidence:private-capital-broader-than-private-equity-01"
   ],
-  "status": "REVIEW",
+  "status": "PROMOTED",
 "confidence": "HIGH",
 "decision": "PROMOTED_TO_ATLAS",
   "canonicalClaimRef": "claim:private-capital-broader-than-private-equity"
@@ -36,7 +36,7 @@
 "evidenceRefs": [
   "evidence:private-capital-includes-private-equity-01"
 ],
-"status": "REVIEW",
+"status": "PROMOTED",
 "confidence": "HIGH",
 "decision": "PROMOTED_TO_ATLAS",
 "canonicalClaimRef": "claim:private-capital-includes-private-equity"
@@ -55,7 +55,7 @@
 "evidenceRefs": [
   "evidence:private-capital-includes-private-credit-01"
 ],
-"status": "REVIEW",
+"status": "PROMOTED",
 "confidence": "HIGH",
 "decision": "PROMOTED_TO_ATLAS",
 "canonicalClaimRef": "claim:private-capital-includes-private-credit"
@@ -73,7 +73,7 @@
 "evidenceRefs": [
   "evidence:private-capital-includes-real-assets-01"
 ],
-"status": "REVIEW",
+"status": "PROMOTED",
 "confidence": "HIGH",
 "decision": "PROMOTED_TO_ATLAS",
 "canonicalClaimRef": "claim:private-capital-includes-real-assets"
@@ -92,7 +92,7 @@
   "evidenceRefs": [
     "evidence:private-capital-includes-venture-capital-01"
   ],
-  "status": "REVIEW",
+  "status": "PROMOTED",
   "confidence": "HIGH",
   "decision": "PROMOTED_TO_ATLAS",
   "canonicalClaimRef": "claim:private-capital-includes-venture-capital"
@@ -111,7 +111,7 @@
   "evidenceRefs": [
     "evidence:private-capital-includes-growth-capital-01"
   ],
-  "status": "REVIEW",
+  "status": "PROMOTED",
   "confidence": "HIGH",
   "decision": "PROMOTED_TO_ATLAS",
   "canonicalClaimRef": "claim:private-capital-includes-growth-capital"
@@ -130,7 +130,7 @@
   "evidenceRefs": [
     "evidence:private-capital-boundaries-vary-01"
   ],
-  "status": "REVIEW",
+  "status": "PROMOTED",
   "confidence": "HIGH",
   "decision": "PROMOTED_TO_ATLAS",
   "canonicalClaimRef": "claim:private-capital-boundaries-vary"
