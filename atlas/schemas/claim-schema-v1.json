@@ -13,67 +13,45 @@
 
   "properties": {
     "id": {
-      "type": "string"
+      "type": "string",
+      "pattern": "^claim:[a-z0-9]+(?:-[a-z0-9]+)*$"
     },
 
     "subject": {
-      "type": "string"
+      "type": "string",
+      "pattern": "^[a-z]+:[a-z0-9]+(?:-[a-z0-9]+)*$"
     },
 
     "predicate": {
-      "type": "string"
+      "type": "string",
+      "pattern": "^[A-Z][A-Z0-9_]*$"
     },
 
     "object": {
-      "type": "string"
+      "type": "string",
+      "pattern": "^[a-z]+:[a-z0-9]+(?:-[a-z0-9]+)*$"
     },
 
     "value": {
-      "type": "object",
-      "required": [
-        "amount",
-        "currency",
-        "unit",
-        "raw",
-        "period_type"
-      ],
-      "properties": {
-        "amount": {
-          "type": "number"
-        },
-
-        "currency": {
-          "type": "string"
-        },
-
-        "unit": {
-          "type": "string"
-        },
-
-        "raw": {
-          "type": "string"
-        },
-
-        "period_type": {
-          "type": "string"
-        }
-      },
-      "additionalProperties": false
-    },
-
-    "role": {
-      "type": "string"
+      "$ref": "value-schema-v1.json"
     },
 
     "temporal": {
       "type": "object",
+
       "properties": {
         "start": {
-          "type": ["string", "null"]
+          "type": [
+            "string",
+            "null"
+          ]
         },
 
         "end": {
-          "type": ["string", "null"]
+          "type": [
+            "string",
+            "null"
+          ]
         },
 
         "precision": {
@@ -84,7 +62,12 @@
           "type": "string"
         }
       },
-      "additionalProperties": true
+
+      "additionalProperties": false
+    },
+
+    "role": {
+      "type": "string"
     },
 
     "context": {
@@ -93,6 +76,7 @@
     },
 
     "status": {
+      "type": "string",
       "enum": [
         "VERIFIED",
         "SUPPORTED",
@@ -102,26 +86,45 @@
     },
 
     "confidence": {
+      "type": "string",
       "enum": [
         "HIGH",
         "MEDIUM",
         "LOW",
         "UNKNOWN"
       ]
+    },
+
+    "evidenceRefs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
     }
   },
 
   "oneOf": [
     {
-      "required": ["object"],
+      "required": [
+        "object"
+      ],
+
       "not": {
-        "required": ["value"]
+        "required": [
+          "value"
+        ]
       }
     },
+
     {
-      "required": ["value"],
+      "required": [
+        "value"
+      ],
+
       "not": {
-        "required": ["object"]
+        "required": [
+          "object"
+        ]
       }
     }
   ],
