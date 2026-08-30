@@ -443,6 +443,20 @@ def validate_claim_integrity(
                 errors.append(
                     f"{claim_id}: value must be an object"
                 )
+                continue
+
+            expected_value_type = rule.get("value_type")
+
+            if expected_value_type:
+                actual_value_type = value.get("unit")
+
+                if actual_value_type != expected_value_type:
+                    errors.append(
+                        f"{claim_id}: value unit "
+                        f"{actual_value_type} does not match "
+                        f"expected value type "
+                        f"{expected_value_type}"
+                    )
 
 
 def validate_evidence_integrity(
