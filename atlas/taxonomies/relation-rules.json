@@ -157,6 +157,15 @@
   "object_types": [
     "Concept"
   ]
+},
+    {
+  "relation": "CHARACTERIZED_BY",
+  "subject_types": [
+    "Concept"
+  ],
+  "object_types": [
+    "Concept"
+  ]
 }
   ]
 }
