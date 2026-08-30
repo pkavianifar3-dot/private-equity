@@ -1,12 +1,13 @@
 {
+  "version": "1.0",
   "claims": [
     {
       "id": "claim:real-assets-include-physical-assets",
       "subject": "concept:real-assets",
       "predicate": "INCLUDES",
       "object": "concept:physical-assets",
-      "claimText": "دارایی‌های واقعی طیفی از دارایی‌های عینی و فیزیکی از جمله املاک و مستغلات، زیرساخت‌ها و منابع طبیعی را دربرمی‌گیرد.",
-      "status": "REVIEW"
+      "status": "SUPPORTED",
+      "confidence": "HIGH"
     }
   ]
 }
