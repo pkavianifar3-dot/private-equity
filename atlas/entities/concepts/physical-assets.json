@@ -1,0 +1,10 @@
+{
+  "id": "concept:physical-assets",
+  "type": "Concept",
+  "name": {
+    "fa": "دارایی‌های فیزیکی",
+    "en": "Physical Assets"
+  },
+  "aliases": [],
+  "lifecycleStatus": "REVIEW"
+}
