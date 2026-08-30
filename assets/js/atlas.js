@@ -1115,9 +1115,11 @@ ${citationRefs
 async function renderOrganization(entityId) {
     const [
         entity,
+        organizationClaims,
         registry
     ] = await Promise.all([
         loadJSON(entityFilePath(entityId)),
+        loadClaimsForEntity(entityId),
         loadJSON(`${ATLAS_ROOT}/entities/index.json`)
     ]);
 
@@ -1126,6 +1128,12 @@ async function renderOrganization(entityId) {
     registry.entities.forEach(item => {
         entityIndex[item.id] = item;
     });
+
+    const claims = organizationClaims.filter(
+        claim =>
+            claim.subject === entityId ||
+            claim.object === entityId
+    );
 
     const root = document.getElementById("atlas-root");
 
@@ -1187,11 +1195,11 @@ async function renderOrganization(entityId) {
                         entity.name?.en
                             ? `
                                 <div class="atlas-identity-row">
-    <strong>نام انگلیسی</strong>
-    <span class="atlas-english">
-        ${escapeHTML(entity.name.en)}
-    </span>
-</div>
+                                    <strong>نام انگلیسی</strong>
+                                    <span class="atlas-english">
+                                        ${escapeHTML(entity.name.en)}
+                                    </span>
+                                </div>
                             `
                             : ""
                     }
@@ -1251,6 +1259,12 @@ async function renderOrganization(entityId) {
             </div>
 
         </section>
+
+        ${renderClaimsSection(
+            "روابط و ادعاها",
+            claims,
+            entityIndex
+        )}
     `;
 
     applyPageSEO({
