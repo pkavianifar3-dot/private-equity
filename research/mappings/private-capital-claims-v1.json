@@ -225,9 +225,10 @@
 "evidenceRefs": [
   "evidence:private-capital-private-access-01"
 ],
-"status": "REVIEW",
+"status": "PROMOTED",
 "confidence": "HIGH",
-"decision": "REVIEW"
+"decision": "PROMOTED_TO_ATLAS",
+"canonicalClaimRef": "claim:private-capital-private-access"
     }
   ]
 }
