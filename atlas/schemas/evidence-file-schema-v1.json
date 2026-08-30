@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Private Capital Atlas Evidence File Schema v1",
+  "type": "object",
+  "required": [
+    "version",
+    "evidence"
+  ],
+  "properties": {
+    "version": {
+      "type": "string"
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "$ref": "evidence-schema-v1.json#/$defs/evidenceRecord"
+      }
+    }
+  },
+  "additionalProperties": false
+}
