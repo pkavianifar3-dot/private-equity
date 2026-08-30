@@ -2,37 +2,76 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Private Capital Atlas Evidence Schema v1",
   "type": "object",
+
   "required": [
-    "id",
-    "claim",
-    "source",
-    "evidence_type",
-    "strength"
+    "version",
+    "evidence"
   ],
+
   "properties": {
-    "id": {
+    "version": {
       "type": "string"
     },
-    "claim": {
-      "type": "string"
-    },
-    "source": {
-      "type": "string"
-    },
-    "evidence_type": {
-      "type": "string"
-    },
-    "strength": {
-      "enum": [
-        "strong",
-        "moderate",
-        "weak"
-      ]
-    },
-    "locator": {
-      "type": "object",
-      "additionalProperties": true
+
+    "evidence": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/evidenceRecord"
+      }
     }
   },
-  "additionalProperties": false
+
+  "additionalProperties": false,
+
+  "$defs": {
+    "evidenceRecord": {
+      "type": "object",
+
+      "required": [
+        "id",
+        "claim",
+        "source",
+        "evidence_type",
+        "strength"
+      ],
+
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^evidence:[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+
+        "claim": {
+          "type": "string",
+          "pattern": "^claim:[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+
+        "source": {
+          "type": "string",
+          "pattern": "^source:[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+
+        "evidence_type": {
+          "type": "string",
+          "minLength": 1
+        },
+
+        "strength": {
+          "type": "string",
+          "enum": [
+            "strong",
+            "moderate",
+            "weak"
+          ]
+        },
+
+        "locator": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      },
+
+      "additionalProperties": false
+    }
+  }
 }
