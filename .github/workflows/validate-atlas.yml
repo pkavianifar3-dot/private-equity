@@ -27,8 +27,8 @@ jobs:
       - name: Validate Atlas
         run: python atlas/tools/validate-atlas.py
 
-      - name: Generate entity index
+      - name: Generate indexes
         run: python atlas/tools/build-index.py
 
-      - name: Check generated entity index
-        run: git diff --exit-code -- atlas/entities/index.json
+      - name: Check generated indexes
+        run: git diff --exit-code -- atlas/entities/index.json atlas/claims/index.json
