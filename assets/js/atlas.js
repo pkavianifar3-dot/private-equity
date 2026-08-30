@@ -1966,35 +1966,7 @@ function renderConceptRelationSection(
         </section>
     `;
 }
-    if (!claims.length) {
-        return "";
-    }
 
-    return `
-        <section class="atlas-section">
-
-            <div class="container">
-
-                <h2>${escapeHTML(title)}</h2>
-
-                <div class="grid atlas-claims-grid">
-
-                    ${claims
-                        .map(claim =>
-                            renderClaimCard(
-                                claim,
-                                entityIndex
-                            )
-                        )
-                        .join("")}
-
-                </div>
-
-            </div>
-
-        </section>
-    `;
-}
     
     async function renderConcept(entityId) {
         const [
