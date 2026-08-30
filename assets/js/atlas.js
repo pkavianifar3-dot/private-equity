@@ -1827,6 +1827,159 @@ function renderConceptRelationSection(
                 <div class="grid atlas-claims-grid">
 
                     ${claims
+                        .map(claim => {
+                            const objectId =
+                                claim.object || null;
+
+                            const objectName =
+                                objectId
+                                    ? getEntityName(
+                                        entityIndex,
+                                        objectId
+                                    )
+                                    : "";
+
+                            const objectEnglishName =
+                                objectId
+                                    ? getEntityEnglishName(
+                                        entityIndex,
+                                        objectId
+                                    )
+                                    : "";
+
+                            const objectURL =
+                                objectId
+                                    ? entityURL(objectId)
+                                    : null;
+
+                            return `
+                                <article class="card atlas-claim">
+
+                                    <div class="atlas-claim-label">
+                                        ${escapeHTML(
+                                            relationLabel(
+                                                claim.predicate
+                                            )
+                                        )}
+                                    </div>
+
+                                    ${
+                                        objectName
+                                            ? `
+                                                <h3>
+                                                    ${
+                                                        objectURL
+                                                            ? `
+                                                                <a href="${objectURL}">
+                                                                    ${escapeHTML(
+                                                                        objectName
+                                                                    )}
+                                                                </a>
+                                                            `
+                                                            : escapeHTML(
+                                                                objectName
+                                                            )
+                                                    }
+                                                </h3>
+                                            `
+                                            : ""
+                                    }
+
+                                    ${
+                                        objectEnglishName
+                                            ? `
+                                                <p class="atlas-english">
+                                                    ${
+                                                        objectURL
+                                                            ? `
+                                                                <a href="${objectURL}">
+                                                                    ${escapeHTML(
+                                                                        objectEnglishName
+                                                                    )}
+                                                                </a>
+                                                            `
+                                                            : escapeHTML(
+                                                                objectEnglishName
+                                                            )
+                                                    }
+                                                </p>
+                                            `
+                                            : ""
+                                    }
+
+                                    ${
+                                        claim.role
+                                            ? `
+                                                <p class="atlas-meta">
+                                                    <strong>
+                                                        نقش:
+                                                    </strong>
+                                                    ${escapeHTML(
+                                                        claim.role
+                                                    )}
+                                                </p>
+                                            `
+                                            : ""
+                                    }
+
+                                    ${
+                                        claim.value
+                                            ? `
+                                                <div class="atlas-value">
+                                                    <strong>
+                                                        مقدار:
+                                                    </strong>
+                                                    ${formatClaimValue(
+                                                        claim.value
+                                                    )}
+                                                </div>
+                                            `
+                                            : ""
+                                    }
+
+                                    <div class="atlas-status">
+                                        ${escapeHTML(
+                                            statusLabel(
+                                                claim.status
+                                            )
+                                        )}
+                                        ${
+                                            claim.confidence
+                                                ? ` · ${escapeHTML(
+                                                    confidenceLabel(
+                                                        claim.confidence
+                                                    )
+                                                )}`
+                                                : ""
+                                        }
+                                    </div>
+
+                                </article>
+                            `;
+                        })
+                        .join("")}
+
+                </div>
+
+            </div>
+
+        </section>
+    `;
+}
+    if (!claims.length) {
+        return "";
+    }
+
+    return `
+        <section class="atlas-section">
+
+            <div class="container">
+
+                <h2>${escapeHTML(title)}</h2>
+
+                <div class="grid atlas-claims-grid">
+
+                    ${claims
                         .map(claim =>
                             renderClaimCard(
                                 claim,
