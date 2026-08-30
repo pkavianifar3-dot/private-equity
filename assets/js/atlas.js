@@ -1281,7 +1281,7 @@ async function renderOrganization(entityId) {
     async function renderPerson(entityId) {
         const [
             entity,
-            personClaims,
+            allClaims,
             registry,
             content,
             evidenceData,
@@ -1294,13 +1294,13 @@ async function renderOrganization(entityId) {
             loadJSON(`${ATLAS_ROOT}/evidence/${entityId.split(":").slice(1).join(":")}.json`),
             loadJSON(`${ATLAS_ROOT}/sources/${entityId.split(":").slice(1).join(":")}.json`)
         ]);
-
+        
         const entityIndex = {};
-
+        
         registry.entities.forEach(item => {
             entityIndex[item.id] = item;
         });
-
+        
         const personClaims = allClaims.filter(
             claim =>
                 claim.subject === entityId ||
