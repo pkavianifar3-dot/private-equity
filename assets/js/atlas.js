@@ -259,16 +259,55 @@
         }
     }
 
-    function claimsFilePath(entityId) {
-        const parts = entityId.split(":");
+    async function loadClaimsForEntity(entityId) {
+    const claimsIndex = await loadJSON(
+        `${ATLAS_ROOT}/claims/index.json`
+    );
 
-        if (parts[0] !== "person") {
-            throw new Error("Claims currently support Person entities only.");
+    const claimIds =
+        claimsIndex.entities?.[entityId] || [];
+
+    if (!claimIds.length) {
+        return [];
+    }
+
+    const claimFileNames = [];
+
+    for (const claimId of claimIds) {
+        const fileName =
+            claimsIndex.claims?.[claimId];
+
+        if (!fileName) {
+            throw new Error(
+                `Claim index is missing source file for: ${claimId}`
+            );
         }
 
-        const slug = parts.slice(1).join(":");
-        return `${ATLAS_ROOT}/claims/${slug}.json`;
+        if (!claimFileNames.includes(fileName)) {
+            claimFileNames.push(fileName);
+        }
     }
+
+    const claimDatasets = await Promise.all(
+        claimFileNames.map(fileName =>
+            loadJSON(
+                `${ATLAS_ROOT}/claims/${fileName}`
+            )
+        )
+    );
+
+    const claimsById = {};
+
+    claimDatasets.forEach(data => {
+        (data.claims || []).forEach(claim => {
+            claimsById[claim.id] = claim;
+        });
+    });
+
+    return claimIds
+        .map(claimId => claimsById[claimId])
+        .filter(Boolean);
+}
 
     function relationLabel(predicate) {
         const labels = {
@@ -1241,20 +1280,20 @@ async function renderOrganization(entityId) {
 
     async function renderPerson(entityId) {
         const [
-            entity,
-            claimsData,
-            registry,
-            content,
-            evidenceData,
-            sourceData
-        ] = await Promise.all([
-            loadJSON(entityFilePath(entityId)),
-            loadJSON(claimsFilePath(entityId)),
-            loadJSON(`${ATLAS_ROOT}/entities/index.json`),
-            loadJSON(`${ATLAS_ROOT}/content/persons/${entityId.split(":").slice(1).join(":")}.json`),
-            loadJSON(`${ATLAS_ROOT}/evidence/${entityId.split(":").slice(1).join(":")}.json`),
-            loadJSON(`${ATLAS_ROOT}/sources/${entityId.split(":").slice(1).join(":")}.json`)
-        ]);
+    entity,
+    personClaims,
+    registry,
+    content,
+    evidenceData,
+    sourceData
+] = await Promise.all([
+    loadJSON(entityFilePath(entityId)),
+    loadClaimsForEntity(entityId),
+    loadJSON(`${ATLAS_ROOT}/entities/index.json`),
+    loadJSON(`${ATLAS_ROOT}/content/persons/${entityId.split(":").slice(1).join(":")}.json`),
+    loadJSON(`${ATLAS_ROOT}/evidence/${entityId.split(":").slice(1).join(":")}.json`),
+    loadJSON(`${ATLAS_ROOT}/sources/${entityId.split(":").slice(1).join(":")}.json`)
+]);
 
         const entityIndex = {};
 
@@ -1262,7 +1301,7 @@ async function renderOrganization(entityId) {
             entityIndex[item.id] = item;
         });
 
-        const allClaims = claimsData.claims || [];
+        const allClaims = personClaims;
 
         const personClaims = allClaims.filter(
             claim => claim.subject === entityId
