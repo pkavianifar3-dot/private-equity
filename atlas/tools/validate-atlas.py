@@ -185,6 +185,9 @@ def collect_claims(errors):
     for path in sorted(
         (ROOT / "claims").glob("*.json")
     ):
+        if path.name == "index.json":
+            continue
+
         data = load_registry(path, errors)
 
         add_schema_errors(
