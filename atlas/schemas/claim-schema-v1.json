@@ -33,7 +33,7 @@
     },
 
     "value": {
-      "$ref": "value-schema-v1.json"
+      "$ref": "./value-schema-v1.json"
     },
 
     "temporal": {
