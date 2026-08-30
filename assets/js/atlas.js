@@ -1973,7 +1973,72 @@ function renderConceptRelationSection(
         </section>
     `;
 }
+function renderConceptBreadcrumbs(
+    entity,
+    conceptClaims,
+    entityIndex
+) {
+    const broaderClaims = conceptClaims.filter(
+        claim =>
+            claim.predicate === "BROADER_THAN" &&
+            claim.object
+    );
 
+    if (!broaderClaims.length) {
+        return "";
+    }
+
+    const items = broaderClaims
+        .map(claim => {
+            const name =
+                getEntityName(
+                    entityIndex,
+                    claim.object
+                );
+
+            const url =
+                entityURL(claim.object);
+
+            return {
+                name,
+                url
+            };
+        })
+        .filter(item => item.name);
+
+    if (!items.length) {
+        return "";
+    }
+
+    return `
+        <nav
+            class="atlas-breadcrumbs"
+            aria-label="مسیر مفهومی"
+        >
+            ${items
+                .map(item =>
+                    item.url
+                        ? `
+                            <a href="${item.url}">
+                                ${escapeHTML(item.name)}
+                            </a>
+                        `
+                        : `
+                            <span>
+                                ${escapeHTML(item.name)}
+                            </span>
+                        `
+                )
+                .join(" / ")}
+            /
+            <span aria-current="page">
+                ${escapeHTML(
+                    entity.name?.fa || ""
+                )}
+            </span>
+        </nav>
+    `;
+}
     
     async function renderConcept(entityId) {
         const [
@@ -2051,6 +2116,12 @@ function renderConceptRelationSection(
                 claim =>
                     claim.predicate === "RETURN_DEPENDS_ON"
             );
+        const breadcrumbsHTML =
+            renderConceptBreadcrumbs(
+                entity,
+                conceptClaims,
+                entityIndex
+            );
         const root =
             document.getElementById("atlas-root");
     
@@ -2064,7 +2135,7 @@ function renderConceptRelationSection(
             <section class="page-hero">
     
                 <div class="container">
-    
+                    ${breadcrumbsHTML}
                     <h1>
                         ${escapeHTML(
                             entity.name?.fa || ""
