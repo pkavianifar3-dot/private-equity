@@ -1937,7 +1937,7 @@ async function renderOrganization(entityId) {
                 </div>
     
             </section>
-    
+            ${investmentRelationshipHTML}
             ${
                 amountClaim
                     ? `
