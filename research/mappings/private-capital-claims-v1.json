@@ -215,9 +215,9 @@
     {
       "id": "research-claim:private-capital-private-access",
  "researchId": "research:private-capital",
-      "subject": "candidate:private-capital",
+      "subject": "concept:private-capital",
       "predicate": "CHARACTERIZED_BY",
-      "object": "candidate:private-market-access",
+      "object": "concept:private-market-access",
       "claimText": "در چارچوب مقاله، ویژگی بنیادین سرمایه خصوصی اتکا به فرصت‌های سرمایه‌گذاری با دسترسی خصوصی و خارج از بازارهای عمومی سرمایه است.",
       "sourceRefs": [],
       "evidenceRefs": [],
