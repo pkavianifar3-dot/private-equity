@@ -601,18 +601,14 @@ function entityURL(entityId) {
                 : null;
         
         const objectURL =
+            claim.object
+                ? entityURL(claim.object)
+                : null;
+        
+        const investmentURL =
             linkedInvestment
                 ? entityURL(linkedInvestment.id)
-                : (
-                    claim.object
-                        ? entityURL(claim.object)
-                        : null
-                );
-        
-        const displayObjectId =
-            linkedInvestment
-                ? linkedInvestment.id
-                : claim.object;
+                : null;
         
         const temporal =
             formatTemporal(claim.temporal);
@@ -621,7 +617,7 @@ function entityURL(entityId) {
             claim.object
                 ? getEntityName(
                     entityIndex,
-                    displayObjectId
+                    claim.object
                 )
                 : "";
         
@@ -629,7 +625,7 @@ function entityURL(entityId) {
             claim.object
                 ? getEntityEnglishName(
                     entityIndex,
-                    displayObjectId
+                    claim.object
                 )
                 : "";
     
@@ -669,7 +665,18 @@ function entityURL(entityId) {
                         `
                         : ""
                 }
-    
+
+                ${
+                    linkedInvestment && investmentURL
+                        ? `
+                            <p class="atlas-meta">
+                                <a href="${investmentURL}">
+                                    مشاهده جزئیات سرمایه‌گذاری
+                                </a>
+                            </p>
+                        `
+                        : ""
+                }
                 ${
                     claim.object && objectEnglishName
                         ? `
