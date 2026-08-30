@@ -262,7 +262,29 @@
                 throw new Error(`Unsupported entity type: ${type}`);
         }
     }
-
+    async function loadInvestmentEntities(registry) {
+        const investmentEntries =
+            (registry.entities || [])
+                .filter(entity => entity.type === "Investment");
+    
+        if (!investmentEntries.length) {
+            return {};
+        }
+    
+        const investments = await Promise.all(
+            investmentEntries.map(entry =>
+                loadJSON(entityFilePath(entry.id))
+            )
+        );
+    
+        const investmentIndex = {};
+    
+        investments.forEach(investment => {
+            investmentIndex[investment.id] = investment;
+        });
+    
+        return investmentIndex;
+    }
     async function loadClaimsForEntity(entityId) {
     const claimsIndex = await loadJSON(
         `${ATLAS_ROOT}/claims/index.json`
@@ -584,19 +606,21 @@ function entityURL(entityId) {
     }
 }
 
-    function renderClaimCard(claim, entityIndex) {
-        const object =
+    function renderClaimCard(
+        claim,
+        entityIndex,
+        investmentIndex = {}
+    ) {        const object =
             claim.object
                 ? entityIndex[claim.object]
                 : null;
         
         const linkedInvestment =
             claim.predicate === "INVESTED_IN"
-                ? Object.values(entityIndex).find(
-                    entity =>
-                        entity.type === "Investment" &&
-                        entity.metadata?.investor === claim.subject &&
-                        entity.metadata?.target === claim.object
+                ? Object.values(investmentIndex).find(
+                    investment =>
+                        investment.metadata?.investor === claim.subject &&
+                        investment.metadata?.target === claim.object
                 )
                 : null;
         
@@ -995,7 +1019,13 @@ const objectURL =
         </section>
     `;
 }
-    function renderClaimsSection(title, claims, entityIndex) {
+    function renderClaimsSection(
+        title,
+        claims,
+        entityIndex,
+        investmentIndex = {}
+    ) {
+    
         if (!claims.length) {
             return "";
         }
@@ -1010,7 +1040,16 @@ const objectURL =
                     <div class="grid atlas-claims-grid">
 
                         ${claims
-                            .map(claim => renderClaimCard(claim, entityIndex))
+
+                            .map(
+                                claim =>
+                                    renderClaimCard(
+                                        claim,
+                                        entityIndex,
+                                        investmentIndex
+                                    )
+                            )
+                          
                             .join("")}
 
                     </div>
@@ -1448,6 +1487,9 @@ async function renderOrganization(entityId) {
         loadJSON(`${ATLAS_ROOT}/entities/index.json`)
     ]);
     
+    const investmentIndex =
+        await loadInvestmentEntities(registry);
+    
     const evidenceList =
         await loadEvidenceForClaims(organizationClaims);
     
@@ -1602,8 +1644,10 @@ async function renderOrganization(entityId) {
         ${renderClaimsSection(
             "روابط و ادعاها",
             claims,
-            entityIndex
+            entityIndex,
+            investmentIndex
         )}
+        
         ${renderEvidenceSection(
             organizationClaims,
             evidenceData,
