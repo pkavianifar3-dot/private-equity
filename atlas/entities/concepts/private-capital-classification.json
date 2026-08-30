@@ -1,0 +1,10 @@
+{
+  "id": "concept:private-capital-classification",
+  "type": "Concept",
+  "name": {
+    "fa": "طبقه‌بندی سرمایه خصوصی",
+    "en": "Private Capital Classification"
+  },
+  "aliases": [],
+  "lifecycleStatus": "REVIEW"
+}
