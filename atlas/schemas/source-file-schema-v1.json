@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Private Capital Atlas Source File Schema v1",
+  "type": "object",
+  "required": [
+    "version",
+    "sources"
+  ],
+  "properties": {
+    "version": {
+      "type": "string"
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "$ref": "source-schema-v1.json#/$defs/sourceRecord"
+      }
+    }
+  },
+  "additionalProperties": false
+}
