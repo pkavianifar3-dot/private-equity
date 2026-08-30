@@ -308,7 +308,126 @@
         .map(claimId => claimsById[claimId])
         .filter(Boolean);
 }
-
+    async function loadEvidenceForClaims(claims) {
+        const evidenceIndex = await loadJSON(
+            `${ATLAS_ROOT}/evidence/index.json`
+        );
+    
+        const evidenceIds = [];
+    
+        claims.forEach(claim => {
+            const claimEvidence =
+                evidenceIndex.claims?.[claim.id] || [];
+    
+            claimEvidence.forEach(evidenceId => {
+                if (!evidenceIds.includes(evidenceId)) {
+                    evidenceIds.push(evidenceId);
+                }
+            });
+        });
+    
+        if (!evidenceIds.length) {
+            return [];
+        }
+    
+        const evidenceFiles = [];
+    
+        evidenceIds.forEach(evidenceId => {
+            const fileName =
+                evidenceIndex.evidence?.[evidenceId];
+    
+            if (!fileName) {
+                throw new Error(
+                    `Evidence index is missing source file for: ${evidenceId}`
+                );
+            }
+    
+            if (!evidenceFiles.includes(fileName)) {
+                evidenceFiles.push(fileName);
+            }
+        });
+    
+        const datasets = await Promise.all(
+            evidenceFiles.map(fileName =>
+                loadJSON(
+                    `${ATLAS_ROOT}/evidence/${fileName}`
+                )
+            )
+        );
+    
+        const evidenceById = {};
+    
+        datasets.forEach(data => {
+            (data.evidence || []).forEach(item => {
+                evidenceById[item.id] = item;
+            });
+        });
+    
+        return evidenceIds
+            .map(evidenceId => evidenceById[evidenceId])
+            .filter(Boolean);
+    }
+    
+    
+    async function loadSourcesForEvidence(evidenceList) {
+        const sourceIndex = await loadJSON(
+            `${ATLAS_ROOT}/sources/index.json`
+        );
+    
+        const sourceIds = [];
+    
+        evidenceList.forEach(evidence => {
+            const sourceId = evidence.source;
+    
+            if (
+                sourceId &&
+                !sourceIds.includes(sourceId)
+            ) {
+                sourceIds.push(sourceId);
+            }
+        });
+    
+        if (!sourceIds.length) {
+            return [];
+        }
+    
+        const sourceFiles = [];
+    
+        sourceIds.forEach(sourceId => {
+            const fileName =
+                sourceIndex.sources?.[sourceId];
+    
+            if (!fileName) {
+                throw new Error(
+                    `Source index is missing source file for: ${sourceId}`
+                );
+            }
+    
+            if (!sourceFiles.includes(fileName)) {
+                sourceFiles.push(fileName);
+            }
+        });
+    
+        const datasets = await Promise.all(
+            sourceFiles.map(fileName =>
+                loadJSON(
+                    `${ATLAS_ROOT}/sources/${fileName}`
+                )
+            )
+        );
+    
+        const sourcesById = {};
+    
+        datasets.forEach(data => {
+            (data.sources || []).forEach(item => {
+                sourcesById[item.id] = item;
+            });
+        });
+    
+        return sourceIds
+            .map(sourceId => sourcesById[sourceId])
+            .filter(Boolean);
+    }
     function relationLabel(predicate) {
         const labels = {
             CEO_OF: "مدیرعامل",
@@ -1297,17 +1416,29 @@ async function renderOrganization(entityId) {
             entity,
             allClaims,
             registry,
-            content,
-            evidenceData,
-            sourceData
+            content
         ] = await Promise.all([
             loadJSON(entityFilePath(entityId)),
             loadClaimsForEntity(entityId),
             loadJSON(`${ATLAS_ROOT}/entities/index.json`),
-            loadJSON(`${ATLAS_ROOT}/content/persons/${entityId.split(":").slice(1).join(":")}.json`),
-            loadJSON(`${ATLAS_ROOT}/evidence/${entityId.split(":").slice(1).join(":")}.json`),
-            loadJSON(`${ATLAS_ROOT}/sources/${entityId.split(":").slice(1).join(":")}.json`)
+            loadJSON(
+                `${ATLAS_ROOT}/content/persons/${entityId.split(":").slice(1).join(":")}.json`
+            )
         ]);
+        
+        const evidenceList =
+            await loadEvidenceForClaims(allClaims);
+        
+        const sourceList =
+            await loadSourcesForEvidence(evidenceList);
+        
+        const evidenceData = {
+            evidence: evidenceList
+        };
+        
+        const sourceData = {
+            sources: sourceList
+};
         
         const entityIndex = {};
         
