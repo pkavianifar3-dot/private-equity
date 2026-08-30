@@ -1,0 +1,124 @@
+{
+  "version": "1.0",
+  "entities": {
+    "concept:contractual-components": [
+      "claim:private-credit-return-contractual"
+    ],
+    "concept:growth-capital": [
+      "claim:private-capital-includes-growth-capital"
+    ],
+    "concept:lender": [
+      "claim:private-credit-lender-position"
+    ],
+    "concept:physical-assets": [
+      "claim:real-assets-include-physical-assets"
+    ],
+    "concept:private-capital": [
+      "claim:private-capital-boundaries-vary",
+      "claim:private-capital-broader-than-private-equity",
+      "claim:private-capital-includes-growth-capital",
+      "claim:private-capital-includes-private-credit",
+      "claim:private-capital-includes-private-equity",
+      "claim:private-capital-includes-real-assets",
+      "claim:private-capital-includes-venture-capital",
+      "claim:private-capital-private-access"
+    ],
+    "concept:private-capital-classification": [
+      "claim:private-capital-boundaries-vary"
+    ],
+    "concept:private-credit": [
+      "claim:private-capital-includes-private-credit",
+      "claim:private-credit-and-private-equity-linked",
+      "claim:private-credit-lender-position",
+      "claim:private-credit-return-contractual"
+    ],
+    "concept:private-equity": [
+      "claim:private-capital-broader-than-private-equity",
+      "claim:private-capital-includes-private-equity",
+      "claim:private-credit-and-private-equity-linked"
+    ],
+    "concept:private-market-access": [
+      "claim:private-capital-private-access"
+    ],
+    "concept:real-assets": [
+      "claim:private-capital-includes-real-assets",
+      "claim:real-assets-include-physical-assets"
+    ],
+    "concept:venture-capital": [
+      "claim:private-capital-includes-venture-capital"
+    ],
+    "investment:kayson-achareh": [
+      "claim:kayson-achareh-investment-amount"
+    ],
+    "organization:achareh": [
+      "claim:kayson-invested-in-achareh"
+    ],
+    "organization:amin-investment-bank": [
+      "claim:ali-sanginian-ceo-amin-investment-bank"
+    ],
+    "organization:kayson-group": [
+      "claim:ali-sanginian-deputy-investment-kayson",
+      "claim:ali-sanginian-investment-executive-kayson-achareh",
+      "claim:kayson-invested-in-achareh"
+    ],
+    "organization:kian-financial-group": [
+      "claim:kian-private-equity-management-subsidiary-kian-financial-group"
+    ],
+    "organization:kian-private-equity-management": [
+      "claim:ali-sanginian-ceo-kian-private-equity-management",
+      "claim:kian-private-equity-has-dadman",
+      "claim:kian-private-equity-management-subsidiary-kian-financial-group",
+      "claim:kian-private-equity-operates-private-equity"
+    ],
+    "organization:semega": [
+      "claim:ali-sanginian-ceo-semega"
+    ],
+    "organization:tehran-chamber-money-capital-commission": [
+      "claim:ali-sanginian-chair-tehran-chamber-commission"
+    ],
+    "organization:tourism-bank": [
+      "claim:ali-sanginian-board-tourism-bank"
+    ],
+    "person:ali-sanginian": [
+      "claim:ali-sanginian-board-tourism-bank",
+      "claim:ali-sanginian-ceo-amin-investment-bank",
+      "claim:ali-sanginian-ceo-kian-private-equity-management",
+      "claim:ali-sanginian-ceo-semega",
+      "claim:ali-sanginian-chair-tehran-chamber-commission",
+      "claim:ali-sanginian-deputy-investment-kayson",
+      "claim:ali-sanginian-investment-executive-kayson-achareh"
+    ],
+    "project:dadman": [
+      "claim:kian-private-equity-has-dadman"
+    ],
+    "sector:private-equity": [
+      "claim:kian-private-equity-operates-private-equity"
+    ]
+  },
+  "claims": {
+    "claim:ali-sanginian-board-tourism-bank": "ali-sanginian.json",
+    "claim:ali-sanginian-ceo-amin-investment-bank": "ali-sanginian.json",
+    "claim:ali-sanginian-ceo-kian-private-equity-management": "ali-sanginian.json",
+    "claim:ali-sanginian-ceo-semega": "ali-sanginian.json",
+    "claim:ali-sanginian-chair-tehran-chamber-commission": "ali-sanginian.json",
+    "claim:ali-sanginian-deputy-investment-kayson": "ali-sanginian.json",
+    "claim:ali-sanginian-investment-executive-kayson-achareh": "ali-sanginian.json",
+    "claim:kayson-achareh-investment-amount": "investment-kayson-achareh-amount.json",
+    "claim:kayson-invested-in-achareh": "kayson-achareh.json",
+    "claim:kian-private-equity-has-dadman": "ali-sanginian.json",
+    "claim:kian-private-equity-management-subsidiary-kian-financial-group": "ali-sanginian.json",
+    "claim:kian-private-equity-operates-private-equity": "ali-sanginian.json",
+    "claim:private-capital-boundaries-vary": "private-capital-boundaries-vary.json",
+    "claim:private-capital-broader-than-private-equity": "private-capital-broader-than.json",
+    "claim:private-capital-includes-growth-capital": "private-capital-includes-growth-capital.json",
+    "claim:private-capital-includes-private-credit": "private-capital-includes-private-credit.json",
+    "claim:private-capital-includes-private-equity": "private-capital.json",
+    "claim:private-capital-includes-real-assets": "private-capital-includes-real-assets.json",
+    "claim:private-capital-includes-venture-capital": "private-capital-includes-venture-capital.json",
+    "claim:private-capital-private-access": "private-capital-private-access.json",
+    "claim:private-credit-and-private-equity-linked": "private-credit-and-private-equity-linked.json",
+    "claim:private-credit-lender-position": "private-credit-lender-position.json",
+    "claim:private-credit-return-contractual": "private-credit-return-contractual.json",
+    "claim:real-assets-include-physical-assets": "real-assets-include-physical-assets.json"
+  }
+}
