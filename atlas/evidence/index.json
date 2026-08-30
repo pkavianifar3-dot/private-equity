@@ -1,1 +1,31 @@
-
+{
+  "version": "1.0",
+  "evidence": {
+    "evidence:ali-board-tourism-bank-01": "ali-sanginian.json",
+    "evidence:ali-ceo-amin-01": "ali-sanginian.json",
+    "evidence:ali-ceo-amin-02": "ali-sanginian.json",
+    "evidence:ali-ceo-kian-01": "ali-sanginian.json",
+    "evidence:ali-ceo-semega-01": "ali-sanginian.json",
+    "evidence:ali-chair-tehran-chamber-01": "ali-sanginian.json",
+    "evidence:ali-chair-tehran-chamber-02": "ali-sanginian.json",
+    "evidence:ali-investment-executive-kayson-01": "ali-sanginian.json",
+    "evidence:ali-kayson-01": "ali-sanginian.json",
+    "evidence:ali-private-equity-01": "ali-sanginian.json",
+    "evidence:kayson-achareh-investment-amount-01": "ali-sanginian.json",
+    "evidence:kayson-invested-achareh-01": "ali-sanginian.json",
+    "evidence:kian-dadman-01": "ali-sanginian.json",
+    "evidence:kian-subsidiary-group-01": "ali-sanginian.json",
+    "evidence:private-capital-borders-vary-01": "private-capital-research.json",
+    "evidence:private-capital-broader-than-private-equity-01": "private-capital-research.json",
+    "evidence:private-capital-includes-growth-capital-01": "private-capital-research.json",
+    "evidence:private-capital-includes-private-credit-01": "private-capital-research.json",
+    "evidence:private-capital-includes-private-equity-01": "private-capital-research.json",
+    "evidence:private-capital-includes-real-assets-01": "private-capital-research.json",
+    "evidence:private-capital-includes-venture-capital-01": "private-capital-research.json",
+    "evidence:private-capital-private-access-01": "private-capital-research.json",
+    "evidence:real-assets-include-physical-assets-01": "private-capital-research.json",
+    "evidence:private-credit-and-private-equity-linked-01": "private-credit-lender-position.json",
+    "evidence:private-credit-lender-position-01": "private-credit-lender-position.json",
+    "evidence:private-credit-return-contractual-01": "private-credit-lender-position.json"
+  }
+}
