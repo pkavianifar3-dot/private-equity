@@ -234,6 +234,15 @@
     "en": "Physical Assets"
   },
   "lifecycleStatus": "REVIEW"
+},
+    {
+  "id": "concept:private-market-access",
+  "type": "Concept",
+  "name": {
+    "fa": "دسترسی به بازارهای خصوصی",
+    "en": "Private Market Access"
+  },
+  "lifecycleStatus": "REVIEW"
 }
   ]
 }
