@@ -162,16 +162,21 @@ def collect_claims(errors):
     claims = []
 
     for path in sorted(
-        (ROOT / "claims").glob("*.json")
-    ):
-        data = load_registry(path, errors)
+    (ROOT / "claims").glob("*.json")
+):
+    data = load_registry(path, errors)
 
-        if not isinstance(data.get("claims"), list):
-            errors.append(
-                f"{path.relative_to(ROOT)}: "
-                f"'claims' must be an array"
-            )
-            continue
+    if "version" not in data:
+        errors.append(
+            f"{path.relative_to(ROOT)}: missing 'version'"
+        )
+
+    if not isinstance(data.get("claims"), list):
+        errors.append(
+            f"{path.relative_to(ROOT)}: "
+            f"'claims' must be an array"
+        )
+        continue
 
         for claim in data["claims"]:
             claim_id = claim.get("id", "<missing-id>")
@@ -439,10 +444,13 @@ def validate_claim_integrity(
 
 def validate_evidence_integrity(
     evidence_records,
+    claims,
     claim_ids,
     source_ids,
     errors
 ):
+    claim_to_evidence = {}
+
     for evidence in evidence_records:
         evidence_id = evidence.get("id")
         claim_id = evidence.get("claim")
@@ -453,11 +461,27 @@ def validate_evidence_integrity(
                 f"{evidence_id}: unknown claim "
                 f"{claim_id}"
             )
+        else:
+            claim_to_evidence.setdefault(
+                claim_id,
+                []
+            ).append(evidence_id)
 
         if source_id not in source_ids:
             errors.append(
                 f"{evidence_id}: unknown source "
                 f"{source_id}"
+            )
+
+    for claim in claims:
+        claim_id = claim.get("id")
+
+        if not claim_id:
+            continue
+
+        if claim_id not in claim_to_evidence:
+            errors.append(
+                f"{claim_id}: missing evidence"
             )
 
 
@@ -486,11 +510,12 @@ def main():
     _, evidence_records = collect_evidence(errors)
 
     validate_evidence_integrity(
-        evidence_records,
-        claim_ids,
-        source_ids,
-        errors
-    )
+    evidence_records,
+    claims,
+    claim_ids,
+    source_ids,
+    errors
+)
 
     if errors:
         print("Atlas validation FAILED")
