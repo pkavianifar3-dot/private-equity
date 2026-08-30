@@ -103,20 +103,6 @@
       "confidence": "HIGH"
     },
     {
-      "id": "claim:ali-sanginian-vice-chair-iran-farabourse",
-      "subject": "person:ali-sanginian",
-      "predicate": "VICE_CHAIR_OF",
-      "object": "organization:iran-farabourse",
-      "temporal": {
-        "start": "1387",
-        "end": "1391",
-        "precision": "year",
-        "status": "approximate"
-      },
-      "status": "REPORTED",
-      "confidence": "MEDIUM"
-    },
-    {
       "id": "claim:ali-sanginian-investment-executive-kayson-achareh",
       "subject": "person:ali-sanginian",
       "predicate": "INVESTMENT_EXECUTIVE_OF",
