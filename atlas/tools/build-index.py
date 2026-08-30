@@ -141,52 +141,70 @@ def collect_claims_by_entity():
     return claims_by_entity, claim_sources
 
 
-def collect_record_sources(directory, collection_key, record_label):
-    record_sources = {}
-    seen_ids = set()
+def collect_evidence_index():
+    evidence_sources = {}
+    evidence_by_claim = {}
+    seen_evidence_ids = set()
 
-    for path in sorted(directory.glob("*.json")):
-        index_path = directory / "index.json"
-
-        if path == index_path:
+    for path in sorted(EVIDENCE_DIR.glob("*.json")):
+        if path == EVIDENCE_INDEX_PATH:
             continue
 
         data = load_json(path)
 
-        if collection_key not in data:
+        if "evidence" not in data:
             raise ValueError(
                 f"{path.relative_to(ROOT)}: "
-                f"missing required field: {collection_key}"
+                "missing required field: evidence"
             )
 
-        records = data[collection_key]
-
-        if not isinstance(records, list):
+        if not isinstance(data["evidence"], list):
             raise ValueError(
                 f"{path.relative_to(ROOT)}: "
-                f"{collection_key} must be an array"
+                "evidence must be an array"
             )
 
-        for record in records:
-            record_id = record.get("id")
+        for evidence in data["evidence"]:
+            evidence_id = evidence.get("id")
+            claim_id = evidence.get("claim")
 
-            if not record_id:
+            if not evidence_id:
                 raise ValueError(
                     f"{path.relative_to(ROOT)}: "
-                    f"{record_label} missing required field: id"
+                    "evidence missing required field: id"
                 )
 
-            if record_id in seen_ids:
+            if not claim_id:
                 raise ValueError(
-                    f"Duplicate {record_label} ID: {record_id}"
+                    f"{path.relative_to(ROOT)}: "
+                    f"evidence {evidence_id} "
+                    "missing required field: claim"
                 )
 
-            seen_ids.add(record_id)
-            record_sources[record_id] = path.name
+            if evidence_id in seen_evidence_ids:
+                raise ValueError(
+                    f"Duplicate evidence ID: {evidence_id}"
+                )
+
+            seen_evidence_ids.add(evidence_id)
+
+            evidence_sources[evidence_id] = path.name
+
+            evidence_by_claim.setdefault(
+                claim_id,
+                set()
+            ).add(evidence_id)
 
     return {
-        record_id: record_sources[record_id]
-        for record_id in sorted(record_sources)
+        "evidence": {
+            evidence_id: evidence_sources[evidence_id]
+            for evidence_id in sorted(evidence_sources)
+        },
+        "claims": {
+            claim_id: sorted(evidence_ids)
+            for claim_id, evidence_ids
+            in sorted(evidence_by_claim.items())
+        }
     }
 
 
@@ -233,15 +251,12 @@ def main():
         claims_index_output
     )
 
-    evidence_sources = collect_record_sources(
-        EVIDENCE_DIR,
-        "evidence",
-        "evidence"
-    )
-
+    evidence_index = collect_evidence_index()
+    
     evidence_index_output = {
         "version": "1.0",
-        "evidence": evidence_sources
+        "evidence": evidence_index["evidence"],
+        "claims": evidence_index["claims"]
     }
 
     write_json(
@@ -278,7 +293,8 @@ def main():
 
     print(
         f"Generated {EVIDENCE_INDEX_PATH.relative_to(ROOT)} "
-        f"with {len(evidence_sources)} evidence items indexed."
+        f"with {len(evidence_index['evidence'])} evidence items indexed "
+        f"across {len(evidence_index['claims'])} claims."
     )
 
     print(
