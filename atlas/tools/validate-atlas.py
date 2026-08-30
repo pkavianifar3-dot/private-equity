@@ -166,29 +166,17 @@ def collect_claims(errors):
     ):
         data = load_registry(path, errors)
 
-        if "version" not in data:
-            errors.append(
-                f"{path.relative_to(ROOT)}: missing 'version'"
-            )
+        add_schema_errors(
+            data,
+            SCHEMAS_DIR / "claim-file-schema-v1.json",
+            str(path.relative_to(ROOT)),
+            errors
+        )
 
-        if not isinstance(data.get("claims"), list):
-            errors.append(
-                f"{path.relative_to(ROOT)}: "
-                f"'claims' must be an array"
-            )
-            continue
-
-        for claim in data["claims"]:
+        for claim in data.get("claims", []):
             claim_id = claim.get(
                 "id",
                 "<missing-id>"
-            )
-
-            add_schema_errors(
-                claim,
-                SCHEMAS_DIR / "claim-schema-v1.json",
-                f"{path.relative_to(ROOT)}:{claim_id}",
-                errors
             )
 
             if "id" not in claim:
@@ -527,12 +515,12 @@ def main():
     _, evidence_records = collect_evidence(errors)
 
     validate_evidence_integrity(
-    evidence_records,
-    claims,
-    claim_ids,
-    source_ids,
-    errors
-)
+        evidence_records,
+        claims,
+        claim_ids,
+        source_ids,
+        errors
+    )
 
     if errors:
         print("Atlas validation FAILED")
