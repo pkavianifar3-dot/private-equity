@@ -1679,13 +1679,86 @@ async function renderOrganization(entityId) {
             targetId
                 ? entityURL(targetId)
                 : null;
-    
+        const investmentRelationshipHTML =
+            investorName && targetName
+                ? `
+                    <section class="atlas-section">
+        
+                        <div class="container">
+        
+                            <h2>
+                                رابطه معامله
+                            </h2>
+        
+                            <div class="card atlas-claim">
+        
+                                <div class="atlas-claim-label">
+                                    سرمایه‌گذاری
+                                </div>
+        
+                                <div class="atlas-identity-row">
+                                    <strong>
+                                        سرمایه‌گذار
+                                    </strong>
+        
+                                    <span>
+                                        ${
+                                            investorURL
+                                                ? `
+                                                    <a href="${investorURL}">
+                                                        ${escapeHTML(
+                                                            investorName
+                                                        )}
+                                                    </a>
+                                                `
+                                                : escapeHTML(
+                                                    investorName
+                                                )
+                                        }
+                                    </span>
+                                </div>
+        
+                                <div class="atlas-identity-row">
+                                    <strong>
+                                        هدف
+                                    </strong>
+        
+                                    <span>
+                                        ${
+                                            targetURL
+                                                ? `
+                                                    <a href="${targetURL}">
+                                                        ${escapeHTML(
+                                                            targetName
+                                                        )}
+                                                    </a>
+                                                `
+                                                : escapeHTML(
+                                                    targetName
+                                                )
+                                        }
+                                    </span>
+                                </div>
+        
+                            </div>
+        
+                        </div>
+        
+                    </section>
+                `
+                : "";
         const amountClaim =
             investmentClaims.find(
                 claim =>
                     claim.predicate === "INVESTMENT_AMOUNT"
             );
-    
+
+        const investmentRelationClaim =
+            investmentClaims.find(
+                claim =>
+                    claim.predicate === "INVESTED_IN"
+            );
+        
         const root =
             document.getElementById("atlas-root");
     
