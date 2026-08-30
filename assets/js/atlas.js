@@ -1664,11 +1664,21 @@ async function renderOrganization(entityId) {
             investorId
                 ? getEntityName(entityIndex, investorId)
                 : "";
-    
+        
+        const investorURL =
+            investorId
+                ? entityURL(investorId)
+                : null;
+        
         const targetName =
             targetId
                 ? getEntityName(entityIndex, targetId)
                 : "";
+        
+        const targetURL =
+            targetId
+                ? entityURL(targetId)
+                : null;
     
         const amountClaim =
             investmentClaims.find(
@@ -1730,9 +1740,19 @@ async function renderOrganization(entityId) {
                                             سرمایه‌گذار
                                         </strong>
                                         <span>
-                                            ${escapeHTML(
-                                                investorName
-                                            )}
+                                            ${
+                                                investorURL
+                                                    ? `
+                                                        <a href="${investorURL}">
+                                                            ${escapeHTML(
+                                                                investorName
+                                                            )}
+                                                        </a>
+                                                    `
+                                                    : escapeHTML(
+                                                        investorName
+                                                    )
+                                            }
                                         </span>
                                     </div>
                                 `
@@ -1747,9 +1767,19 @@ async function renderOrganization(entityId) {
                                             هدف سرمایه‌گذاری
                                         </strong>
                                         <span>
-                                            ${escapeHTML(
-                                                targetName
-                                            )}
+                                            ${
+                                                targetURL
+                                                    ? `
+                                                        <a href="${targetURL}">
+                                                            ${escapeHTML(
+                                                                targetName
+                                                            )}
+                                                        </a>
+                                                    `
+                                                    : escapeHTML(
+                                                        targetName
+                                                    )
+                                            }
                                         </span>
                                     </div>
                                 `
