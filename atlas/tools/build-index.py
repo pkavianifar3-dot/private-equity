@@ -72,6 +72,8 @@ def validate_unique_ids(entities):
 
 def collect_claims_by_entity():
     claims_by_entity = {}
+    claim_sources = {}
+    seen_claim_ids = set()
 
     for path in sorted(CLAIMS_DIR.glob("*.json")):
         if path == CLAIMS_INDEX_PATH:
@@ -89,8 +91,18 @@ def collect_claims_by_entity():
 
             if not claim_id:
                 raise ValueError(
-                    f"{path.relative_to(ROOT)}: claim missing required field: id"
+                    f"{path.relative_to(ROOT)}: "
+                    "claim missing required field: id"
                 )
+
+            if claim_id in seen_claim_ids:
+                raise ValueError(
+                    f"Duplicate claim ID: {claim_id}"
+                )
+
+            seen_claim_ids.add(claim_id)
+
+            claim_sources[claim_id] = path.name
 
             linked_entity_ids = set()
 
@@ -104,12 +116,23 @@ def collect_claims_by_entity():
                 linked_entity_ids.add(object_id)
 
             for entity_id in sorted(linked_entity_ids):
-                claims_by_entity.setdefault(entity_id, set()).add(claim_id)
+                claims_by_entity.setdefault(
+                    entity_id,
+                    set()
+                ).add(claim_id)
 
-    return {
+    claims_by_entity = {
         entity_id: sorted(claim_ids)
-        for entity_id, claim_ids in sorted(claims_by_entity.items())
+        for entity_id, claim_ids
+        in sorted(claims_by_entity.items())
     }
+
+    claim_sources = {
+        claim_id: claim_sources[claim_id]
+        for claim_id in sorted(claim_sources)
+    }
+
+    return claims_by_entity, claim_sources
 
 
 def write_json(path, output):
@@ -142,11 +165,12 @@ def main():
         entity_index_output
     )
 
-    claims_by_entity = collect_claims_by_entity()
+    claims_by_entity, claim_sources = collect_claims_by_entity()
 
     claims_index_output = {
         "version": "1.0",
-        "entities": claims_by_entity
+        "entities": claims_by_entity,
+        "claims": claim_sources
     }
 
     write_json(
@@ -161,7 +185,8 @@ def main():
 
     print(
         f"Generated {CLAIMS_INDEX_PATH.relative_to(ROOT)} "
-        f"with {len(claims_by_entity)} entities linked to claims."
+        f"with {len(claims_by_entity)} entities linked to claims "
+        f"and {len(claim_sources)} claims indexed."
     )
 
 
