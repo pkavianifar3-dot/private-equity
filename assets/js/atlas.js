@@ -621,10 +621,10 @@ function entityURL(entityId) {
 
         case "investment":
             return `investment.html?id=${encodeURIComponent(entityId)}`;
-        
+
         case "concept":
             return `concept.html?id=${encodeURIComponent(entityId)}`;
-        
+
         default:
             return null;
     }
