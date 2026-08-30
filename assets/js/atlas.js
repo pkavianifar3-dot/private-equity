@@ -475,7 +475,53 @@
 
         return labels[confidence] || confidence;
     }
-
+    function formatClaimValue(value) {
+        if (!value || typeof value !== "object") {
+            return "";
+        }
+    
+        if (value.unit === "amount") {
+            const amount = Number(value.amount);
+    
+            if (!Number.isFinite(amount)) {
+                return escapeHTML(value.raw || "");
+            }
+    
+            const formattedAmount =
+                new Intl.NumberFormat("fa-IR").format(amount);
+    
+            const currencyLabels = {
+                IRR: "ریال",
+                USD: "دلار",
+                EUR: "یورو"
+            };
+    
+            const currency =
+                currencyLabels[value.currency] ||
+                value.currency ||
+                "";
+    
+            if (currency) {
+                return `${formattedAmount} ${escapeHTML(currency)}`;
+            }
+    
+            return formattedAmount;
+        }
+    
+        if (value.unit === "percentage") {
+            return `${escapeHTML(value.raw || value.amount)}٪`;
+        }
+    
+        if (value.unit === "count") {
+            return escapeHTML(value.raw || String(value.amount));
+        }
+    
+        if (value.unit === "ratio") {
+            return escapeHTML(value.raw || String(value.amount));
+        }
+    
+        return escapeHTML(value.raw || "");
+    }
     function formatTemporal(temporal) {
         if (!temporal) {
             return "";
@@ -624,7 +670,16 @@ const objectURL = entityURL(claim.object);
                     ${escapeHTML(statusLabel(claim.status))}
                     ${claim.confidence ? ` · ${escapeHTML(confidenceLabel(claim.confidence))}` : ""}
                 </div>
-
+                ${
+                    claim.value
+                        ? `
+                            <div class="atlas-value">
+                                <strong>مقدار:</strong>
+                                ${formatClaimValue(claim.value)}
+                            </div>
+                        `
+                        : ""
+                }
             </article>
         `;
     }
