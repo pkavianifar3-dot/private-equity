@@ -574,76 +574,87 @@ function entityURL(entityId) {
 
     return null;
 }
+
     function renderClaimCard(claim, entityIndex) {
-        const object = entityIndex[claim.object];
-const objectURL = entityURL(claim.object);
-        if (!object) {
-            return "";
-        }
-
+        const object =
+            claim.object
+                ? entityIndex[claim.object]
+                : null;
+    
+        const objectURL =
+            claim.object
+                ? entityURL(claim.object)
+                : null;
+    
         const temporal = formatTemporal(claim.temporal);
-
+    
+        const objectName =
+            claim.object
+                ? getEntityName(entityIndex, claim.object)
+                : "";
+    
+        const objectEnglishName =
+            claim.object
+                ? getEntityEnglishName(entityIndex, claim.object)
+                : "";
+    
+        const valueHTML =
+            claim.value
+                ? `
+                    <div class="atlas-value">
+                        <strong>مقدار:</strong>
+                        ${formatClaimValue(claim.value)}
+                    </div>
+                `
+                : "";
+    
         return `
             <article class="card atlas-claim">
-
+    
                 <div class="atlas-claim-label">
                     ${escapeHTML(relationLabel(claim.predicate))}
                 </div>
-
-                <h3>
-    ${
-        objectURL
-            ? `
-                <a href="${objectURL}">
-                    ${escapeHTML(
-                        getEntityName(
-                            entityIndex,
-                            claim.object
-                        )
-                    )}
-                </a>
-            `
-            : `
-                ${escapeHTML(
-                    getEntityName(
-                        entityIndex,
-                        claim.object
-                    )
-                )}
-            `
-    }
-</h3>
-
+    
                 ${
-                    getEntityEnglishName(entityIndex, claim.object)
-    ? `
-        <p class="atlas-english">
-    ${
-        objectURL
-            ? `
-                <a href="${objectURL}">
-                    ${escapeHTML(
-                        getEntityEnglishName(
-                            entityIndex,
-                            claim.object
-                        )
-                    )}
-                </a>
-            `
-            : `
-                ${escapeHTML(
-                    getEntityEnglishName(
-                        entityIndex,
-                        claim.object
-                    )
-                )}
-            `
-    }
-</p>
-    `
+                    claim.object && object
+                        ? `
+                            <h3>
+                                ${
+                                    objectURL
+                                        ? `
+                                            <a href="${objectURL}">
+                                                ${escapeHTML(objectName)}
+                                            </a>
+                                        `
+                                        : `
+                                            ${escapeHTML(objectName)}
+                                        `
+                                }
+                            </h3>
+                        `
                         : ""
                 }
-
+    
+                ${
+                    claim.object && objectEnglishName
+                        ? `
+                            <p class="atlas-english">
+                                ${
+                                    objectURL
+                                        ? `
+                                            <a href="${objectURL}">
+                                                ${escapeHTML(objectEnglishName)}
+                                            </a>
+                                        `
+                                        : `
+                                            ${escapeHTML(objectEnglishName)}
+                                        `
+                                }
+                            </p>
+                        `
+                        : ""
+                }
+    
                 ${
                     claim.role
                         ? `
@@ -654,7 +665,7 @@ const objectURL = entityURL(claim.object);
                         `
                         : ""
                 }
-
+    
                 ${
                     temporal
                         ? `
@@ -665,21 +676,18 @@ const objectURL = entityURL(claim.object);
                         `
                         : ""
                 }
-
+    
+                ${valueHTML}
+    
                 <div class="atlas-status">
                     ${escapeHTML(statusLabel(claim.status))}
-                    ${claim.confidence ? ` · ${escapeHTML(confidenceLabel(claim.confidence))}` : ""}
+                    ${
+                        claim.confidence
+                            ? ` · ${escapeHTML(confidenceLabel(claim.confidence))}`
+                            : ""
+                    }
                 </div>
-                ${
-                    claim.value
-                        ? `
-                            <div class="atlas-value">
-                                <strong>مقدار:</strong>
-                                ${formatClaimValue(claim.value)}
-                            </div>
-                        `
-                        : ""
-                }
+    
             </article>
         `;
     }
