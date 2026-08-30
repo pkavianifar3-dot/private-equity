@@ -488,7 +488,140 @@ def validate_evidence_integrity(
             errors.append(
                 f"{claim_id}: missing evidence"
             )
+def validate_research_integrity(
+    entity_ids,
+    claim_ids,
+    source_ids,
+    errors
+):
+    """
+    Validate Research mappings against canonical Atlas data.
 
+    Research may contain candidate claims, but once a research
+    claim is marked PROMOTED it must point to a valid canonical
+    Atlas claim.
+    """
+
+    research_root = ROOT.parent / "research"
+
+    research_claims_path = (
+        research_root
+        / "mappings"
+        / "private-capital-claims-v1.json"
+    )
+
+    research_sources_path = (
+        research_root
+        / "mappings"
+        / "private-capital-sources-v1.json"
+    )
+
+    if research_claims_path.exists():
+        research_claims_data = load_registry(
+            research_claims_path,
+            errors
+        )
+
+        research_claims = research_claims_data.get(
+            "claims",
+            []
+        )
+
+        if not isinstance(research_claims, list):
+            errors.append(
+                "research/mappings/private-capital-claims-v1.json: "
+                "'claims' must be an array"
+            )
+            research_claims = []
+
+        for claim in research_claims:
+            claim_id = claim.get(
+                "id",
+                "<missing-id>"
+            )
+
+            subject = claim.get("subject")
+            object_id = claim.get("object")
+            canonical_claim_ref = claim.get(
+                "canonicalClaimRef"
+            )
+            status = claim.get("status")
+
+            if subject and not (
+                subject in entity_ids
+                or subject.startswith("candidate:")
+            ):
+                errors.append(
+                    f"{claim_id}: unknown research subject "
+                    f"{subject}"
+                )
+
+            if object_id and not (
+                object_id in entity_ids
+                or object_id.startswith("candidate:")
+            ):
+                errors.append(
+                    f"{claim_id}: unknown research object "
+                    f"{object_id}"
+                )
+
+            if canonical_claim_ref:
+                if canonical_claim_ref not in claim_ids:
+                    errors.append(
+                        f"{claim_id}: unknown canonical claim "
+                        f"{canonical_claim_ref}"
+                    )
+
+            if (
+                status == "PROMOTED"
+                and not canonical_claim_ref
+            ):
+                errors.append(
+                    f"{claim_id}: PROMOTED research claim "
+                    f"must have canonicalClaimRef"
+                )
+
+    if research_sources_path.exists():
+        research_sources_data = load_registry(
+            research_sources_path,
+            errors
+        )
+
+        research_sources = research_sources_data.get(
+            "sources",
+            []
+        )
+
+        if not isinstance(research_sources, list):
+            errors.append(
+                "research/mappings/private-capital-sources-v1.json: "
+                "'sources' must be an array"
+            )
+            research_sources = []
+
+        for item in research_sources:
+            candidate_id = item.get(
+                "candidateId",
+                "<missing-candidate-id>"
+            )
+
+            atlas_source_id = item.get(
+                "atlasSourceId"
+            )
+
+            decision = item.get(
+                "decision"
+            )
+
+            if (
+                decision == "EXISTING_SOURCE"
+                and atlas_source_id
+                and atlas_source_id not in source_ids
+            ):
+                errors.append(
+                    f"{candidate_id}: unknown Atlas source "
+                    f"{atlas_source_id}"
+                )
 
 def main():
     errors = []
@@ -521,7 +654,12 @@ def main():
         source_ids,
         errors
     )
-
+    validate_research_integrity(
+        entity_ids,
+        claim_ids,
+        source_ids,
+        errors
+    )
     if errors:
         print("Atlas validation FAILED")
         print()
