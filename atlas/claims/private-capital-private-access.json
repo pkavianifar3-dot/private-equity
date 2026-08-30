@@ -1,0 +1,12 @@
+{
+  "claims": [
+    {
+      "id": "claim:private-capital-private-access",
+      "subject": "concept:private-capital",
+      "predicate": "CHARACTERIZED_BY",
+      "object": "concept:private-market-access",
+      "status": "SUPPORTED",
+      "confidence": "HIGH"
+    }
+  ]
+}
