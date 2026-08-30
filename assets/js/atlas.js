@@ -481,6 +481,11 @@
             BROADER_THAN: "کلی‌تر از",
             RELATED_TO: "مرتبط با",
             INCLUDES: "شامل",
+            HAS_NON_UNIFORM_CLASSIFICATION: "طبقه‌بندی یکنواخت ندارد",
+            CHARACTERIZED_BY: "مشخص‌شده با",
+            LINKED_TO: "مرتبط با",
+            HAS_INVESTOR_POSITION: "دارای جایگاه سرمایه‌گذاری",
+            RETURN_DEPENDS_ON: "بازده وابسته به",
         };
 
         return labels[predicate] || predicate;
@@ -1885,6 +1890,35 @@ function renderConceptRelationSection(
                 claim =>
                     claim.predicate === "INCLUDES"
             );
+        const classificationClaims =
+            conceptClaims.filter(
+                claim =>
+                    claim.predicate === "HAS_NON_UNIFORM_CLASSIFICATION"
+            );
+        
+        const characterizedByClaims =
+            conceptClaims.filter(
+                claim =>
+                    claim.predicate === "CHARACTERIZED_BY"
+            );
+        
+        const linkedToClaims =
+            conceptClaims.filter(
+                claim =>
+                    claim.predicate === "LINKED_TO"
+            );
+        
+        const investorPositionClaims =
+            conceptClaims.filter(
+                claim =>
+                    claim.predicate === "HAS_INVESTOR_POSITION"
+            );
+        
+        const returnDependsOnClaims =
+            conceptClaims.filter(
+                claim =>
+                    claim.predicate === "RETURN_DEPENDS_ON"
+            );
         const root =
             document.getElementById("atlas-root");
     
@@ -2017,7 +2051,37 @@ function renderConceptRelationSection(
                 includesClaims,
                 entityIndex
             )}
-    
+            
+            ${renderConceptRelationSection(
+                "طبقه‌بندی",
+                classificationClaims,
+                entityIndex
+            )}
+            
+            ${renderConceptRelationSection(
+                "مشخصه‌ها",
+                characterizedByClaims,
+                entityIndex
+            )}
+            
+            ${renderConceptRelationSection(
+                "ارتباط با",
+                linkedToClaims,
+                entityIndex
+            )}
+            
+            ${renderConceptRelationSection(
+                "جایگاه سرمایه‌گذار",
+                investorPositionClaims,
+                entityIndex
+            )}
+            
+            ${renderConceptRelationSection(
+                "وابستگی بازده",
+                returnDependsOnClaims,
+                entityIndex
+            )}
+            
             ${renderEvidenceSection(
                 conceptClaims,
                 evidenceData,
