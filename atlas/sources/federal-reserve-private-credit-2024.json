@@ -1,11 +1,16 @@
 {
+  "version": "1.0",
   "sources": [
     {
       "id": "source:federal-reserve-private-credit-2024",
-      "title": "Private Credit: Characteristics and Risks",
-      "publisher": "Federal Reserve Board",
-      "publicationDate": "2024-02-23",
-      "url": "https://www.federalreserve.gov/econres/notes/feds-notes/private-credit-characteristics-and-risks-20240223.html"
+      "type": "Source",
+      "source_type": "official_report",
+      "title_fa": "گزارش اعتبارات خصوصی ۲۰۲۴",
+      "title_en": "Private Credit 2024",
+      "publisher": "Federal Reserve",
+      "publication_date": "2024",
+      "url": null,
+      "citation_refs": []
     }
   ]
 }
