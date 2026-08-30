@@ -18,17 +18,15 @@ def add_schema_errors(instance, schema_path, label, errors):
     try:
         schema = load_json(schema_path)
 
-from jsonschema import Draft202012Validator, RefResolver
+        resolver = RefResolver(
+            schema_path.resolve().as_uri(),
+            schema
+        )
 
-resolver = RefResolver(
-    schema_path.resolve().as_uri(),
-    schema
-)
-
-validator = Draft202012Validator(
-    schema,
-    resolver=resolver
-)
+        validator = Draft202012Validator(
+            schema,
+            resolver=resolver
+        )
 
         for error in sorted(
             validator.iter_errors(instance),
@@ -66,7 +64,6 @@ def load_registry(path, errors):
 
 def collect_entities(errors):
     index_path = ROOT / "entities" / "index.json"
-
     index = load_registry(index_path, errors)
 
     entities = index.get("entities", [])
@@ -104,7 +101,6 @@ def collect_entities(errors):
         entity_ids.add(entity_id)
         entity_by_id[entity_id] = entity
 
-    # Validate canonical entity files too.
     for path in sorted(
         ROOT.joinpath("entities").rglob("*.json")
     ):
@@ -186,6 +182,12 @@ def collect_claims(errors):
                 f"{path.relative_to(ROOT)}:{claim_id}",
                 errors
             )
+
+            if "id" not in claim:
+                errors.append(
+                    f"{path.relative_to(ROOT)}: claim without id"
+                )
+                continue
 
             if claim_id in claim_ids:
                 errors.append(
@@ -407,26 +409,24 @@ def validate_claim_integrity(
                 )
                 continue
 
-            if object_id in entity_by_id:
-                object_type = entity_by_id[
-                    object_id
-                ].get("type")
+            object_type = entity_by_id[
+                object_id
+            ].get("type")
 
-                allowed_object_types = rule.get(
-                    "object_types",
-                    []
+            allowed_object_types = rule.get(
+                "object_types",
+                []
+            )
+
+            if (
+                allowed_object_types
+                and object_type not in allowed_object_types
+            ):
+                errors.append(
+                    f"{claim_id}: object type "
+                    f"{object_type} is not allowed "
+                    f"for {predicate}"
                 )
-
-                if (
-                    allowed_object_types
-                    and object_type
-                    not in allowed_object_types
-                ):
-                    errors.append(
-                        f"{claim_id}: object type "
-                        f"{object_type} is not allowed "
-                        f"for {predicate}"
-                    )
 
         if has_value:
             value = claim.get("value")
