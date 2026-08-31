@@ -5,7 +5,10 @@
     window.location.pathname.includes("/atlas/")
         ? "."
         : "atlas";
-
+    let entitiesIndexCache = null;
+    let claimsIndexCache = null;
+    let evidenceIndexCache = null;
+    let sourcesIndexCache = null;
     async function loadJSON(path) {
         const response = await fetch(path, {
             cache: "no-store"
@@ -17,7 +20,60 @@
 
         return response.json();
     }
-
+    async function loadEntitiesIndex() {
+        if (entitiesIndexCache) {
+            return entitiesIndexCache;
+        }
+    
+        entitiesIndexCache =
+            await loadJSON(
+                `${ATLAS_ROOT}/entities/index.json`
+            );
+    
+        return entitiesIndexCache;
+    }
+    
+    
+    async function loadClaimsIndex() {
+        if (claimsIndexCache) {
+            return claimsIndexCache;
+        }
+    
+        claimsIndexCache =
+            await loadJSON(
+                `${ATLAS_ROOT}/claims/index.json`
+            );
+    
+        return claimsIndexCache;
+    }
+    
+    
+    async function loadEvidenceIndex() {
+        if (evidenceIndexCache) {
+            return evidenceIndexCache;
+        }
+    
+        evidenceIndexCache =
+            await loadJSON(
+                `${ATLAS_ROOT}/evidence/index.json`
+            );
+    
+        return evidenceIndexCache;
+    }
+    
+    
+    async function loadSourcesIndex() {
+        if (sourcesIndexCache) {
+            return sourcesIndexCache;
+        }
+    
+        sourcesIndexCache =
+            await loadJSON(
+                `${ATLAS_ROOT}/sources/index.json`
+            );
+    
+        return sourcesIndexCache;
+    }
     function escapeHTML(value) {
         return String(value ?? "")
             .replace(/&/g, "&amp;")
