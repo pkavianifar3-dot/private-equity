@@ -21,16 +21,16 @@
 
         return response.json();
     }
-    async function loadCachedJSON(path) {
+    function loadCachedJSON(path) {
         if (jsonCache.has(path)) {
             return jsonCache.get(path);
         }
     
-        const data = await loadJSON(path);
+        const promise = loadJSON(path);
     
-        jsonCache.set(path, data);
+        jsonCache.set(path, promise);
     
-        return data;
+        return promise;
     }
     async function loadEntitiesIndex() {
         if (entitiesIndexCache) {
