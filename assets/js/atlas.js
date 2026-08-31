@@ -5,10 +5,7 @@
     window.location.pathname.includes("/atlas/")
         ? "."
         : "atlas";
-    let entitiesIndexCache = null;
-    let claimsIndexCache = null;
-    let evidenceIndexCache = null;
-    let sourcesIndexCache = null;
+
     const jsonCache = new Map();
     async function loadJSON(path) {
         const response = await fetch(path, {
@@ -26,66 +23,16 @@
             return jsonCache.get(path);
         }
     
-        const promise = loadJSON(path);
+        const promise = loadJSON(path).catch(error => {
+            jsonCache.delete(path);
+            throw error;
+        });
     
         jsonCache.set(path, promise);
     
         return promise;
     }
-    async function loadEntitiesIndex() {
-        if (entitiesIndexCache) {
-            return entitiesIndexCache;
-        }
 
-        entitiesIndexCache =
-            await loadJSON(
-                `${ATLAS_ROOT}/entities/index.json`
-            );
-    
-        return entitiesIndexCache;
-    }
-    
-    
-    async function loadClaimsIndex() {
-        if (claimsIndexCache) {
-            return claimsIndexCache;
-        }
-    
-        claimsIndexCache =
-            await loadJSON(
-                `${ATLAS_ROOT}/claims/index.json`
-            );
-    
-        return claimsIndexCache;
-    }
-    
-    
-    async function loadEvidenceIndex() {
-        if (evidenceIndexCache) {
-            return evidenceIndexCache;
-        }
-    
-        evidenceIndexCache =
-            await loadJSON(
-                `${ATLAS_ROOT}/evidence/index.json`
-            );
-    
-        return evidenceIndexCache;
-    }
-    
-    
-    async function loadSourcesIndex() {
-        if (sourcesIndexCache) {
-            return sourcesIndexCache;
-        }
-    
-        sourcesIndexCache =
-            await loadJSON(
-                `${ATLAS_ROOT}/sources/index.json`
-            );
-    
-        return sourcesIndexCache;
-    }
     function escapeHTML(value) {
         return String(value ?? "")
             .replace(/&/g, "&amp;")
@@ -359,7 +306,9 @@
     }
     async function loadClaimsForEntity(entityId) {
     const claimsIndex =
-        await loadClaimsIndex();
+        await loadCachedJSON(
+            `${ATLAS_ROOT}/claims/index.json`
+        );
 
     const claimIds =
         claimsIndex.entities?.[entityId] || [];
@@ -412,7 +361,9 @@
             return allConceptClaimsCache;
         }
         const claimsIndex =
-            await loadClaimsIndex();
+            await loadCachedJSON(
+                `${ATLAS_ROOT}/claims/index.json`
+            );
     
         const conceptIds = Object.keys(
             claimsIndex.entities || {}
@@ -476,7 +427,9 @@
         }
     async function loadEvidenceForClaims(claims) {
         const evidenceIndex =
-            await loadEvidenceIndex();
+            await loadCachedJSON(
+                `${ATLAS_ROOT}/evidence/index.json`
+            );
     
         const evidenceIds = [];
     
@@ -536,7 +489,9 @@
     
     async function loadSourcesForEvidence(evidenceList) {
         const sourceIndex =
-            await loadSourcesIndex();
+            await loadCachedJSON(
+                `${ATLAS_ROOT}/sources/index.json`
+            );
     
         const sourceIds = [];
     
@@ -1650,7 +1605,10 @@ async function renderOrganization(entityId) {
     ] = await Promise.all([
         loadCachedJSON(entityFilePath(entityId)),
         loadClaimsForEntity(entityId),
-        loadEntitiesIndex()
+        loadCachedJSON(
+            `${ATLAS_ROOT}/entities/index.json`
+        )
+        
     ]);
     
     const investmentIndex =
@@ -2248,7 +2206,10 @@ function renderConceptBreadcrumbs(
         ] = await Promise.all([
             loadCachedJSON(entityFilePath(entityId)),
             loadClaimsForEntity(entityId),
-            loadEntitiesIndex()
+            loadCachedJSON(
+                `${ATLAS_ROOT}/entities/index.json`
+            )
+            
         ]);
     
         const entityIndex = {};
@@ -2515,7 +2476,10 @@ function renderConceptBreadcrumbs(
         ] = await Promise.all([
             loadCachedJSON(entityFilePath(entityId)),
             loadClaimsForEntity(entityId),
-            loadEntitiesIndex()
+            loadCachedJSON(
+                `${ATLAS_ROOT}/entities/index.json`
+            )
+            
         ]);
     
         const entityIndex = {};
@@ -2891,7 +2855,9 @@ function renderConceptBreadcrumbs(
         ] = await Promise.all([
             loadCachedJSON(entityFilePath(entityId)),
             loadClaimsForEntity(entityId),
-            loadEntitiesIndex(),
+            loadCachedJSON(
+                `${ATLAS_ROOT}/entities/index.json`
+            )
             loadJSON(
                 `${ATLAS_ROOT}/content/persons/${entityId.split(":").slice(1).join(":")}.json`
             )
