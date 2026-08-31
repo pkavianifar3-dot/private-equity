@@ -1309,7 +1309,8 @@ function renderEvidenceSection(
     claims,
     evidenceData,
     sourceData,
-    entityIndex
+    entityIndex,
+    entityId = null
 ) {
     const evidenceList =
         evidenceData?.evidence || [];
@@ -1358,7 +1359,14 @@ function renderEvidenceSection(
             }
 
             const relation =
-                relationLabel(claim.predicate);
+                entityId
+                    ? getConceptRelationDisplayLabel(
+                        claim,
+                        entityId
+                    )
+                    : relationLabel(
+                        claim.predicate
+                    );
 
             const objectName =
                 claim.object
@@ -1967,6 +1975,36 @@ function getConceptRelationTargetId(
     
     return null;
 }
+function getConceptRelationDisplayLabel(
+    claim,
+    entityId
+) {
+    if (!claim) {
+        return "";
+    }
+
+    if (claim.predicate === "BROADER_THAN") {
+        if (claim.subject === entityId) {
+            return "کلی‌تر از";
+        }
+
+        if (claim.object === entityId) {
+            return "مفهوم بالاتر";
+        }
+    }
+
+    if (claim.predicate === "INCLUDES") {
+        if (claim.subject === entityId) {
+            return "شامل";
+        }
+
+        if (claim.object === entityId) {
+            return "بخشی از";
+        }
+    }
+
+    return relationLabel(claim.predicate);
+}
 function renderConceptRelationSection(
     title,
     claims,
@@ -2034,8 +2072,9 @@ function renderConceptRelationSection(
 
                                     <div class="atlas-claim-label">
                                         ${escapeHTML(
-                                            relationLabel(
-                                                claim.predicate
+                                            getConceptRelationDisplayLabel(
+                                                claim,
+                                                entityId
                                             )
                                         )}
                                     </div>
@@ -2342,7 +2381,15 @@ function renderConceptBreadcrumbs(
         const broaderClaims =
             conceptClaims.filter(
                 claim =>
-                    claim.predicate === "BROADER_THAN"
+                    claim.predicate === "BROADER_THAN" &&
+                    claim.subject === entityId
+            );
+        
+        const broaderThanClaims =
+            conceptClaims.filter(
+                claim =>
+                    claim.predicate === "BROADER_THAN" &&
+                    claim.object === entityId
             );
         
         const relatedClaims =
@@ -2520,7 +2567,12 @@ function renderConceptBreadcrumbs(
                 entityIndex,
                 entityId
             )}
-            
+            ${renderConceptRelationSection(
+                "مفهوم بالاتر",
+                broaderThanClaims,
+                entityIndex,
+                entityId
+            )}
             ${renderConceptRelationSection(
                 "مرتبط با",
                 relatedClaims,
@@ -2579,7 +2631,8 @@ function renderConceptBreadcrumbs(
                 conceptClaims,
                 evidenceData,
                 sourceData,
-                entityIndex
+                entityIndex,
+                entityId
             )}
         `;
     
