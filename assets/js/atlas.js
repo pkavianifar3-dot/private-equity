@@ -343,7 +343,9 @@
     
         const investments = await Promise.all(
             investmentEntries.map(entry =>
-                loadJSON(entityFilePath(entry.id))
+                loadCachedJSON(
+                    entityFilePath(entry.id)
+                )
             )
         );
     
