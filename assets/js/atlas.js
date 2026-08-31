@@ -731,7 +731,16 @@ function entityURL(entityId) {
         claim,
         entityIndex,
         investmentIndex = {}
-    ) {        const object =
+    ) {
+        if (!claim || typeof claim !== "object") {
+            return "";
+        }
+    
+        if (!entityIndex || typeof entityIndex !== "object") {
+            return "";
+        }
+    
+        const object =
             claim.object
                 ? entityIndex[claim.object]
                 : null;
@@ -1913,6 +1922,13 @@ function renderConceptRelationSection(
     claims,
     entityIndex
 ) {
+    if (!Array.isArray(claims) || !claims.length) {
+        return "";
+    }
+
+    if (!entityIndex || typeof entityIndex !== "object") {
+        return "";
+    }
     if (!claims.length) {
         return "";
     }
@@ -2078,6 +2094,17 @@ function renderConceptBreadcrumbs(
     allConceptClaims,
     entityIndex
 ) {
+    if (!entity || typeof entity !== "object") {
+        return "";
+    }
+
+    if (!Array.isArray(allConceptClaims)) {
+        return "";
+    }
+
+    if (!entityIndex || typeof entityIndex !== "object") {
+        return "";
+    }
     const parentMap = {};
 
     allConceptClaims.forEach(claim => {
@@ -2601,11 +2628,6 @@ function renderConceptBreadcrumbs(
                     claim.predicate === "INVESTMENT_AMOUNT"
             );
 
-        const investmentRelationClaim =
-            investmentClaims.find(
-                claim =>
-                    claim.predicate === "INVESTED_IN"
-            );
         
         const root =
             document.getElementById("atlas-root");
@@ -2858,7 +2880,7 @@ function renderConceptBreadcrumbs(
             loadCachedJSON(
                 `${ATLAS_ROOT}/entities/index.json`
             ),
-            loadJSON(
+            loadCachedJSON(
                 `${ATLAS_ROOT}/content/persons/${entityId.split(":").slice(1).join(":")}.json`
             )
         ]);
