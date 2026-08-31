@@ -2224,7 +2224,32 @@ function renderConceptBreadcrumbs(
         </nav>
     `;
 }
+    function buildConceptJSONLD(
+        entity,
+        entityId
+    ) {
+        const data = {
+            "@context": "https://schema.org",
+            "@type": "DefinedTerm",
+            "name": entity.name?.fa || "",
+            "identifier": {
+                "@type": "PropertyValue",
+                "propertyID": "PrivateCapitalAtlasID",
+                "value": entity.id
+            },
+            "url": `${SITE_ORIGIN}/atlas/concept.html?id=${encodeURIComponent(entityId)}`
+        };
     
+        if (entity.name?.en) {
+            data.alternateName = entity.name.en;
+        }
+    
+        if (entity.aliases?.length) {
+            data.alternateName = entity.aliases;
+        }
+    
+        return data;
+    }
     async function renderConcept(entityId) {
         const [
             entity,
@@ -2494,6 +2519,90 @@ function renderConceptBreadcrumbs(
                     entityId
                 )}`
         });
+        injectJSONLD(
+            buildConceptJSONLD(
+                entity,
+                entityId
+            )
+        );
+    }
+    function buildInvestmentJSONLD(
+        entity,
+        entityIndex,
+        entityId,
+        investmentClaims
+    ) {
+        const data = {
+            "@context": "https://schema.org",
+            "@type": "InvestmentOrDeposit",
+            "name": entity.name?.fa || "",
+            "identifier": {
+                "@type": "PropertyValue",
+                "propertyID": "PrivateCapitalAtlasID",
+                "value": entity.id
+            },
+            "url": `${SITE_ORIGIN}/atlas/investment.html?id=${encodeURIComponent(entityId)}`
+        };
+    
+        if (entity.name?.en) {
+            data.alternateName = entity.name.en;
+        }
+    
+        const investorId =
+            entity.metadata?.investor || null;
+    
+        const targetId =
+            entity.metadata?.target || null;
+    
+        const investorName =
+            investorId
+                ? getEntityName(entityIndex, investorId)
+                : "";
+    
+        const targetName =
+            targetId
+                ? getEntityName(entityIndex, targetId)
+                : "";
+    
+        if (investorName) {
+            data.provider = {
+                "@type": "Organization",
+                "name": investorName
+            };
+        }
+    
+        if (targetName) {
+            data.recipient = {
+                "@type": "Organization",
+                "name": targetName
+            };
+        }
+    
+        const publishableAmountClaim =
+            investmentClaims.find(
+                claim =>
+                    claim.predicate === "INVESTMENT_AMOUNT" &&
+                    STRUCTURED_DATA_STATUSES.includes(
+                        claim.status
+                    ) &&
+                    claim.value?.unit === "amount" &&
+                    Number.isFinite(
+                        Number(claim.value.amount)
+                    )
+            );
+    
+        if (publishableAmountClaim) {
+            data.amount = {
+                "@type": "MonetaryAmount",
+                "value": Number(
+                    publishableAmountClaim.value.amount
+                ),
+                "currency":
+                    publishableAmountClaim.value.currency || ""
+            };
+        }
+    
+        return data;
     }
     async function renderInvestment(entityId) {
         const [
@@ -2851,6 +2960,14 @@ function renderConceptBreadcrumbs(
                     entityId
                 )}`
         });
+        injectJSONLD(
+            buildInvestmentJSONLD(
+                entity,
+                entityIndex,
+                entityId,
+                investmentClaims
+            )
+        );
     }
     
     function renderError(message) {
