@@ -1978,9 +1978,7 @@ function renderConceptRelationSection(
     if (!entityIndex || typeof entityIndex !== "object") {
         return "";
     }
-    if (!claims.length) {
-        return "";
-    }
+
     const uniqueClaims = Array.from(
         new Map(
             claims.map(claim => [
@@ -2509,56 +2507,56 @@ function renderConceptBreadcrumbs(
             ${renderConceptRelationSection(
                 "کلی‌تر از",
                 broaderClaims,
-                entityIndex
+                entityIndex,
                 entityId
             )}
             
             ${renderConceptRelationSection(
                 "مرتبط با",
                 relatedClaims,
-                entityIndex
+                entityIndex,
                 entityId
             )}
             
             ${renderConceptRelationSection(
                 "شامل",
                 includesClaims,
-                entityIndex
+                entityIndex,
                 entityId
             )}
             
             ${renderConceptRelationSection(
                 "طبقه‌بندی",
                 classificationClaims,
-                entityIndex
+                entityIndex,
                 entityId
             )}
             
             ${renderConceptRelationSection(
                 "مشخصه‌ها",
                 characterizedByClaims,
-                entityIndex
+                entityIndex,
                 entityId
             )}
             
             ${renderConceptRelationSection(
                 "ارتباط با",
                 linkedToClaims,
-                entityIndex
+                entityIndex,
                 entityId
             )}
             
             ${renderConceptRelationSection(
                 "جایگاه سرمایه‌گذار",
                 investorPositionClaims,
-                entityIndex
+                entityIndex,
                 entityId
             )}
             
             ${renderConceptRelationSection(
                 "وابستگی بازده",
                 returnDependsOnClaims,
-                entityIndex
+                entityIndex,
                 entityId
             )}
             
