@@ -20,11 +20,22 @@
 
         return response.json();
     }
+    
     async function loadEntitiesIndex() {
         if (entitiesIndexCache) {
             return entitiesIndexCache;
         }
+    async function loadCachedJSON(path) {
+        if (jsonCache.has(path)) {
+            return jsonCache.get(path);
+        }
     
+        const data = await loadJSON(path);
+    
+        jsonCache.set(path, data);
+    
+        return data;
+    }
         entitiesIndexCache =
             await loadJSON(
                 `${ATLAS_ROOT}/entities/index.json`
@@ -88,7 +99,7 @@
     // REPORTED / DISPUTED claims stay visible on the page but are kept out
     // of machine-readable data until independently verified or supported.
     const STRUCTURED_DATA_STATUSES = ["VERIFIED", "SUPPORTED"];
-
+    const jsonCache = new Map();
     function setMeta(name, content) {
         if (!content) {
             return;
@@ -1628,7 +1639,7 @@ async function renderOrganization(entityId) {
         organizationClaims,
         registry
     ] = await Promise.all([
-        loadJSON(entityFilePath(entityId)),
+        lloadCachedJSON(entityFilePath(entityId)),
         loadClaimsForEntity(entityId),
         loadEntitiesIndex()
     ]);
@@ -2493,7 +2504,7 @@ function renderConceptBreadcrumbs(
             investmentClaims,
             registry
         ] = await Promise.all([
-            loadJSON(entityFilePath(entityId)),
+            loadCachedJSON(entityFilePath(entityId)),
             loadClaimsForEntity(entityId),
             loadEntitiesIndex()
         ]);
@@ -2869,7 +2880,7 @@ function renderConceptBreadcrumbs(
             registry,
             content
         ] = await Promise.all([
-            loadJSON(entityFilePath(entityId)),
+            loadCachedJSON(entityFilePath(entityId)),
             loadClaimsForEntity(entityId),
             loadEntitiesIndex(),
             loadJSON(
