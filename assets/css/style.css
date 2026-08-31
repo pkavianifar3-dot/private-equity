@@ -449,11 +449,52 @@ font-size:30px;
     display:grid;
     gap:16px;
 }
+.atlas-evidence-group{
+    height:auto;
+    min-height:0;
+    padding:28px 30px;
+}
 
+.atlas-evidence-group h3{
+    margin:4px 0 6px;
+}
+
+.atlas-evidence-group .atlas-english{
+    margin:0 0 8px;
+}
+
+.atlas-evidence-group .atlas-status{
+    margin-top:10px;
+}
 .atlas-evidence-card{
     scroll-margin-top:110px;
 }
+.atlas-evidence-list{
+    margin-top:20px;
+    padding-top:18px;
+    border-top:1px solid rgba(255,255,255,.08);
+    display:grid;
+    gap:14px;
+}
 
+.atlas-evidence-item{
+    padding:0;
+}
+
+.atlas-evidence-item .atlas-claim-label{
+    margin-bottom:6px;
+}
+.atlas-evidence-item .atlas-source-item{
+    line-height:1.75;
+}
+
+.atlas-evidence-item .atlas-source-item > div{
+    margin-top:4px;
+}
+
+.atlas-evidence-item .atlas-source-item a{
+    margin-top:6px;
+}
 .atlas-source-item{
     line-height:1.9;
 }
@@ -496,7 +537,14 @@ font-size:30px;
     .atlas-timeline-date{
         padding-top:0;
     }
+    .atlas-evidence-group{
+        padding:22px 20px;
+    }
 
+    .atlas-evidence-list{
+        margin-top:16px;
+        padding-top:14px;
+    }
 }
 
 @media(max-width:600px){
