@@ -1808,56 +1808,120 @@ async function renderOrganization(entityId) {
         buildOrganizationJSONLD(entity, entityIndex, entityId)
     );
 }
+
+function getConceptRelationTarget(
+    claim,
+    currentEntityId
+) {
+    if (
+        claim.subject === currentEntityId &&
+        claim.object
+    ) {
+        return {
+            targetId: claim.object,
+            direction: "outgoing"
+        };
+    }
+
+    if (
+        claim.object === currentEntityId &&
+        claim.subject
+    ) {
+        return {
+            targetId: claim.subject,
+            direction: "incoming"
+        };
+    }
+
+    return null;
+}
+
 function renderConceptRelationSection(
     title,
     claims,
+    entityId,
     entityIndex
 ) {
     if (!claims.length) {
         return "";
     }
+
     const uniqueClaims = Array.from(
         new Map(
             claims.map(claim => [
-                `${claim.predicate}|${claim.object || ""}|${claim.value?.raw || ""}`,
+                `${claim.id}|${claim.subject || ""}|${claim.object || ""}|${claim.value?.raw || ""}`,
                 claim
             ])
         ).values()
     );
+
+    const renderedClaims = uniqueClaims
+        .map(claim => {
+
+            const relationTarget =
+                getConceptRelationTarget(
+                    claim,
+                    entityId
+                );
+
+            if (!relationTarget) {
+                return null;
+            }
+
+            const targetId =
+                relationTarget.targetId;
+
+            const targetName =
+                getEntityName(
+                    entityIndex,
+                    targetId
+                );
+
+            const targetEnglishName =
+                getEntityEnglishName(
+                    entityIndex,
+                    targetId
+                );
+
+            const targetURL =
+                entityURL(targetId);
+
+            return {
+                claim,
+                targetId,
+                targetName,
+                targetEnglishName,
+                targetURL,
+                direction:
+                    relationTarget.direction
+            };
+        })
+        .filter(Boolean);
+
+    if (!renderedClaims.length) {
+        return "";
+    }
+
     return `
         <section class="atlas-section">
 
             <div class="container">
 
-                <h2>${escapeHTML(title)}</h2>
+                <h2>
+                    ${escapeHTML(title)}
+                </h2>
 
                 <div class="grid atlas-claims-grid">
 
-                    ${uniqueClaims
-                        .map(claim => {
-                            const objectId =
-                                claim.object || null;
+                    ${renderedClaims
+                        .map(item => {
 
-                            const objectName =
-                                objectId
-                                    ? getEntityName(
-                                        entityIndex,
-                                        objectId
-                                    )
-                                    : "";
-
-                            const objectEnglishName =
-                                objectId
-                                    ? getEntityEnglishName(
-                                        entityIndex,
-                                        objectId
-                                    )
-                                    : "";
-
-                            const objectURL =
-                                objectId
-                                    ? entityURL(objectId)
-                                    : null;
+                            const {
+                                claim,
+                                targetName,
+                                targetEnglishName,
+                                targetURL
+                            } = item;
 
                             return `
                                 <article class="card atlas-claim">
@@ -1871,20 +1935,20 @@ function renderConceptRelationSection(
                                     </div>
 
                                     ${
-                                        objectName
+                                        targetName
                                             ? `
                                                 <h3>
                                                     ${
-                                                        objectURL
+                                                        targetURL
                                                             ? `
-                                                                <a href="${objectURL}">
+                                                                <a href="${targetURL}">
                                                                     ${escapeHTML(
-                                                                        objectName
+                                                                        targetName
                                                                     )}
                                                                 </a>
                                                             `
                                                             : escapeHTML(
-                                                                objectName
+                                                                targetName
                                                             )
                                                     }
                                                 </h3>
@@ -1893,20 +1957,20 @@ function renderConceptRelationSection(
                                     }
 
                                     ${
-                                        objectEnglishName
+                                        targetEnglishName
                                             ? `
                                                 <p class="atlas-english">
                                                     ${
-                                                        objectURL
+                                                        targetURL
                                                             ? `
-                                                                <a href="${objectURL}">
+                                                                <a href="${targetURL}">
                                                                     ${escapeHTML(
-                                                                        objectEnglishName
+                                                                        targetEnglishName
                                                                     )}
                                                                 </a>
                                                             `
                                                             : escapeHTML(
-                                                                objectEnglishName
+                                                                targetEnglishName
                                                             )
                                                     }
                                                 </p>
@@ -2240,48 +2304,56 @@ function renderConceptBreadcrumbs(
             ${renderConceptRelationSection(
                 "کلی‌تر از",
                 broaderClaims,
+                entityId,
                 entityIndex
             )}
             
             ${renderConceptRelationSection(
                 "مرتبط با",
                 relatedClaims,
+                entityId,
                 entityIndex
             )}
             
             ${renderConceptRelationSection(
                 "شامل",
                 includesClaims,
+                entityId,
                 entityIndex
             )}
             
-            ${renderConceptRelationSection(
+             ${renderConceptRelationSection(
                 "طبقه‌بندی",
                 classificationClaims,
+                entityId,
                 entityIndex
             )}
             
             ${renderConceptRelationSection(
                 "مشخصه‌ها",
                 characterizedByClaims,
+                entityId,
                 entityIndex
             )}
             
             ${renderConceptRelationSection(
                 "ارتباط با",
                 linkedToClaims,
+                entityId,
                 entityIndex
             )}
             
             ${renderConceptRelationSection(
                 "جایگاه سرمایه‌گذار",
                 investorPositionClaims,
+                entityId,
                 entityIndex
             )}
             
             ${renderConceptRelationSection(
                 "وابستگی بازده",
                 returnDependsOnClaims,
+                entityId,
                 entityIndex
             )}
             
