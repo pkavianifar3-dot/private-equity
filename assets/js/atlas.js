@@ -2857,7 +2857,7 @@ function renderConceptBreadcrumbs(
             loadClaimsForEntity(entityId),
             loadCachedJSON(
                 `${ATLAS_ROOT}/entities/index.json`
-            )
+            ),
             loadJSON(
                 `${ATLAS_ROOT}/content/persons/${entityId.split(":").slice(1).join(":")}.json`
             )
