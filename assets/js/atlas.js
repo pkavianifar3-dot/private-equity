@@ -747,10 +747,17 @@
         return entity.name?.en || "";
     }
 function entityURL(entityId) {
+    if (typeof entityId !== "string" || !entityId.includes(":")) {
+        return null;
+    }
+
     const parts = entityId.split(":");
     const type = parts[0];
 
     switch (type) {
+        case "person":
+            return `person.html?id=${encodeURIComponent(entityId)}`;
+
         case "organization":
             return `organization.html?id=${encodeURIComponent(entityId)}`;
 
