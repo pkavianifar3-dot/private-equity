@@ -9,6 +9,7 @@
     let claimsIndexCache = null;
     let evidenceIndexCache = null;
     let sourcesIndexCache = null;
+    const jsonCache = new Map();
     async function loadJSON(path) {
         const response = await fetch(path, {
             cache: "no-store"
@@ -20,11 +21,6 @@
 
         return response.json();
     }
-    
-    async function loadEntitiesIndex() {
-        if (entitiesIndexCache) {
-            return entitiesIndexCache;
-        }
     async function loadCachedJSON(path) {
         if (jsonCache.has(path)) {
             return jsonCache.get(path);
@@ -36,6 +32,11 @@
     
         return data;
     }
+    async function loadEntitiesIndex() {
+        if (entitiesIndexCache) {
+            return entitiesIndexCache;
+        }
+
         entitiesIndexCache =
             await loadJSON(
                 `${ATLAS_ROOT}/entities/index.json`
