@@ -100,7 +100,6 @@
     // REPORTED / DISPUTED claims stay visible on the page but are kept out
     // of machine-readable data until independently verified or supported.
     const STRUCTURED_DATA_STATUSES = ["VERIFIED", "SUPPORTED"];
-    const jsonCache = new Map();
     function setMeta(name, content) {
         if (!content) {
             return;
