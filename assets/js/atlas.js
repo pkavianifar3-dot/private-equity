@@ -1918,10 +1918,58 @@ async function renderOrganization(entityId) {
         buildOrganizationJSONLD(entity, entityIndex, entityId)
     );
 }
+function getConceptRelationTargetId(
+    claim,
+    entityId
+) {
+    if (!claim || !entityId) {
+        return null;
+    }
+
+    if (
+        claim.predicate === "BROADER_THAN"
+    ) {
+        if (claim.object === entityId) {
+            return claim.subject || null;
+        }
+
+        if (claim.subject === entityId) {
+            return claim.object || null;
+        }
+    }
+
+    if (
+        claim.predicate === "INCLUDES"
+    ) {
+        if (claim.subject === entityId) {
+            return claim.object || null;
+        }
+
+        if (claim.object === entityId) {
+            return claim.subject || null;
+        }
+    }
+
+    if (
+        claim.predicate === "RELATED_TO" ||
+        claim.predicate === "LINKED_TO"
+    ) {
+        if (claim.subject === entityId) {
+            return claim.object || null;
+        }
+
+        if (claim.object === entityId) {
+            return claim.subject || null;
+        }
+    }
+
+    return claim.object || null;
+}
 function renderConceptRelationSection(
     title,
     claims,
-    entityIndex
+    entityIndex,
+    entityId
 ) {
     if (!Array.isArray(claims) || !claims.length) {
         return "";
@@ -1953,8 +2001,13 @@ function renderConceptRelationSection(
                     ${uniqueClaims
                         .map(claim => {
                             const objectId =
-                                claim.object || null;
-
+                                getConceptRelationTargetId(
+                                    claim,
+                                    entityId
+                                );
+                            if (!objectId || objectId === entityId) {
+                                return "";
+                            }
                             const objectName =
                                 objectId
                                     ? getEntityName(
@@ -2081,6 +2134,7 @@ function renderConceptRelationSection(
                                 </article>
                             `;
                         })
+                        .filter(Boolean)
                         .join("")}
 
                 </div>
@@ -2456,48 +2510,56 @@ function renderConceptBreadcrumbs(
                 "کلی‌تر از",
                 broaderClaims,
                 entityIndex
+                entityId
             )}
             
             ${renderConceptRelationSection(
                 "مرتبط با",
                 relatedClaims,
                 entityIndex
+                entityId
             )}
             
             ${renderConceptRelationSection(
                 "شامل",
                 includesClaims,
                 entityIndex
+                entityId
             )}
             
             ${renderConceptRelationSection(
                 "طبقه‌بندی",
                 classificationClaims,
                 entityIndex
+                entityId
             )}
             
             ${renderConceptRelationSection(
                 "مشخصه‌ها",
                 characterizedByClaims,
                 entityIndex
+                entityId
             )}
             
             ${renderConceptRelationSection(
                 "ارتباط با",
                 linkedToClaims,
                 entityIndex
+                entityId
             )}
             
             ${renderConceptRelationSection(
                 "جایگاه سرمایه‌گذار",
                 investorPositionClaims,
                 entityIndex
+                entityId
             )}
             
             ${renderConceptRelationSection(
                 "وابستگی بازده",
                 returnDependsOnClaims,
                 entityIndex
+                entityId
             )}
             
             ${renderEvidenceSection(
