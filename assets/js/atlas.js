@@ -2228,7 +2228,7 @@ function renderConceptBreadcrumbs(
         ] = await Promise.all([
             loadJSON(entityFilePath(entityId)),
             loadClaimsForEntity(entityId),
-            loadJSON(`${ATLAS_ROOT}/entities/index.json`)
+            loadEntitiesIndex()
         ]);
     
         const entityIndex = {};
