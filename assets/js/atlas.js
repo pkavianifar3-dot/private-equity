@@ -1944,10 +1944,12 @@ function getConceptRelationTargetId(
         if (claim.subject === entityId) {
             return claim.object || null;
         }
-
+    
         if (claim.object === entityId) {
             return claim.subject || null;
         }
+    
+        return null;
     }
 
     if (
@@ -1957,13 +1959,13 @@ function getConceptRelationTargetId(
         if (claim.subject === entityId) {
             return claim.object || null;
         }
-
+    
         if (claim.object === entityId) {
             return claim.subject || null;
         }
     }
-
-    return claim.object || null;
+    
+    return null;
 }
 function renderConceptRelationSection(
     title,
@@ -2352,7 +2354,15 @@ function renderConceptBreadcrumbs(
         const includesClaims =
             conceptClaims.filter(
                 claim =>
-                    claim.predicate === "INCLUDES"
+                    claim.predicate === "INCLUDES" &&
+                    claim.subject === entityId
+            );
+        
+        const includedInClaims =
+            conceptClaims.filter(
+                claim =>
+                    claim.predicate === "INCLUDES" &&
+                    claim.object === entityId
             );
         const classificationClaims =
             conceptClaims.filter(
@@ -2524,7 +2534,12 @@ function renderConceptBreadcrumbs(
                 entityIndex,
                 entityId
             )}
-            
+            ${renderConceptRelationSection(
+                "بخشی از",
+                includedInClaims,
+                entityIndex,
+                entityId
+            )}
             ${renderConceptRelationSection(
                 "طبقه‌بندی",
                 classificationClaims,
