@@ -514,7 +514,7 @@
     
         const datasets = await Promise.all(
             evidenceFiles.map(fileName =>
-                loadJSON(
+                loadCachedJSON(
                     `${ATLAS_ROOT}/evidence/${fileName}`
                 )
             )
@@ -574,7 +574,7 @@
     
         const datasets = await Promise.all(
             sourceFiles.map(fileName =>
-                loadJSON(
+                loadCachedJSON(
                     `${ATLAS_ROOT}/sources/${fileName}`
                 )
             )
