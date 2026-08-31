@@ -962,3 +962,17 @@ font-size:30px;
     display:inline;
     margin-top:0;
 }
+
+/* Atlas — Final Evidence Spacing */
+
+.atlas-page .atlas-sources-list{
+    margin-top:18px;
+}
+
+.atlas-page .atlas-source-item small{
+    margin-top:1px;
+}
+
+.atlas-page .atlas-source-item a{
+    margin-top:3px;
+}
