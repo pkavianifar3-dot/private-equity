@@ -345,9 +345,8 @@
         return investmentIndex;
     }
     async function loadClaimsForEntity(entityId) {
-    const claimsIndex = await loadJSON(
-        `${ATLAS_ROOT}/claims/index.json`
-    );
+    const claimsIndex =
+        await loadClaimsIndex();
 
     const claimIds =
         claimsIndex.entities?.[entityId] || [];
@@ -399,9 +398,8 @@
         if (allConceptClaimsCache) {
             return allConceptClaimsCache;
         }
-        const claimsIndex = await loadJSON(
-            `${ATLAS_ROOT}/claims/index.json`
-        );
+        const claimsIndex =
+            await loadClaimsIndex();
     
         const conceptIds = Object.keys(
             claimsIndex.entities || {}
@@ -464,9 +462,8 @@
         return allConceptClaimsCache;
         }
     async function loadEvidenceForClaims(claims) {
-        const evidenceIndex = await loadJSON(
-            `${ATLAS_ROOT}/evidence/index.json`
-        );
+        const evidenceIndex =
+            await loadEvidenceIndex();
     
         const evidenceIds = [];
     
@@ -525,9 +522,8 @@
     
     
     async function loadSourcesForEvidence(evidenceList) {
-        const sourceIndex = await loadJSON(
-            `${ATLAS_ROOT}/sources/index.json`
-        );
+        const sourceIndex =
+            await loadSourcesIndex();
     
         const sourceIds = [];
     
@@ -1634,7 +1630,7 @@ async function renderOrganization(entityId) {
     ] = await Promise.all([
         loadJSON(entityFilePath(entityId)),
         loadClaimsForEntity(entityId),
-        loadJSON(`${ATLAS_ROOT}/entities/index.json`)
+        loadEntitiesIndex()
     ]);
     
     const investmentIndex =
@@ -2499,7 +2495,7 @@ function renderConceptBreadcrumbs(
         ] = await Promise.all([
             loadJSON(entityFilePath(entityId)),
             loadClaimsForEntity(entityId),
-            loadJSON(`${ATLAS_ROOT}/entities/index.json`)
+            loadEntitiesIndex()
         ]);
     
         const entityIndex = {};
@@ -2875,7 +2871,7 @@ function renderConceptBreadcrumbs(
         ] = await Promise.all([
             loadJSON(entityFilePath(entityId)),
             loadClaimsForEntity(entityId),
-            loadJSON(`${ATLAS_ROOT}/entities/index.json`),
+            loadEntitiesIndex(),
             loadJSON(
                 `${ATLAS_ROOT}/content/persons/${entityId.split(":").slice(1).join(":")}.json`
             )
