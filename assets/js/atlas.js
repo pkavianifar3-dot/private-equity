@@ -560,6 +560,7 @@
             SUBSIDIARY_OF: "زیرمجموعه",
             PART_OF: "بخشی از",
             INVESTED_IN: "سرمایه‌گذاری",
+            INVESTMENT_AMOUNT: "مبلغ سرمایه‌گذاری",
             INVESTMENT_EXECUTIVE_OF: "مدیر سرمایه‌گذاری در",
             MANAGES: "مدیریت",
             HAS_PROJECT: "پروژه",
@@ -2934,11 +2935,21 @@ function renderConceptBreadcrumbs(
                     : ""
             }
     
-            ${renderClaimsSection(
-                "ادعاها و روابط",
-                investmentClaims,
-                entityIndex
-            )}
+            ${
+                investmentClaims.filter(
+                    claim =>
+                        claim.predicate !== "INVESTMENT_AMOUNT"
+                ).length
+                    ? renderClaimsSection(
+                        "ادعاها و روابط",
+                        investmentClaims.filter(
+                            claim =>
+                                claim.predicate !== "INVESTMENT_AMOUNT"
+                        ),
+                        entityIndex
+                    )
+                    : ""
+            }
     
             ${renderEvidenceSection(
                 investmentClaims,
