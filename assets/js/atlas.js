@@ -337,7 +337,12 @@
         .map(claimId => claimsById[claimId])
         .filter(Boolean);
 }
+    let allConceptClaimsCache = null;
+    
     async function loadAllConceptClaims() {
+        if (allConceptClaimsCache) {
+            return allConceptClaimsCache;
+        }
         const claimsIndex = await loadJSON(
             `${ATLAS_ROOT}/claims/index.json`
         );
@@ -395,10 +400,13 @@
             });
         });
     
-        return claimIds
-            .map(claimId => claimsById[claimId])
-            .filter(Boolean);
-    }
+        allConceptClaimsCache =
+            claimIds
+                .map(claimId => claimsById[claimId])
+                .filter(Boolean);
+        
+        return allConceptClaimsCache;
+        }
     async function loadEvidenceForClaims(claims) {
         const evidenceIndex = await loadJSON(
             `${ATLAS_ROOT}/evidence/index.json`
