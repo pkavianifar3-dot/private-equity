@@ -1978,26 +1978,27 @@ function renderConceptBreadcrumbs(
     conceptClaims,
     entityIndex
 ) {
-    const broaderClaims = conceptClaims.filter(
+    const parentClaims = conceptClaims.filter(
         claim =>
             claim.predicate === "BROADER_THAN" &&
-            claim.object
+            claim.subject &&
+            claim.object === entity.id
     );
 
-    if (!broaderClaims.length) {
+    if (!parentClaims.length) {
         return "";
     }
 
-    const items = broaderClaims
+    const items = parentClaims
         .map(claim => {
             const name =
                 getEntityName(
                     entityIndex,
-                    claim.object
+                    claim.subject
                 );
 
             const url =
-                entityURL(claim.object);
+                entityURL(claim.subject);
 
             return {
                 name,
