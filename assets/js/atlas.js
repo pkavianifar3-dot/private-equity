@@ -337,6 +337,68 @@
         .map(claimId => claimsById[claimId])
         .filter(Boolean);
 }
+    async function loadAllConceptClaims() {
+        const claimsIndex = await loadJSON(
+            `${ATLAS_ROOT}/claims/index.json`
+        );
+    
+        const conceptIds = Object.keys(
+            claimsIndex.entities || {}
+        ).filter(id =>
+            id.startsWith("concept:")
+        );
+    
+        if (!conceptIds.length) {
+            return [];
+        }
+    
+        const claimIds = [];
+    
+        conceptIds.forEach(entityId => {
+            const ids =
+                claimsIndex.entities?.[entityId] || [];
+    
+            ids.forEach(claimId => {
+                if (!claimIds.includes(claimId)) {
+                    claimIds.push(claimId);
+                }
+            });
+        });
+    
+        const claimFileNames = [];
+    
+        claimIds.forEach(claimId => {
+            const fileName =
+                claimsIndex.claims?.[claimId];
+    
+            if (
+                fileName &&
+                !claimFileNames.includes(fileName)
+            ) {
+                claimFileNames.push(fileName);
+            }
+        });
+    
+        const datasets = await Promise.all(
+            claimFileNames.map(fileName =>
+                loadJSON(
+                    `${ATLAS_ROOT}/claims/${fileName}`
+                )
+            )
+        );
+    
+        const claimsById = {};
+    
+        datasets.forEach(data => {
+            (data.claims || []).forEach(claim => {
+                claimsById[claim.id] = claim;
+            });
+        });
+    
+        return claimIds
+            .map(claimId => claimsById[claimId])
+            .filter(Boolean);
+    }
     async function loadEvidenceForClaims(claims) {
         const evidenceIndex = await loadJSON(
             `${ATLAS_ROOT}/evidence/index.json`
@@ -1975,30 +2037,69 @@ function renderConceptRelationSection(
 }
 function renderConceptBreadcrumbs(
     entity,
-    conceptClaims,
+    allConceptClaims,
     entityIndex
 ) {
-    const parentClaims = conceptClaims.filter(
-        claim =>
-            claim.predicate === "BROADER_THAN" &&
-            claim.subject &&
-            claim.object === entity.id
-    );
+    const parentMap = {};
 
-    if (!parentClaims.length) {
+    allConceptClaims.forEach(claim => {
+        if (
+            claim.predicate !== "BROADER_THAN" ||
+            !claim.subject ||
+            !claim.object
+        ) {
+            return;
+        }
+
+        if (!parentMap[claim.object]) {
+            parentMap[claim.object] = [];
+        }
+
+        parentMap[claim.object].push(
+            claim.subject
+        );
+    });
+
+    const chain = [];
+    const visited = new Set();
+
+    let currentId = entity.id;
+
+    while (
+        parentMap[currentId]?.length &&
+        !visited.has(currentId)
+    ) {
+        visited.add(currentId);
+
+        const parentId =
+            parentMap[currentId][0];
+
+        if (
+            !parentId ||
+            visited.has(parentId)
+        ) {
+            break;
+        }
+
+        chain.unshift(parentId);
+
+        currentId = parentId;
+    }
+
+    if (!chain.length) {
         return "";
     }
 
-    const items = parentClaims
-        .map(claim => {
+    const items = chain
+        .map(id => {
             const name =
                 getEntityName(
                     entityIndex,
-                    claim.subject
+                    id
                 );
 
             const url =
-                entityURL(claim.subject);
+                entityURL(id);
 
             return {
                 name,
@@ -2011,32 +2112,50 @@ function renderConceptBreadcrumbs(
         return "";
     }
 
+    items.push({
+        name:
+            entity.name?.fa || "",
+        url: null
+    });
+
     return `
         <nav
             class="atlas-breadcrumbs"
             aria-label="مسیر مفهومی"
         >
             ${items
-                .map(item =>
-                    item.url
-                        ? `
-                            <a href="${item.url}">
-                                ${escapeHTML(item.name)}
-                            </a>
-                        `
-                        : `
-                            <span>
-                                ${escapeHTML(item.name)}
-                            </span>
-                        `
-                )
-                .join(" / ")}
-            /
-            <span aria-current="page">
-                ${escapeHTML(
-                    entity.name?.fa || ""
-                )}
-            </span>
+                .map((item, index) => `
+                    ${
+                        item.url
+                            ? `
+                                <a href="${item.url}">
+                                    ${escapeHTML(
+                                        item.name
+                                    )}
+                                </a>
+                            `
+                            : `
+                                <span
+                                    aria-current="${
+                                        index === items.length - 1
+                                            ? "page"
+                                            : ""
+                                    }"
+                                >
+                                    ${escapeHTML(
+                                        item.name
+                                    )}
+                                </span>
+                            `
+                    }
+
+                    ${
+                        index < items.length - 1
+                            ? " / "
+                            : ""
+                    }
+                `)
+                .join("")}
         </nav>
     `;
 }
@@ -2057,7 +2176,8 @@ function renderConceptBreadcrumbs(
         registry.entities.forEach(item => {
             entityIndex[item.id] = item;
         });
-    
+        const allConceptClaims =
+            await loadAllConceptClaims();
         const evidenceList =
             await loadEvidenceForClaims(conceptClaims);
     
@@ -2120,7 +2240,7 @@ function renderConceptBreadcrumbs(
         const breadcrumbsHTML =
             renderConceptBreadcrumbs(
                 entity,
-                conceptClaims,
+                allConceptClaims,
                 entityIndex
             );
         const root =
