@@ -1639,7 +1639,7 @@ async function renderOrganization(entityId) {
         organizationClaims,
         registry
     ] = await Promise.all([
-        lloadCachedJSON(entityFilePath(entityId)),
+        loadCachedJSON(entityFilePath(entityId)),
         loadClaimsForEntity(entityId),
         loadEntitiesIndex()
     ]);
@@ -2237,7 +2237,7 @@ function renderConceptBreadcrumbs(
             conceptClaims,
             registry
         ] = await Promise.all([
-            loadJSON(entityFilePath(entityId)),
+            loadCachedJSON(entityFilePath(entityId)),
             loadClaimsForEntity(entityId),
             loadEntitiesIndex()
         ]);
