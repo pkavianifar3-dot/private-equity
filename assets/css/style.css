@@ -951,3 +951,14 @@ font-size:30px;
     }
 
 }
+/* Atlas — Inline source citation */
+
+.atlas-page .atlas-source-item > strong{
+    display:inline;
+    margin-left:6px;
+}
+
+.atlas-page .atlas-source-item > div{
+    display:inline;
+    margin-top:0;
+}
