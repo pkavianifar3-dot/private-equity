@@ -45,3 +45,5 @@ jobs:
           test -f atlas/organization.html
           test -f atlas/investment.html
           test -f atlas/concept.html
+      - name: Test Atlas renderer structure
+        run: node tests/atlas-renderer.test.js
