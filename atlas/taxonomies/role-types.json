@@ -1,0 +1,15 @@
+{
+  "version": "1.0",
+  "roles": [
+    {
+      "id": "deputy_investment",
+      "label_fa": "معاونت سرمایه‌گذاری",
+      "label_en": "Deputy Investment Role"
+    },
+    {
+      "id": "chairman",
+      "label_fa": "رئیس",
+      "label_en": "Chairman"
+    }
+  ]
+}
