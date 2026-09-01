@@ -7,7 +7,10 @@
       "predicate": "HAS_INVESTOR_POSITION",
       "object": "concept:lender",
       "status": "SUPPORTED",
-      "confidence": "HIGH"
+      "confidence": "HIGH",
+      "evidenceRefs": [
+        "evidence:private-credit-lender-position-01"
+      ]     
     }
   ]
 }

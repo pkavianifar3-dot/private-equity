@@ -7,7 +7,10 @@
       "predicate": "HAS_NON_UNIFORM_CLASSIFICATION",
       "object": "concept:private-capital-classification",
       "status": "SUPPORTED",
-      "confidence": "HIGH"
+      "confidence": "HIGH",
+      "evidenceRefs": [
+        "evidence:private-capital-boundaries-vary-01"
+      ]     
     }
   ]
 }

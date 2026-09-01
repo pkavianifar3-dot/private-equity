@@ -7,7 +7,10 @@
       "predicate": "CHARACTERIZED_BY",
       "object": "concept:private-market-access",
       "status": "SUPPORTED",
-      "confidence": "HIGH"
+      "confidence": "HIGH",
+      "evidenceRefs": [
+        "evidence:private-capital-private-access-01"
+      ]      
     }
   ]
 }

@@ -13,7 +13,10 @@
         "status": "current"
       },
       "status": "SUPPORTED",
-      "confidence": "HIGH"
+      "confidence": "HIGH",
+      "evidenceRefs": [
+        "evidence:ali-ceo-kian-01"
+      ]
     },
     {
       "id": "claim:kian-private-equity-management-subsidiary-kian-financial-group",
@@ -27,7 +30,10 @@
         "status": "unknown"
       },
       "status": "SUPPORTED",
-      "confidence": "MEDIUM"
+      "confidence": "MEDIUM",
+      "evidenceRefs": [
+        "evidence:kian-subsidiary-group-01"
+      ]
     },
     {
       "id": "claim:ali-sanginian-ceo-amin-investment-bank",
@@ -41,7 +47,11 @@
         "status": "known"
       },
       "status": "VERIFIED",
-      "confidence": "HIGH"
+      "confidence": "HIGH",
+      "evidenceRefs": [
+        "evidence:ali-ceo-amin-01",
+        "evidence:ali-ceo-amin-02"
+      ]
     },
     {
       "id": "claim:ali-sanginian-ceo-semega",
@@ -55,7 +65,10 @@
         "status": "known"
       },
       "status": "VERIFIED",
-      "confidence": "HIGH"
+      "confidence": "HIGH",
+      "evidenceRefs": [
+        "evidence:ali-ceo-semega-01"
+      ]      
     },
     {
       "id": "claim:ali-sanginian-board-tourism-bank",
@@ -69,7 +82,10 @@
         "status": "at-least"
       },
       "status": "VERIFIED",
-      "confidence": "HIGH"
+      "confidence": "HIGH",
+      "evidenceRefs": [
+        "evidence:ali-board-tourism-bank-01"
+      ]      
     },
     {
       "id": "claim:ali-sanginian-deputy-investment-kayson",
@@ -84,7 +100,10 @@
         "status": "unknown"
       },
       "status": "VERIFIED",
-      "confidence": "HIGH"
+      "confidence": "HIGH",
+      "evidenceRefs": [
+        "evidence:ali-kayson-01"
+      ]     
     },
     {
       "id": "claim:ali-sanginian-chair-tehran-chamber-commission",
@@ -99,7 +118,11 @@
         "status": "known"
       },
       "status": "VERIFIED",
-      "confidence": "HIGH"
+      "confidence": "HIGH",
+      "evidenceRefs": [
+        "evidence:ali-chair-tehran-chamber-01",
+        "evidence:ali-chair-tehran-chamber-02"
+      ]     
     },
     {
       "id": "claim:ali-sanginian-investment-executive-kayson-achareh",
@@ -108,7 +131,10 @@
       "object": "organization:kayson-group",
     
       "status": "VERIFIED",
-      "confidence": "HIGH"
+      "confidence": "HIGH",
+      "evidenceRefs": [
+        "evidence:ali-investment-executive-kayson-01"
+      ]     
     },
     {
       "id": "claim:kian-private-equity-has-dadman",
@@ -116,7 +142,10 @@
       "predicate": "HAS_PROJECT",
       "object": "project:dadman",
       "status": "SUPPORTED",
-      "confidence": "HIGH"
+      "confidence": "HIGH",
+      "evidenceRefs": [
+        "evidence:kian-dadman-01"
+      ]     
     },
     {
       "id": "claim:kian-private-equity-operates-private-equity",
@@ -130,7 +159,10 @@
         "status": "current"
       },
       "status": "SUPPORTED",
-      "confidence": "HIGH"
+      "confidence": "HIGH",
+      "evidenceRefs": [
+        "evidence:ali-private-equity-01"
+      ]     
     }
   ]
 }

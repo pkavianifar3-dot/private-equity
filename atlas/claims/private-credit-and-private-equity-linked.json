@@ -7,7 +7,10 @@
       "predicate": "LINKED_TO",
       "object": "concept:private-equity",
       "status": "SUPPORTED",
-      "confidence": "HIGH"
+      "confidence": "HIGH",
+      "evidenceRefs": [
+        "evidence:private-credit-and-private-equity-linked-01"
+      ]     
     }
   ]
 }

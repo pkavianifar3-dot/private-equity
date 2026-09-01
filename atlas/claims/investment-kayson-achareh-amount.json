@@ -13,7 +13,10 @@
         "period_type": "reported"
       },
       "status": "REPORTED",
-      "confidence": "HIGH"
+      "confidence": "HIGH",
+      "evidenceRefs": [
+        "evidence:kayson-achareh-investment-amount-01"
+      ]
     }
   ]
 }

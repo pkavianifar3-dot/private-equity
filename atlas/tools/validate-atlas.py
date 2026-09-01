@@ -220,7 +220,7 @@ def collect_claims(errors):
 
     return claim_ids, claims
 
-def collect_sources(errors):
+def collect_sources(errors, source_types):
     source_ids = set()
     sources = []
 
@@ -249,7 +249,13 @@ def collect_sources(errors):
 
         for source in source_list:
             source_id = source.get("id")
+            source_type = source.get("source_type")
 
+            if source_type not in source_types:
+                errors.append(
+                    f"{source_id}: unknown source_type "
+                    f"{source_type}"
+                )
             if not source_id:
                 errors.append(
                     f"{path.relative_to(ROOT)}: source without id"
@@ -326,13 +332,24 @@ def load_taxonomies(errors):
         errors
     )
 
+    role_types_data = load_registry(
+        ROOT / "taxonomies" / "role-types.json",
+        errors
+    )
+
+    source_types_data = load_registry(
+        ROOT / "taxonomies" / "source-types.json",
+        errors
+    )
+
     relation_types = {
         item["id"]
         for item in relation_types_data.get(
             "relation_types",
             []
         )
-        if isinstance(item, dict) and "id" in item
+        if isinstance(item, dict)
+        and "id" in item
     }
 
     relation_rules = {
@@ -343,6 +360,26 @@ def load_taxonomies(errors):
         )
         if isinstance(item, dict)
         and "relation" in item
+    }
+
+    role_types = {
+        item["id"]
+        for item in role_types_data.get(
+            "roles",
+            []
+        )
+        if isinstance(item, dict)
+        and "id" in item
+    }
+
+    source_types = {
+        item["id"]
+        for item in source_types_data.get(
+            "source_types",
+            []
+        )
+        if isinstance(item, dict)
+        and "id" in item
     }
 
     for relation in relation_rules:
@@ -359,7 +396,12 @@ def load_taxonomies(errors):
             f"Relation type has no rule: {relation}"
         )
 
-    return relation_types, relation_rules
+    return (
+        relation_types,
+        relation_rules,
+        role_types,
+        source_types
+    )
 
 
 def validate_claim_integrity(
@@ -368,13 +410,19 @@ def validate_claim_integrity(
     entity_ids,
     relation_types,
     relation_rules,
+    role_types,
     errors
 ):
     for claim in claims:
         claim_id = claim.get("id", "<missing-id>")
         subject_id = claim.get("subject")
         predicate = claim.get("predicate")
+        role = claim.get("role")
 
+        if role is not None and role not in role_types:
+            errors.append(
+                f"{claim_id}: unknown role {role}"
+            )
         if subject_id not in entity_ids:
             errors.append(
                 f"{claim_id}: unknown subject entity "
@@ -483,11 +531,15 @@ def validate_evidence_integrity(
     errors
 ):
     claim_to_evidence = {}
+    evidence_by_id = {}
 
     for evidence in evidence_records:
         evidence_id = evidence.get("id")
         claim_id = evidence.get("claim")
         source_id = evidence.get("source")
+
+        if evidence_id:
+            evidence_by_id[evidence_id] = evidence
 
         if claim_id not in claim_ids:
             errors.append(
@@ -512,9 +564,42 @@ def validate_evidence_integrity(
         if not claim_id:
             continue
 
-        if claim_id not in claim_to_evidence:
+        actual_refs = sorted(
+            claim_to_evidence.get(
+                claim_id,
+                []
+            )
+        )
+
+        declared_refs = sorted(
+            claim.get(
+                "evidenceRefs",
+                []
+            )
+        )
+
+        if not actual_refs:
             errors.append(
                 f"{claim_id}: missing evidence"
+            )
+            continue
+
+        unknown_refs = [
+            ref
+            for ref in declared_refs
+            if ref not in evidence_by_id
+        ]
+
+        if unknown_refs:
+            errors.append(
+                f"{claim_id}: unknown evidenceRefs "
+                f"{unknown_refs}"
+            )
+
+        if declared_refs != actual_refs:
+            errors.append(
+                f"{claim_id}: evidenceRefs do not match "
+                f"Evidence records"
             )
 def validate_research_integrity(
     entity_ids,
@@ -650,17 +735,57 @@ def validate_research_integrity(
                     f"{candidate_id}: unknown Atlas source "
                     f"{atlas_source_id}"
                 )
+def validate_research_documents(errors):
+    research_root = ROOT.parent / "research"
 
+    schema_path = (
+        research_root
+        / "schemas"
+        / "research-schema-v2.json"
+    )
+
+    content_root = research_root / "content"
+
+    if not schema_path.exists():
+        errors.append(
+            "research/schemas/research-schema-v2.json: "
+            "schema file not found"
+        )
+        return
+
+    if not content_root.exists():
+        errors.append(
+            "research/content: directory not found"
+        )
+        return
+
+    for path in sorted(
+        content_root.glob("*.json")
+    ):
+        data = load_registry(
+            path,
+            errors
+        )
+
+        add_schema_errors(
+            data,
+            schema_path,
+            str(path.relative_to(ROOT.parent)),
+            errors
+        )
 def main():
     errors = []
 
     entity_by_id, entity_ids = collect_entities(errors)
 
-    relation_types, relation_rules = load_taxonomies(
+    relation_types, relation_rules, role_types, source_types = load_taxonomies(
         errors
     )
 
-    source_ids, _ = collect_sources(errors)
+    source_ids, _ = collect_sources(
+        errors,
+        source_types
+    )
 
     claim_ids, claims = collect_claims(errors)
 
@@ -670,6 +795,7 @@ def main():
         entity_ids,
         relation_types,
         relation_rules,
+        role_types,
         errors
     )
 
@@ -688,6 +814,7 @@ def main():
         source_ids,
         errors
     )
+    validate_research_documents(errors)    
     if errors:
         print("Atlas validation FAILED")
         print()
