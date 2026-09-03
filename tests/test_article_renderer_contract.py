@@ -235,13 +235,31 @@ class ArticleRendererLegacyPresentationBaselineTests(unittest.TestCase):
         parser = Parser()
         parser.feed(html)
 
-        self.assertEqual(parser.counts["title"], 1)
-        self.assertEqual(parser.counts["meta"], 15)
-        self.assertEqual(parser.counts["canonical"], 1)
-        self.assertEqual(parser.counts["json_ld"], 1)
-        self.assertEqual(parser.counts["a"], 18)
-        self.assertEqual(parser.counts["button"], 0)
-        self.assertEqual(parser.counts["img"], 3)
+        import json
+
+        baseline = json.loads(
+            (
+                ROOT
+                / "tests"
+                / "fixtures"
+                / "private-capital-legacy-baseline.json"
+            ).read_text(encoding="utf-8")
+        )
+
+        for key in (
+            "title",
+            "meta",
+            "canonical",
+            "json_ld",
+            "a",
+            "button",
+            "img",
+        ):
+            self.assertEqual(
+                parser.counts[key],
+                baseline["counts"][key],
+                f"Legacy presentation baseline mismatch: {key}",
+            )
 
 
 class ArticleRendererLegacyBaselineTests(unittest.TestCase):
@@ -278,14 +296,32 @@ class ArticleRendererLegacyBaselineTests(unittest.TestCase):
         parser = Parser()
         parser.feed(article)
 
-        self.assertEqual(parser.counts["h1"], 1)
-        self.assertEqual(parser.counts["h2"], 4)
-        self.assertEqual(parser.counts["h3"], 6)
-        self.assertEqual(parser.counts["p"], 35)
-        self.assertEqual(parser.counts["figure"], 2)
-        self.assertEqual(parser.counts["ul"], 1)
-        self.assertEqual(parser.counts["table"], 0)
-        self.assertEqual(parser.counts["cta"], 2)
+        import json
+
+        baseline = json.loads(
+            (
+                ROOT
+                / "tests"
+                / "fixtures"
+                / "private-capital-legacy-baseline.json"
+            ).read_text(encoding="utf-8")
+        )
+
+        for key in (
+            "h1",
+            "h2",
+            "h3",
+            "p",
+            "figure",
+            "ul",
+            "table",
+            "cta",
+        ):
+            self.assertEqual(
+                parser.counts[key],
+                baseline["counts"][key],
+                f"Legacy article baseline mismatch: {key}",
+            )
 
 
 class ArticleRendererIntegrationTests(unittest.TestCase):

@@ -212,3 +212,54 @@ assert(
 );
 
 console.log("Article Renderer introduction pilot contract PASSED");
+
+{
+    const mainBlocks = research.sections.find(
+        section => section.id === "main-blocks"
+    );
+
+    assert(mainBlocks, "Research main-blocks section must exist");
+
+    const mainBlocksHtml = renderArticleContent([mainBlocks]);
+
+    assert.strictEqual(
+        (mainBlocksHtml.match(/<p>/g) || []).length,
+        1,
+        "main-blocks pilot must render exactly one paragraph"
+    );
+
+    assert(
+        mainBlocksHtml.includes(
+            "در یک طبقه‌بندی عملیاتی، «سرمایه خصوصی» را می‌توان در پنج بلوک اصلی دید"
+        ),
+        "main-blocks pilot must render the Research paragraph"
+    );
+
+    assert(
+        !mainBlocksHtml.includes("سرمایه‌گذاری خصوصی (Private Equity)</h3>"),
+        "main-blocks pilot must not absorb the next section"
+    );
+}
+
+console.log("Article Renderer main-blocks pilot contract PASSED");
+
+{
+    const mainBlocks = research.sections.find(
+        section => section.id === "main-blocks"
+    );
+
+    assert(mainBlocks, "Research main-blocks section must exist");
+
+    const mainBlocksText = mainBlocks.content
+        .filter(block => block.type === "paragraph")
+        .map(block => block.text)
+        .join("\n");
+
+    assert.strictEqual(
+        mainBlocksText.trim(),
+        `در یک طبقه‌بندی عملیاتی، «سرمایه خصوصی» را می‌توان در پنج بلوک اصلی دید: «سرمایه‌گذاری خصوصی»، «سرمایه‌گذاری خطرپذیر»، «سرمایه رشد»، «اعتبار خصوصی» و «دارایی‌های واقعی». مرزبندی دقیق میان این بلوک‌ها در منابع مختلف یکسان نیست و برخی منابع، از جمله در موضوع «اعتبار خصوصی»، دامنه متفاوتی از وام‌دهی مستقیم تا اعتبارات مبتنی بر دارایی را در گزارش‌های خود منظور می‌کنند.`,
+        "main-blocks Research content must match the legacy paragraph exactly"
+    );
+}
+
+console.log("Article Renderer main-blocks legacy parity PASSED");

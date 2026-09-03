@@ -48,6 +48,14 @@ ${(block.rows || []).map(
         }
     }
 
+    function renderArticleContentInto(target, sections) {
+        if (!target || typeof target.innerHTML !== "string") {
+            throw new TypeError("Article renderer target must be a DOM element");
+        }
+
+        target.innerHTML = renderArticleContent(sections);
+    }
+
     function renderArticleContent(sections) {
         if (!Array.isArray(sections)) {
             throw new TypeError("Article sections must be an array");
@@ -63,4 +71,5 @@ ${(block.rows || []).map(
     }
 
     global.renderArticleContent = renderArticleContent;
+    global.renderArticleContentInto = renderArticleContentInto;
 })(typeof window !== "undefined" ? window : globalThis);
