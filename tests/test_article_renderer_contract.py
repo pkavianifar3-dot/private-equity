@@ -437,3 +437,157 @@ class ArticleRendererMigrationBoundaryTests(unittest.TestCase):
             [block["type"] for block in introduction["content"]],
             ["paragraph", "paragraph", "figure"],
         )
+
+class ArticleRendererResearchSourceContractTests(unittest.TestCase):
+    def test_private_capital_research_source_path_is_stable(self):
+        article = (
+            ROOT / "articles" / "private-capital.html"
+        ).read_text(encoding="utf-8")
+
+        research_path = (
+            ROOT
+            / "research"
+            / "content"
+            / "private-capital.json"
+        )
+
+        self.assertTrue(
+            research_path.exists(),
+            "private-capital Research source must exist",
+        )
+
+        self.assertNotIn(
+            "research/content/private-capital.json",
+            article,
+            "Research source should not be hardcoded into article HTML yet",
+        )
+
+class ArticleRendererPageIntegrationTests(unittest.TestCase):
+    def test_article_page_integration_exists(self):
+        integration = ROOT / "assets" / "js" / "article-page.js"
+
+        self.assertTrue(
+            integration.exists(),
+            "article-page integration module must exist",
+        )
+
+    def test_article_page_integration_owns_research_loading(self):
+        integration = (
+            ROOT / "assets" / "js" / "article-page.js"
+        ).read_text(encoding="utf-8")
+
+        self.assertIn(
+            'fetch(path, {',
+            integration,
+        )
+        self.assertIn(
+            'const RESEARCH_PATH = "../research/content/private-capital.json";',
+            integration,
+        )
+
+    def test_article_page_integration_uses_renderer(self):
+        integration = (
+            ROOT / "assets" / "js" / "article-page.js"
+        ).read_text(encoding="utf-8")
+
+        self.assertIn(
+            "global.renderArticleContent([section])",
+            integration,
+        )
+        self.assertNotIn(
+            "function renderArticleContent(",
+            integration,
+        )
+
+    def test_article_page_integration_preserves_failure_fallback(self):
+        integration = (
+            ROOT / "assets" / "js" / "article-page.js"
+        ).read_text(encoding="utf-8")
+
+        self.assertIn(
+            'renderMainBlocks().catch(error => {',
+            integration,
+        )
+        self.assertIn(
+            'console.error("Article Research rendering failed:", error);',
+            integration,
+        )
+
+    def test_private_capital_loads_page_integration_after_renderer(self):
+        article = (
+            ROOT / "articles" / "private-capital.html"
+        ).read_text(encoding="utf-8")
+
+        renderer_pos = article.index(
+            '<script src="../assets/js/article-renderer.js"></script>'
+        )
+        integration_pos = article.index(
+            '<script src="../assets/js/article-page.js"></script>'
+        )
+        main_pos = article.index(
+            '<script src="../assets/js/main.js"></script>'
+        )
+
+        self.assertLess(renderer_pos, integration_pos)
+        self.assertLess(integration_pos, main_pos)
+
+    def test_private_capital_has_main_blocks_fallback_marker(self):
+        article = (
+            ROOT / "articles" / "private-capital.html"
+        ).read_text(encoding="utf-8")
+
+        self.assertEqual(
+            article.count(
+                'data-article-renderer-section="main-blocks"'
+            ),
+            1,
+        )
+
+
+    def test_private_capital_page_replaces_only_main_blocks_target(self):
+        integration = (
+            ROOT / "assets" / "js" / "article-page.js"
+        ).read_text(encoding="utf-8")
+
+        self.assertIn(
+            'document.querySelector(TARGET_SELECTOR)',
+            integration,
+        )
+        self.assertIn(
+            'target.replaceWith(template.content)',
+            integration,
+        )
+        self.assertNotIn(
+            'document.querySelector("article")',
+            integration,
+        )
+        self.assertNotIn(
+            'article.innerHTML',
+            integration,
+        )
+
+    def test_private_capital_page_does_not_render_other_sections(self):
+        integration = (
+            ROOT / "assets" / "js" / "article-page.js"
+        ).read_text(encoding="utf-8")
+
+        self.assertIn(
+            'const SECTION_ID = "main-blocks";',
+            integration,
+        )
+        self.assertNotIn(
+            'SECTION_ID = "introduction"',
+            integration,
+        )
+        self.assertNotIn(
+            'SECTION_ID = "private-equity"',
+            integration,
+        )
+        self.assertNotIn(
+            'SECTION_ID = "private-credit"',
+            integration,
+        )
+        self.assertNotIn(
+            'SECTION_ID = "real-assets"',
+            integration,
+        )
