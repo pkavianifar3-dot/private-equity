@@ -352,3 +352,52 @@ class ArticleRendererIntroductionBoundaryTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class ArticleRendererMigrationBoundaryTests(unittest.TestCase):
+    def test_introduction_legacy_order_is_explicit(self):
+        article = (
+            ROOT / "articles" / "private-capital.html"
+        ).read_text(encoding="utf-8")
+
+        figure_pos = article.index("<figure>")
+        first_paragraph_pos = article.index(
+            "«سرمایه خصوصی» (Private Capital)"
+        )
+        second_paragraph_pos = article.index(
+            "از آنجا که سرمایه خصوصی (Private Capital)"
+        )
+
+        self.assertLess(
+            figure_pos,
+            first_paragraph_pos,
+            "Legacy HTML currently places the introduction figure first",
+        )
+        self.assertLess(
+            first_paragraph_pos,
+            second_paragraph_pos,
+            "Legacy HTML introduction paragraphs must preserve order",
+        )
+
+    def test_research_introduction_order_is_explicit(self):
+        import json
+
+        research = json.loads(
+            (
+                ROOT
+                / "research"
+                / "content"
+                / "private-capital.json"
+            ).read_text(encoding="utf-8")
+        )
+
+        introduction = next(
+            section
+            for section in research["sections"]
+            if section["id"] == "introduction"
+        )
+
+        self.assertEqual(
+            [block["type"] for block in introduction["content"]],
+            ["paragraph", "paragraph", "figure"],
+        )
