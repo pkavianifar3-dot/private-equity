@@ -668,6 +668,126 @@ def validate_claim_versioning(claims):
     return errors
 
 
+def collect_research_ids(errors):
+    research_root = ROOT.parent / "research"
+    content_root = research_root / "content"
+
+    research_ids = set()
+
+    if not content_root.exists():
+        errors.append(
+            "research/content: directory not found"
+        )
+        return research_ids
+
+    for path in sorted(content_root.glob("*.json")):
+        data = load_registry(path, errors)
+
+        research_id = data.get("id")
+
+        if not research_id:
+            continue
+
+        if research_id in research_ids:
+            errors.append(
+                f"Duplicate research ID: {research_id}"
+            )
+
+        research_ids.add(research_id)
+
+    return research_ids
+
+
+def validate_claim_analysis_integrity(
+    claims,
+    claim_ids,
+    research_ids,
+    errors
+):
+    based_on_graph = {}
+
+    for claim in claims:
+        claim_id = claim.get("id", "<missing-id>")
+        claim_origin = claim.get("claim_origin")
+
+        if claim_origin == "sourced":
+            if "evidenceRefs" not in claim:
+                errors.append(
+                    f"{claim_id}: sourced claim must have evidenceRefs"
+                )
+
+        elif claim_origin == "internal_analysis":
+            based_on = claim.get("based_on")
+            authored_in = claim.get("authored_in")
+
+            if not isinstance(based_on, list) or not based_on:
+                errors.append(
+                    f"{claim_id}: internal_analysis claim "
+                    f"must have non-empty based_on"
+                )
+            else:
+                seen = set()
+
+                for ref in based_on:
+                    if ref in seen:
+                        errors.append(
+                            f"{claim_id}: based_on contains duplicate "
+                            f"claim {ref}"
+                        )
+                    seen.add(ref)
+
+                    if ref == claim_id:
+                        errors.append(
+                            f"{claim_id}: based_on cannot reference "
+                            f"itself"
+                        )
+                    elif ref not in claim_ids:
+                        errors.append(
+                            f"{claim_id}: unknown based_on claim "
+                            f"{ref}"
+                        )
+
+                based_on_graph[claim_id] = [
+                    ref for ref in based_on
+                    if ref in claim_ids
+                ]
+
+            if not authored_in:
+                errors.append(
+                    f"{claim_id}: internal_analysis claim "
+                    f"must have authored_in"
+                )
+            elif authored_in not in research_ids:
+                errors.append(
+                    f"{claim_id}: unknown authored_in research "
+                    f"{authored_in}"
+                )
+
+    visited = set()
+    active = set()
+
+    def visit(claim_id):
+        if claim_id in active:
+            errors.append(
+                f"{claim_id}: based_on chain contains a cycle"
+            )
+            return
+
+        if claim_id in visited:
+            return
+
+        active.add(claim_id)
+
+        for parent_id in based_on_graph.get(claim_id, []):
+            visit(parent_id)
+
+        active.remove(claim_id)
+        visited.add(claim_id)
+
+    for claim_id in based_on_graph:
+        visit(claim_id)
+
+
 def validate_evidence_integrity(
     evidence_records,
     claims,
@@ -724,9 +844,15 @@ def validate_evidence_integrity(
         )
 
         if not actual_refs:
-            errors.append(
-                f"{claim_id}: missing evidence"
-            )
+            if claim.get("claim_origin") != "internal_analysis":
+                errors.append(
+                    f"{claim_id}: missing evidence"
+                )
+            elif declared_refs:
+                errors.append(
+                    f"{claim_id}: evidenceRefs do not match "
+                    f"Evidence records"
+                )
             continue
 
         unknown_refs = [
@@ -935,6 +1061,8 @@ def main():
 
     claim_ids, claims = collect_claims(errors)
 
+    research_ids = collect_research_ids(errors)
+
     validate_claim_integrity(
         claims,
         entity_by_id,
@@ -946,6 +1074,12 @@ def main():
     )
 
     errors.extend(validate_claim_versioning(claims))
+    validate_claim_analysis_integrity(
+        claims,
+        claim_ids,
+        research_ids,
+        errors
+    )
     validate_claim_review_metadata(
         claims,
         warnings

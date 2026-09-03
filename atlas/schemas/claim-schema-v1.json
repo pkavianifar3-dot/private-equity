@@ -9,8 +9,7 @@
     "subject",
     "predicate",
     "status",
-    "confidence",
-    "evidenceRefs"
+    "confidence"
   ],
 
   "properties": {
@@ -145,6 +144,29 @@
     "review_cycle_months": {
       "type": "integer",
       "minimum": 1
+    },
+
+    "claim_origin": {
+      "type": "string",
+      "enum": [
+        "sourced",
+        "internal_analysis"
+      ]
+    },
+
+    "based_on": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^claim:[a-z0-9]+(?:-[a-z0-9]+)*$"
+      }
+    },
+
+    "authored_in": {
+      "type": "string",
+      "pattern": "^research:[a-z0-9]+(?:-[a-z0-9]+)*$"
     }
   },
 
@@ -174,5 +196,57 @@
     }
   ],
 
-  "additionalProperties": false
+  "additionalProperties": false,
+
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "claim_origin": {
+            "const": "sourced"
+          }
+        },
+        "required": [
+          "claim_origin"
+        ]
+      },
+      "then": {
+        "required": [
+          "evidenceRefs"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "claim_origin": {
+            "const": "internal_analysis"
+          }
+        },
+        "required": [
+          "claim_origin"
+        ]
+      },
+      "then": {
+        "required": [
+          "based_on",
+          "authored_in"
+        ]
+      }
+    },
+    {
+      "if": {
+        "not": {
+          "required": [
+            "claim_origin"
+          ]
+        }
+      },
+      "then": {
+        "required": [
+          "evidenceRefs"
+        ]
+      }
+    }
+  ]
 }
