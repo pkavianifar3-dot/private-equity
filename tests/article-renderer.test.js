@@ -1,0 +1,214 @@
+const assert = require("assert");
+const fs = require("fs");
+const vm = require("vm");
+
+const rendererSource = fs.readFileSync(
+    "assets/js/article-renderer.js",
+    "utf8"
+);
+
+const context = {
+    console,
+};
+
+vm.createContext(context);
+vm.runInContext(rendererSource, context);
+
+const { renderArticleContent } = context;
+
+assert.strictEqual(
+    typeof renderArticleContent,
+    "function",
+    "renderArticleContent must be a function"
+);
+
+const html = renderArticleContent([
+    {
+        id: "test-section",
+        title: { fa: "بخش آزمون" },
+        content: [
+            {
+                id: "paragraph-01",
+                type: "paragraph",
+                text: "متن آزمون"
+            },
+            {
+                id: "subheading-01",
+                type: "subheading",
+                text: "زیرعنوان آزمون"
+            },
+            {
+                id: "figure-01",
+                type: "figure",
+                src: "../assets/images/test.png",
+                alt: "تصویر آزمون",
+                caption: "شرح تصویر"
+            },
+            {
+                id: "list-01",
+                type: "list",
+                items: ["مورد اول", "مورد دوم"]
+            },
+            {
+                id: "table-01",
+                type: "table",
+                rows: [
+                    ["عنوان", "مقدار"],
+                    ["الف", "۱"]
+                ]
+            }
+        ]
+    }
+]);
+
+assert(html.includes("<p>متن آزمون</p>"));
+assert(html.includes("<h3>زیرعنوان آزمون</h3>"));
+assert(html.includes('src="../assets/images/test.png"'));
+assert(html.includes("<figcaption>شرح تصویر</figcaption>"));
+assert(html.includes("<li>مورد اول</li>"));
+assert(html.includes("<li>مورد دوم</li>"));
+assert(html.includes("<table>"));
+assert(html.includes("<td>عنوان</td>"));
+assert(html.includes("<td>۱</td>"));
+
+console.log("Article Renderer behavior PASSED");
+
+const research = JSON.parse(
+    fs.readFileSync(
+        "research/content/private-capital.json",
+        "utf8"
+    )
+);
+
+const renderedResearchContent = renderArticleContent(
+    research.sections
+);
+
+const expectedBlockCount = research.sections.reduce(
+    (total, section) => total + section.content.length,
+    0
+);
+
+const renderedParagraphCount =
+    (renderedResearchContent.match(/<p>/g) || []).length;
+
+const renderedFigureCount =
+    (renderedResearchContent.match(/<figure>/g) || []).length;
+
+const renderedSubheadingCount =
+    (renderedResearchContent.match(/<h3>/g) || []).length;
+
+assert.strictEqual(
+    renderedParagraphCount,
+    23,
+    "Research renderer must render 23 paragraphs"
+);
+
+assert.strictEqual(
+    renderedFigureCount,
+    2,
+    "Research renderer must render 2 figures"
+);
+
+assert.strictEqual(
+    renderedSubheadingCount,
+    1,
+    "Research renderer must render 1 subheading"
+);
+
+assert.strictEqual(
+    renderedParagraphCount +
+        renderedFigureCount +
+        renderedSubheadingCount,
+    expectedBlockCount,
+    "Rendered block count must match Research block count"
+);
+
+assert(
+    renderedResearchContent.indexOf(
+        "intro-paragraph-01"
+    ) === -1,
+    "Block IDs must not leak into rendered HTML"
+);
+
+console.log("Article Renderer Research E2E contract PASSED");
+
+assert(
+    renderedResearchContent.startsWith("<p>"),
+    "Rendered Research content must start with the first content block"
+);
+
+assert(
+    renderedResearchContent.includes(
+        "../assets/images/private-capital.png"
+    ),
+    "Rendered Research content must include the Research hero figure"
+);
+
+assert(
+    renderedResearchContent.includes(
+        "../assets/images/2026-08-13-private-capital-structure.png.png"
+    ),
+    "Rendered Research content must include the Research structure figure"
+);
+
+assert(
+    renderedResearchContent.indexOf(
+        "<p>از آنجا که سرمایه خصوصی"
+    ) >
+    renderedResearchContent.indexOf(
+        "<p>«سرمایه خصوصی»"
+    ),
+    "Research block order must be preserved"
+);
+
+console.log("Article Renderer ordering and asset contract PASSED");
+
+const introduction = research.sections.find(
+    section => section.id === "introduction"
+);
+
+assert(introduction, "Research introduction section must exist");
+
+const introductionHtml = renderArticleContent([introduction]);
+
+assert.strictEqual(
+    (introductionHtml.match(/<p>/g) || []).length,
+    2,
+    "Introduction must render exactly 2 paragraphs"
+);
+
+assert.strictEqual(
+    (introductionHtml.match(/<figure>/g) || []).length,
+    1,
+    "Introduction must render exactly 1 figure"
+);
+
+assert(
+    introductionHtml.indexOf(
+        "<p>«سرمایه خصوصی» (Private Capital)"
+    ) !== -1,
+    "Introduction first paragraph must come from Research"
+);
+
+assert(
+    introductionHtml.indexOf(
+        "<p>«سرمایه خصوصی» (Private Capital)"
+    ) <
+    introductionHtml.indexOf(
+        "<p>از آنجا که سرمایه خصوصی"
+    ),
+    "Introduction paragraph order must follow Research"
+);
+
+assert(
+    introductionHtml.indexOf(
+        "<figure>"
+    ) >
+    introductionHtml.indexOf(
+        "<p>از آنجا که سرمایه خصوصی"
+    ),
+    "Introduction figure must follow Research block order"
+);
+
+console.log("Article Renderer introduction pilot contract PASSED");
