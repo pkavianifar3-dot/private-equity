@@ -2,6 +2,8 @@ import json
 import sys
 from pathlib import Path
 
+import jdatetime
+
 from jsonschema import Draft202012Validator, RefResolver
 
 
@@ -523,6 +525,56 @@ def validate_claim_integrity(
                     )
 
 
+def jalali_month_age(last_reviewed, today=None):
+    try:
+        year, month = (
+            int(part)
+            for part in last_reviewed.split("-")
+        )
+    except (AttributeError, TypeError, ValueError):
+        return None
+
+    if month < 1 or month > 12:
+        return None
+
+    if today is None:
+        today = jdatetime.date.today()
+
+    return (
+        (today.year - year) * 12
+        + (today.month - month)
+    )
+
+
+def validate_claim_review_metadata(claims, warnings, today=None):
+    for claim in claims:
+        claim_id = claim.get("id", "<missing-id>")
+        last_reviewed = claim.get("last_reviewed")
+
+        if last_reviewed is None:
+            continue
+
+        age = jalali_month_age(
+            last_reviewed,
+            today=today
+        )
+
+        if age is None:
+            continue
+
+        cycle = claim.get(
+            "review_cycle_months",
+            6
+        )
+
+        if age > cycle:
+            warnings.append(
+                f"{claim_id}: review is overdue "
+                f"({age} months since last_reviewed; "
+                f"cycle is {cycle} months)"
+            )
+
+
 def validate_claim_versioning(claims):
     errors = []
 
@@ -868,6 +920,7 @@ def validate_research_documents(errors):
         )
 def main():
     errors = []
+    warnings = []
 
     entity_by_id, entity_ids = collect_entities(errors)
 
@@ -893,6 +946,10 @@ def main():
     )
 
     errors.extend(validate_claim_versioning(claims))
+    validate_claim_review_metadata(
+        claims,
+        warnings
+    )
 
     _, evidence_records = collect_evidence(errors)
 
@@ -922,6 +979,12 @@ def main():
         sys.exit(1)
 
     print("Atlas validation PASSED")
+
+    if warnings:
+        print()
+        print("Warnings:")
+        for warning in warnings:
+            print(f"- {warning}")
 
 
 if __name__ == "__main__":

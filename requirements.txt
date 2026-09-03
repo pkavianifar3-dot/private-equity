@@ -1,1 +1,2 @@
 jsonschema>=4.20,<5
+jdatetime==6.1.0

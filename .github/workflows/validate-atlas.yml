@@ -27,6 +27,9 @@ jobs:
       - name: Validate Atlas
         run: python atlas/tools/validate-atlas.py
 
+      - name: Test Python validation logic
+        run: python -m unittest discover -s tests -p 'test_*.py'
+
       - name: Generate indexes
         run: python atlas/tools/build-index.py
 

@@ -135,6 +135,16 @@
         "type": "string",
         "pattern": "^evidence:[a-z0-9]+(?:-[a-z0-9]+)*$"
       }
+    },
+
+    "last_reviewed": {
+      "type": "string",
+      "pattern": "^(13|14)\\d{2}-(0[1-9]|1[0-2])$"
+    },
+
+    "review_cycle_months": {
+      "type": "integer",
+      "minimum": 1
     }
   },
 

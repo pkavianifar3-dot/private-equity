@@ -596,3 +596,31 @@ Revision rules:
 `transaction_time` should only be populated when the recording
 time and recorder are actually known. Historical values must not
 be invented.
+
+---
+
+## 25. Claim Review Metadata
+
+Claim review metadata is optional operational metadata stored directly
+on the canonical Claim.
+
+Supported fields:
+
+- `last_reviewed` — the month in which the Claim was last reviewed,
+  using the Jalali `YYYY-MM` format.
+- `review_cycle_months` — the intended review interval as a positive
+  integer number of months.
+
+Review-cycle rules:
+
+1. `last_reviewed` may be omitted when no review date is known.
+2. `review_cycle_months` may be omitted.
+3. When `last_reviewed` exists but `review_cycle_months` is omitted,
+   the default review cycle is 6 months.
+4. A Claim is considered overdue only when the elapsed time is greater
+   than the applicable review cycle.
+5. An overdue Claim produces a validation warning; it does not fail
+   Atlas validation.
+6. Historical `last_reviewed` values must not be invented or backfilled.
+7. Review metadata is operational metadata and does not replace
+   provenance, evidence or source fields.
