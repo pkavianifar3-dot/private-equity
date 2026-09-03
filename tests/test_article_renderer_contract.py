@@ -505,7 +505,7 @@ class ArticleRendererPageIntegrationTests(unittest.TestCase):
         ).read_text(encoding="utf-8")
 
         self.assertIn(
-            'renderMainBlocks().catch(error => {',
+            'renderArticleSections().catch(error => {',
             integration,
         )
         self.assertIn(
@@ -544,13 +544,13 @@ class ArticleRendererPageIntegrationTests(unittest.TestCase):
         )
 
 
-    def test_private_capital_page_replaces_only_main_blocks_target(self):
+    def test_private_capital_page_replaces_only_section_targets(self):
         integration = (
             ROOT / "assets" / "js" / "article-page.js"
         ).read_text(encoding="utf-8")
 
         self.assertIn(
-            'document.querySelector(TARGET_SELECTOR)',
+            'document.querySelector(',
             integration,
         )
         self.assertIn(
@@ -566,28 +566,24 @@ class ArticleRendererPageIntegrationTests(unittest.TestCase):
             integration,
         )
 
-    def test_private_capital_page_does_not_render_other_sections(self):
+    def test_private_capital_page_renders_only_selected_sections(self):
         integration = (
             ROOT / "assets" / "js" / "article-page.js"
         ).read_text(encoding="utf-8")
 
         self.assertIn(
-            'const SECTION_ID = "main-blocks";',
+            'const SECTION_IDS = ["introduction", "main-blocks"];',
             integration,
         )
         self.assertNotIn(
-            'SECTION_ID = "introduction"',
+            '"private-equity"',
             integration,
         )
         self.assertNotIn(
-            'SECTION_ID = "private-equity"',
+            '"private-credit"',
             integration,
         )
         self.assertNotIn(
-            'SECTION_ID = "private-credit"',
-            integration,
-        )
-        self.assertNotIn(
-            'SECTION_ID = "real-assets"',
+            '"real-assets"',
             integration,
         )

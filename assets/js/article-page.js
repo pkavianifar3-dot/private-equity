@@ -2,9 +2,7 @@
     "use strict";
 
     const RESEARCH_PATH = "../research/content/private-capital.json";
-    const SECTION_ID = "main-blocks";
-    const TARGET_SELECTOR =
-        '[data-article-renderer-section="main-blocks"]';
+    const SECTION_IDS = ["introduction", "main-blocks"];
 
     async function loadResearch(path) {
         const response = await fetch(path, {
@@ -34,15 +32,17 @@
         return section;
     }
 
-    async function renderMainBlocks() {
-        const target = document.querySelector(TARGET_SELECTOR);
+    function renderSection(section) {
+        const target = document.querySelector(
+            `[data-article-renderer-section="${section.id}"]`
+        );
 
         if (!target) {
-            throw new Error("Main-blocks render target not found");
+            throw new Error(
+                `Article render target not found: ${section.id}`
+            );
         }
 
-        const research = await loadResearch(RESEARCH_PATH);
-        const section = getSection(research, SECTION_ID);
         const html = global.renderArticleContent([section]);
 
         const template = document.createElement("template");
@@ -51,7 +51,15 @@
         target.replaceWith(template.content);
     }
 
-    renderMainBlocks().catch(error => {
+    async function renderArticleSections() {
+        const research = await loadResearch(RESEARCH_PATH);
+
+        SECTION_IDS.forEach(sectionId => {
+            renderSection(getSection(research, sectionId));
+        });
+    }
+
+    renderArticleSections().catch(error => {
         console.error("Article Research rendering failed:", error);
     });
 })(window);
