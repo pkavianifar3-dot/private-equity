@@ -531,11 +531,17 @@ class ArticleRendererPageIntegrationTests(unittest.TestCase):
         self.assertLess(renderer_pos, integration_pos)
         self.assertLess(integration_pos, main_pos)
 
-    def test_private_capital_has_main_blocks_fallback_marker(self):
+    def test_private_capital_has_renderer_fallback_markers(self):
         article = (
             ROOT / "articles" / "private-capital.html"
         ).read_text(encoding="utf-8")
 
+        self.assertEqual(
+            article.count(
+                'data-article-renderer-section="introduction"'
+            ),
+            1,
+        )
         self.assertEqual(
             article.count(
                 'data-article-renderer-section="main-blocks"'
