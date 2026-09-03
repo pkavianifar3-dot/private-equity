@@ -3,6 +3,7 @@
   "claims": [
     {
       "id": "claim:ali-sanginian-ceo-kian-private-equity-management",
+      "revision": 1,
       "subject": "person:ali-sanginian",
       "predicate": "CEO_OF",
       "object": "organization:kian-private-equity-management",
@@ -20,6 +21,7 @@
     },
     {
       "id": "claim:kian-private-equity-management-subsidiary-kian-financial-group",
+      "revision": 1,
       "subject": "organization:kian-private-equity-management",
       "predicate": "SUBSIDIARY_OF",
       "object": "organization:kian-financial-group",
@@ -37,6 +39,7 @@
     },
     {
       "id": "claim:ali-sanginian-ceo-amin-investment-bank",
+      "revision": 1,
       "subject": "person:ali-sanginian",
       "predicate": "CEO_OF",
       "object": "organization:amin-investment-bank",
@@ -55,6 +58,7 @@
     },
     {
       "id": "claim:ali-sanginian-ceo-semega",
+      "revision": 1,
       "subject": "person:ali-sanginian",
       "predicate": "CEO_OF",
       "object": "organization:semega",
@@ -72,6 +76,7 @@
     },
     {
       "id": "claim:ali-sanginian-board-tourism-bank",
+      "revision": 1,
       "subject": "person:ali-sanginian",
       "predicate": "BOARD_MEMBER_OF",
       "object": "organization:tourism-bank",
@@ -89,6 +94,7 @@
     },
     {
       "id": "claim:ali-sanginian-deputy-investment-kayson",
+      "revision": 1,
       "subject": "person:ali-sanginian",
       "predicate": "EXECUTIVE_ROLE_AT",
       "object": "organization:kayson-group",
@@ -107,6 +113,7 @@
     },
     {
       "id": "claim:ali-sanginian-chair-tehran-chamber-commission",
+      "revision": 1,
       "subject": "person:ali-sanginian",
       "predicate": "CHAIR_OF",
       "object": "organization:tehran-chamber-money-capital-commission",
@@ -126,6 +133,7 @@
     },
     {
       "id": "claim:ali-sanginian-investment-executive-kayson-achareh",
+      "revision": 1,
       "subject": "person:ali-sanginian",
       "predicate": "INVESTMENT_EXECUTIVE_OF",
       "object": "organization:kayson-group",
@@ -138,6 +146,7 @@
     },
     {
       "id": "claim:kian-private-equity-has-dadman",
+      "revision": 1,
       "subject": "organization:kian-private-equity-management",
       "predicate": "HAS_PROJECT",
       "object": "project:dadman",
@@ -149,6 +158,7 @@
     },
     {
       "id": "claim:kian-private-equity-operates-private-equity",
+      "revision": 1,
       "subject": "organization:kian-private-equity-management",
       "predicate": "OPERATES_IN",
       "object": "sector:private-equity",

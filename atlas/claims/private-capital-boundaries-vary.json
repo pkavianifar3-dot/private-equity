@@ -3,6 +3,7 @@
   "claims": [
     {
       "id": "claim:private-capital-boundaries-vary",
+      "revision": 1,
       "subject": "concept:private-capital",
       "predicate": "HAS_NON_UNIFORM_CLASSIFICATION",
       "object": "concept:private-capital-classification",

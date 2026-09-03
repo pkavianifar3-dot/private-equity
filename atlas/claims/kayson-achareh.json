@@ -3,6 +3,7 @@
   "claims": [
     {
       "id": "claim:kayson-invested-in-achareh",
+      "revision": 1,
       "subject": "organization:kayson-group",
       "predicate": "INVESTED_IN",
       "object": "organization:achareh",

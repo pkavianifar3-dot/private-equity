@@ -3,6 +3,7 @@
   "claims": [
     {
       "id": "claim:private-capital-includes-growth-capital",
+      "revision": 1,
       "subject": "concept:private-capital",
       "predicate": "INCLUDES",
       "object": "concept:growth-capital",

@@ -5,6 +5,7 @@
 
   "required": [
     "id",
+    "revision",
     "subject",
     "predicate",
     "status",
@@ -16,6 +17,36 @@
     "id": {
       "type": "string",
       "pattern": "^claim:[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+
+    "revision": {
+      "type": "integer",
+      "minimum": 1
+    },
+
+    "supersedes": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^claim:[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+
+    "transaction_time": {
+      "type": "object",
+      "required": [
+        "recorded_at",
+        "recorded_by"
+      ],
+      "properties": {
+        "recorded_at": {
+          "type": "string"
+        },
+        "recorded_by": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
     },
 
     "subject": {

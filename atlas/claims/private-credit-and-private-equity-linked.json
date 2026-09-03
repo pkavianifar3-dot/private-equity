@@ -3,6 +3,7 @@
   "claims": [
     {
       "id": "claim:private-credit-and-private-equity-linked",
+      "revision": 1,
       "subject": "concept:private-credit",
       "predicate": "LINKED_TO",
       "object": "concept:private-equity",

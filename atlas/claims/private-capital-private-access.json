@@ -3,6 +3,7 @@
   "claims": [
     {
       "id": "claim:private-capital-private-access",
+      "revision": 1,
       "subject": "concept:private-capital",
       "predicate": "CHARACTERIZED_BY",
       "object": "concept:private-market-access",

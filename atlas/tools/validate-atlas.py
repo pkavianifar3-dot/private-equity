@@ -523,6 +523,99 @@ def validate_claim_integrity(
                     )
 
 
+def validate_claim_versioning(claims):
+    errors = []
+
+    claim_by_id = {
+        claim.get("id"): claim
+        for claim in claims
+        if claim.get("id")
+    }
+
+    children_by_parent = {}
+
+    for claim in claims:
+        claim_id = claim.get("id", "<missing-id>")
+        revision = claim.get("revision")
+
+        if (
+            isinstance(revision, bool)
+            or not isinstance(revision, int)
+            or revision < 1
+        ):
+            errors.append(
+                f"{claim_id}: revision must be an integer >= 1"
+            )
+            continue
+
+        parent_id = claim.get("supersedes")
+
+        if parent_id is None:
+            if revision != 1:
+                errors.append(
+                    f"{claim_id}: revision {revision} "
+                    f"must supersede a previous claim"
+                )
+            continue
+
+        if parent_id == claim_id:
+            errors.append(
+                f"{claim_id}: claim cannot supersede itself"
+            )
+            continue
+
+        parent = claim_by_id.get(parent_id)
+
+        if parent is None:
+            errors.append(
+                f"{claim_id}: supersedes unknown claim "
+                f"{parent_id}"
+            )
+            continue
+
+        parent_revision = parent.get("revision")
+
+        if parent_revision != revision - 1:
+            errors.append(
+                f"{claim_id}: revision {revision} "
+                f"must supersede revision {revision - 1}"
+            )
+
+        children_by_parent.setdefault(
+            parent_id,
+            []
+        ).append(claim_id)
+
+    for parent_id, children in children_by_parent.items():
+        if len(children) > 1:
+            errors.append(
+                f"{parent_id}: multiple claims supersede "
+                f"the same claim: {children}"
+            )
+
+    for claim_id in claim_by_id:
+        visited = set()
+        current_id = claim_id
+
+        while current_id:
+            if current_id in visited:
+                errors.append(
+                    f"{claim_id}: supersedes chain contains a cycle"
+                )
+                break
+
+            visited.add(current_id)
+
+            current = claim_by_id.get(current_id)
+
+            if current is None:
+                break
+
+            current_id = current.get("supersedes")
+
+    return errors
+
+
 def validate_evidence_integrity(
     evidence_records,
     claims,
@@ -798,6 +891,8 @@ def main():
         role_types,
         errors
     )
+
+    errors.extend(validate_claim_versioning(claims))
 
     _, evidence_records = collect_evidence(errors)
 

@@ -3,6 +3,7 @@
   "claims": [
     {
       "id": "claim:private-capital-includes-private-credit",
+      "revision": 1,
       "subject": "concept:private-capital",
       "predicate": "INCLUDES",
       "object": "concept:private-credit",

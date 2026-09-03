@@ -3,6 +3,7 @@
   "claims": [
     {
       "id": "claim:kayson-achareh-investment-amount",
+      "revision": 1,
       "subject": "investment:kayson-achareh",
       "predicate": "INVESTMENT_AMOUNT",
       "value": {
