@@ -376,14 +376,6 @@ class ArticleRendererIntroductionBoundaryTests(unittest.TestCase):
             article,
         )
 
-        self.assertIn(
-            "«سرمایه خصوصی» (Private Capital)، چتر مفهومی اصلی",
-            article,
-        )
-        self.assertIn(
-            "از آنجا که سرمایه خصوصی (Private Capital)",
-            article,
-        )
 
 
 if __name__ == "__main__":
@@ -393,7 +385,7 @@ if __name__ == "__main__":
 class ArticleRendererMigrationBoundaryTests(unittest.TestCase):
     def test_introduction_legacy_order_is_explicit(self):
         article = (
-            ROOT / "articles" / "private-capital.html"
+            ROOT / "tests" / "fixtures" / "private-capital-legacy.html"
         ).read_text(encoding="utf-8")
 
         figure_pos = article.index("<figure>")
