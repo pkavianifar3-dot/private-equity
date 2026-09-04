@@ -145,7 +145,12 @@
   },
   "content": [
     {
-"id": "private-equity-paragraph-01",
+"id": "private-equity-subheading-01",
+      "type": "subheading",
+      "text": "سرمایه‌گذاری خصوصی (Private Equity)"
+    },
+    {
+      "id": "private-equity-paragraph-01",
       "type": "paragraph",
       "text": "این مفهوم به سرمایه‌گذاری در حقوق صاحبان سهام شرکت‌های غیربورسی اشاره دارد و در ادبیات حرفه‌ای، استراتژی‌هایی مانند خرید اهرمی (Buyout)، سرمایه‌گذاری خطرپذیر، سرمایه رشد، بازسازی و احیای شرکت (Turnaround) و سرمایه‌گذاری در شرکت‌های دچار بحران (Distressed) را دربرمی‌گیرد."
     },
@@ -174,7 +179,12 @@
   },
   "content": [
     {
-"id": "private-credit-paragraph-01",
+"id": "private-credit-subheading-01",
+      "type": "subheading",
+      "text": "اعتبار خصوصی (Private Credit)"
+    },
+    {
+      "id": "private-credit-paragraph-01",
       "type": "paragraph",
       "text": "منطق «اعتبار خصوصی» از منطق سرمایه‌گذاری در حقوق صاحبان سهام متفاوت است؛ به این معنا که سرمایه‌گذار در این حوزه عمدتاً در جایگاه اعتباردهنده قرار دارد و بازده سرمایه‌گذاری او از محل دریافت بهره، کارمزد و دیگر اجزای قراردادی تأمین می‌شود."
     },
@@ -208,7 +218,12 @@
   },
   "content": [
     {
-"id": "real-assets-paragraph-01",
+"id": "real-assets-subheading-01",
+      "type": "subheading",
+      "text": "دارایی‌های واقعی (Real Assets)"
+    },
+    {
+      "id": "real-assets-paragraph-01",
       "type": "paragraph",
       "text": "دارایی‌های واقعی طیف متنوعی از دارایی‌های عینی و فیزیکی، از جمله املاک و مستغلات، زیرساخت‌ها و منابع طبیعی را دربرمی‌گیرد."
     },
@@ -232,7 +247,12 @@
   },
   "content": [
     {
-"id": "conclusion-paragraph-01",
+"id": "conclusion-subheading-01",
+      "type": "subheading",
+      "text": "جمع‌بندی"
+    },
+    {
+      "id": "conclusion-paragraph-01",
       "type": "paragraph",
       "text": "در مجموع، مفهوم «سرمایه خصوصی» را نمی‌توان صرفاً بر مبنای یک ابزار مالی مشخص، نظیر سهام یا بدهی، تعریف یا طبقه‌بندی کرد. معیار مناسب‌تر، ماهیت خصوصی دسترسی به فرصت سرمایه‌گذاری، افق زمانی سرمایه‌گذاری و سازوکار خلق و تحقق بازده است."
     },

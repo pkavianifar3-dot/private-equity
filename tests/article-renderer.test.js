@@ -112,8 +112,8 @@ assert.strictEqual(
 
 assert.strictEqual(
     renderedSubheadingCount,
-    1,
-    "Research renderer must render 1 subheading"
+    5,
+    "Research renderer must render 5 subheadings"
 );
 
 assert.strictEqual(

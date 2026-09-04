@@ -664,6 +664,33 @@ class ArticleRendererPageIntegrationTests(unittest.TestCase):
             integration,
         )
 
+    def test_private_capital_introduction_owns_its_figure(self):
+        html = (
+            ROOT / "articles" / "private-capital.html"
+        ).read_text(encoding="utf-8")
+
+        start = html.index(
+            '<div data-article-renderer-section="introduction">'
+        )
+        end = html.index(
+            '<h2>سرمایه خصوصی چیست؟</h2>',
+            start,
+        )
+        section = html[start:end]
+
+        self.assertEqual(
+            section.count("<figure>"),
+            1,
+            "Introduction boundary must contain exactly one figure",
+        )
+
+        before = html[:start]
+        self.assertNotIn(
+            "<figure>",
+            before,
+            "Introduction figure must not remain outside its renderer boundary",
+        )
+
     def test_private_capital_page_renders_only_selected_sections(self):
         integration = (
             ROOT / "assets" / "js" / "article-page.js"
