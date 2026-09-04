@@ -670,7 +670,7 @@ class ArticleRendererPageIntegrationTests(unittest.TestCase):
         ).read_text(encoding="utf-8")
 
         self.assertIn(
-            'const SECTION_IDS = ["introduction", "definition-and-scope", "main-blocks", "private-equity", "private-credit"];',
+            'const SECTION_IDS = ["introduction", "definition-and-scope", "main-blocks", "private-equity", "private-credit", "real-assets"];',
             integration,
         )
         self.assertIn(
@@ -681,7 +681,7 @@ class ArticleRendererPageIntegrationTests(unittest.TestCase):
             '"private-credit"',
             integration,
         )
-        self.assertNotIn(
+        self.assertIn(
             '"real-assets"',
             integration,
         )
