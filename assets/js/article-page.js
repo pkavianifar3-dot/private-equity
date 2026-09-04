@@ -43,7 +43,10 @@
             );
         }
 
-        const html = global.renderArticleContent([section]);
+        const html = global.renderArticleContent(
+            [section],
+            Array.isArray(section.mentions) ? section.mentions : []
+        );
 
         const template = document.createElement("template");
         template.innerHTML = html;

@@ -503,3 +503,150 @@ console.log("Article Renderer private-equity legacy parity PASSED");
 }
 
 console.log("Article Renderer conclusion legacy parity PASSED");
+
+{
+    const introduction = research.sections.find(
+        section => section.id === "introduction"
+    );
+
+    assert(introduction, "Research introduction section must exist");
+
+    const mentionHtml = renderArticleContent(
+        [introduction],
+        introduction.mentions
+    );
+
+    assert(
+        mentionHtml.includes(
+            '<a href="../atlas/concept.html?id=concept%3Aprivate-equity">سرمایه‌گذاری خصوصی</a>'
+        ),
+        "Resolved Research Mention must link to the canonical Atlas concept"
+    );
+
+    assert.strictEqual(
+        (mentionHtml.match(/<a href=/g) || []).length,
+        1,
+        "Introduction pilot must render exactly one resolved entity link"
+    );
+
+    console.log("Article Renderer resolved Mention contract PASSED");
+}
+
+{
+    const section = {
+        id: "mention-status-test",
+        content: [
+            {
+                id: "paragraph-resolved",
+                type: "paragraph",
+                text: "سرمایه‌گذاری خصوصی"
+            },
+            {
+                id: "paragraph-unresolved",
+                type: "paragraph",
+                text: "سرمایه‌گذاری خطرپذیر"
+            },
+            {
+                id: "paragraph-rejected",
+                type: "paragraph",
+                text: "اعتبار خصوصی"
+            }
+        ],
+        mentions: [
+            {
+                id: "mention-resolved",
+                text: "سرمایه‌گذاری خصوصی",
+                entityRef: "concept:private-equity",
+                contentBlockId: "paragraph-resolved",
+                start: 0,
+                end: 18,
+                resolutionStatus: "RESOLVED"
+            },
+            {
+                id: "mention-unresolved",
+                text: "سرمایه‌گذاری خطرپذیر",
+                entityRef: "concept:venture-capital",
+                contentBlockId: "paragraph-unresolved",
+                start: 0,
+                end: 21,
+                resolutionStatus: "UNRESOLVED"
+            },
+            {
+                id: "mention-rejected",
+                text: "اعتبار خصوصی",
+                entityRef: "concept:private-credit",
+                contentBlockId: "paragraph-rejected",
+                start: 0,
+                end: 13,
+                resolutionStatus: "REJECTED"
+            }
+        ]
+    };
+
+    const html = renderArticleContent(
+        [section],
+        section.mentions
+    );
+
+    assert.strictEqual(
+        (html.match(/<a href=/g) || []).length,
+        1,
+        "Only RESOLVED supported Mentions must become links"
+    );
+
+    assert(
+        html.includes("سرمایه‌گذاری خطرپذیر</p>"),
+        "UNRESOLVED Mention must remain plain text"
+    );
+
+    assert(
+        html.includes("اعتبار خصوصی</p>"),
+        "REJECTED Mention must remain plain text"
+    );
+
+    console.log("Article Renderer Mention status contract PASSED");
+}
+
+{
+    const section = {
+        id: "mention-safety-test",
+        content: [
+            {
+                id: "paragraph-invalid-range",
+                type: "paragraph",
+                text: "<b>سرمایه‌گذاری خصوصی</b>"
+            }
+        ],
+        mentions: [
+            {
+                id: "mention-invalid-range",
+                text: "سرمایه‌گذاری خصوصی",
+                entityRef: "concept:private-equity",
+                contentBlockId: "paragraph-invalid-range",
+                start: 999,
+                end: 1018,
+                resolutionStatus: "RESOLVED"
+            }
+        ]
+    };
+
+    const html = renderArticleContent(
+        [section],
+        section.mentions
+    );
+
+    assert(
+        html.includes(
+            "&lt;b&gt;سرمایه‌گذاری خصوصی&lt;/b&gt;"
+        ),
+        "Invalid Mention range must preserve escaped text"
+    );
+
+    assert.strictEqual(
+        (html.match(/<a href=/g) || []).length,
+        0,
+        "Invalid Mention range must not create a link"
+    );
+
+    console.log("Article Renderer Mention safety contract PASSED");
+}
