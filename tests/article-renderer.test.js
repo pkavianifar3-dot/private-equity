@@ -457,3 +457,49 @@ console.log("Article Renderer real-assets legacy parity PASSED");
 console.log("Article Renderer private-credit legacy parity PASSED");
 
 console.log("Article Renderer private-equity legacy parity PASSED");
+
+{
+    const conclusion = research.sections.find(
+        section => section.id === "conclusion"
+    );
+
+    assert(conclusion, "Research conclusion section must exist");
+
+    const privateCapitalHtml = fs.readFileSync(
+        "articles/private-capital.html",
+        "utf8"
+    );
+
+    const start = privateCapitalHtml.indexOf(
+        '<div data-article-renderer-section="conclusion">'
+    );
+    const end = privateCapitalHtml.indexOf(
+        '<div class="cta"',
+        start
+    );
+
+    assert(start >= 0, "Legacy conclusion section wrapper must exist");
+    assert(end > start, "Legacy conclusion section boundary must be valid");
+
+    const legacySection = privateCapitalHtml.slice(start, end);
+    const legacyTexts = [...legacySection.matchAll(/<p>\s*([\s\S]*?)\s*<\/p>/g)]
+        .map(match => match[1].trim());
+
+    const researchTexts = conclusion.content
+        .filter(block => block.type === "paragraph")
+        .map(block => block.text);
+
+    assert.strictEqual(
+        legacyTexts.length,
+        researchTexts.length,
+        "conclusion legacy and Research paragraph counts must match"
+    );
+
+    assert.deepStrictEqual(
+        legacyTexts,
+        researchTexts,
+        "conclusion Research content must match the legacy paragraphs exactly"
+    );
+}
+
+console.log("Article Renderer conclusion legacy parity PASSED");

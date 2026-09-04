@@ -2,7 +2,7 @@
     "use strict";
 
     const RESEARCH_PATH = "../research/content/private-capital.json";
-    const SECTION_IDS = ["introduction", "definition-and-scope", "main-blocks", "private-equity", "private-credit", "real-assets"];
+    const SECTION_IDS = ["introduction", "definition-and-scope", "main-blocks", "private-equity", "private-credit", "real-assets", "conclusion"];
 
     async function loadResearch(path) {
         const response = await fetch(path, {
