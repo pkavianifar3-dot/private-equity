@@ -550,6 +550,52 @@ class ArticleRendererPageIntegrationTests(unittest.TestCase):
         )
 
 
+    def test_private_capital_definition_and_scope_has_section_wrapper(self):
+        html = (
+            ROOT / "articles" / "private-capital.html"
+        ).read_text(encoding="utf-8")
+
+        self.assertEqual(
+            html.count(
+                '<div data-article-renderer-section="definition-and-scope">'
+            ),
+            1,
+        )
+        self.assertIn(
+            '<h3>تعریف و دامنه سرمایه خصوصی</h3>',
+            html,
+        )
+
+        start = html.index(
+            '<div data-article-renderer-section="definition-and-scope">'
+        )
+        end = html.index(
+            '<div class="cta"',
+            start,
+        )
+        section = html[start:end]
+
+        self.assertEqual(section.count("<h3>"), 1)
+        self.assertEqual(section.count("<p>"), 3)
+        self.assertEqual(section.count("<figure"), 1)
+
+    def test_private_capital_definition_and_scope_keeps_cta_outside_wrapper(self):
+        html = (
+            ROOT / "articles" / "private-capital.html"
+        ).read_text(encoding="utf-8")
+
+        start = html.index(
+            '<div data-article-renderer-section="definition-and-scope">'
+        )
+        cta = html.index(
+            '<div class="cta"',
+            start,
+        )
+        wrapper_end = html.rindex("</div>", start, cta)
+
+        self.assertLess(start, wrapper_end)
+        self.assertLess(wrapper_end, cta)
+
     def test_private_capital_page_replaces_only_section_targets(self):
         integration = (
             ROOT / "assets" / "js" / "article-page.js"
@@ -578,7 +624,7 @@ class ArticleRendererPageIntegrationTests(unittest.TestCase):
         ).read_text(encoding="utf-8")
 
         self.assertIn(
-            'const SECTION_IDS = ["introduction", "main-blocks"];',
+            'const SECTION_IDS = ["introduction", "definition-and-scope", "main-blocks"];',
             integration,
         )
         self.assertNotIn(

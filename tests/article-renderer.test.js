@@ -214,6 +214,61 @@ assert(
 console.log("Article Renderer introduction pilot contract PASSED");
 
 {
+    const definition = research.sections.find(
+        section => section.id === "definition-and-scope"
+    );
+
+    assert(definition, "Research definition-and-scope section must exist");
+
+    const definitionHtml = renderArticleContent([definition]);
+
+    assert.strictEqual(
+        (definitionHtml.match(/<h3>/g) || []).length,
+        1,
+        "definition-and-scope pilot must render exactly one subheading"
+    );
+
+    assert.strictEqual(
+        (definitionHtml.match(/<p>/g) || []).length,
+        3,
+        "definition-and-scope pilot must render exactly three paragraphs"
+    );
+
+    assert.strictEqual(
+        (definitionHtml.match(/<figure>/g) || []).length,
+        1,
+        "definition-and-scope pilot must render exactly one figure"
+    );
+
+    assert(
+        definitionHtml.includes("تعریف و دامنه سرمایه خصوصی"),
+        "definition-and-scope pilot must render the Research subheading"
+    );
+
+    const headingIndex = definitionHtml.indexOf("<h3>");
+    const firstParagraphIndex = definitionHtml.indexOf("<p>");
+    const figureIndex = definitionHtml.indexOf("<figure>");
+
+    assert(
+        headingIndex < firstParagraphIndex &&
+        firstParagraphIndex < figureIndex,
+        "definition-and-scope block order must follow Research"
+    );
+
+    assert(
+        !definitionHtml.includes('class="cta"'),
+        "definition-and-scope pilot must not absorb the CTA"
+    );
+
+    assert(
+        !definitionHtml.includes("بلوک‌های اصلی سرمایه خصوصی"),
+        "definition-and-scope pilot must not absorb the next section"
+    );
+}
+
+console.log("Article Renderer definition-and-scope pilot contract PASSED");
+
+{
     const mainBlocks = research.sections.find(
         section => section.id === "main-blocks"
     );
