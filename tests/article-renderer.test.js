@@ -318,3 +318,50 @@ console.log("Article Renderer main-blocks pilot contract PASSED");
 }
 
 console.log("Article Renderer main-blocks legacy parity PASSED");
+
+
+{
+    const privateEquity = research.sections.find(
+        section => section.id === "private-equity"
+    );
+
+    assert(privateEquity, "Research private-equity section must exist");
+
+    const privateCapitalHtml = fs.readFileSync(
+        "articles/private-capital.html",
+        "utf8"
+    );
+
+    const start = privateCapitalHtml.indexOf(
+        '<div data-article-renderer-section="private-equity">'
+    );
+    const end = privateCapitalHtml.indexOf(
+        '<div data-article-renderer-section="private-credit">',
+        start
+    );
+
+    assert(start >= 0, "Legacy private-equity section wrapper must exist");
+    assert(end > start, "Legacy private-equity section boundary must be valid");
+
+    const legacySection = privateCapitalHtml.slice(start, end);
+    const legacyTexts = [...legacySection.matchAll(/<p>\s*([\s\S]*?)\s*<\/p>/g)]
+        .map(match => match[1].trim());
+
+    const researchTexts = privateEquity.content
+        .filter(block => block.type === "paragraph")
+        .map(block => block.text);
+
+    assert.strictEqual(
+        legacyTexts.length,
+        researchTexts.length,
+        "private-equity legacy and Research paragraph counts must match"
+    );
+
+    assert.deepStrictEqual(
+        legacyTexts,
+        researchTexts,
+        "private-equity Research content must match the legacy paragraphs exactly"
+    );
+}
+
+console.log("Article Renderer private-equity legacy parity PASSED");

@@ -579,6 +579,52 @@ class ArticleRendererPageIntegrationTests(unittest.TestCase):
         self.assertEqual(section.count("<p>"), 3)
         self.assertEqual(section.count("<figure"), 1)
 
+    def test_private_capital_private_equity_has_section_wrapper(self):
+        html = (
+            ROOT / "articles" / "private-capital.html"
+        ).read_text(encoding="utf-8")
+
+        self.assertEqual(
+            html.count(
+                '<div data-article-renderer-section="private-equity">'
+            ),
+            1,
+        )
+        self.assertIn(
+            "<h3>سرمایه‌گذاری خصوصی (Private Equity)</h3>",
+            html,
+        )
+
+        start = html.index(
+            '<div data-article-renderer-section="private-equity">'
+        )
+        end = html.index(
+            '<div data-article-renderer-section="private-credit">',
+            start,
+        )
+        section = html[start:end]
+
+        self.assertEqual(section.count("<h3>"), 1)
+        self.assertEqual(section.count("<p>"), 4)
+
+    def test_private_capital_private_equity_ends_before_private_credit(self):
+        html = (
+            ROOT / "articles" / "private-capital.html"
+        ).read_text(encoding="utf-8")
+
+        start = html.index(
+            '<div data-article-renderer-section="private-equity">'
+        )
+        next_section = html.index(
+            '<div data-article-renderer-section="private-credit">',
+            start,
+        )
+        wrapper_end = html.rindex("</div>", start, next_section)
+
+        self.assertLess(start, wrapper_end)
+        self.assertLess(wrapper_end, next_section)
+
+
     def test_private_capital_definition_and_scope_keeps_cta_outside_wrapper(self):
         html = (
             ROOT / "articles" / "private-capital.html"
@@ -624,10 +670,10 @@ class ArticleRendererPageIntegrationTests(unittest.TestCase):
         ).read_text(encoding="utf-8")
 
         self.assertIn(
-            'const SECTION_IDS = ["introduction", "definition-and-scope", "main-blocks"];',
+            'const SECTION_IDS = ["introduction", "definition-and-scope", "main-blocks", "private-equity"];',
             integration,
         )
-        self.assertNotIn(
+        self.assertIn(
             '"private-equity"',
             integration,
         )
