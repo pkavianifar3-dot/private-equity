@@ -229,7 +229,7 @@ class ArticleRendererLegacyPresentationBaselineTests(unittest.TestCase):
                 self.handle_starttag(tag, attrs)
 
         html = (
-            ROOT / "articles" / "private-capital.html"
+            ROOT / "tests" / "fixtures" / "private-capital-legacy.html"
         ).read_text(encoding="utf-8")
 
         parser = Parser()
@@ -290,7 +290,7 @@ class ArticleRendererLegacyBaselineTests(unittest.TestCase):
                         self.counts["cta"] += 1
 
         article = (
-            ROOT / "articles" / "private-capital.html"
+            ROOT / "tests" / "fixtures" / "private-capital-legacy.html"
         ).read_text(encoding="utf-8")
 
         parser = Parser()

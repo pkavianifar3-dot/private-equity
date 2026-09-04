@@ -328,7 +328,7 @@ console.log("Article Renderer main-blocks legacy parity PASSED");
     assert(privateEquity, "Research private-equity section must exist");
 
     const privateCapitalHtml = fs.readFileSync(
-        "articles/private-capital.html",
+        "tests/fixtures/private-capital-legacy.html",
         "utf8"
     );
 
@@ -372,7 +372,7 @@ console.log("Article Renderer main-blocks legacy parity PASSED");
     assert(privateCredit, "Research private-credit section must exist");
 
     const privateCapitalHtml = fs.readFileSync(
-        "articles/private-capital.html",
+        "tests/fixtures/private-capital-legacy.html",
         "utf8"
     );
 
@@ -416,7 +416,7 @@ console.log("Article Renderer main-blocks legacy parity PASSED");
     assert(realAssets, "Research real-assets section must exist");
 
     const privateCapitalHtml = fs.readFileSync(
-        "articles/private-capital.html",
+        "tests/fixtures/private-capital-legacy.html",
         "utf8"
     );
 
@@ -466,7 +466,7 @@ console.log("Article Renderer private-equity legacy parity PASSED");
     assert(conclusion, "Research conclusion section must exist");
 
     const privateCapitalHtml = fs.readFileSync(
-        "articles/private-capital.html",
+        "tests/fixtures/private-capital-legacy.html",
         "utf8"
     );
 
