@@ -1,8 +1,24 @@
 (function (global) {
     "use strict";
 
-    const RESEARCH_PATH = "../research/content/private-capital.json";
-    const SECTION_IDS = ["introduction", "definition-and-scope", "main-blocks", "private-equity", "private-credit", "real-assets", "conclusion"];
+    function getArticleSlug() {
+        const pathname = global.location && global.location.pathname
+            ? global.location.pathname
+            : "";
+
+        const filename = pathname.split("/").pop() || "";
+        const slug = filename.replace(/\.html$/, "");
+
+        if (!slug) {
+            throw new Error("Article slug could not be determined from URL");
+        }
+
+        return slug;
+    }
+
+    function getResearchPath() {
+        return `../research/content/${getArticleSlug()}.json`;
+    }
 
     async function loadResearch(path) {
         const response = await fetch(path, {
@@ -14,22 +30,6 @@
         }
 
         return response.json();
-    }
-
-    function getSection(research, sectionId) {
-        if (!research || !Array.isArray(research.sections)) {
-            throw new TypeError("Research sections must be an array");
-        }
-
-        const section = research.sections.find(
-            item => item.id === sectionId
-        );
-
-        if (!section) {
-            throw new Error(`Research section not found: ${sectionId}`);
-        }
-
-        return section;
     }
 
     function renderSection(section) {
@@ -52,11 +52,14 @@
     }
 
     async function renderArticleSections() {
-        const research = await loadResearch(RESEARCH_PATH);
+        const researchPath = getResearchPath();
+        const research = await loadResearch(researchPath);
 
-        SECTION_IDS.forEach(sectionId => {
-            renderSection(getSection(research, sectionId));
-        });
+        if (!research || !Array.isArray(research.sections)) {
+            throw new TypeError("Research sections must be an array");
+        }
+
+        research.sections.forEach(renderSection);
     }
 
     renderArticleSections().catch(error => {

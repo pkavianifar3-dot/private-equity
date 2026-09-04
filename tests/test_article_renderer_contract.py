@@ -481,7 +481,15 @@ class ArticleRendererPageIntegrationTests(unittest.TestCase):
             integration,
         )
         self.assertIn(
-            'const RESEARCH_PATH = "../research/content/private-capital.json";',
+            "function getArticleSlug()",
+            integration,
+        )
+        self.assertIn(
+            'function getResearchPath()',
+            integration,
+        )
+        self.assertIn(
+            '`../research/content/${getArticleSlug()}.json`',
             integration,
         )
 
@@ -697,22 +705,14 @@ class ArticleRendererPageIntegrationTests(unittest.TestCase):
         ).read_text(encoding="utf-8")
 
         self.assertIn(
-            'const SECTION_IDS = ["introduction", "definition-and-scope", "main-blocks", "private-equity", "private-credit", "real-assets", "conclusion"];',
+            "Array.isArray(research.sections)",
             integration,
         )
         self.assertIn(
-            '"private-equity"',
+            "research.sections.forEach(renderSection)",
             integration,
         )
-        self.assertIn(
-            '"private-credit"',
-            integration,
-        )
-        self.assertIn(
-            '"real-assets"',
-            integration,
-        )
-        self.assertIn(
-            '"conclusion"',
+        self.assertNotIn(
+            "const SECTION_IDS =",
             integration,
         )
