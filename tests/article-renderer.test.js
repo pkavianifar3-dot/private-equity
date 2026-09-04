@@ -364,4 +364,50 @@ console.log("Article Renderer main-blocks legacy parity PASSED");
     );
 }
 
+{
+    const privateCredit = research.sections.find(
+        section => section.id === "private-credit"
+    );
+
+    assert(privateCredit, "Research private-credit section must exist");
+
+    const privateCapitalHtml = fs.readFileSync(
+        "articles/private-capital.html",
+        "utf8"
+    );
+
+    const start = privateCapitalHtml.indexOf(
+        '<div data-article-renderer-section="private-credit">'
+    );
+    const end = privateCapitalHtml.indexOf(
+        '<div data-article-renderer-section="real-assets">',
+        start
+    );
+
+    assert(start >= 0, "Legacy private-credit section wrapper must exist");
+    assert(end > start, "Legacy private-credit section boundary must be valid");
+
+    const legacySection = privateCapitalHtml.slice(start, end);
+    const legacyTexts = [...legacySection.matchAll(/<p>\s*([\s\S]*?)\s*<\/p>/g)]
+        .map(match => match[1].trim());
+
+    const researchTexts = privateCredit.content
+        .filter(block => block.type === "paragraph")
+        .map(block => block.text);
+
+    assert.strictEqual(
+        legacyTexts.length,
+        researchTexts.length,
+        "private-credit legacy and Research paragraph counts must match"
+    );
+
+    assert.deepStrictEqual(
+        legacyTexts,
+        researchTexts,
+        "private-credit Research content must match the legacy paragraphs exactly"
+    );
+}
+
+console.log("Article Renderer private-credit legacy parity PASSED");
+
 console.log("Article Renderer private-equity legacy parity PASSED");
