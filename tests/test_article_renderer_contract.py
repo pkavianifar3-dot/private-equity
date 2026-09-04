@@ -499,7 +499,7 @@ class ArticleRendererPageIntegrationTests(unittest.TestCase):
         ).read_text(encoding="utf-8")
 
         self.assertIn(
-            "global.renderArticleContent([section])",
+            "global.renderArticleContent(\n            [section],\n            Array.isArray(section.mentions) ? section.mentions : []\n        )",
             integration,
         )
         self.assertNotIn(

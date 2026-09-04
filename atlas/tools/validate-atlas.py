@@ -1006,6 +1006,64 @@ def validate_research_integrity(
                     f"{candidate_id}: unknown Atlas source "
                     f"{atlas_source_id}"
                 )
+
+    research_content_root = research_root / "content"
+
+    if research_content_root.exists():
+        for path in sorted(
+            research_content_root.glob("*.json")
+        ):
+            data = load_registry(
+                path,
+                errors
+            )
+
+            if not isinstance(data, dict):
+                continue
+
+            sections = data.get("sections", [])
+
+            if not isinstance(sections, list):
+                continue
+
+            for section in sections:
+                if not isinstance(section, dict):
+                    continue
+
+                section_id = section.get(
+                    "id",
+                    "<missing-section-id>"
+                )
+
+                claim_refs = section.get(
+                    "claimRefs",
+                    []
+                )
+
+                if isinstance(claim_refs, list):
+                    for claim_ref in claim_refs:
+                        if claim_ref not in claim_ids:
+                            errors.append(
+                                f"{path.relative_to(ROOT.parent)}:"
+                                f"{section_id}: unknown canonical claim "
+                                f"{claim_ref}"
+                            )
+
+                source_refs = section.get(
+                    "sourceRefs",
+                    []
+                )
+
+                if isinstance(source_refs, list):
+                    for source_ref in source_refs:
+                        if source_ref not in source_ids:
+                            errors.append(
+                                f"{path.relative_to(ROOT.parent)}:"
+                                f"{section_id}: unknown canonical source "
+                                f"{source_ref}"
+                            )
+
+
 def validate_research_documents(errors):
     research_root = ROOT.parent / "research"
 

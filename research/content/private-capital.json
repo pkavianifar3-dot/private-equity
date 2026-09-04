@@ -51,6 +51,15 @@
   "sections": [
     {
   "id": "introduction",
+  "claimRefs": [
+    "claim:private-capital-broader-than-private-equity",
+    "claim:private-capital-includes-private-equity",
+    "claim:private-capital-includes-private-credit",
+    "claim:private-capital-includes-real-assets"
+  ],
+  "sourceRefs": [
+    "source:ecb-private-markets-public-risk"
+  ],
   "title": {
     "fa": "مقدمه",
     "en": "Introduction"
@@ -88,6 +97,12 @@
 },
     {
   "id": "definition-and-scope",
+  "claimRefs": [
+    "claim:private-capital-private-access"
+  ],
+  "sourceRefs": [
+    "source:ecb-private-markets-public-risk"
+  ],
   "title": {
     "fa": "سرمایه خصوصی چیست؟",
     "en": "What Is Private Capital?"
@@ -124,6 +139,17 @@
 },
     {
   "id": "main-blocks",
+  "claimRefs": [
+    "claim:private-capital-includes-private-equity",
+    "claim:private-capital-includes-private-credit",
+    "claim:private-capital-includes-real-assets",
+    "claim:private-capital-includes-venture-capital",
+    "claim:private-capital-includes-growth-capital",
+    "claim:private-capital-boundaries-vary"
+  ],
+  "sourceRefs": [
+    "source:ecb-private-markets-public-risk"
+  ],
   "title": {
 
     "fa": "بلوک‌های اصلی سرمایه خصوصی",
@@ -173,6 +199,15 @@
 },
     {
   "id": "private-credit",
+  "claimRefs": [
+    "claim:private-credit-lender-position",
+    "claim:private-credit-return-contractual",
+    "claim:private-credit-and-private-equity-linked"
+  ],
+  "sourceRefs": [
+    "source:ecb-private-markets-public-risk",
+    "source:federal-reserve-private-credit-2024"
+  ],
   "title": {
     "fa": "اعتبار خصوصی (Private Credit)",
     "en": "Private Credit"
@@ -212,6 +247,12 @@
 },
     {
   "id": "real-assets",
+  "claimRefs": [
+    "claim:real-assets-include-physical-assets"
+  ],
+  "sourceRefs": [
+    "source:ecb-private-markets-public-risk"
+  ],
   "title": {
     "fa": "دارایی‌های واقعی (Real Assets)",
     "en": "Real Assets"
@@ -241,6 +282,12 @@
 },
     {
   "id": "conclusion",
+  "claimRefs": [
+    "claim:private-capital-private-access"
+  ],
+  "sourceRefs": [
+    "source:ecb-private-markets-public-risk"
+  ],
   "title": {
     "fa": "جمع‌بندی",
     "en": "Conclusion"
