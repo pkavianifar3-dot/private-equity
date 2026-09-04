@@ -650,3 +650,89 @@ console.log("Article Renderer conclusion legacy parity PASSED");
 
     console.log("Article Renderer Mention safety contract PASSED");
 }
+
+{
+    const section = {
+        id: "citation-test",
+        content: [
+            {
+                id: "citation-paragraph",
+                type: "paragraph",
+                text: "متن دارای منبع"
+            }
+        ],
+        sourceRefs: ["source:test-primary"]
+    };
+
+    const sources = [
+        {
+            id: "source:test-primary",
+            title_fa: "منبع آزمون",
+            publisher: "ناشر آزمون",
+            url: "https://example.com/source"
+        }
+    ];
+
+    const html = renderArticleContent(
+        [section],
+        [],
+        sources
+    );
+
+    assert(html.includes("منبع آزمون"));
+    assert(html.includes("ناشر آزمون"));
+    assert(html.includes('href="https://example.com/source"'));
+    assert(html.includes('target="_blank"'));
+    assert(html.includes('rel="noopener noreferrer"'));
+
+    console.log("Article Renderer citation contract PASSED");
+}
+
+{
+    const section = {
+        id: "citation-order-test",
+        content: [
+            {
+                id: "citation-order-paragraph",
+                type: "paragraph",
+                text: "متن چندمنبعی"
+            }
+        ],
+        sourceRefs: [
+            "source:test-second",
+            "source:test-first",
+            "source:test-unknown"
+        ]
+    };
+
+    const sources = [
+        {
+            id: "source:test-first",
+            title_fa: "منبع اول",
+            publisher: "ناشر اول",
+            url: "https://example.com/first"
+        },
+        {
+            id: "source:test-second",
+            title_fa: "منبع دوم",
+            publisher: "ناشر دوم",
+            url: "https://example.com/second"
+        }
+    ];
+
+    const html = renderArticleContent(
+        [section],
+        [],
+        sources
+    );
+
+    const secondPosition = html.indexOf("منبع دوم");
+    const firstPosition = html.indexOf("منبع اول");
+
+    assert(secondPosition !== -1);
+    assert(firstPosition !== -1);
+    assert(secondPosition < firstPosition);
+    assert(!html.includes("source:test-unknown"));
+
+    console.log("Article Renderer citation ordering contract PASSED");
+}

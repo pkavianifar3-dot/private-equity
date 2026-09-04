@@ -32,7 +32,37 @@
         return response.json();
     }
 
-    function renderSection(section) {
+    async function loadSources(sourceRefs) {
+        if (!Array.isArray(sourceRefs) || !sourceRefs.length) {
+            return [];
+        }
+
+        const index = await loadResearch("../atlas/sources/index.json");
+        const sources = [];
+
+        for (const sourceRef of sourceRefs) {
+            const fileName = index.sources?.[sourceRef];
+
+            if (!fileName) {
+                continue;
+            }
+
+            const data = await loadResearch(
+                `../atlas/sources/${fileName}`
+            );
+
+            const source = (data.sources || [])
+                .find(item => item.id === sourceRef);
+
+            if (source) {
+                sources.push(source);
+            }
+        }
+
+        return sources;
+    }
+
+    async function renderSection(section) {
         const target = document.querySelector(
             `[data-article-renderer-section="${section.id}"]`
         );
@@ -43,9 +73,12 @@
             );
         }
 
+        const sources = await loadSources(section.sourceRefs);
+
         const html = global.renderArticleContent(
             [section],
-            Array.isArray(section.mentions) ? section.mentions : []
+            Array.isArray(section.mentions) ? section.mentions : [],
+            sources
         );
 
         const template = document.createElement("template");
@@ -62,7 +95,9 @@
             throw new TypeError("Research sections must be an array");
         }
 
-        research.sections.forEach(renderSection);
+        for (const section of research.sections) {
+            await renderSection(section);
+        }
     }
 
     renderArticleSections().catch(error => {
