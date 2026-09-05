@@ -3,11 +3,15 @@
   "claims": [
     {
       "id": "claim:real-assets-include-physical-assets",
+      "revision": 1,
       "subject": "concept:real-assets",
       "predicate": "INCLUDES",
       "object": "concept:physical-assets",
       "status": "SUPPORTED",
-      "confidence": "HIGH"
+      "confidence": "HIGH",
+      "evidenceRefs": [
+        "evidence:real-assets-include-physical-assets-01"
+      ]     
     }
   ]
 }

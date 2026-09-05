@@ -3,6 +3,7 @@
   "claims": [
     {
       "id": "claim:kayson-achareh-investment-amount",
+      "revision": 1,
       "subject": "investment:kayson-achareh",
       "predicate": "INVESTMENT_AMOUNT",
       "value": {
@@ -13,7 +14,10 @@
         "period_type": "reported"
       },
       "status": "REPORTED",
-      "confidence": "HIGH"
+      "confidence": "HIGH",
+      "evidenceRefs": [
+        "evidence:kayson-achareh-investment-amount-01"
+      ]
     }
   ]
 }

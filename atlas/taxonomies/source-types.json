@@ -45,6 +45,16 @@
       "id": "secondary",
       "label_fa": "منبع ثانویه",
       "label_en": "Secondary"
+    },
+    {
+      "id": "official_report",
+      "label_fa": "گزارش رسمی",
+      "label_en": "Official Report"
+    },
+    {
+      "id": "research",
+      "label_fa": "منبع پژوهشی",
+      "label_en": "Research Source"
     }
   ]
 }

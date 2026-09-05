@@ -3,6 +3,7 @@
   "claims": [
     {
       "id": "claim:ali-sanginian-ceo-kian-private-equity-management",
+      "revision": 1,
       "subject": "person:ali-sanginian",
       "predicate": "CEO_OF",
       "object": "organization:kian-private-equity-management",
@@ -13,10 +14,14 @@
         "status": "current"
       },
       "status": "SUPPORTED",
-      "confidence": "HIGH"
+      "confidence": "HIGH",
+      "evidenceRefs": [
+        "evidence:ali-ceo-kian-01"
+      ]
     },
     {
       "id": "claim:kian-private-equity-management-subsidiary-kian-financial-group",
+      "revision": 1,
       "subject": "organization:kian-private-equity-management",
       "predicate": "SUBSIDIARY_OF",
       "object": "organization:kian-financial-group",
@@ -27,10 +32,14 @@
         "status": "unknown"
       },
       "status": "SUPPORTED",
-      "confidence": "MEDIUM"
+      "confidence": "MEDIUM",
+      "evidenceRefs": [
+        "evidence:kian-subsidiary-group-01"
+      ]
     },
     {
       "id": "claim:ali-sanginian-ceo-amin-investment-bank",
+      "revision": 1,
       "subject": "person:ali-sanginian",
       "predicate": "CEO_OF",
       "object": "organization:amin-investment-bank",
@@ -41,10 +50,15 @@
         "status": "known"
       },
       "status": "VERIFIED",
-      "confidence": "HIGH"
+      "confidence": "HIGH",
+      "evidenceRefs": [
+        "evidence:ali-ceo-amin-01",
+        "evidence:ali-ceo-amin-02"
+      ]
     },
     {
       "id": "claim:ali-sanginian-ceo-semega",
+      "revision": 1,
       "subject": "person:ali-sanginian",
       "predicate": "CEO_OF",
       "object": "organization:semega",
@@ -55,10 +69,14 @@
         "status": "known"
       },
       "status": "VERIFIED",
-      "confidence": "HIGH"
+      "confidence": "HIGH",
+      "evidenceRefs": [
+        "evidence:ali-ceo-semega-01"
+      ]      
     },
     {
       "id": "claim:ali-sanginian-board-tourism-bank",
+      "revision": 1,
       "subject": "person:ali-sanginian",
       "predicate": "BOARD_MEMBER_OF",
       "object": "organization:tourism-bank",
@@ -69,10 +87,14 @@
         "status": "at-least"
       },
       "status": "VERIFIED",
-      "confidence": "HIGH"
+      "confidence": "HIGH",
+      "evidenceRefs": [
+        "evidence:ali-board-tourism-bank-01"
+      ]      
     },
     {
       "id": "claim:ali-sanginian-deputy-investment-kayson",
+      "revision": 1,
       "subject": "person:ali-sanginian",
       "predicate": "EXECUTIVE_ROLE_AT",
       "object": "organization:kayson-group",
@@ -84,10 +106,14 @@
         "status": "unknown"
       },
       "status": "VERIFIED",
-      "confidence": "HIGH"
+      "confidence": "HIGH",
+      "evidenceRefs": [
+        "evidence:ali-kayson-01"
+      ]     
     },
     {
       "id": "claim:ali-sanginian-chair-tehran-chamber-commission",
+      "revision": 1,
       "subject": "person:ali-sanginian",
       "predicate": "CHAIR_OF",
       "object": "organization:tehran-chamber-money-capital-commission",
@@ -99,27 +125,40 @@
         "status": "known"
       },
       "status": "VERIFIED",
-      "confidence": "HIGH"
+      "confidence": "HIGH",
+      "evidenceRefs": [
+        "evidence:ali-chair-tehran-chamber-01",
+        "evidence:ali-chair-tehran-chamber-02"
+      ]     
     },
     {
       "id": "claim:ali-sanginian-investment-executive-kayson-achareh",
+      "revision": 1,
       "subject": "person:ali-sanginian",
       "predicate": "INVESTMENT_EXECUTIVE_OF",
       "object": "organization:kayson-group",
     
       "status": "VERIFIED",
-      "confidence": "HIGH"
+      "confidence": "HIGH",
+      "evidenceRefs": [
+        "evidence:ali-investment-executive-kayson-01"
+      ]     
     },
     {
       "id": "claim:kian-private-equity-has-dadman",
+      "revision": 1,
       "subject": "organization:kian-private-equity-management",
       "predicate": "HAS_PROJECT",
       "object": "project:dadman",
       "status": "SUPPORTED",
-      "confidence": "HIGH"
+      "confidence": "HIGH",
+      "evidenceRefs": [
+        "evidence:kian-dadman-01"
+      ]     
     },
     {
       "id": "claim:kian-private-equity-operates-private-equity",
+      "revision": 1,
       "subject": "organization:kian-private-equity-management",
       "predicate": "OPERATES_IN",
       "object": "sector:private-equity",
@@ -130,7 +169,10 @@
         "status": "current"
       },
       "status": "SUPPORTED",
-      "confidence": "HIGH"
+      "confidence": "HIGH",
+      "evidenceRefs": [
+        "evidence:ali-private-equity-01"
+      ]     
     }
   ]
 }

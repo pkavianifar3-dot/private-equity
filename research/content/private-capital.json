@@ -51,6 +51,15 @@
   "sections": [
     {
   "id": "introduction",
+  "claimRefs": [
+    "claim:private-capital-broader-than-private-equity",
+    "claim:private-capital-includes-private-equity",
+    "claim:private-capital-includes-private-credit",
+    "claim:private-capital-includes-real-assets"
+  ],
+  "sourceRefs": [
+    "source:ecb-private-markets-public-risk"
+  ],
   "title": {
     "fa": "مقدمه",
     "en": "Introduction"
@@ -88,6 +97,12 @@
 },
     {
   "id": "definition-and-scope",
+  "claimRefs": [
+    "claim:private-capital-private-access"
+  ],
+  "sourceRefs": [
+    "source:ecb-private-markets-public-risk"
+  ],
   "title": {
     "fa": "سرمایه خصوصی چیست؟",
     "en": "What Is Private Capital?"
@@ -124,6 +139,17 @@
 },
     {
   "id": "main-blocks",
+  "claimRefs": [
+    "claim:private-capital-includes-private-equity",
+    "claim:private-capital-includes-private-credit",
+    "claim:private-capital-includes-real-assets",
+    "claim:private-capital-includes-venture-capital",
+    "claim:private-capital-includes-growth-capital",
+    "claim:private-capital-boundaries-vary"
+  ],
+  "sourceRefs": [
+    "source:ecb-private-markets-public-risk"
+  ],
   "title": {
 
     "fa": "بلوک‌های اصلی سرمایه خصوصی",
@@ -145,7 +171,12 @@
   },
   "content": [
     {
-"id": "private-equity-paragraph-01",
+"id": "private-equity-subheading-01",
+      "type": "subheading",
+      "text": "سرمایه‌گذاری خصوصی (Private Equity)"
+    },
+    {
+      "id": "private-equity-paragraph-01",
       "type": "paragraph",
       "text": "این مفهوم به سرمایه‌گذاری در حقوق صاحبان سهام شرکت‌های غیربورسی اشاره دارد و در ادبیات حرفه‌ای، استراتژی‌هایی مانند خرید اهرمی (Buyout)، سرمایه‌گذاری خطرپذیر، سرمایه رشد، بازسازی و احیای شرکت (Turnaround) و سرمایه‌گذاری در شرکت‌های دچار بحران (Distressed) را دربرمی‌گیرد."
     },
@@ -168,13 +199,27 @@
 },
     {
   "id": "private-credit",
+  "claimRefs": [
+    "claim:private-credit-lender-position",
+    "claim:private-credit-return-contractual",
+    "claim:private-credit-and-private-equity-linked"
+  ],
+  "sourceRefs": [
+    "source:ecb-private-markets-public-risk",
+    "source:federal-reserve-private-credit-2024"
+  ],
   "title": {
     "fa": "اعتبار خصوصی (Private Credit)",
     "en": "Private Credit"
   },
   "content": [
     {
-"id": "private-credit-paragraph-01",
+"id": "private-credit-subheading-01",
+      "type": "subheading",
+      "text": "اعتبار خصوصی (Private Credit)"
+    },
+    {
+      "id": "private-credit-paragraph-01",
       "type": "paragraph",
       "text": "منطق «اعتبار خصوصی» از منطق سرمایه‌گذاری در حقوق صاحبان سهام متفاوت است؛ به این معنا که سرمایه‌گذار در این حوزه عمدتاً در جایگاه اعتباردهنده قرار دارد و بازده سرمایه‌گذاری او از محل دریافت بهره، کارمزد و دیگر اجزای قراردادی تأمین می‌شود."
     },
@@ -202,13 +247,24 @@
 },
     {
   "id": "real-assets",
+  "claimRefs": [
+    "claim:real-assets-include-physical-assets"
+  ],
+  "sourceRefs": [
+    "source:ecb-private-markets-public-risk"
+  ],
   "title": {
     "fa": "دارایی‌های واقعی (Real Assets)",
     "en": "Real Assets"
   },
   "content": [
     {
-"id": "real-assets-paragraph-01",
+"id": "real-assets-subheading-01",
+      "type": "subheading",
+      "text": "دارایی‌های واقعی (Real Assets)"
+    },
+    {
+      "id": "real-assets-paragraph-01",
       "type": "paragraph",
       "text": "دارایی‌های واقعی طیف متنوعی از دارایی‌های عینی و فیزیکی، از جمله املاک و مستغلات، زیرساخت‌ها و منابع طبیعی را دربرمی‌گیرد."
     },
@@ -226,13 +282,24 @@
 },
     {
   "id": "conclusion",
+  "claimRefs": [
+    "claim:private-capital-private-access"
+  ],
+  "sourceRefs": [
+    "source:ecb-private-markets-public-risk"
+  ],
   "title": {
     "fa": "جمع‌بندی",
     "en": "Conclusion"
   },
   "content": [
     {
-"id": "conclusion-paragraph-01",
+"id": "conclusion-subheading-01",
+      "type": "subheading",
+      "text": "جمع‌بندی"
+    },
+    {
+      "id": "conclusion-paragraph-01",
       "type": "paragraph",
       "text": "در مجموع، مفهوم «سرمایه خصوصی» را نمی‌توان صرفاً بر مبنای یک ابزار مالی مشخص، نظیر سهام یا بدهی، تعریف یا طبقه‌بندی کرد. معیار مناسب‌تر، ماهیت خصوصی دسترسی به فرصت سرمایه‌گذاری، افق زمانی سرمایه‌گذاری و سازوکار خلق و تحقق بازده است."
     },

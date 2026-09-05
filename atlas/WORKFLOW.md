@@ -567,3 +567,60 @@ Reusable structure over page-specific markup.
 Provenance over convenience.
 
 A smaller verified graph is preferable to a larger graph containing unverified assertions.
+
+---
+
+## 24. Claim Versioning
+
+Published canonical Claims are immutable.
+
+If a published Claim must be corrected, updated or materially
+revised:
+
+1. Do not edit the existing canonical Claim in place.
+2. Create a new Claim.
+3. Increment the `revision`.
+4. Set `supersedes` to the previous Claim ID.
+5. Preserve the original Claim and its provenance.
+6. Do not create `superseded_by` as a second stored source of truth;
+   reverse lineage may be derived from `supersedes`.
+
+Revision rules:
+
+- Revision 1 has no `supersedes`.
+- Revision N must supersede Revision N-1.
+- A Claim must not supersede itself.
+- A Claim lineage must not contain cycles.
+- Only one successor may supersede a given Claim.
+
+`transaction_time` should only be populated when the recording
+time and recorder are actually known. Historical values must not
+be invented.
+
+---
+
+## 25. Claim Review Metadata
+
+Claim review metadata is optional operational metadata stored directly
+on the canonical Claim.
+
+Supported fields:
+
+- `last_reviewed` — the month in which the Claim was last reviewed,
+  using the Jalali `YYYY-MM` format.
+- `review_cycle_months` — the intended review interval as a positive
+  integer number of months.
+
+Review-cycle rules:
+
+1. `last_reviewed` may be omitted when no review date is known.
+2. `review_cycle_months` may be omitted.
+3. When `last_reviewed` exists but `review_cycle_months` is omitted,
+   the default review cycle is 6 months.
+4. A Claim is considered overdue only when the elapsed time is greater
+   than the applicable review cycle.
+5. An overdue Claim produces a validation warning; it does not fail
+   Atlas validation.
+6. Historical `last_reviewed` values must not be invented or backfilled.
+7. Review metadata is operational metadata and does not replace
+   provenance, evidence or source fields.

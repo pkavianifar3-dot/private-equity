@@ -3,11 +3,15 @@
   "claims": [
     {
       "id": "claim:kayson-invested-in-achareh",
+      "revision": 1,
       "subject": "organization:kayson-group",
       "predicate": "INVESTED_IN",
       "object": "organization:achareh",
       "status": "VERIFIED",
-      "confidence": "HIGH"
+      "confidence": "HIGH",
+      "evidenceRefs": [
+        "evidence:kayson-invested-achareh-01"
+      ]     
     }
   ]
 }

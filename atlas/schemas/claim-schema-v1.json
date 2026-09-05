@@ -5,6 +5,7 @@
 
   "required": [
     "id",
+    "revision",
     "subject",
     "predicate",
     "status",
@@ -15,6 +16,36 @@
     "id": {
       "type": "string",
       "pattern": "^claim:[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+
+    "revision": {
+      "type": "integer",
+      "minimum": 1
+    },
+
+    "supersedes": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^claim:[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+
+    "transaction_time": {
+      "type": "object",
+      "required": [
+        "recorded_at",
+        "recorded_by"
+      ],
+      "properties": {
+        "recorded_at": {
+          "type": "string"
+        },
+        "recorded_by": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
     },
 
     "subject": {
@@ -97,9 +128,45 @@
 
     "evidenceRefs": {
       "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
       "items": {
-        "type": "string"
+        "type": "string",
+        "pattern": "^evidence:[a-z0-9]+(?:-[a-z0-9]+)*$"
       }
+    },
+
+    "last_reviewed": {
+      "type": "string",
+      "pattern": "^(13|14)\\d{2}-(0[1-9]|1[0-2])$"
+    },
+
+    "review_cycle_months": {
+      "type": "integer",
+      "minimum": 1
+    },
+
+    "claim_origin": {
+      "type": "string",
+      "enum": [
+        "sourced",
+        "internal_analysis"
+      ]
+    },
+
+    "based_on": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^claim:[a-z0-9]+(?:-[a-z0-9]+)*$"
+      }
+    },
+
+    "authored_in": {
+      "type": "string",
+      "pattern": "^research:[a-z0-9]+(?:-[a-z0-9]+)*$"
     }
   },
 
@@ -129,5 +196,57 @@
     }
   ],
 
-  "additionalProperties": false
+  "additionalProperties": false,
+
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "claim_origin": {
+            "const": "sourced"
+          }
+        },
+        "required": [
+          "claim_origin"
+        ]
+      },
+      "then": {
+        "required": [
+          "evidenceRefs"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "claim_origin": {
+            "const": "internal_analysis"
+          }
+        },
+        "required": [
+          "claim_origin"
+        ]
+      },
+      "then": {
+        "required": [
+          "based_on",
+          "authored_in"
+        ]
+      }
+    },
+    {
+      "if": {
+        "not": {
+          "required": [
+            "claim_origin"
+          ]
+        }
+      },
+      "then": {
+        "required": [
+          "evidenceRefs"
+        ]
+      }
+    }
+  ]
 }
