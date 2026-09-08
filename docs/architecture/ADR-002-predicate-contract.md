@@ -47,3 +47,15 @@ This ADR does not migrate Claims, rename predicates, add inferred inverses, chan
 - EXECUTIVE_ROLE_AT asserts a general executive role and may carry a role value.
 - INVESTMENT_EXECUTIVE_OF asserts a specialized investment-executive relationship.
 - These predicates are not interchangeable, and one must not be inferred from another without explicit evidence.
+
+
+## Reserved Predicate Review
+
+The current taxonomy contains 14 predicates with no live Claims. They remain reserved and must not be populated speculatively.
+
+Two predicates require explicit architectural review before activation:
+
+- `VICE_CHAIR_OF`: the current rule targets `Organization`, while `CHAIR_OF` targets `OrganizationUnit`. This mismatch is intentionally unresolved until the canonical organization/organization-unit boundary is settled.
+- `SUPPORTED_BY`: this is a knowledge-object relation from `Claim` to `Source` or `Evidence`, not a domain-entity relationship. It remains reserved pending the Claim/Evidence/Source relationship model.
+
+The remaining unused predicates are reserved without changing their current rules or creating inferred Claims.
