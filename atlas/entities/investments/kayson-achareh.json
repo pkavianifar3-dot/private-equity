@@ -7,10 +7,8 @@
     "en": "Kayson Investment in Achareh"
   },
   "lifecycleStatus": "REVIEW",
-  "metadata": {
-    "investor": "organization:kayson-group",
-    "target": "organization:achareh",
-    "investment_status": "announced",
-    "date_status": "unknown"
-  }
+  "investor": "organization:kayson-group",
+  "target": "organization:achareh",
+  "investment_status": "announced",
+  "date_status": "unknown"
 }

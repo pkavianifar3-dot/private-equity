@@ -8,9 +8,7 @@
   },
   "aliases": [],
   "lifecycleStatus": "REVIEW",
-  "metadata": {
-    "organization_type": "financial_group",
-    "national_id": null,
-    "registration_number": null
-  }
+  "organization_type": "financial_group",
+  "national_id": null,
+  "registration_number": null
 }
