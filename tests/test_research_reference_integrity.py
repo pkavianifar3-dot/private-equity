@@ -54,14 +54,20 @@ class ResearchReferenceIntegrityTests(unittest.TestCase):
     def validate(self):
         errors = []
 
+        entity_by_id = {"concept:subject": {"type": "Concept"}, "concept:object": {"type": "Concept"}}
+        entity_ids = set(entity_by_id)
+
         VALIDATOR.validate_research_integrity(
-            entity_ids=set(),
+            entity_by_id=entity_by_id,
+            entity_ids=entity_ids,
             claim_ids={
                 "claim:known-claim",
             },
             source_ids={
                 "source:known-source",
             },
+            relation_types={"INCLUDES"},
+            relation_rules={"INCLUDES": {"subject_types": ["Concept"], "object_types": ["Concept"]}},
             errors=errors,
         )
 
@@ -133,6 +139,49 @@ class ResearchReferenceIntegrityTests(unittest.TestCase):
             "research/content/test-research.json:section-one",
             errors[0],
         )
+
+
+    def test_unknown_research_predicate_fails(self):
+        errors = []
+        VALIDATOR.validate_research_claim_integrity(
+            [{"id": "research-claim:test", "subject": "concept:subject", "predicate": "UNKNOWN", "object": "concept:object"}],
+            {"concept:subject": {"type": "Concept"}, "concept:object": {"type": "Concept"}},
+            {"concept:subject", "concept:object"},
+            {"INCLUDES"},
+            {"INCLUDES": {"subject_types": ["Concept"], "object_types": ["Concept"]}},
+            errors,
+        )
+        self.assertEqual(len(errors), 1)
+        self.assertIn("unknown research predicate UNKNOWN", errors[0])
+
+
+    def test_research_object_type_mismatch_fails(self):
+        errors = []
+        VALIDATOR.validate_research_claim_integrity(
+            [{"id": "research-claim:test", "subject": "concept:subject", "predicate": "INCLUDES", "object": "organization:object"}],
+            {"concept:subject": {"type": "Concept"}, "organization:object": {"type": "Organization"}},
+            {"concept:subject", "organization:object"},
+            {"INCLUDES"},
+            {"INCLUDES": {"subject_types": ["Concept"], "object_types": ["Concept"]}},
+            errors,
+        )
+        self.assertEqual(len(errors), 1)
+        self.assertIn("research object type Organization is not allowed for INCLUDES", errors[0])
+
+
+    def test_research_predicate_taxonomy_is_enforced(self):
+        errors = []
+        VALIDATOR.validate_research_claim_integrity(
+            [{"id": "research-claim:test", "subject": "concept:subject", "predicate": "INCLUDES", "object": "concept:object"}],
+            {"concept:subject": {"type": "Concept"}, "concept:object": {"type": "Concept"}},
+            {"concept:subject", "concept:object"},
+            {"INCLUDES"},
+            {"INCLUDES": {"subject_types": ["Concept"], "object_types": ["Concept"]}},
+            errors,
+            {"BROADER_THAN"},
+        )
+        self.assertEqual(len(errors), 1)
+        self.assertIn("is not allowed in Research", errors[0])
 
 
 if __name__ == "__main__":

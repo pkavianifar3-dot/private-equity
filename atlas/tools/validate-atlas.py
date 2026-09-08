@@ -410,6 +410,11 @@ def load_taxonomies(errors):
         errors
     )
 
+    research_predicate_types_data = load_registry(
+        ROOT.parent / "research" / "taxonomies" / "research-predicate-types-v1.json",
+        errors
+    )
+
     relation_types = {
         item["id"]
         for item in relation_types_data.get(
@@ -450,6 +455,16 @@ def load_taxonomies(errors):
         and "id" in item
     }
 
+    research_predicate_types = {
+        item["id"]
+        for item in research_predicate_types_data.get(
+            "predicate_types",
+            []
+        )
+        if isinstance(item, dict)
+        and "id" in item
+    }
+
     for relation in relation_rules:
         if relation not in relation_types:
             errors.append(
@@ -468,7 +483,8 @@ def load_taxonomies(errors):
         relation_types,
         relation_rules,
         role_types,
-        source_types
+        source_types,
+        research_predicate_types
     )
 
 
@@ -938,11 +954,60 @@ def validate_evidence_integrity(
                 f"{claim_id}: evidenceRefs do not match "
                 f"Evidence records"
             )
+def validate_research_claim_integrity(
+    research_claims,
+    entity_by_id,
+    entity_ids,
+    relation_types,
+    relation_rules,
+    errors,
+    research_predicate_types=None
+):
+    for claim in research_claims:
+        claim_id = claim.get("id", "<missing-id>")
+        subject_id = claim.get("subject")
+        predicate = claim.get("predicate")
+        object_id = claim.get("object")
+
+        if research_predicate_types is not None and predicate not in research_predicate_types:
+            errors.append(
+                f"{claim_id}: predicate "
+                f"{predicate} is not allowed in Research"
+            )
+        if predicate not in relation_types:
+            errors.append(
+                f"{claim_id}: unknown research predicate "
+                f"{predicate}"
+            )
+            continue    
+        rule = relation_rules.get(predicate)
+        if not rule:                    
+            continue
+        if subject_id in entity_by_id:
+            subject_type = entity_by_id[subject_id].get("type")
+            allowed_subject_types = rule.get("subject_types", [])
+            if allowed_subject_types and subject_type not in allowed_subject_types:
+                errors.append(
+                    f"{claim_id}: research subject type "
+                    f"{subject_type} is not allowed for {predicate}"
+                )                 
+        if object_id in entity_by_id:
+            object_type = entity_by_id[object_id].get("type")
+            allowed_object_types = rule.get("object_types", [])
+            if allowed_object_types and object_type not in allowed_object_types:                
+                errors.append(
+                    f"{claim_id}: research object type "
+                    f"{object_type} is not allowed for {predicate}"
+                )
 def validate_research_integrity(
+    entity_by_id,
     entity_ids,
     claim_ids,
     source_ids,
-    errors
+    relation_types,
+    relation_rules,
+    errors,
+    research_predicate_types=None
 ):
     """
     Validate Research mappings against canonical Atlas data.
@@ -990,6 +1055,15 @@ def validate_research_integrity(
                 "'claims' must be an array"
             )
             research_claims = []
+        validate_research_claim_integrity(
+            research_claims,
+            entity_by_id,
+            entity_ids,
+            relation_types,
+            relation_rules,
+            errors,
+            research_predicate_types,
+        )
 
         for claim in research_claims:
             claim_id = claim.get(
@@ -1181,7 +1255,7 @@ def main():
 
     entity_by_id, entity_ids = collect_entities(errors)
 
-    relation_types, relation_rules, role_types, source_types = load_taxonomies(
+    relation_types, relation_rules, role_types, source_types, research_predicate_types = load_taxonomies(
         errors
     )
 
@@ -1226,10 +1300,14 @@ def main():
         errors
     )
     validate_research_integrity(
+        entity_by_id,
         entity_ids,
         claim_ids,
         source_ids,
-        errors
+        relation_types,
+        relation_rules,
+        errors,
+        research_predicate_types
     )
     validate_research_documents(errors)    
     if errors:
