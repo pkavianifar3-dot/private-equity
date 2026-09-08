@@ -1,0 +1,122 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Private Capital Atlas Entity Schema v2",
+  "description": "Canonical data contract for Atlas entities in Architecture v1.",
+  "type": "object",
+  "required": [
+    "version",
+    "id",
+    "type",
+    "name",
+    "lifecycleStatus"
+  ],
+  "properties": {
+    "version": {
+      "type": "string",
+      "const": "2.0"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z]+:[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "Person",
+        "Organization",
+        "OrganizationUnit",
+        "Project",
+        "Investment",
+        "Fund",
+        "Sector",
+        "Concept",
+        "InvestorCategory"
+      ]
+    },
+    "name": {
+      "type": "object",
+      "required": ["fa", "en"],
+      "properties": {
+        "fa": {
+          "type": "string",
+          "minLength": 1
+        },
+        "en": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "aliases": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "honorific": {
+      "type": "object",
+      "properties": {
+        "fa": {
+          "type": "string"
+        },
+        "en": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "lifecycleStatus": {
+      "type": "string",
+      "enum": [
+        "DRAFT",
+        "REVIEW",
+        "PUBLISHED",
+        "ARCHIVED"
+      ]
+    },
+    "domains": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "organization_type": {
+      "type": "string"
+    },
+    "legal_name_status": {
+      "type": "string"
+    },
+    "national_id": {
+      "type": ["string", "null"]
+    },
+    "registration_number": {
+      "type": ["string", "null"]
+    },
+    "project_type": {
+      "type": "string"
+    },
+    "investment_stage": {
+      "type": "string"
+    },
+    "investor": {
+      "type": "string",
+      "pattern": "^[a-z]+:[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "target": {
+      "type": "string",
+      "pattern": "^[a-z]+:[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "investment_status": {
+      "type": "string"
+    },
+    "date_status": {
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}

@@ -10,6 +10,18 @@ from jsonschema import Draft202012Validator, RefResolver
 ROOT = Path(__file__).resolve().parents[1]
 SCHEMAS_DIR = ROOT / "schemas"
 
+ENTITY_TYPE_NAMESPACES = {
+    "Person": "person",
+    "Organization": "organization",
+    "OrganizationUnit": "organization",
+    "Project": "project",
+    "Investment": "investment",
+    "Fund": "fund",
+    "Sector": "sector",
+    "Concept": "concept",
+    "InvestorCategory": "investor-category",
+}
+
 
 def load_json(path):
     with path.open("r", encoding="utf-8") as f:
@@ -64,6 +76,54 @@ def load_registry(path, errors):
         return {}
 
 
+def validate_entity_identity(entity, label, errors):
+    entity_id = entity.get("id")
+    entity_type = entity.get("type")
+
+    namespace = ENTITY_TYPE_NAMESPACES.get(entity_type)
+
+    if not namespace or not entity_id:
+        return
+
+    expected_prefix = f"{namespace}:"
+
+    if not entity_id.startswith(expected_prefix):
+        errors.append(
+            f"{label}: entity id namespace does not match "
+            f"type {entity_type}: expected prefix "
+            f"{expected_prefix!r}, got {entity_id!r}"
+        )
+
+
+ENTITY_TYPE_FIELDS = {
+    "Person": {"honorific", "domains"},
+    "Organization": {"organization_type", "legal_name_status", "national_id", "registration_number"},
+    "OrganizationUnit": set(),
+    "Project": {"project_type", "investment_stage"},
+    "Investment": {"investor", "target", "investment_status", "date_status"},
+    "Fund": set(), "Sector": set(), "Concept": set(), "InvestorCategory": set(),
+}
+
+
+def validate_entity_type_fields(entity, label, errors):
+    allowed = ENTITY_TYPE_FIELDS.get(entity.get("type"), set())
+    fields = set(entity) & set().union(*ENTITY_TYPE_FIELDS.values())
+    for field in fields - allowed:
+        errors.append("{}: field {} is not valid for entity type {}".format(label, field, entity.get("type")))
+
+
+def validate_entity_domains(entity, entity_by_id, label, errors):
+    domains = entity.get("domains")
+    if domains is None:
+        return
+    for domain_id in domains:
+        target = entity_by_id.get(domain_id)
+        if target is None:
+            errors.append(f"{label}: domain {domain_id} is missing from entities/index.json")
+        elif target.get("type") != "Sector":
+            errors.append(f"{label}: domain {domain_id} must reference a Sector")
+
+
 def collect_entities(errors):
     index_path = ROOT / "entities" / "index.json"
     index = load_registry(index_path, errors)
@@ -95,6 +155,8 @@ def collect_entities(errors):
             errors
         )
 
+        validate_entity_identity(entity, f"entities/index.json:{entity_id}", errors)
+
         if entity_id in entity_ids:
             errors.append(
                 f"Duplicate entity ID: {entity_id}"
@@ -113,10 +175,13 @@ def collect_entities(errors):
 
         add_schema_errors(
             data,
-            SCHEMAS_DIR / "atlas-schema-v1.json",
+            SCHEMAS_DIR / "atlas-schema-v2.json",
             str(path.relative_to(ROOT)),
             errors
         )
+
+        validate_entity_identity(data, str(path.relative_to(ROOT)), errors)
+        validate_entity_type_fields(data, str(path.relative_to(ROOT)), errors)
 
         entity_id = data.get("id")
 
@@ -134,6 +199,7 @@ def collect_entities(errors):
             continue
 
         indexed = entity_by_id[entity_id]
+        validate_entity_domains(data, entity_by_id, str(path.relative_to(ROOT)), errors)
 
         if indexed.get("name") != data.get("name"):
             errors.append(
