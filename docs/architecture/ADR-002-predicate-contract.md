@@ -59,3 +59,8 @@ Two predicates require explicit architectural review before activation:
 - `SUPPORTED_BY`: this is a knowledge-object relation from `Claim` to `Source` or `Evidence`, not a domain-entity relationship. It remains reserved pending the Claim/Evidence/Source relationship model.
 
 The remaining unused predicates are reserved without changing their current rules or creating inferred Claims.
+
+
+## Claim / Evidence / Source Boundary
+
+The current provenance model is `Claim <- Evidence -> Source`. Evidence is a first-class knowledge object that references exactly one Claim and one Source in the current schema. Claim status such as `SUPPORTED` is epistemic status and is distinct from the `SUPPORTED_BY` predicate. Therefore `SUPPORTED_BY` remains a reserved knowledge-object predicate and is not used as an alternative provenance path unless the provenance model is explicitly redesigned.
