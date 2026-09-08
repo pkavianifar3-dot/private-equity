@@ -40,3 +40,10 @@ Unused predicates must not be populated speculatively.
 ## Non-Goals
 
 This ADR does not migrate Claims, rename predicates, add inferred inverses, change URLs, or change renderer behavior.
+
+## Predicate Boundaries
+
+- CEO_OF asserts a CEO relationship.
+- EXECUTIVE_ROLE_AT asserts a general executive role and may carry a role value.
+- INVESTMENT_EXECUTIVE_OF asserts a specialized investment-executive relationship.
+- These predicates are not interchangeable, and one must not be inferred from another without explicit evidence.
