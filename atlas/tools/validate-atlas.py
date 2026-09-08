@@ -961,7 +961,8 @@ def validate_research_claim_integrity(
     relation_types,
     relation_rules,
     errors,
-    research_predicate_types=None
+    research_predicate_types=None,
+    evidence_records=None
 ):
     for claim in research_claims:
         claim_id = claim.get("id", "<missing-id>")
@@ -1007,7 +1008,8 @@ def validate_research_integrity(
     relation_types,
     relation_rules,
     errors,
-    research_predicate_types=None
+    research_predicate_types=None,
+    evidence_records=None
 ):
     """
     Validate Research mappings against canonical Atlas data.
@@ -1064,6 +1066,29 @@ def validate_research_integrity(
             errors,
             research_predicate_types,
         )
+
+        if evidence_records is not None:
+            evidence_by_id = {
+                item.get("id"): item
+                for item in evidence_records
+                if isinstance(item, dict) and item.get("id")
+            }
+            for claim in research_claims:
+                claim_id = claim.get("id", "<missing-id>")
+                canonical_claim_ref = claim.get("canonicalClaimRef")
+                source_refs = set(claim.get("sourceRefs", []))
+                for source_ref in source_refs:
+                    if source_ref not in source_ids:
+                        errors.append(f"{claim_id}: unknown research source {source_ref}")
+                for evidence_ref in claim.get("evidenceRefs", []):
+                    evidence = evidence_by_id.get(evidence_ref)
+                    if evidence is None:
+                        errors.append(f"{claim_id}: unknown research evidence {evidence_ref}")
+                        continue
+                    if canonical_claim_ref and evidence.get("claim") != canonical_claim_ref:
+                        errors.append(f"{claim_id}: evidence {evidence_ref} does not support {canonical_claim_ref}")
+                    if evidence.get("source") not in source_refs:
+                        errors.append(f"{claim_id}: evidence {evidence_ref} source is not declared in sourceRefs")
 
         for claim in research_claims:
             claim_id = claim.get(
@@ -1307,7 +1332,8 @@ def main():
         relation_types,
         relation_rules,
         errors,
-        research_predicate_types
+        research_predicate_types,
+        evidence_records
     )
     validate_research_documents(errors)    
     if errors:
