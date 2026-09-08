@@ -72,12 +72,13 @@
     },
 
     "confidence": {
-      "type": [
-        "number",
-        "null"
-      ],
-      "minimum": 0,
-      "maximum": 1
+      "type": "string",
+      "enum": [
+        "HIGH",
+        "MEDIUM",
+        "LOW",
+        "UNKNOWN"
+      ]
     },
 
     "decision": {
@@ -86,12 +87,17 @@
         "REVIEW",
         "ACCEPT",
         "REJECT",
-        "PROMOTE_TO_ATLAS"
+        "PROMOTED_TO_ATLAS"
       ]
     },
 
     "notes": {
       "type": "string"
+    },
+
+    "canonicalClaimRef": {
+      "type": "string",
+      "pattern": "^claim:[a-z0-9]+(?:-[a-z0-9]+)*$"
     }
   },
 

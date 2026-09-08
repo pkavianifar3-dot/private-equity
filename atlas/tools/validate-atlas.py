@@ -972,6 +972,13 @@ def validate_research_integrity(
             errors
         )
 
+        add_schema_errors(
+            research_claims_data,
+            research_root / "schemas" / "candidate-claims-schema-v1.json",
+            "research/mappings/private-capital-claims-v1.json",
+            errors
+        )
+
         research_claims = research_claims_data.get(
             "claims",
             []
