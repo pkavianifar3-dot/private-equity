@@ -1,3 +1,4 @@
+import re
 import json
 import sys
 from pathlib import Path
@@ -488,6 +489,41 @@ def load_taxonomies(errors):
     )
 
 
+def validate_claim_temporal_integrity(claim, errors):
+    claim_id = claim.get("id", "<missing-id>")
+    temporal = claim.get("temporal")
+    if temporal is None:
+        return
+
+    precision = temporal.get("precision")
+    start = temporal.get("start")
+    end = temporal.get("end")
+
+    patterns = {
+        "year": r"^[0-9]{4}$",
+        "month": r"^[0-9]{4}-[0-9]{2}$",
+        "day": r"^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+    }
+
+    if precision == "unknown":
+        if start is not None or end is not None:
+            errors.append(f"{claim_id}: unknown precision requires null start/end")
+        return
+
+    pattern = patterns.get(precision)
+    if not pattern:
+        errors.append(f"{claim_id}: unknown temporal precision {precision}")
+        return
+
+
+    if isinstance(start, str) and isinstance(end, str) and start > end:
+        errors.append(f"{claim_id}: temporal start must not be after end")
+    for field, value in (("start", start), ("end", end)):
+        if value is not None and (not isinstance(value, str) or not re.match(pattern, value)):
+            errors.append(
+                f"{claim_id}: temporal {field} does not match precision {precision}"
+            )
+
 def validate_claim_integrity(
     claims,
     entity_by_id,
@@ -498,6 +534,7 @@ def validate_claim_integrity(
     errors
 ):
     for claim in claims:
+        validate_claim_temporal_integrity(claim, errors)
         claim_id = claim.get("id", "<missing-id>")
         subject_id = claim.get("subject")
         predicate = claim.get("predicate")
