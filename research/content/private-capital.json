@@ -25,21 +25,21 @@
     "concept:private-equity"
   ],
 
-  "claimRefs": [],
-"candidateClaimRefs": [
-  "research-claim:private-capital-broader-than-private-equity",
-  "research-claim:private-capital-includes-private-equity",
-  "research-claim:private-capital-includes-private-credit",
-  "research-claim:private-capital-includes-real-assets",
-  "research-claim:private-capital-includes-venture-capital",
-  "research-claim:private-capital-includes-growth-capital",
-  "research-claim:private-capital-boundaries-vary",
-  "research-claim:private-credit-lender-position",
-  "research-claim:private-credit-return-contractual",
-  "research-claim:private-credit-and-private-equity-linked",
-  "research-claim:real-assets-include-physical-assets",
-  "research-claim:private-capital-private-access"
-],
+  "claimRefs": [
+    "claim:private-capital-broader-than-private-equity",
+    "claim:private-capital-includes-private-equity",
+    "claim:private-capital-includes-private-credit",
+    "claim:private-capital-includes-real-assets",
+    "claim:private-capital-includes-venture-capital",
+    "claim:private-capital-includes-growth-capital",
+    "claim:private-capital-boundaries-vary",
+    "claim:private-credit-lender-position",
+    "claim:private-credit-return-contractual",
+    "claim:private-credit-and-private-equity-linked",
+    "claim:real-assets-include-physical-assets",
+    "claim:private-capital-private-access"
+  ],
+"candidateClaimRefs": [],
   "evidenceRefs": [],
 
   "sourceRefs": [],
