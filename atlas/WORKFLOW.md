@@ -416,7 +416,11 @@ publisher
 
 url
 
+Legacy/deprecated field:
+
 citation_refs
+
+Citations should be derived from the Evidence → Source chain; new data must not introduce citation_refs.
 
 Unknown values remain null.
 
