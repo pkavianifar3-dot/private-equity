@@ -10,30 +10,7 @@
             .replace(/'/g, "&#039;");
     }
 
-    function entityURL(entityId) {
-        if (typeof entityId !== "string" || !entityId.includes(":")) {
-            return null;
-        }
-
-        const type = entityId.split(":")[0];
-
-        switch (type) {
-            case "person":
-                return `../atlas/person.html?id=${encodeURIComponent(entityId)}`;
-
-            case "organization":
-                return `../atlas/organization.html?id=${encodeURIComponent(entityId)}`;
-
-            case "investment":
-                return `../atlas/investment.html?id=${encodeURIComponent(entityId)}`;
-
-            case "concept":
-                return `../atlas/concept.html?id=${encodeURIComponent(entityId)}`;
-
-            default:
-                return null;
-        }
-    }
+    const entityURL = (entityId) => global.PrivateCapitalURL.entityURL(entityId, "research");
 
     function renderTextWithMentions(text, blockId, mentions) {
         const value = String(text || "");

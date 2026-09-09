@@ -1,6 +1,8 @@
 (function () {
     "use strict";
 
+    const entityURL = (entityId) => window.PrivateCapitalURL.entityURL(entityId, "atlas");
+
     const ATLAS_ROOT =
     window.location.pathname.includes("/atlas/")
         ? "."
@@ -185,7 +187,7 @@
                 "propertyID": "PrivateCapitalAtlasID",
                 "value": entity.id
             },
-            "url": `${SITE_ORIGIN}/atlas/person.html?id=${encodeURIComponent(entityId)}`
+            "url": window.PrivateCapitalURL.entityCanonicalURL(entityId)
         };
 
         if (entity.name?.en) {
@@ -215,7 +217,7 @@
                 "propertyID": "PrivateCapitalAtlasID",
                 "value": entity.id
             },
-            "url": `${SITE_ORIGIN}/atlas/organization.html?id=${encodeURIComponent(entityId)}`
+            "url": window.PrivateCapitalURL.entityCanonicalURL(entityId)
         };
 
         if (entity.name?.en) {
@@ -702,32 +704,6 @@
 
         return entity.name?.en || "";
     }
-function entityURL(entityId) {
-    if (typeof entityId !== "string" || !entityId.includes(":")) {
-        return null;
-    }
-
-    const parts = entityId.split(":");
-    const type = parts[0];
-
-    switch (type) {
-        case "person":
-            return `person.html?id=${encodeURIComponent(entityId)}`;
-
-        case "organization":
-            return `organization.html?id=${encodeURIComponent(entityId)}`;
-
-        case "investment":
-            return `investment.html?id=${encodeURIComponent(entityId)}`;
-
-        case "concept":
-            return `concept.html?id=${encodeURIComponent(entityId)}`;
-
-        default:
-            return null;
-    }
-}
-
     function renderClaimCard(
         claim,
         entityIndex,
@@ -1905,7 +1881,7 @@ async function renderOrganization(entityId) {
     applyPageSEO({
         title: `${entity.name?.fa || ""} | اطلس | Private Capital`,
         description: `صفحه اطلس ${entity.name?.fa || ""} در Private Capital.`,
-        url: `${SITE_ORIGIN}/atlas/organization.html?id=${encodeURIComponent(entityId)}`
+        url: window.PrivateCapitalURL.entityCanonicalURL(entityId)
     });
 
     injectJSONLD(
@@ -2317,7 +2293,7 @@ function renderConceptBreadcrumbs(
                 "propertyID": "PrivateCapitalAtlasID",
                 "value": entity.id
             },
-            "url": `${SITE_ORIGIN}/atlas/concept.html?id=${encodeURIComponent(entityId)}`
+            "url": window.PrivateCapitalURL.entityCanonicalURL(entityId)
         };
     
         if (entity.name?.en) {
@@ -2629,10 +2605,7 @@ function renderConceptBreadcrumbs(
             description:
                 `صفحه مفهوم ${entity.name?.fa || ""} در Private Capital.`,
     
-            url:
-                `${SITE_ORIGIN}/atlas/concept.html?id=${encodeURIComponent(
-                    entityId
-                )}`
+            url: window.PrivateCapitalURL.entityCanonicalURL(entityId)
         });
         injectJSONLD(
             buildConceptJSONLD(
@@ -2656,7 +2629,7 @@ function renderConceptBreadcrumbs(
                 "propertyID": "PrivateCapitalAtlasID",
                 "value": entity.id
             },
-            "url": `${SITE_ORIGIN}/atlas/investment.html?id=${encodeURIComponent(entityId)}`
+            "url": window.PrivateCapitalURL.entityCanonicalURL(entityId)
         };
     
         if (entity.name?.en) {
@@ -3080,10 +3053,7 @@ function renderConceptBreadcrumbs(
             description:
                 `صفحه سرمایه‌گذاری ${entity.name?.fa || ""} در Private Capital.`,
     
-            url:
-                `${SITE_ORIGIN}/atlas/investment.html?id=${encodeURIComponent(
-                    entityId
-                )}`
+            url: window.PrivateCapitalURL.entityCanonicalURL(entityId)
         });
         injectJSONLD(
             buildInvestmentJSONLD(
@@ -3296,7 +3266,7 @@ ${renderEvidenceSection(
             description: currentRoleClaim
                 ? `${entity.name?.fa || ""}؛ ${relationLabel(currentRoleClaim.predicate)} ${getEntityName(entityIndex, currentRoleClaim.object)}.`
                 : `صفحه اطلس ${entity.name?.fa || ""} در Private Capital.`,
-            url: `${SITE_ORIGIN}/atlas/person.html?id=${encodeURIComponent(entityId)}`
+            url: window.PrivateCapitalURL.entityCanonicalURL(entityId)
         });
 
         injectJSONLD(
