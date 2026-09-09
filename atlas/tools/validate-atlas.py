@@ -1037,6 +1037,51 @@ def validate_research_claim_integrity(
                     f"{claim_id}: research object type "
                     f"{object_type} is not allowed for {predicate}"
                 )
+def validate_research_citation_integrity(research_data, source_ids, evidence_records, errors):
+    citations = research_data.get("citations", [])
+    if not isinstance(citations, list):
+        return
+
+    evidence_by_id = {e.get("id"): e for e in (evidence_records or []) if isinstance(e, dict) and e.get("id")}
+    content_blocks = {block.get("id"): block for section in research_data.get("sections", []) if isinstance(section, dict) for block in section.get("content", []) if isinstance(block, dict) and block.get("id")}
+    citation_ids = set()
+
+    for citation in citations:
+        citation_id = citation.get("id", "<missing-citation-id>")
+        if citation_id in citation_ids:
+            errors.append(f"{citation_id}: duplicate citation id")
+        citation_ids.add(citation_id)
+
+        source_ref = citation.get("sourceRef")
+        if source_ref not in source_ids:
+            errors.append(f"{citation_id}: unknown citation source {source_ref}")
+
+        evidence_ref = citation.get("evidenceRef")
+        if evidence_ref is not None and evidence_ref not in evidence_by_id:
+            errors.append(f"{citation_id}: unknown citation evidence {evidence_ref}")
+        if evidence_ref is not None and evidence_ref in evidence_by_id and evidence_by_id[evidence_ref].get("source") != source_ref:
+            errors.append(f"{citation_id}: citation evidence source mismatch")
+
+        block_id = citation.get("contentBlockId")
+        if block_id is not None and block_id not in content_blocks:
+            errors.append(f"{citation_id}: unknown citation content block {block_id}")
+
+        start = citation.get("start")
+        end = citation.get("end")
+        if (start is None) != (end is None):
+            errors.append(f"{citation_id}: citation start and end must be provided together")
+        if (start is not None or end is not None) and block_id is None:
+            errors.append(f"{citation_id}: citation offsets require contentBlockId")
+        if start is not None and end is not None and start > end:
+            errors.append(f"{citation_id}: citation start must not be after end")
+        if block_id in content_blocks and start is not None and end is not None:
+            block = content_blocks[block_id]
+            text = block.get("text")
+            if not isinstance(text, str):
+                errors.append(f"{citation_id}: citation offsets require a textual content block")
+            elif end > len(text):
+                errors.append(f"{citation_id}: citation end exceeds content block text length")
+
 def validate_research_integrity(
     entity_by_id,
     entity_ids,
@@ -1229,6 +1274,8 @@ def validate_research_integrity(
 
             if not isinstance(data, dict):
                 continue
+
+            validate_research_citation_integrity(data, source_ids, evidence_records, errors)
 
             sections = data.get("sections", [])
 

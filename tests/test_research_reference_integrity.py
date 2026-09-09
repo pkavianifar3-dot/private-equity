@@ -184,5 +184,34 @@ class ResearchReferenceIntegrityTests(unittest.TestCase):
         self.assertIn("is not allowed in Research", errors[0])
 
 
+    def test_unknown_citation_source_fails(self):
+        data = {"sections": [], "citations": [{"id": "citation:test", "sourceRef": "source:unknown-source"}]}
+        errors = []
+        VALIDATOR.validate_research_citation_integrity(data, {"source:known-source"}, [], errors)
+        self.assertEqual(len(errors), 1)
+        self.assertIn("unknown citation source source:unknown-source", errors[0])
+
+    def test_unknown_citation_content_block_fails(self):
+        data = {"sections": [], "citations": [{"id": "citation:test", "sourceRef": "source:known-source", "contentBlockId": "missing-block"}]}
+        errors = []
+        VALIDATOR.validate_research_citation_integrity(data, {"source:known-source"}, [], errors)
+        self.assertEqual(len(errors), 1)
+        self.assertIn("unknown citation content block missing-block", errors[0])
+
+    def test_unknown_citation_evidence_fails(self):
+        data = {"sections": [], "citations": [{"id": "citation:test", "sourceRef": "source:known-source", "evidenceRef": "evidence:unknown"}]}
+        errors = []
+        VALIDATOR.validate_research_citation_integrity(data, {"source:known-source"}, [], errors)
+        self.assertEqual(len(errors), 1)
+        self.assertIn("unknown citation evidence evidence:unknown", errors[0])
+
+    def test_citation_evidence_source_mismatch_fails(self):
+        data = {"sections": [], "citations": [{"id": "citation:test", "sourceRef": "source:other-source", "evidenceRef": "evidence:known"}]}
+        evidence = [{"id": "evidence:known", "source": "source:known-source"}]
+        errors = []
+        VALIDATOR.validate_research_citation_integrity(data, {"source:known-source", "source:other-source"}, evidence, errors)
+        self.assertEqual(len(errors), 1)
+        self.assertIn("citation evidence source mismatch", errors[0])
+
 if __name__ == "__main__":
     unittest.main()
