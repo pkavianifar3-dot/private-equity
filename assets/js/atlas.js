@@ -1418,20 +1418,6 @@ function renderEvidenceSection(
                                 <div class="atlas-source-item">
 
                                     ${
-                                        source.citation_refs?.length
-                                            ? `
-                                                <strong>
-                                                    ${source.citation_refs
-                                                        .map(
-                                                            ref =>
-                                                                `[${escapeHTML(ref)}]`
-                                                        )
-                                                        .join(" ")}
-                                                </strong>
-                                            `
-                                            : ""
-                                    }
-
                                     <div>
                                         ${escapeHTML(
                                             source.title_fa || ""
