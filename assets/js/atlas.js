@@ -948,10 +948,14 @@ const organizationURL = entityURL(claim.object);
         `;
     }
 
-    function renderContentSections(content) {
-    if (!content?.sections?.length) {
-        return "";
-    }
+    function renderContentSections(content, sourceData) {
+        const sourceIndex = {};
+        (sourceData?.sources || []).forEach(source => {
+            sourceIndex[source.id] = source;
+        });
+        if (!content?.sections?.length) {
+            return "";
+        }
 
     return `
         <section class="atlas-section">
@@ -986,23 +990,29 @@ const organizationURL = entityURL(claim.object);
                                                 ${escapeHTML(paragraph.text)}
 
                                                 ${
-                                                    paragraph.source_refs?.length
-    ? `
-        <span class="atlas-inline-sources">
-    ${paragraph.source_refs
-        .map(ref => `
-            <a
-                href="#source-${escapeHTML(ref)}"
-                class="atlas-source-ref"
-            >
-                [${escapeHTML(ref)}]
-            </a>
-        `)
-        .join(" ")
-    }
-</span>
-    `
-    : ""
+                                                    paragraph.sourceRefs?.length
+                                                        ? `
+                                                            <span class="atlas-inline-sources">
+                                                                ${paragraph.sourceRefs
+                                                                    .map(sourceId => {
+                                                                        const source = sourceIndex[sourceId];
+                                                                        if (!source) {
+                                                                            return "";
+                                                                        }
+                                                                        return `
+                                                                            <a
+                                                                                href="#source-${escapeHTML(sourceId)}"
+                                                                                class="atlas-source-ref"
+                                                                            >
+                                                                                [${escapeHTML(source.title_fa || "منبع")}]
+                                                                            </a>
+                                                                        `;
+                                                                    })
+                                                                    .join(" ")
+                                                                }
+                                                            </span>
+                                                        `
+                                                        : ""
                                                 }
                                             </p>
                                         `)
@@ -1404,9 +1414,11 @@ function renderEvidenceSection(
                                     منبع پشتیبان
                                 </div>
 
-                                <div class="atlas-source-item">
+                                <div
+                                    id="source-${escapeHTML(source.id)}"
+                                    class="atlas-source-item"
+                                >
 
-                                    ${
                                     <div>
                                         ${escapeHTML(
                                             source.title_fa || ""
@@ -3277,7 +3289,7 @@ ${
         : ""
 }
 
-${renderContentSections(content)}
+${renderContentSections(content, sourceData)}
 
 ${renderDataQualitySection(
     content,
