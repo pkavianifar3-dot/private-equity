@@ -915,7 +915,7 @@ const organizationURL = entityURL(claim.object);
 
     function renderContentSections(content, sourceData) {
         const sourceIndex =
-            global.PrivateCapitalProvenanceRenderer.buildSourceIndex(sourceData);
+            window.PrivateCapitalProvenanceRenderer.buildSourceIndex(sourceData);
         if (!content?.sections?.length) {
             return "";
         }
