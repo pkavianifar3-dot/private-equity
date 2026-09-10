@@ -1277,9 +1277,6 @@ function renderEvidenceSection(
     const evidenceList =
         evidenceData?.evidence || [];
 
-    const sourceList =
-        sourceData?.sources || [];
-
     if (!evidenceList.length) {
         return "";
     }
