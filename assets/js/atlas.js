@@ -2330,7 +2330,8 @@ function renderConceptBreadcrumbs(
         const [
             entity,
             conceptClaims,
-            registry
+            registry,
+            relationContract
         ] = await Promise.all([
             loadCachedJSON(entityFilePath(entityId)),
             loadClaimsForEntity(entityId),
