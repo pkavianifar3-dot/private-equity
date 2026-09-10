@@ -1284,11 +1284,8 @@ function renderEvidenceSection(
         return "";
     }
 
-    const sourceIndex = {};
-
-    sourceList.forEach(source => {
-        sourceIndex[source.id] = source;
-    });
+    const sourceIndex =
+        window.PrivateCapitalProvenanceRenderer.buildSourceIndex(sourceData);
 
     const claimIndex = {};
 
