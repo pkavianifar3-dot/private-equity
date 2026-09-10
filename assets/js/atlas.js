@@ -8,45 +8,10 @@
         ? "."
         : "atlas";
 
-    const jsonCache = new Map();
-    async function loadJSON(path) {
-        const response = await fetch(path, {
-            cache: "no-store"
-        });
-
-        if (!response.ok) {
-            throw new Error(`Atlas data load failed: ${path}`);
-        }
-
-        return response.json();
-    }
-    let relationContractCache = null;
-    async function loadRelationContract() {
-        if (relationContractCache) {
-            return relationContractCache;
-        }
-        relationContractCache = Promise.all([
-            loadCachedJSON(`${ATLAS_ROOT}/taxonomies/relation-types.json`),
-            loadCachedJSON(`${ATLAS_ROOT}/taxonomies/relation-rules.json`),
-            loadCachedJSON(`${ATLAS_ROOT}/taxonomies/relation-rendering.json`)
-        ]).then(([relationTypes, relationRules, relationRendering]) => ({ relationTypes, relationRules, relationRendering }));
-        return relationContractCache;
-    }
-
-    function loadCachedJSON(path) {
-        if (jsonCache.has(path)) {
-            return jsonCache.get(path);
-        }
-    
-        const promise = loadJSON(path).catch(error => {
-            jsonCache.delete(path);
-            throw error;
-        });
-    
-        jsonCache.set(path, promise);
-    
-        return promise;
-    }
+    const dataLoader = window.PrivateCapitalDataLoader.create(ATLAS_ROOT);
+    const loadJSON = dataLoader.loadJSON;
+    const loadCachedJSON = dataLoader.loadCachedJSON;
+    const loadRelationContract = dataLoader.loadRelationContract;
 
     function escapeHTML(value) {
         return String(value ?? "")
