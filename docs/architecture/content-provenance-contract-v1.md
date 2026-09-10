@@ -6,7 +6,7 @@ Person and other Atlas content may reference canonical Source records directly.
 
 ## Canonical field
 
-Use `section.sourceRefs` with canonical Source IDs such as `source:kian-direct-interview-1405`.
+Use `paragraph.sourceRefs` with canonical Source IDs such as `source:kian-direct-interview-1405` for Atlas content. Research section-level `sourceRefs` is a separate contract and is not changed by this document.
 
 ## Legacy field
 
