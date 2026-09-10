@@ -22,7 +22,7 @@
         }
 
         if (object === currentEntityId) {
-            return { predicate: claim.predicate, direction: "reverse", targetId: subject, label: rendering && rendering.reverse_label_fa ? rendering.reverse_label_fa : forwardLabel || null };
+            return { predicate: claim.predicate, direction: "reverse", targetId: subject, label: rendering && rendering.reverse_label_fa ? rendering.reverse_label_fa : null };
         }
 
         return null;

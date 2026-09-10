@@ -15,6 +15,7 @@ assert.deepStrictEqual(reverse, { predicate: "BROADER_THAN", direction: "reverse
 
 assert.strictEqual(PrivateCapitalRelationRenderer.renderRelation({ subject: "concept:a", predicate: "BROADER_THAN", object: "concept:a" }, "concept:a", types, rules, rendering), null);
 assert.strictEqual(PrivateCapitalRelationRenderer.renderRelation({ subject: "investment:a", predicate: "INVESTMENT_AMOUNT", object: null }, "investment:a", types, rules, rendering), null);
+assert.strictEqual(PrivateCapitalRelationRenderer.renderRelation({ subject: "concept:a", predicate: "BROADER_THAN", object: "concept:b" }, "concept:b", types, rules, { relations: {} }).label, null);
 assert.strictEqual(PrivateCapitalRelationRenderer.renderRelation({ subject: "person:a", predicate: "CEO_OF", object: "organization:b" }, "person:x", types, rules, rendering), null);
 
 console.log("Relation renderer runtime behavior PASSED");
