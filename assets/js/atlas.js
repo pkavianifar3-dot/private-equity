@@ -914,10 +914,8 @@ const organizationURL = entityURL(claim.object);
     }
 
     function renderContentSections(content, sourceData) {
-        const sourceIndex = {};
-        (sourceData?.sources || []).forEach(source => {
-            sourceIndex[source.id] = source;
-        });
+        const sourceIndex =
+            global.PrivateCapitalProvenanceRenderer.buildSourceIndex(sourceData);
         if (!content?.sections?.length) {
             return "";
         }

@@ -54,6 +54,7 @@ assert(atlasJS.includes("function renderContentSections(content, sourceData)"), 
 assert(atlasJS.includes("href=\"#source-${escapeHTML(sourceId)}\""), "content provenance link must target canonical source anchor");
 assert(atlasJS.includes("id=\"source-${escapeHTML(source.id)}\""), "source evidence item must expose canonical source anchor");
 assert(atlasJS.includes("window.PrivateCapitalDataLoader.create(ATLAS_ROOT)"), "atlas renderer must use the shared data loader");
+assert(atlasJS.includes("PrivateCapitalProvenanceRenderer"), "atlas renderer must use the shared provenance renderer");
 for (const page of ["atlas/concept.html", "atlas/investment.html", "atlas/organization.html", "atlas/person.html"]) {
     const html = require("fs").readFileSync(page, "utf8");
     assert(html.indexOf("core/data-loader.js") < html.indexOf("assets/js/atlas.js"), `${page} must load data-loader before atlas.js`);
