@@ -1,5 +1,14 @@
 import json
+import importlib.util
 import unittest
+from pathlib import Path
+
+SPEC = importlib.util.spec_from_file_location(
+    "validate_atlas",
+    Path("atlas/tools/validate-atlas.py")
+)
+VALIDATOR = importlib.util.module_from_spec(SPEC)
+SPEC.loader.exec_module(VALIDATOR)
 
 
 class PredicateArchitectureTests(unittest.TestCase):
@@ -10,9 +19,6 @@ class PredicateArchitectureTests(unittest.TestCase):
             rules = {item["relation"] for item in json.load(f)["rules"]}
         self.assertEqual(relation_types, rules)
 
-
-if __name__ == "__main__":
-    unittest.main()
     def test_every_rule_references_a_relation_type(self):
         with open("atlas/taxonomies/relation-types.json", encoding="utf-8") as f:
             relation_types = {item["id"] for item in json.load(f)["relation_types"]}
@@ -33,3 +39,21 @@ if __name__ == "__main__":
         VALIDATOR.validate_claim_integrity([invalid], entities, set(entities), relations, rules, set(), errors)
         self.assertEqual(len(errors), 1)
         self.assertIn("does not match expected value type", errors[0])
+    def test_every_relation_rendering_is_a_known_relation(self):
+        with open("atlas/taxonomies/relation-types.json", encoding="utf-8") as f:
+            relation_types = {item["id"] for item in json.load(f)["relation_types"]}
+        with open("atlas/taxonomies/relation-rules.json", encoding="utf-8") as f:
+            rules = {item["relation"] for item in json.load(f)["rules"]}
+        with open("atlas/taxonomies/relation-rendering.json", encoding="utf-8") as f:
+            rendering = json.load(f)["relations"]
+
+        self.assertTrue(set(rendering).issubset(relation_types))
+        self.assertTrue(set(rendering).issubset(rules))
+
+        for predicate, config in rendering.items():
+            self.assertIsInstance(config["reverse_label_fa"], str)
+            self.assertTrue(config["reverse_label_fa"].strip(), predicate)
+
+
+if __name__ == "__main__":
+    unittest.main()

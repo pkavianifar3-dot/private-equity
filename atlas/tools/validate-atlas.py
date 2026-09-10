@@ -401,6 +401,11 @@ def load_taxonomies(errors):
         errors
     )
 
+    relation_rendering_data = load_registry(
+        ROOT / "taxonomies" / "relation-rendering.json",
+        errors
+    )
+
     role_types_data = load_registry(
         ROOT / "taxonomies" / "role-types.json",
         errors
@@ -435,6 +440,34 @@ def load_taxonomies(errors):
         if isinstance(item, dict)
         and "relation" in item
     }
+
+    relation_rendering = relation_rendering_data.get(
+        "relations",
+        {}
+    )
+
+    if isinstance(relation_rendering, dict):
+        for predicate, config in relation_rendering.items():
+            if predicate not in relation_types:
+                errors.append(
+                    f"Relation rendering references unknown predicate: "
+                    f"{predicate}"
+                )
+            if predicate not in relation_rules:
+                errors.append(
+                    f"Relation rendering has no rule: {predicate}"
+                )
+            if not isinstance(config, dict):
+                errors.append(
+                    f"Relation rendering config is invalid: {predicate}"
+                )
+                continue
+            reverse_label = config.get("reverse_label_fa")
+            if not isinstance(reverse_label, str) or not reverse_label.strip():
+                errors.append(
+                    f"Relation rendering reverse label is invalid: "
+                    f"{predicate}"
+                )
 
     role_types = {
         item["id"]
