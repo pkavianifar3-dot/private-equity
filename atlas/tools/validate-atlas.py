@@ -1353,6 +1353,41 @@ def validate_research_integrity(
                             )
 
 
+def validate_person_content(errors, source_ids):
+    content_root = ROOT / "content" / "persons"
+    schema_path = SCHEMAS_DIR / "person-content-schema-v1.json"
+
+    if not schema_path.exists():
+        errors.append(
+            "atlas/schemas/person-content-schema-v1.json: "
+            "schema file not found"
+        )
+        return
+
+    if not content_root.exists():
+        return
+
+    for path in sorted(content_root.glob("*.json")):
+        data = load_registry(path, errors)
+
+        add_schema_errors(
+            data,
+            schema_path,
+            str(path.relative_to(ROOT)),
+            errors
+        )
+
+        for section in data.get("sections", []):
+            for paragraph in section.get("paragraphs", []):
+                for source_ref in paragraph.get("sourceRefs", []):
+                    if source_ref not in source_ids:
+                        errors.append(
+                            f"{path.relative_to(ROOT)}:"
+                            f"{section.get('id')}: unknown canonical source "
+                            f"{source_ref}"
+                        )
+
+
 def validate_research_documents(errors):
     research_root = ROOT.parent / "research"
 
@@ -1421,6 +1456,11 @@ def main():
     )
 
     errors.extend(validate_claim_versioning(claims))
+
+    validate_person_content(
+        errors,
+        source_ids
+    )
     validate_claim_analysis_integrity(
         claims,
         claim_ids,
