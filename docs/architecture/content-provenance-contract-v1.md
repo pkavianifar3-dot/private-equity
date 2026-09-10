@@ -6,11 +6,11 @@ Person and other Atlas content may reference canonical Source records directly.
 
 ## Canonical field
 
-Use `sourceRefs` with canonical Source IDs such as `source:kian-direct-interview-1405`.
+Use `section.sourceRefs` with canonical Source IDs such as `source:kian-direct-interview-1405`.
 
 ## Legacy field
 
-The legacy `source_refs` field uses local numeric citation references and is migration-only.
+The legacy `paragraph.source_refs` field uses local numeric citation references and is migration-only.
 
 ## Migration rule
 
