@@ -15,7 +15,7 @@
         const rendering = relationRendering && relationRendering.relations
             ? relationRendering.relations[claim.predicate]
             : null;
-        const forwardLabel = relationType && relationType.labels && relationType.labels.fa;
+        const forwardLabel = relationType && relationType.label_fa;
 
         if (subject === currentEntityId) {
             return { predicate: claim.predicate, direction: "forward", targetId: object, label: forwardLabel || null };

@@ -20,6 +20,19 @@
 
         return response.json();
     }
+    let relationContractCache = null;
+    async function loadRelationContract() {
+        if (relationContractCache) {
+            return relationContractCache;
+        }
+        relationContractCache = Promise.all([
+            loadCachedJSON(`${ATLAS_ROOT}/taxonomies/relation-types.json`),
+            loadCachedJSON(`${ATLAS_ROOT}/taxonomies/relation-rules.json`),
+            loadCachedJSON(`${ATLAS_ROOT}/taxonomies/relation-rendering.json`)
+        ]).then(([relationTypes, relationRules, relationRendering]) => ({ relationTypes, relationRules, relationRendering }));
+        return relationContractCache;
+    }
+
     function loadCachedJSON(path) {
         if (jsonCache.has(path)) {
             return jsonCache.get(path);
@@ -1971,7 +1984,8 @@ function renderConceptRelationSection(
     title,
     claims,
     entityIndex,
-    entityId
+    entityId,
+    relationContract
 ) {
     if (!Array.isArray(claims) || !claims.length) {
         return "";
@@ -2000,11 +2014,20 @@ function renderConceptRelationSection(
 
                     ${uniqueClaims
                         .map(claim => {
-                            const objectId =
-                                getConceptRelationTargetId(
+                            const renderedRelation =
+                                PrivateCapitalRelationRenderer.renderRelation(
                                     claim,
-                                    entityId
+                                    entityId,
+                                    relationContract.relationTypes,
+                                    relationContract.relationRules,
+                                    relationContract.relationRendering
                                 );
+                            if (!renderedRelation) {
+                                return "";
+                            }
+
+                            const objectId =
+                                renderedRelation.targetId;
                             if (!objectId || objectId === entityId) {
                                 return "";
                             }
@@ -2034,10 +2057,7 @@ function renderConceptRelationSection(
 
                                     <div class="atlas-claim-label">
                                         ${escapeHTML(
-                                            getConceptRelationDisplayLabel(
-                                                claim,
-                                                entityId
-                                            )
+                                            renderedRelation.label
                                         )}
                                     </div>
 
@@ -2316,8 +2336,8 @@ function renderConceptBreadcrumbs(
             loadClaimsForEntity(entityId),
             loadCachedJSON(
                 `${ATLAS_ROOT}/entities/index.json`
-            )
-            
+            ),
+            loadRelationContract()
         ]);
     
         const entityIndex = {};
@@ -2527,66 +2547,76 @@ function renderConceptBreadcrumbs(
                 "کلی‌تر از",
                 broaderClaims,
                 entityIndex,
-                entityId
+                entityId,
+                relationContract
             )}
             ${renderConceptRelationSection(
                 "مفهوم بالاتر",
                 broaderThanClaims,
                 entityIndex,
-                entityId
+                entityId,
+                relationContract
             )}
             ${renderConceptRelationSection(
                 "مرتبط با",
                 relatedClaims,
                 entityIndex,
-                entityId
+                entityId,
+                relationContract
             )}
             
             ${renderConceptRelationSection(
                 "شامل",
                 includesClaims,
                 entityIndex,
-                entityId
+                entityId,
+                relationContract
             )}
             ${renderConceptRelationSection(
                 "بخشی از",
                 includedInClaims,
                 entityIndex,
-                entityId
+                entityId,
+                relationContract
             )}
             ${renderConceptRelationSection(
                 "طبقه‌بندی",
                 classificationClaims,
                 entityIndex,
-                entityId
+                entityId,
+                relationContract
             )}
             
             ${renderConceptRelationSection(
                 "مشخصه‌ها",
                 characterizedByClaims,
                 entityIndex,
-                entityId
+                entityId,
+                relationContract
             )}
             
             ${renderConceptRelationSection(
                 "ارتباط با",
                 linkedToClaims,
                 entityIndex,
-                entityId
+                entityId,
+                relationContract
             )}
             
             ${renderConceptRelationSection(
                 "جایگاه سرمایه‌گذار",
                 investorPositionClaims,
                 entityIndex,
-                entityId
+                entityId,
+                relationContract
             )}
             
             ${renderConceptRelationSection(
                 "وابستگی بازده",
                 returnDependsOnClaims,
                 entityIndex,
-                entityId
+                entityId,
+                relationContract
             )}
             
             ${renderEvidenceSection(
