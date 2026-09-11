@@ -1,7 +1,7 @@
 (function (global) {
     "use strict";
 
-    function createDataLoader(atlasRoot) {
+    function createDataLoader(baseRoot) {
         const jsonCache = new Map();
         let relationContractCache = null;
 
@@ -11,7 +11,7 @@
             });
 
             if (!response.ok) {
-                throw new Error(`Atlas data load failed: ${path}`);
+                throw new Error(`Data load failed: ${path}`);
             }
 
             return response.json();
@@ -38,9 +38,9 @@
             }
 
             relationContractCache = Promise.all([
-                loadCachedJSON(`${atlasRoot}/taxonomies/relation-types.json`),
-                loadCachedJSON(`${atlasRoot}/taxonomies/relation-rules.json`),
-                loadCachedJSON(`${atlasRoot}/taxonomies/relation-rendering.json`)
+                loadCachedJSON(`${baseRoot}/taxonomies/relation-types.json`),
+                loadCachedJSON(`${baseRoot}/taxonomies/relation-rules.json`),
+                loadCachedJSON(`${baseRoot}/taxonomies/relation-rendering.json`)
             ]).then(([relationTypes, relationRules, relationRendering]) => ({
                 relationTypes,
                 relationRules,

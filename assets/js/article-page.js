@@ -16,20 +16,15 @@
         return slug;
     }
 
+    const dataLoader = global.PrivateCapitalDataLoader.create("../atlas");
+    const loadJSON = dataLoader.loadJSON;
+
     function getResearchPath() {
         return `../research/content/${getArticleSlug()}.json`;
     }
 
     async function loadResearch(path) {
-        const response = await fetch(path, {
-            cache: "no-store"
-        });
-
-        if (!response.ok) {
-            throw new Error(`Research data load failed: ${path}`);
-        }
-
-        return response.json();
+        return loadJSON(path);
     }
 
     async function loadSources(sourceRefs) {
@@ -37,7 +32,7 @@
             return [];
         }
 
-        const index = await loadResearch("../atlas/sources/index.json");
+        const index = await loadJSON("../atlas/sources/index.json");
         const sources = [];
 
         for (const sourceRef of sourceRefs) {
@@ -47,7 +42,7 @@
                 continue;
             }
 
-            const data = await loadResearch(
+            const data = await loadJSON(
                 `../atlas/sources/${fileName}`
             );
 

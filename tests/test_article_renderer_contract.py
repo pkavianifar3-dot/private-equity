@@ -465,7 +465,7 @@ class ArticleRendererPageIntegrationTests(unittest.TestCase):
         ).read_text(encoding="utf-8")
 
         self.assertIn(
-            'fetch(path, {',
+            "const loadJSON = dataLoader.loadJSON;",
             integration,
         )
         self.assertIn(
@@ -478,6 +478,28 @@ class ArticleRendererPageIntegrationTests(unittest.TestCase):
         )
         self.assertIn(
             '`../research/content/${getArticleSlug()}.json`',
+            integration,
+        )
+
+    def test_article_page_integration_uses_shared_data_loader(self):
+        integration = (
+            ROOT / "assets" / "js" / "article-page.js"
+        ).read_text(encoding="utf-8")
+
+        self.assertIn(
+            "global.PrivateCapitalDataLoader.create(\"../atlas\")",
+            integration,
+        )
+        self.assertIn(
+            "const loadJSON = dataLoader.loadJSON;",
+            integration,
+        )
+        self.assertIn(
+            "return loadJSON(path);",
+            integration,
+        )
+        self.assertNotIn(
+            "const response = await fetch(path,",
             integration,
         )
 
