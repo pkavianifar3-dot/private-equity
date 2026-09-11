@@ -12,7 +12,7 @@
 
     const entityURL = (entityId) => global.PrivateCapitalURL.entityURL(entityId, "research");
 
-    function renderTextWithMentions(text, blockId, mentions) {
+    function renderTextWithMentions(text, blockId, mentions, citations, citationIndex) {
         const value = String(text || "");
 
         if (!Array.isArray(mentions) || !mentions.length) {
@@ -79,7 +79,7 @@
         return parts.join("");
     }
 
-    function renderBlock(block, mentions) {
+    function renderBlock(block, mentions, citations, citationIndex) {
         switch (block.type) {
             case "paragraph":
                 return `<p>${renderTextWithMentions(
@@ -223,7 +223,7 @@ ${citations.join("\n")}
         target.innerHTML = renderArticleContent(sections, mentions, sources, citations);
     }
 
-    function renderArticleContent(sections, mentions, sources, citations) {
+    function renderArticleContent(sections, mentions, sources, citations, citationIndex) {
         if (!Array.isArray(sections)) {
             throw new TypeError("Article sections must be an array");
         }
@@ -234,7 +234,7 @@ ${citations.join("\n")}
                 : [];
 
             const renderedContent = content
-                .map(block => renderBlock(block, mentions))
+                .map(block => renderBlock(block, mentions, citations, citationIndex))
                 .join("\n");
 
             return renderedContent + renderSectionSources(

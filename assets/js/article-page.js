@@ -57,7 +57,7 @@
         return sources;
     }
 
-    async function renderSection(section, citations) {
+    async function renderSection(section, citations, citationIndex) {
         const target = document.querySelector(
             `[data-article-renderer-section="${section.id}"]`
         );
@@ -83,7 +83,7 @@
             [section],
             Array.isArray(section.mentions) ? section.mentions : [],
             sources,
-            citations
+            citations, citationIndex
         );
 
         const template = document.createElement("template");
@@ -100,8 +100,9 @@
             throw new TypeError("Research sections must be an array");
         }
 
+        const citationIndex = global.PrivateCapitalCitationRenderer.buildCitationIndex(research.sections, research.citations);
         for (const section of research.sections) {
-            await renderSection(section, research.citations);
+            await renderSection(section, research.citations, citationIndex);
         }
     }
 

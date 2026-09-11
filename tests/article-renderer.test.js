@@ -7,6 +7,7 @@ const urlResolverSource = fs.readFileSync(
     "utf8"
 );
 
+const citationRendererSource = fs.readFileSync("assets/js/research/citation-renderer.js", "utf8");
 const rendererSource = fs.readFileSync(
     "assets/js/article-renderer.js",
     "utf8"
@@ -19,6 +20,7 @@ context.window = context;
 
 vm.createContext(context);
 vm.runInContext(urlResolverSource, context);
+vm.runInContext(citationRendererSource, context);
 vm.runInContext(rendererSource, context);
 
 const { renderArticleContent } = context;
