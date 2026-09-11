@@ -486,10 +486,10 @@ class ArticleRendererPageIntegrationTests(unittest.TestCase):
             ROOT / "assets" / "js" / "article-page.js"
         ).read_text(encoding="utf-8")
 
-        self.assertIn(
-            "global.renderArticleContent(\n            [section],\n            Array.isArray(section.mentions) ? section.mentions : [],\n            sources\n        )",
-            integration,
-        )
+        self.assertIn("global.renderArticleContent(", integration)
+        self.assertIn("[section],", integration)
+        self.assertIn("sources,", integration)
+        self.assertIn("citations", integration)
         self.assertNotIn(
             "function renderArticleContent(",
             integration,

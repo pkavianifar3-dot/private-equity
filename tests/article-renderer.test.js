@@ -2,6 +2,11 @@ const assert = require("assert");
 const fs = require("fs");
 const vm = require("vm");
 
+const urlResolverSource = fs.readFileSync(
+    "assets/js/core/url-resolver.js",
+    "utf8"
+);
+
 const rendererSource = fs.readFileSync(
     "assets/js/article-renderer.js",
     "utf8"
@@ -10,8 +15,10 @@ const rendererSource = fs.readFileSync(
 const context = {
     console,
 };
+context.window = context;
 
 vm.createContext(context);
+vm.runInContext(urlResolverSource, context);
 vm.runInContext(rendererSource, context);
 
 const { renderArticleContent } = context;
@@ -735,4 +742,51 @@ console.log("Article Renderer conclusion legacy parity PASSED");
     assert(!html.includes("source:test-unknown"));
 
     console.log("Article Renderer citation ordering contract PASSED");
+}
+
+{
+    const researchCitations = [
+        {
+            id: "citation:test-primary",
+            sourceRef: "source:test-primary",
+            evidenceRef: null,
+            contentBlockId: "citation-v2-paragraph",
+            start: 0,
+            end: 14
+        }
+    ];
+
+    const section = {
+        id: "citation-v2-test",
+        content: [
+            {
+                id: "citation-v2-paragraph",
+                type: "paragraph",
+                text: "متن دارای citation"
+            }
+        ]
+    };
+
+    const sources = [
+        {
+            id: "source:test-primary",
+            title_fa: "منبع Citation v2",
+            publisher: "ناشر آزمون",
+            url: "https://example.com/citation-v2"
+        }
+    ];
+
+    const html = renderArticleContent(
+        [section],
+        [],
+        sources,
+        researchCitations
+    );
+
+    assert(
+        html.includes("منبع Citation v2"),
+        "Research v2 Citation must render its canonical Source"
+    );
+
+    console.log("Article Renderer Research v2 Citation contract PASSED");
 }

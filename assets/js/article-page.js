@@ -62,7 +62,7 @@
         return sources;
     }
 
-    async function renderSection(section) {
+    async function renderSection(section, citations) {
         const target = document.querySelector(
             `[data-article-renderer-section="${section.id}"]`
         );
@@ -73,12 +73,22 @@
             );
         }
 
-        const sources = await loadSources(section.sourceRefs);
+        const citationSourceRefs = Array.isArray(citations)
+            ? citations.map(citation => citation && citation.sourceRef).filter(Boolean)
+            : [];
+        const sectionSourceRefs = Array.isArray(section.sourceRefs)
+            ? section.sourceRefs
+            : [];
+        const sourceRefs = [
+            ...new Set([...sectionSourceRefs, ...citationSourceRefs])
+        ];
+        const sources = await loadSources(sourceRefs);
 
         const html = global.renderArticleContent(
             [section],
             Array.isArray(section.mentions) ? section.mentions : [],
-            sources
+            sources,
+            citations
         );
 
         const template = document.createElement("template");
@@ -96,7 +106,7 @@
         }
 
         for (const section of research.sections) {
-            await renderSection(section);
+            await renderSection(section, research.citations);
         }
     }
 

@@ -151,6 +151,36 @@ ${(block.rows || []).map(
         return `<li><a href="${escapeHtml(source.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(label)}</a></li>`;
     }
 
+    function renderResearchCitations(citations, sources) {
+        if (!Array.isArray(citations) || !citations.length || !Array.isArray(sources)) {
+            return "";
+        }
+
+        const sourceById = new Map(
+            sources
+                .filter(source => source && typeof source.id === "string")
+                .map(source => [source.id, source])
+        );
+
+        const rendered = citations
+            .filter(citation => citation && typeof citation.sourceRef === "string")
+            .map(citation => sourceById.get(citation.sourceRef))
+            .map(renderSourceCitation)
+            .filter(Boolean);
+
+        if (!rendered.length) {
+            return "";
+        }
+
+        return `
+<div class="article-citations">
+<p>منابع</p>
+<ul>
+${rendered.join("\\n")}
+</ul>
+</div>`;
+    }
+
     function renderSectionSources(sourceRefs, sources) {
         if (
             !Array.isArray(sourceRefs) ||
@@ -185,15 +215,15 @@ ${citations.join("\n")}
 </div>`;
     }
 
-    function renderArticleContentInto(target, sections, mentions, sources) {
+    function renderArticleContentInto(target, sections, mentions, sources, citations) {
         if (!target || typeof target.innerHTML !== "string") {
             throw new TypeError("Article renderer target must be a DOM element");
         }
 
-        target.innerHTML = renderArticleContent(sections, mentions, sources);
+        target.innerHTML = renderArticleContent(sections, mentions, sources, citations);
     }
 
-    function renderArticleContent(sections, mentions, sources) {
+    function renderArticleContent(sections, mentions, sources, citations) {
         if (!Array.isArray(sections)) {
             throw new TypeError("Article sections must be an array");
         }
@@ -211,7 +241,7 @@ ${citations.join("\n")}
                 section.sourceRefs,
                 sources
             );
-        }).join("\n");
+        }).join("\n") + renderResearchCitations(citations, sources);
     }
 
     global.renderArticleContent = renderArticleContent;
