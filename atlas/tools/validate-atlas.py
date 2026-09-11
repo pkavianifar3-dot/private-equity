@@ -355,7 +355,7 @@ def collect_evidence(errors):
 
         add_schema_errors(
             data,
-            SCHEMAS_DIR / "evidence-file-schema-v1.json",
+            SCHEMAS_DIR / "evidence-file-schema-v2.json",
             str(path.relative_to(ROOT)),
             errors
         )
@@ -952,8 +952,8 @@ def validate_evidence_integrity(
 
     for evidence in evidence_records:
         evidence_id = evidence.get("id")
-        claim_id = evidence.get("claim")
-        source_id = evidence.get("source")
+        claim_id = evidence.get("claimRef")
+        source_id = evidence.get("sourceRef")
 
         if evidence_id:
             evidence_by_id[evidence_id] = evidence
@@ -1092,7 +1092,7 @@ def validate_research_citation_integrity(research_data, source_ids, evidence_rec
         evidence_ref = citation.get("evidenceRef")
         if evidence_ref is not None and evidence_ref not in evidence_by_id:
             errors.append(f"{citation_id}: unknown citation evidence {evidence_ref}")
-        if evidence_ref is not None and evidence_ref in evidence_by_id and evidence_by_id[evidence_ref].get("source") != source_ref:
+        if evidence_ref is not None and evidence_ref in evidence_by_id and evidence_by_id[evidence_ref].get("sourceRef") != source_ref:
             errors.append(f"{citation_id}: citation evidence source mismatch")
 
         block_id = citation.get("contentBlockId")
@@ -1200,9 +1200,9 @@ def validate_research_integrity(
                     if evidence is None:
                         errors.append(f"{claim_id}: unknown research evidence {evidence_ref}")
                         continue
-                    if canonical_claim_ref and evidence.get("claim") != canonical_claim_ref:
+                    if canonical_claim_ref and evidence.get("claimRef") != canonical_claim_ref:
                         errors.append(f"{claim_id}: evidence {evidence_ref} does not support {canonical_claim_ref}")
-                    if evidence.get("source") not in source_refs:
+                    if evidence.get("sourceRef") not in source_refs:
                         errors.append(f"{claim_id}: evidence {evidence_ref} source is not declared in sourceRefs")
 
         for claim in research_claims:

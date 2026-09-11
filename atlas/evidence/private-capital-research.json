@@ -1,11 +1,11 @@
 {
-  "version": "1.0",
+  "version": "2.0",
   "evidence": [
     {
       "id": "evidence:private-capital-includes-private-equity-01",
-      "claim": "claim:private-capital-includes-private-equity",
-      "source": "source:ecb-private-markets-public-risk",
-      "evidence_type": "authoritative_publication",
+      "claimRef": "claim:private-capital-includes-private-equity",
+      "sourceRef": "source:ecb-private-markets-public-risk",
+      "evidenceType": "authoritative_publication",
       "strength": "strong",
       "locator": {
         "section": "Overview of private market segments and strategies",
@@ -14,9 +14,9 @@
     },
     {
       "id": "evidence:private-capital-broader-than-private-equity-01",
-      "claim": "claim:private-capital-broader-than-private-equity",
-      "source": "source:ecb-private-markets-public-risk",
-      "evidence_type": "authoritative_publication",
+      "claimRef": "claim:private-capital-broader-than-private-equity",
+      "sourceRef": "source:ecb-private-markets-public-risk",
+      "evidenceType": "authoritative_publication",
       "strength": "strong",
       "locator": {
         "section": "Overview of private market segments and strategies",
@@ -24,81 +24,81 @@
       }
     },
     {
-  "id": "evidence:private-capital-includes-private-credit-01",
-  "claim": "claim:private-capital-includes-private-credit",
-  "source": "source:ecb-private-markets-public-risk",
-  "evidence_type": "authoritative_publication",
-  "strength": "strong",
-  "locator": {
-    "section": "Overview of private market segments and strategies",
-    "paragraph": 2
-  }
-},
+      "id": "evidence:private-capital-includes-private-credit-01",
+      "claimRef": "claim:private-capital-includes-private-credit",
+      "sourceRef": "source:ecb-private-markets-public-risk",
+      "evidenceType": "authoritative_publication",
+      "strength": "strong",
+      "locator": {
+        "section": "Overview of private market segments and strategies",
+        "paragraph": 2
+      }
+    },
     {
-  "id": "evidence:private-capital-includes-real-assets-01",
-  "claim": "claim:private-capital-includes-real-assets",
-  "source": "source:ecb-private-markets-public-risk",
-  "evidence_type": "authoritative_publication",
-  "strength": "strong",
-  "locator": {
-    "section": "Overview of private market segments and strategies",
-    "paragraph": 2
-  }
-},
+      "id": "evidence:private-capital-includes-real-assets-01",
+      "claimRef": "claim:private-capital-includes-real-assets",
+      "sourceRef": "source:ecb-private-markets-public-risk",
+      "evidenceType": "authoritative_publication",
+      "strength": "strong",
+      "locator": {
+        "section": "Overview of private market segments and strategies",
+        "paragraph": 2
+      }
+    },
     {
-  "id": "evidence:private-capital-includes-venture-capital-01",
-  "claim": "claim:private-capital-includes-venture-capital",
-  "source": "source:ecb-private-markets-public-risk",
-  "evidence_type": "authoritative_publication",
-  "strength": "strong",
-  "locator": {
-    "section": "Overview of private market segments and strategies",
-    "paragraph": 2
-  }
-},
+      "id": "evidence:private-capital-includes-venture-capital-01",
+      "claimRef": "claim:private-capital-includes-venture-capital",
+      "sourceRef": "source:ecb-private-markets-public-risk",
+      "evidenceType": "authoritative_publication",
+      "strength": "strong",
+      "locator": {
+        "section": "Overview of private market segments and strategies",
+        "paragraph": 2
+      }
+    },
     {
-  "id": "evidence:private-capital-includes-growth-capital-01",
-  "claim": "claim:private-capital-includes-growth-capital",
-  "source": "source:ecb-private-markets-public-risk",
-  "evidence_type": "authoritative_publication",
-  "strength": "strong",
-  "locator": {
-    "section": "Overview of private market segments and strategies",
-    "paragraph": 2
-  }
-},
+      "id": "evidence:private-capital-includes-growth-capital-01",
+      "claimRef": "claim:private-capital-includes-growth-capital",
+      "sourceRef": "source:ecb-private-markets-public-risk",
+      "evidenceType": "authoritative_publication",
+      "strength": "strong",
+      "locator": {
+        "section": "Overview of private market segments and strategies",
+        "paragraph": 2
+      }
+    },
     {
-  "id": "evidence:private-capital-boundaries-vary-01",
-  "claim": "claim:private-capital-boundaries-vary",
-  "source": "source:ecb-private-markets-public-risk",
-  "evidence_type": "authoritative_publication",
-  "strength": "strong",
-  "locator": {
-    "section": "Overview of private market segments and strategies",
-    "paragraph": 2
-  }
-},
+      "id": "evidence:private-capital-boundaries-vary-01",
+      "claimRef": "claim:private-capital-boundaries-vary",
+      "sourceRef": "source:ecb-private-markets-public-risk",
+      "evidenceType": "authoritative_publication",
+      "strength": "strong",
+      "locator": {
+        "section": "Overview of private market segments and strategies",
+        "paragraph": 2
+      }
+    },
     {
-  "id": "evidence:real-assets-include-physical-assets-01",
-  "claim": "claim:real-assets-include-physical-assets",
-  "source": "source:ecb-private-markets-public-risk",
-  "evidence_type": "authoritative_publication",
-  "strength": "strong",
-  "locator": {
-    "section": "Overview of private market segments and strategies",
-    "paragraph": 2
-  }
-},
+      "id": "evidence:real-assets-include-physical-assets-01",
+      "claimRef": "claim:real-assets-include-physical-assets",
+      "sourceRef": "source:ecb-private-markets-public-risk",
+      "evidenceType": "authoritative_publication",
+      "strength": "strong",
+      "locator": {
+        "section": "Overview of private market segments and strategies",
+        "paragraph": 2
+      }
+    },
     {
-  "id": "evidence:private-capital-private-access-01",
-  "claim": "claim:private-capital-private-access",
-  "source": "source:ecb-private-markets-public-risk",
-  "evidence_type": "authoritative_publication",
-  "strength": "strong",
-  "locator": {
-    "section": "Overview of private market segments and strategies",
-    "paragraph": 2
-  }
-}
+      "id": "evidence:private-capital-private-access-01",
+      "claimRef": "claim:private-capital-private-access",
+      "sourceRef": "source:ecb-private-markets-public-risk",
+      "evidenceType": "authoritative_publication",
+      "strength": "strong",
+      "locator": {
+        "section": "Overview of private market segments and strategies",
+        "paragraph": 2
+      }
+    }
   ]
 }
