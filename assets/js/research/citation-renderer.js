@@ -21,8 +21,108 @@
     }
 
     function renderCitationMarker(citation, citationIndex) {
-        const number = citationIndex && citationIndex.get(citation && citation.sourceRef);
-        return number ? ` <sup class="citation"><a href="#citation-source-${number}">[${number}]</a></sup>` : "";
+        const number =
+            citationIndex &&
+            citationIndex.get(citation && citation.sourceRef);
+
+        if (!number) {
+            return "";
+        }
+
+        const citationId =
+            citation && typeof citation.id === "string"
+                ? citation.id
+                : `citation-${number}`;
+
+        return ` <sup class="citation" id="citation-location-${escapeHtml(citationId)}"><a href="#citation-source-${number}">[${number}]</a></sup>`;
+    }
+
+    function renderCitationBibliography(citations, sources, citationIndex) {
+        if (!Array.isArray(citations) || !citations.length) {
+            return "";
+        }
+
+        if (!Array.isArray(sources) || !sources.length) {
+            return "";
+        }
+
+        const sourceById = new Map(
+            sources
+                .filter(source => source && typeof source.id === "string")
+                .map(source => [source.id, source])
+        );
+
+        const entries = [];
+
+        for (const [sourceRef, number] of citationIndex || []) {
+            const source = sourceById.get(sourceRef);
+
+            if (!source) {
+                continue;
+            }
+
+            entries.push({
+                sourceRef,
+                number,
+                source
+            });
+        }
+
+        if (!entries.length) {
+            return "";
+        }
+
+        return entries;
+    }
+
+    function renderCitationBibliographyHtml(citations, sources, citationIndex) {
+        const entries = renderCitationBibliography(
+            citations,
+            sources,
+            citationIndex
+        );
+
+        if (!entries.length) {
+            return "";
+        }
+
+        const items = entries.map(entry => {
+            const title =
+                typeof entry.source.title_fa === "string"
+                    ? entry.source.title_fa
+                    : typeof entry.source.title_en === "string"
+                        ? entry.source.title_en
+                        : entry.source.id || "";
+
+            const publisher =
+                typeof entry.source.publisher === "string"
+                    ? entry.source.publisher
+                    : "";
+
+            const label = publisher
+                ? `${title} — ${publisher}`
+                : title;
+
+            const locations = (Array.isArray(citations) ? citations : [])
+                .filter(citation =>
+                    citation &&
+                    citation.sourceRef === entry.sourceRef &&
+                    typeof citation.id === "string"
+                )
+                .map(citation =>
+                    `<a href="#citation-location-${escapeHtml(citation.id)}">↩</a>`
+                )
+                .join(" ");
+
+            const sourceLink =
+                typeof entry.source.url === "string" && entry.source.url
+                    ? `<a href="${escapeHtml(entry.source.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(label)}</a>`
+                    : escapeHtml(label);
+
+            return `<li id="citation-source-${entry.number}"><strong>[${entry.number}]</strong> ${sourceLink}${locations ? ` ${locations}` : ""}</li>`;
+        });
+
+        return `<div class="article-citations"><p>منابع</p><ol>${items.join("\n")}</ol></div>`;
     }
 
     function renderInlineCitations(text, blockId, citations, citationIndex) {
@@ -40,5 +140,5 @@
         return parts.join("");
     }
 
-    global.PrivateCapitalCitationRenderer = { buildCitationIndex, getBlockCitations, renderInlineCitations, renderCitationMarker };
+    global.PrivateCapitalCitationRenderer = { buildCitationIndex, getBlockCitations, renderInlineCitations, renderCitationMarker, renderCitationBibliography, renderCitationBibliographyHtml };
 })(window);

@@ -781,13 +781,18 @@ console.log("Article Renderer conclusion legacy parity PASSED");
     const html = renderArticleContent(
         [section],
         [],
-        sources,
+        [],
         researchCitations
     );
 
     assert(
-        html.includes("منبع Citation v2"),
-        "Research v2 Citation must render its canonical Source"
+        html.includes("[1]"),
+        "Research v2 Citation must render an inline citation marker"
+    );
+
+    assert(
+        html.includes("#citation-source-1"),
+        "Research v2 Citation must link to its document-level citation anchor"
     );
 
     console.log("Article Renderer Research v2 Citation contract PASSED");

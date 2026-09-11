@@ -116,7 +116,7 @@
         return parts.join("");
     }
 
-    function renderBlock(block, mentions, citations, citationIndex) {
+    function renderBlock(block, mentions, citations, effectiveCitationIndex) {
         switch (block.type) {
             case "paragraph":
                 return `<p>${renderTextWithMentions(
@@ -124,7 +124,7 @@
                     block.id,
                     mentions,
                     citations,
-                    citationIndex
+                    effectiveCitationIndex
                 )}</p>`;
 
             case "subheading":
@@ -133,7 +133,7 @@
                     block.id,
                     mentions,
                     citations,
-                    citationIndex
+                    effectiveCitationIndex
                 )}</h3>`;
 
             case "figure":
@@ -192,36 +192,6 @@ ${(block.rows || []).map(
         return `<li><a href="${escapeHtml(source.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(label)}</a></li>`;
     }
 
-    function renderResearchCitations(citations, sources) {
-        if (!Array.isArray(citations) || !citations.length || !Array.isArray(sources)) {
-            return "";
-        }
-
-        const sourceById = new Map(
-            sources
-                .filter(source => source && typeof source.id === "string")
-                .map(source => [source.id, source])
-        );
-
-        const rendered = citations
-            .filter(citation => citation && typeof citation.sourceRef === "string")
-            .map(citation => sourceById.get(citation.sourceRef))
-            .map(renderSourceCitation)
-            .filter(Boolean);
-
-        if (!rendered.length) {
-            return "";
-        }
-
-        return `
-<div class="article-citations">
-<p>منابع</p>
-<ul>
-${rendered.join("\\n")}
-</ul>
-</div>`;
-    }
-
     function renderSectionSources(sourceRefs, sources) {
         if (
             !Array.isArray(sourceRefs) ||
@@ -269,20 +239,27 @@ ${citations.join("\n")}
             throw new TypeError("Article sections must be an array");
         }
 
+        const effectiveCitationIndex =
+            citationIndex ||
+            global.PrivateCapitalCitationRenderer.buildCitationIndex(
+                sections,
+                citations
+            );
+
         return sections.map(section => {
             const content = Array.isArray(section.content)
                 ? section.content
                 : [];
 
             const renderedContent = content
-                .map(block => renderBlock(block, mentions, citations, citationIndex))
+                .map(block => renderBlock(block, mentions, citations, effectiveCitationIndex))
                 .join("\n");
 
             return renderedContent + renderSectionSources(
                 section.sourceRefs,
                 sources
             );
-        }).join("\n") + renderResearchCitations(citations, sources);
+        }).join("\n");
     }
 
     global.renderArticleContent = renderArticleContent;

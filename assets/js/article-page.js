@@ -68,8 +68,25 @@
             );
         }
 
+        const sectionBlockIds = new Set(
+            (Array.isArray(section.content) ? section.content : [])
+                .map(block => block && block.id)
+                .filter(Boolean)
+        );
+
         const citationSourceRefs = Array.isArray(citations)
-            ? citations.map(citation => citation && citation.sourceRef).filter(Boolean)
+            ? [
+                ...new Set(
+                    citations
+                        .filter(
+                            citation =>
+                                citation &&
+                                sectionBlockIds.has(citation.contentBlockId)
+                        )
+                        .map(citation => citation.sourceRef)
+                        .filter(Boolean)
+                )
+            ]
             : [];
         const sectionSourceRefs = Array.isArray(section.sourceRefs)
             ? section.sourceRefs
@@ -83,7 +100,8 @@
             [section],
             Array.isArray(section.mentions) ? section.mentions : [],
             sources,
-            citations, citationIndex
+            citations,
+            citationIndex
         );
 
         const template = document.createElement("template");
@@ -103,6 +121,31 @@
         const citationIndex = global.PrivateCapitalCitationRenderer.buildCitationIndex(research.sections, research.citations);
         for (const section of research.sections) {
             await renderSection(section, research.citations, citationIndex);
+        }
+
+        const citationTarget = document.querySelector(
+            "[data-article-renderer-citations]"
+        );
+
+        if (citationTarget) {
+            const citationSourceRefs = Array.isArray(research.citations)
+                ? [
+                    ...new Set(
+                        research.citations
+                            .map(citation => citation && citation.sourceRef)
+                            .filter(Boolean)
+                    )
+                ]
+                : [];
+
+            const citationSources = await loadSources(citationSourceRefs);
+
+            citationTarget.innerHTML =
+                global.PrivateCapitalCitationRenderer.renderCitationBibliographyHtml(
+                    research.citations,
+                    citationSources,
+                    citationIndex
+                );
         }
     }
 

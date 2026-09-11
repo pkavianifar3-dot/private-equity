@@ -344,7 +344,7 @@ class ArticleRendererIntegrationTests(unittest.TestCase):
             'class="article-author"',
             'class="article-date"',
             'class="cta"',
-            "<h2>منابع</h2>",
+            "data-article-renderer-citations",
             'class="article-copyright"',
         ):
             self.assertIn(
@@ -368,7 +368,7 @@ class ArticleRendererIntroductionBoundaryTests(unittest.TestCase):
             article,
         )
         self.assertIn(
-            "<h2>منابع</h2>",
+            "data-article-renderer-citations",
             article,
         )
 
@@ -515,6 +515,28 @@ class ArticleRendererPageIntegrationTests(unittest.TestCase):
         self.assertNotIn(
             "function renderArticleContent(",
             integration,
+        )
+
+    def test_article_page_integration_mounts_citations_once(self):
+        integration = (
+            ROOT / "assets" / "js" / "article-page.js"
+        ).read_text(encoding="utf-8")
+
+        article = (
+            ROOT / "articles" / "private-capital.html"
+        ).read_text(encoding="utf-8")
+
+        self.assertIn(
+            '"[data-article-renderer-citations]"',
+            integration,
+        )
+        self.assertIn(
+            "renderCitationBibliographyHtml(",
+            integration,
+        )
+        self.assertEqual(
+            article.count('data-article-renderer-citations'),
+            1,
         )
 
     def test_article_page_integration_preserves_failure_fallback(self):
