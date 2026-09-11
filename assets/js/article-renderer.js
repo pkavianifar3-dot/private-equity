@@ -14,12 +14,9 @@
 
     function renderTextWithMentions(text, blockId, mentions, citations, citationIndex) {
         const value = String(text || "");
+        const mentionItems = (Array.isArray(mentions) ? mentions : []);
 
-        if (!Array.isArray(mentions) || !mentions.length) {
-            return escapeHtml(value);
-        }
-
-        const applicableMentions = mentions
+        const applicableMentions = mentionItems
             .filter(mention =>
                 mention &&
                 mention.contentBlockId === blockId &&
@@ -37,13 +34,41 @@
             }))
             .filter(mention => mention.url);
 
-        if (!applicableMentions.length) {
-            return escapeHtml(value);
-        }
-
         applicableMentions.sort((a, b) => a.start - b.start);
 
+        const citationRenderer = global.PrivateCapitalCitationRenderer;
+        const citationItems =
+            citationRenderer &&
+            typeof citationRenderer.getBlockCitations === "function"
+                ? citationRenderer.getBlockCitations(
+                    citations,
+                    blockId,
+                    value.length
+                )
+                : [];
+
         const parts = [];
+        const markersByEnd = new Map();
+
+        citationItems.forEach(citation => {
+            const marker =
+                citationRenderer &&
+                typeof citationRenderer.renderCitationMarker === "function"
+                    ? citationRenderer.renderCitationMarker(
+                        citation,
+                        citationIndex
+                    )
+                    : "";
+
+            if (!marker) {
+                return;
+            }
+
+            const markers = markersByEnd.get(citation.end) || [];
+            markers.push(marker);
+            markersByEnd.set(citation.end, markers);
+        });
+
         let cursor = 0;
 
         applicableMentions.forEach(mention => {
@@ -74,6 +99,18 @@
             cursor = mention.end;
         });
 
+        for (const [end, markers] of [...markersByEnd.entries()].sort(
+            ([a], [b]) => a - b
+        )) {
+            if (end < cursor) {
+                continue;
+            }
+
+            parts.push(escapeHtml(value.slice(cursor, end)));
+            parts.push(markers.join(""));
+            cursor = end;
+        }
+
         parts.push(escapeHtml(value.slice(cursor)));
 
         return parts.join("");
@@ -85,14 +122,18 @@
                 return `<p>${renderTextWithMentions(
                     block.text || "",
                     block.id,
-                    mentions
+                    mentions,
+                    citations,
+                    citationIndex
                 )}</p>`;
 
             case "subheading":
                 return `<h3>${renderTextWithMentions(
                     block.text || "",
                     block.id,
-                    mentions
+                    mentions,
+                    citations,
+                    citationIndex
                 )}</h3>`;
 
             case "figure":
