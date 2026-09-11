@@ -975,6 +975,28 @@ def validate_evidence_integrity(
                 f"{source_id}"
             )
 
+        excerpt = evidence.get("excerpt")
+        locator = evidence.get("locator")
+
+        if excerpt is not None:
+            if not isinstance(excerpt, str) or not excerpt.strip():
+                errors.append(
+                    f"{evidence_id}: excerpt must be "
+                    f"a non-empty string when provided"
+                )
+
+        if locator is not None:
+            if not isinstance(locator, dict):
+                errors.append(
+                    f"{evidence_id}: locator must be "
+                    f"an object when provided"
+                )
+            elif not locator:
+                errors.append(
+                    f"{evidence_id}: locator must not be empty "
+                    f"when provided"
+                )
+
     for claim in claims:
         claim_id = claim.get("id")
 
