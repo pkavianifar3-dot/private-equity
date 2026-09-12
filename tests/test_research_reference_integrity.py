@@ -213,5 +213,46 @@ class ResearchReferenceIntegrityTests(unittest.TestCase):
         self.assertEqual(len(errors), 1)
         self.assertIn("citation evidence source mismatch", errors[0])
 
+
+    def test_citation_end_exceeding_block_text_fails(self):
+        data = {
+            "sections": [
+                {
+                    "id": "section-one",
+                    "content": [
+                        {
+                            "id": "block-one",
+                            "type": "paragraph",
+                            "text": "متن کوتاه",
+                        }
+                    ],
+                }
+            ],
+            "citations": [
+                {
+                    "id": "citation:test",
+                    "sourceRef": "source:known-source",
+                    "contentBlockId": "block-one",
+                    "start": 0,
+                    "end": 100,
+                }
+            ],
+        }
+
+        errors = []
+        VALIDATOR.validate_research_citation_integrity(
+            data,
+            {"source:known-source"},
+            [],
+            errors,
+        )
+
+        self.assertEqual(len(errors), 1)
+        self.assertIn(
+            "citation end exceeds content block text length",
+            errors[0],
+        )
+
+
 if __name__ == "__main__":
     unittest.main()
