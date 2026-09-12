@@ -1,37 +1,17 @@
 (function () {
     "use strict";
 
+    const entityURL = (entityId) => window.PrivateCapitalURL.entityURL(entityId, "atlas");
+
     const ATLAS_ROOT =
     window.location.pathname.includes("/atlas/")
         ? "."
         : "atlas";
 
-    const jsonCache = new Map();
-    async function loadJSON(path) {
-        const response = await fetch(path, {
-            cache: "no-store"
-        });
-
-        if (!response.ok) {
-            throw new Error(`Atlas data load failed: ${path}`);
-        }
-
-        return response.json();
-    }
-    function loadCachedJSON(path) {
-        if (jsonCache.has(path)) {
-            return jsonCache.get(path);
-        }
-    
-        const promise = loadJSON(path).catch(error => {
-            jsonCache.delete(path);
-            throw error;
-        });
-    
-        jsonCache.set(path, promise);
-    
-        return promise;
-    }
+    const dataLoader = window.PrivateCapitalDataLoader.create(ATLAS_ROOT);
+    const loadJSON = dataLoader.loadJSON;
+    const loadCachedJSON = dataLoader.loadCachedJSON;
+    const loadRelationContract = dataLoader.loadRelationContract;
 
     function escapeHTML(value) {
         return String(value ?? "")
@@ -185,7 +165,7 @@
                 "propertyID": "PrivateCapitalAtlasID",
                 "value": entity.id
             },
-            "url": `${SITE_ORIGIN}/atlas/person.html?id=${encodeURIComponent(entityId)}`
+            "url": window.PrivateCapitalURL.entityCanonicalURL(entityId)
         };
 
         if (entity.name?.en) {
@@ -215,7 +195,7 @@
                 "propertyID": "PrivateCapitalAtlasID",
                 "value": entity.id
             },
-            "url": `${SITE_ORIGIN}/atlas/organization.html?id=${encodeURIComponent(entityId)}`
+            "url": window.PrivateCapitalURL.entityCanonicalURL(entityId)
         };
 
         if (entity.name?.en) {
@@ -702,32 +682,6 @@
 
         return entity.name?.en || "";
     }
-function entityURL(entityId) {
-    if (typeof entityId !== "string" || !entityId.includes(":")) {
-        return null;
-    }
-
-    const parts = entityId.split(":");
-    const type = parts[0];
-
-    switch (type) {
-        case "person":
-            return `person.html?id=${encodeURIComponent(entityId)}`;
-
-        case "organization":
-            return `organization.html?id=${encodeURIComponent(entityId)}`;
-
-        case "investment":
-            return `investment.html?id=${encodeURIComponent(entityId)}`;
-
-        case "concept":
-            return `concept.html?id=${encodeURIComponent(entityId)}`;
-
-        default:
-            return null;
-    }
-}
-
     function renderClaimCard(
         claim,
         entityIndex,
@@ -959,10 +913,12 @@ const organizationURL = entityURL(claim.object);
         `;
     }
 
-    function renderContentSections(content) {
-    if (!content?.sections?.length) {
-        return "";
-    }
+    function renderContentSections(content, sourceData) {
+        const sourceIndex =
+            window.PrivateCapitalProvenanceRenderer.buildSourceIndex(sourceData);
+        if (!content?.sections?.length) {
+            return "";
+        }
 
     return `
         <section class="atlas-section">
@@ -997,23 +953,29 @@ const organizationURL = entityURL(claim.object);
                                                 ${escapeHTML(paragraph.text)}
 
                                                 ${
-                                                    paragraph.source_refs?.length
-    ? `
-        <span class="atlas-inline-sources">
-    ${paragraph.source_refs
-        .map(ref => `
-            <a
-                href="#source-${escapeHTML(ref)}"
-                class="atlas-source-ref"
-            >
-                [${escapeHTML(ref)}]
-            </a>
-        `)
-        .join(" ")
-    }
-</span>
-    `
-    : ""
+                                                    paragraph.sourceRefs?.length
+                                                        ? `
+                                                            <span class="atlas-inline-sources">
+                                                                ${paragraph.sourceRefs
+                                                                    .map(sourceId => {
+                                                                        const source = sourceIndex[sourceId];
+                                                                        if (!source) {
+                                                                            return "";
+                                                                        }
+                                                                        return `
+                                                                            <a
+                                                                                href="#source-${escapeHTML(sourceId)}"
+                                                                                class="atlas-source-ref"
+                                                                            >
+                                                                                [${escapeHTML(source.title_fa || "منبع")}]
+                                                                            </a>
+                                                                        `;
+                                                                    })
+                                                                    .join(" ")
+                                                                }
+                                                            </span>
+                                                        `
+                                                        : ""
                                                 }
                                             </p>
                                         `)
@@ -1315,18 +1277,12 @@ function renderEvidenceSection(
     const evidenceList =
         evidenceData?.evidence || [];
 
-    const sourceList =
-        sourceData?.sources || [];
-
     if (!evidenceList.length) {
         return "";
     }
 
-    const sourceIndex = {};
-
-    sourceList.forEach(source => {
-        sourceIndex[source.id] = source;
-    });
+    const sourceIndex =
+        window.PrivateCapitalProvenanceRenderer.buildSourceIndex(sourceData);
 
     const claimIndex = {};
 
@@ -1415,22 +1371,10 @@ function renderEvidenceSection(
                                     منبع پشتیبان
                                 </div>
 
-                                <div class="atlas-source-item">
-
-                                    ${
-                                        source.citation_refs?.length
-                                            ? `
-                                                <strong>
-                                                    ${source.citation_refs
-                                                        .map(
-                                                            ref =>
-                                                                `[${escapeHTML(ref)}]`
-                                                        )
-                                                        .join(" ")}
-                                                </strong>
-                                            `
-                                            : ""
-                                    }
+                                <div
+                                    id="source-${escapeHTML(source.id)}"
+                                    class="atlas-source-item"
+                                >
 
                                     <div>
                                         ${escapeHTML(
@@ -1919,7 +1863,7 @@ async function renderOrganization(entityId) {
     applyPageSEO({
         title: `${entity.name?.fa || ""} | اطلس | Private Capital`,
         description: `صفحه اطلس ${entity.name?.fa || ""} در Private Capital.`,
-        url: `${SITE_ORIGIN}/atlas/organization.html?id=${encodeURIComponent(entityId)}`
+        url: window.PrivateCapitalURL.entityCanonicalURL(entityId)
     });
 
     injectJSONLD(
@@ -2009,7 +1953,8 @@ function renderConceptRelationSection(
     title,
     claims,
     entityIndex,
-    entityId
+    entityId,
+    relationContract
 ) {
     if (!Array.isArray(claims) || !claims.length) {
         return "";
@@ -2038,11 +1983,20 @@ function renderConceptRelationSection(
 
                     ${uniqueClaims
                         .map(claim => {
-                            const objectId =
-                                getConceptRelationTargetId(
+                            const renderedRelation =
+                                PrivateCapitalRelationRenderer.renderRelation(
                                     claim,
-                                    entityId
+                                    entityId,
+                                    relationContract.relationTypes,
+                                    relationContract.relationRules,
+                                    relationContract.relationRendering
                                 );
+                            if (!renderedRelation) {
+                                return "";
+                            }
+
+                            const objectId =
+                                renderedRelation.targetId;
                             if (!objectId || objectId === entityId) {
                                 return "";
                             }
@@ -2072,10 +2026,7 @@ function renderConceptRelationSection(
 
                                     <div class="atlas-claim-label">
                                         ${escapeHTML(
-                                            getConceptRelationDisplayLabel(
-                                                claim,
-                                                entityId
-                                            )
+                                            renderedRelation.label
                                         )}
                                     </div>
 
@@ -2331,7 +2282,7 @@ function renderConceptBreadcrumbs(
                 "propertyID": "PrivateCapitalAtlasID",
                 "value": entity.id
             },
-            "url": `${SITE_ORIGIN}/atlas/concept.html?id=${encodeURIComponent(entityId)}`
+            "url": window.PrivateCapitalURL.entityCanonicalURL(entityId)
         };
     
         if (entity.name?.en) {
@@ -2348,14 +2299,15 @@ function renderConceptBreadcrumbs(
         const [
             entity,
             conceptClaims,
-            registry
+            registry,
+            relationContract
         ] = await Promise.all([
             loadCachedJSON(entityFilePath(entityId)),
             loadClaimsForEntity(entityId),
             loadCachedJSON(
                 `${ATLAS_ROOT}/entities/index.json`
-            )
-            
+            ),
+            loadRelationContract()
         ]);
     
         const entityIndex = {};
@@ -2565,66 +2517,76 @@ function renderConceptBreadcrumbs(
                 "کلی‌تر از",
                 broaderClaims,
                 entityIndex,
-                entityId
+                entityId,
+                relationContract
             )}
             ${renderConceptRelationSection(
                 "مفهوم بالاتر",
                 broaderThanClaims,
                 entityIndex,
-                entityId
+                entityId,
+                relationContract
             )}
             ${renderConceptRelationSection(
                 "مرتبط با",
                 relatedClaims,
                 entityIndex,
-                entityId
+                entityId,
+                relationContract
             )}
             
             ${renderConceptRelationSection(
                 "شامل",
                 includesClaims,
                 entityIndex,
-                entityId
+                entityId,
+                relationContract
             )}
             ${renderConceptRelationSection(
                 "بخشی از",
                 includedInClaims,
                 entityIndex,
-                entityId
+                entityId,
+                relationContract
             )}
             ${renderConceptRelationSection(
                 "طبقه‌بندی",
                 classificationClaims,
                 entityIndex,
-                entityId
+                entityId,
+                relationContract
             )}
             
             ${renderConceptRelationSection(
                 "مشخصه‌ها",
                 characterizedByClaims,
                 entityIndex,
-                entityId
+                entityId,
+                relationContract
             )}
             
             ${renderConceptRelationSection(
                 "ارتباط با",
                 linkedToClaims,
                 entityIndex,
-                entityId
+                entityId,
+                relationContract
             )}
             
             ${renderConceptRelationSection(
                 "جایگاه سرمایه‌گذار",
                 investorPositionClaims,
                 entityIndex,
-                entityId
+                entityId,
+                relationContract
             )}
             
             ${renderConceptRelationSection(
                 "وابستگی بازده",
                 returnDependsOnClaims,
                 entityIndex,
-                entityId
+                entityId,
+                relationContract
             )}
             
             ${renderEvidenceSection(
@@ -2643,10 +2605,7 @@ function renderConceptBreadcrumbs(
             description:
                 `صفحه مفهوم ${entity.name?.fa || ""} در Private Capital.`,
     
-            url:
-                `${SITE_ORIGIN}/atlas/concept.html?id=${encodeURIComponent(
-                    entityId
-                )}`
+            url: window.PrivateCapitalURL.entityCanonicalURL(entityId)
         });
         injectJSONLD(
             buildConceptJSONLD(
@@ -2670,7 +2629,7 @@ function renderConceptBreadcrumbs(
                 "propertyID": "PrivateCapitalAtlasID",
                 "value": entity.id
             },
-            "url": `${SITE_ORIGIN}/atlas/investment.html?id=${encodeURIComponent(entityId)}`
+            "url": window.PrivateCapitalURL.entityCanonicalURL(entityId)
         };
     
         if (entity.name?.en) {
@@ -3094,10 +3053,7 @@ function renderConceptBreadcrumbs(
             description:
                 `صفحه سرمایه‌گذاری ${entity.name?.fa || ""} در Private Capital.`,
     
-            url:
-                `${SITE_ORIGIN}/atlas/investment.html?id=${encodeURIComponent(
-                    entityId
-                )}`
+            url: window.PrivateCapitalURL.entityCanonicalURL(entityId)
         });
         injectJSONLD(
             buildInvestmentJSONLD(
@@ -3290,7 +3246,7 @@ ${
         : ""
 }
 
-${renderContentSections(content)}
+${renderContentSections(content, sourceData)}
 
 ${renderDataQualitySection(
     content,
@@ -3310,7 +3266,7 @@ ${renderEvidenceSection(
             description: currentRoleClaim
                 ? `${entity.name?.fa || ""}؛ ${relationLabel(currentRoleClaim.predicate)} ${getEntityName(entityIndex, currentRoleClaim.object)}.`
                 : `صفحه اطلس ${entity.name?.fa || ""} در Private Capital.`,
-            url: `${SITE_ORIGIN}/atlas/person.html?id=${encodeURIComponent(entityId)}`
+            url: window.PrivateCapitalURL.entityCanonicalURL(entityId)
         });
 
         injectJSONLD(

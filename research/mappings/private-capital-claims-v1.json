@@ -67,6 +67,7 @@
   "subject": "concept:private-capital",
 "predicate": "INCLUDES",
 "object": "concept:real-assets",
+  "claimText": "سرمایه خصوصی دارایی‌های واقعی را نیز دربرمی‌گیرد.",
 "sourceRefs": [
   "source:ecb-private-markets-public-risk"
 ],

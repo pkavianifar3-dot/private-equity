@@ -2,6 +2,17 @@ const assert = require("assert");
 const fs = require("fs");
 const vm = require("vm");
 
+const urlResolverSource = fs.readFileSync(
+    "assets/js/core/url-resolver.js",
+    "utf8"
+);
+
+const citationRendererSource = fs.readFileSync("assets/js/research/citation-renderer.js", "utf8");
+const entityResolverSource = fs.readFileSync(
+    "assets/js/core/entity-resolver.js",
+    "utf8"
+);
+
 const rendererSource = fs.readFileSync(
     "assets/js/article-renderer.js",
     "utf8"
@@ -10,8 +21,12 @@ const rendererSource = fs.readFileSync(
 const context = {
     console,
 };
+context.window = context;
 
 vm.createContext(context);
+vm.runInContext(urlResolverSource, context);
+vm.runInContext(entityResolverSource, context);
+vm.runInContext(citationRendererSource, context);
 vm.runInContext(rendererSource, context);
 
 const { renderArticleContent } = context;
@@ -653,6 +668,68 @@ console.log("Article Renderer conclusion legacy parity PASSED");
 
 {
     const section = {
+        id: "mention-resolver-injection-test",
+        content: [
+            {
+                id: "paragraph-resolver-injection",
+                type: "paragraph",
+                text: "سرمایه‌گذاری خصوصی"
+            }
+        ],
+        mentions: [
+            {
+                id: "mention-resolver-injection",
+                text: "سرمایه‌گذاری خصوصی",
+                entityRef: "concept:private-equity",
+                contentBlockId: "paragraph-resolver-injection",
+                start: 0,
+                end: 18,
+                resolutionStatus: "RESOLVED"
+            }
+        ]
+    };
+
+    const injectedResolver = {
+        resolve(entityRef, contextName) {
+            assert.strictEqual(
+                entityRef,
+                "concept:private-equity"
+            );
+            assert.strictEqual(
+                contextName,
+                "research"
+            );
+
+            return {
+                entity: {
+                    id: entityRef
+                },
+                url: "../atlas/injected-entity.html?id=concept%3Aprivate-equity"
+            };
+        }
+    };
+
+    const html = renderArticleContent(
+        [section],
+        section.mentions,
+        [],
+        [],
+        null,
+        injectedResolver
+    );
+
+    assert(
+        html.includes(
+            '<a href="../atlas/injected-entity.html?id=concept%3Aprivate-equity">سرمایه‌گذاری خصوصی</a>'
+        ),
+        "Renderer must use the injected Entity Resolver URL"
+    );
+
+    console.log("Article Renderer Entity Resolver injection PASSED");
+}
+
+{
+    const section = {
         id: "citation-test",
         content: [
             {
@@ -735,4 +812,56 @@ console.log("Article Renderer conclusion legacy parity PASSED");
     assert(!html.includes("source:test-unknown"));
 
     console.log("Article Renderer citation ordering contract PASSED");
+}
+
+{
+    const researchCitations = [
+        {
+            id: "citation:test-primary",
+            sourceRef: "source:test-primary",
+            evidenceRef: null,
+            contentBlockId: "citation-v2-paragraph",
+            start: 0,
+            end: 14
+        }
+    ];
+
+    const section = {
+        id: "citation-v2-test",
+        content: [
+            {
+                id: "citation-v2-paragraph",
+                type: "paragraph",
+                text: "متن دارای citation"
+            }
+        ]
+    };
+
+    const sources = [
+        {
+            id: "source:test-primary",
+            title_fa: "منبع Citation v2",
+            publisher: "ناشر آزمون",
+            url: "https://example.com/citation-v2"
+        }
+    ];
+
+    const html = renderArticleContent(
+        [section],
+        [],
+        [],
+        researchCitations
+    );
+
+    assert(
+        html.includes("[1]"),
+        "Research v2 Citation must render an inline citation marker"
+    );
+
+    assert(
+        html.includes("#citation-source-1"),
+        "Research v2 Citation must link to its document-level citation anchor"
+    );
+
+    console.log("Article Renderer Research v2 Citation contract PASSED");
 }

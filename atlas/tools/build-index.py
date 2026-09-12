@@ -166,7 +166,7 @@ def collect_evidence_index():
 
         for evidence in data["evidence"]:
             evidence_id = evidence.get("id")
-            claim_id = evidence.get("claim")
+            claim_id = evidence.get("claimRef")
 
             if not evidence_id:
                 raise ValueError(

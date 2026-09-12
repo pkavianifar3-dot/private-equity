@@ -1,3 +1,4 @@
+import re
 import json
 import sys
 from pathlib import Path
@@ -9,6 +10,18 @@ from jsonschema import Draft202012Validator, RefResolver
 
 ROOT = Path(__file__).resolve().parents[1]
 SCHEMAS_DIR = ROOT / "schemas"
+
+ENTITY_TYPE_NAMESPACES = {
+    "Person": "person",
+    "Organization": "organization",
+    "OrganizationUnit": "organization",
+    "Project": "project",
+    "Investment": "investment",
+    "Fund": "fund",
+    "Sector": "sector",
+    "Concept": "concept",
+    "InvestorCategory": "investor-category",
+}
 
 
 def load_json(path):
@@ -64,6 +77,54 @@ def load_registry(path, errors):
         return {}
 
 
+def validate_entity_identity(entity, label, errors):
+    entity_id = entity.get("id")
+    entity_type = entity.get("type")
+
+    namespace = ENTITY_TYPE_NAMESPACES.get(entity_type)
+
+    if not namespace or not entity_id:
+        return
+
+    expected_prefix = f"{namespace}:"
+
+    if not entity_id.startswith(expected_prefix):
+        errors.append(
+            f"{label}: entity id namespace does not match "
+            f"type {entity_type}: expected prefix "
+            f"{expected_prefix!r}, got {entity_id!r}"
+        )
+
+
+ENTITY_TYPE_FIELDS = {
+    "Person": {"honorific", "domains"},
+    "Organization": {"organization_type", "legal_name_status", "national_id", "registration_number"},
+    "OrganizationUnit": set(),
+    "Project": {"project_type", "investment_stage"},
+    "Investment": {"investor", "target", "investment_status", "date_status"},
+    "Fund": set(), "Sector": set(), "Concept": set(), "InvestorCategory": set(),
+}
+
+
+def validate_entity_type_fields(entity, label, errors):
+    allowed = ENTITY_TYPE_FIELDS.get(entity.get("type"), set())
+    fields = set(entity) & set().union(*ENTITY_TYPE_FIELDS.values())
+    for field in fields - allowed:
+        errors.append("{}: field {} is not valid for entity type {}".format(label, field, entity.get("type")))
+
+
+def validate_entity_domains(entity, entity_by_id, label, errors):
+    domains = entity.get("domains")
+    if domains is None:
+        return
+    for domain_id in domains:
+        target = entity_by_id.get(domain_id)
+        if target is None:
+            errors.append(f"{label}: domain {domain_id} is missing from entities/index.json")
+        elif target.get("type") != "Sector":
+            errors.append(f"{label}: domain {domain_id} must reference a Sector")
+
+
 def collect_entities(errors):
     index_path = ROOT / "entities" / "index.json"
     index = load_registry(index_path, errors)
@@ -95,6 +156,8 @@ def collect_entities(errors):
             errors
         )
 
+        validate_entity_identity(entity, f"entities/index.json:{entity_id}", errors)
+
         if entity_id in entity_ids:
             errors.append(
                 f"Duplicate entity ID: {entity_id}"
@@ -113,10 +176,13 @@ def collect_entities(errors):
 
         add_schema_errors(
             data,
-            SCHEMAS_DIR / "atlas-schema-v1.json",
+            SCHEMAS_DIR / "atlas-schema-v2.json",
             str(path.relative_to(ROOT)),
             errors
         )
+
+        validate_entity_identity(data, str(path.relative_to(ROOT)), errors)
+        validate_entity_type_fields(data, str(path.relative_to(ROOT)), errors)
 
         entity_id = data.get("id")
 
@@ -134,6 +200,7 @@ def collect_entities(errors):
             continue
 
         indexed = entity_by_id[entity_id]
+        validate_entity_domains(data, entity_by_id, str(path.relative_to(ROOT)), errors)
 
         if indexed.get("name") != data.get("name"):
             errors.append(
@@ -288,7 +355,7 @@ def collect_evidence(errors):
 
         add_schema_errors(
             data,
-            SCHEMAS_DIR / "evidence-file-schema-v1.json",
+            SCHEMAS_DIR / "evidence-file-schema-v2.json",
             str(path.relative_to(ROOT)),
             errors
         )
@@ -334,6 +401,11 @@ def load_taxonomies(errors):
         errors
     )
 
+    relation_rendering_data = load_registry(
+        ROOT / "taxonomies" / "relation-rendering.json",
+        errors
+    )
+
     role_types_data = load_registry(
         ROOT / "taxonomies" / "role-types.json",
         errors
@@ -341,6 +413,11 @@ def load_taxonomies(errors):
 
     source_types_data = load_registry(
         ROOT / "taxonomies" / "source-types.json",
+        errors
+    )
+
+    research_predicate_types_data = load_registry(
+        ROOT.parent / "research" / "taxonomies" / "research-predicate-types-v1.json",
         errors
     )
 
@@ -364,6 +441,34 @@ def load_taxonomies(errors):
         and "relation" in item
     }
 
+    relation_rendering = relation_rendering_data.get(
+        "relations",
+        {}
+    )
+
+    if isinstance(relation_rendering, dict):
+        for predicate, config in relation_rendering.items():
+            if predicate not in relation_types:
+                errors.append(
+                    f"Relation rendering references unknown predicate: "
+                    f"{predicate}"
+                )
+            if predicate not in relation_rules:
+                errors.append(
+                    f"Relation rendering has no rule: {predicate}"
+                )
+            if not isinstance(config, dict):
+                errors.append(
+                    f"Relation rendering config is invalid: {predicate}"
+                )
+                continue
+            reverse_label = config.get("reverse_label_fa")
+            if not isinstance(reverse_label, str) or not reverse_label.strip():
+                errors.append(
+                    f"Relation rendering reverse label is invalid: "
+                    f"{predicate}"
+                )
+
     role_types = {
         item["id"]
         for item in role_types_data.get(
@@ -378,6 +483,16 @@ def load_taxonomies(errors):
         item["id"]
         for item in source_types_data.get(
             "source_types",
+            []
+        )
+        if isinstance(item, dict)
+        and "id" in item
+    }
+
+    research_predicate_types = {
+        item["id"]
+        for item in research_predicate_types_data.get(
+            "predicate_types",
             []
         )
         if isinstance(item, dict)
@@ -402,9 +517,45 @@ def load_taxonomies(errors):
         relation_types,
         relation_rules,
         role_types,
-        source_types
+        source_types,
+        research_predicate_types
     )
 
+
+def validate_claim_temporal_integrity(claim, errors):
+    claim_id = claim.get("id", "<missing-id>")
+    temporal = claim.get("temporal")
+    if temporal is None:
+        return
+
+    precision = temporal.get("precision")
+    start = temporal.get("start")
+    end = temporal.get("end")
+
+    patterns = {
+        "year": r"^[0-9]{4}$",
+        "month": r"^[0-9]{4}-[0-9]{2}$",
+        "day": r"^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+    }
+
+    if precision == "unknown":
+        if start is not None or end is not None:
+            errors.append(f"{claim_id}: unknown precision requires null start/end")
+        return
+
+    pattern = patterns.get(precision)
+    if not pattern:
+        errors.append(f"{claim_id}: unknown temporal precision {precision}")
+        return
+
+
+    if isinstance(start, str) and isinstance(end, str) and start > end:
+        errors.append(f"{claim_id}: temporal start must not be after end")
+    for field, value in (("start", start), ("end", end)):
+        if value is not None and (not isinstance(value, str) or not re.match(pattern, value)):
+            errors.append(
+                f"{claim_id}: temporal {field} does not match precision {precision}"
+            )
 
 def validate_claim_integrity(
     claims,
@@ -416,6 +567,7 @@ def validate_claim_integrity(
     errors
 ):
     for claim in claims:
+        validate_claim_temporal_integrity(claim, errors)
         claim_id = claim.get("id", "<missing-id>")
         subject_id = claim.get("subject")
         predicate = claim.get("predicate")
@@ -800,8 +952,8 @@ def validate_evidence_integrity(
 
     for evidence in evidence_records:
         evidence_id = evidence.get("id")
-        claim_id = evidence.get("claim")
-        source_id = evidence.get("source")
+        claim_id = evidence.get("claimRef")
+        source_id = evidence.get("sourceRef")
 
         if evidence_id:
             evidence_by_id[evidence_id] = evidence
@@ -822,6 +974,28 @@ def validate_evidence_integrity(
                 f"{evidence_id}: unknown source "
                 f"{source_id}"
             )
+
+        excerpt = evidence.get("excerpt")
+        locator = evidence.get("locator")
+
+        if excerpt is not None:
+            if not isinstance(excerpt, str) or not excerpt.strip():
+                errors.append(
+                    f"{evidence_id}: excerpt must be "
+                    f"a non-empty string when provided"
+                )
+
+        if locator is not None:
+            if not isinstance(locator, dict):
+                errors.append(
+                    f"{evidence_id}: locator must be "
+                    f"an object when provided"
+                )
+            elif not locator:
+                errors.append(
+                    f"{evidence_id}: locator must not be empty "
+                    f"when provided"
+                )
 
     for claim in claims:
         claim_id = claim.get("id")
@@ -872,11 +1046,189 @@ def validate_evidence_integrity(
                 f"{claim_id}: evidenceRefs do not match "
                 f"Evidence records"
             )
+def validate_research_claim_integrity(
+    research_claims,
+    entity_by_id,
+    entity_ids,
+    relation_types,
+    relation_rules,
+    errors,
+    research_predicate_types=None,
+    evidence_records=None
+):
+    for claim in research_claims:
+        claim_id = claim.get("id", "<missing-id>")
+        subject_id = claim.get("subject")
+        predicate = claim.get("predicate")
+        object_id = claim.get("object")
+
+        if research_predicate_types is not None and predicate not in research_predicate_types:
+            errors.append(
+                f"{claim_id}: predicate "
+                f"{predicate} is not allowed in Research"
+            )
+        if predicate not in relation_types:
+            errors.append(
+                f"{claim_id}: unknown research predicate "
+                f"{predicate}"
+            )
+            continue    
+        rule = relation_rules.get(predicate)
+        if not rule:                    
+            continue
+        if subject_id in entity_by_id:
+            subject_type = entity_by_id[subject_id].get("type")
+            allowed_subject_types = rule.get("subject_types", [])
+            if allowed_subject_types and subject_type not in allowed_subject_types:
+                errors.append(
+                    f"{claim_id}: research subject type "
+                    f"{subject_type} is not allowed for {predicate}"
+                )                 
+        if object_id in entity_by_id:
+            object_type = entity_by_id[object_id].get("type")
+            allowed_object_types = rule.get("object_types", [])
+            if allowed_object_types and object_type not in allowed_object_types:                
+                errors.append(
+                    f"{claim_id}: research object type "
+                    f"{object_type} is not allowed for {predicate}"
+                )
+def validate_research_citation_integrity(research_data, source_ids, evidence_records, errors):
+    citations = research_data.get("citations", [])
+    if not isinstance(citations, list):
+        return
+
+    evidence_by_id = {e.get("id"): e for e in (evidence_records or []) if isinstance(e, dict) and e.get("id")}
+    content_blocks = {block.get("id"): block for section in research_data.get("sections", []) if isinstance(section, dict) for block in section.get("content", []) if isinstance(block, dict) and block.get("id")}
+    citation_ids = set()
+
+    for citation in citations:
+        citation_id = citation.get("id", "<missing-citation-id>")
+        if citation_id in citation_ids:
+            errors.append(f"{citation_id}: duplicate citation id")
+        citation_ids.add(citation_id)
+
+        source_ref = citation.get("sourceRef")
+        if source_ref not in source_ids:
+            errors.append(f"{citation_id}: unknown citation source {source_ref}")
+
+        evidence_ref = citation.get("evidenceRef")
+        if evidence_ref is not None and evidence_ref not in evidence_by_id:
+            errors.append(f"{citation_id}: unknown citation evidence {evidence_ref}")
+        if evidence_ref is not None and evidence_ref in evidence_by_id and evidence_by_id[evidence_ref].get("sourceRef") != source_ref:
+            errors.append(f"{citation_id}: citation evidence source mismatch")
+
+        block_id = citation.get("contentBlockId")
+        if block_id is not None and block_id not in content_blocks:
+            errors.append(f"{citation_id}: unknown citation content block {block_id}")
+
+        start = citation.get("start")
+        end = citation.get("end")
+        if (start is None) != (end is None):
+            errors.append(f"{citation_id}: citation start and end must be provided together")
+        if (start is not None or end is not None) and block_id is None:
+            errors.append(f"{citation_id}: citation offsets require contentBlockId")
+        if start is not None and end is not None and start > end:
+            errors.append(f"{citation_id}: citation start must not be after end")
+        if block_id in content_blocks and start is not None and end is not None:
+            block = content_blocks[block_id]
+            text = block.get("text")
+            if not isinstance(text, str):
+                errors.append(f"{citation_id}: citation offsets require a textual content block")
+            elif end > len(text):
+                errors.append(f"{citation_id}: citation end exceeds content block text length")
+
+def validate_research_mention_integrity(research_data, entity_ids, errors):
+    sections = research_data.get("sections", [])
+    if not isinstance(sections, list):
+        return
+
+    for section in sections:
+        if not isinstance(section, dict):
+            continue
+
+        content_blocks = {
+            block.get("id"): block
+            for block in section.get("content", [])
+            if isinstance(block, dict) and block.get("id")
+        }
+
+        mentions = section.get("mentions", [])
+        if not isinstance(mentions, list):
+            continue
+
+        for mention in mentions:
+            if not isinstance(mention, dict):
+                continue
+
+            mention_id = mention.get("id", "<missing-mention-id>")
+            block_id = mention.get("contentBlockId")
+            entity_ref = mention.get("entityRef")
+            resolution_status = mention.get("resolutionStatus")
+
+            if resolution_status == "RESOLVED" and entity_ref is None:
+                errors.append(
+                    f"{mention_id}: resolved mention requires entityRef"
+                )
+
+            if (
+                resolution_status == "RESOLVED"
+                and entity_ref is not None
+                and entity_ref not in entity_ids
+            ):
+                errors.append(
+                    f"{mention_id}: unknown mention entity {entity_ref}"
+                )
+
+            if block_id is not None and block_id not in content_blocks:
+                errors.append(
+                    f"{mention_id}: unknown mention content block {block_id}"
+                )
+
+            start = mention.get("start")
+            end = mention.get("end")
+
+            if (start is None) != (end is None):
+                errors.append(
+                    f"{mention_id}: mention start and end must be provided together"
+                )
+
+            if (start is not None or end is not None) and block_id is None:
+                errors.append(
+                    f"{mention_id}: mention offsets require contentBlockId"
+                )
+
+            if block_id in content_blocks and start is not None and end is not None:
+                block = content_blocks[block_id]
+                if not isinstance(block.get("text"), str):
+                    errors.append(
+                        f"{mention_id}: mention offsets require a textual content block"
+                    )
+                elif end > len(block.get("text")):
+                    errors.append(
+                        f"{mention_id}: mention end exceeds content block text length"
+                    )
+
+            if start is not None and start < 0:
+                errors.append(
+                    f"{mention_id}: mention start must not be negative"
+                )
+
+            if start is not None and end is not None and start >= end:
+                errors.append(
+                    f"{mention_id}: mention start must be before end"
+                )
+
+
 def validate_research_integrity(
+    entity_by_id,
     entity_ids,
     claim_ids,
     source_ids,
-    errors
+    relation_types,
+    relation_rules,
+    errors,
+    research_predicate_types=None,
+    evidence_records=None
 ):
     """
     Validate Research mappings against canonical Atlas data.
@@ -906,6 +1258,13 @@ def validate_research_integrity(
             errors
         )
 
+        add_schema_errors(
+            research_claims_data,
+            research_root / "schemas" / "candidate-claims-schema-v1.json",
+            "research/mappings/private-capital-claims-v1.json",
+            errors
+        )
+
         research_claims = research_claims_data.get(
             "claims",
             []
@@ -917,6 +1276,39 @@ def validate_research_integrity(
                 "'claims' must be an array"
             )
             research_claims = []
+
+        validate_research_claim_integrity(
+            research_claims,
+            entity_by_id,
+            entity_ids,
+            relation_types,
+            relation_rules,
+            errors,
+            research_predicate_types,
+        )
+
+        if evidence_records is not None:
+            evidence_by_id = {
+                item.get("id"): item
+                for item in evidence_records
+                if isinstance(item, dict) and item.get("id")
+            }
+            for claim in research_claims:
+                claim_id = claim.get("id", "<missing-id>")
+                canonical_claim_ref = claim.get("canonicalClaimRef")
+                source_refs = set(claim.get("sourceRefs", []))
+                for source_ref in source_refs:
+                    if source_ref not in source_ids:
+                        errors.append(f"{claim_id}: unknown research source {source_ref}")
+                for evidence_ref in claim.get("evidenceRefs", []):
+                    evidence = evidence_by_id.get(evidence_ref)
+                    if evidence is None:
+                        errors.append(f"{claim_id}: unknown research evidence {evidence_ref}")
+                        continue
+                    if canonical_claim_ref and evidence.get("claimRef") != canonical_claim_ref:
+                        errors.append(f"{claim_id}: evidence {evidence_ref} does not support {canonical_claim_ref}")
+                    if evidence.get("sourceRef") not in source_refs:
+                        errors.append(f"{claim_id}: evidence {evidence_ref} source is not declared in sourceRefs")
 
         for claim in research_claims:
             claim_id = claim.get(
@@ -1021,6 +1413,8 @@ def validate_research_integrity(
             if not isinstance(data, dict):
                 continue
 
+            validate_research_citation_integrity(data, source_ids, evidence_records, errors)
+
             sections = data.get("sections", [])
 
             if not isinstance(sections, list):
@@ -1064,7 +1458,42 @@ def validate_research_integrity(
                             )
 
 
-def validate_research_documents(errors):
+def validate_person_content(errors, source_ids):
+    content_root = ROOT / "content" / "persons"
+    schema_path = SCHEMAS_DIR / "person-content-schema-v1.json"
+
+    if not schema_path.exists():
+        errors.append(
+            "atlas/schemas/person-content-schema-v1.json: "
+            "schema file not found"
+        )
+        return
+
+    if not content_root.exists():
+        return
+
+    for path in sorted(content_root.glob("*.json")):
+        data = load_registry(path, errors)
+
+        add_schema_errors(
+            data,
+            schema_path,
+            str(path.relative_to(ROOT)),
+            errors
+        )
+
+        for section in data.get("sections", []):
+            for paragraph in section.get("paragraphs", []):
+                for source_ref in paragraph.get("sourceRefs", []):
+                    if source_ref not in source_ids:
+                        errors.append(
+                            f"{path.relative_to(ROOT)}:"
+                            f"{section.get('id')}: unknown canonical source "
+                            f"{source_ref}"
+                        )
+
+
+def validate_research_documents(errors, entity_ids):
     research_root = ROOT.parent / "research"
 
     schema_path = (
@@ -1102,13 +1531,21 @@ def validate_research_documents(errors):
             str(path.relative_to(ROOT.parent)),
             errors
         )
+
+        validate_research_mention_integrity(
+            data,
+            entity_ids,
+            errors
+        )
+
+
 def main():
     errors = []
     warnings = []
 
     entity_by_id, entity_ids = collect_entities(errors)
 
-    relation_types, relation_rules, role_types, source_types = load_taxonomies(
+    relation_types, relation_rules, role_types, source_types, research_predicate_types = load_taxonomies(
         errors
     )
 
@@ -1132,6 +1569,11 @@ def main():
     )
 
     errors.extend(validate_claim_versioning(claims))
+
+    validate_person_content(
+        errors,
+        source_ids
+    )
     validate_claim_analysis_integrity(
         claims,
         claim_ids,
@@ -1153,12 +1595,17 @@ def main():
         errors
     )
     validate_research_integrity(
+        entity_by_id,
         entity_ids,
         claim_ids,
         source_ids,
-        errors
+        relation_types,
+        relation_rules,
+        errors,
+        research_predicate_types,
+        evidence_records
     )
-    validate_research_documents(errors)    
+    validate_research_documents(errors, entity_ids)
     if errors:
         print("Atlas validation FAILED")
         print()

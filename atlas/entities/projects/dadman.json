@@ -1,4 +1,5 @@
 {
+  "version": "2.0",
   "id": "project:dadman",
   "type": "Project",
   "name": {
@@ -6,8 +7,6 @@
     "en": "Dadman"
   },
   "lifecycleStatus": "REVIEW",
-  "metadata": {
-    "project_type": "real_estate",
-    "investment_stage": "reported_first_private_equity_project"
-  }
+  "project_type": "real_estate",
+  "investment_stage": "reported_first_private_equity_project"
 }

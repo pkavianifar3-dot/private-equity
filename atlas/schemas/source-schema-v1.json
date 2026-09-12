@@ -80,14 +80,8 @@
             "string",
             "null"
           ]
-        },
-
-        "citation_refs": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
         }
+
       },
 
       "additionalProperties": false

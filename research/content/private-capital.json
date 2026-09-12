@@ -4,326 +4,335 @@
   "schemaVersion": "2.0",
   "url": "/articles/private-capital.html",
   "status": "PUBLISHED",
-
   "title": {
     "fa": "سرمایه خصوصی (Private Capital) چیست؟ | راهنمای جامع مفهومی",
     "en": "What Is Private Capital? | A Comprehensive Conceptual Guide"
   },
-
   "summary": {
     "fa": "راهنمای مفهومی درباره سرمایه خصوصی، دامنه آن و تمایز میان سرمایه‌گذاری خصوصی، اعتبار خصوصی و دارایی‌های واقعی.",
     "en": "A conceptual guide to private capital, its scope, and the distinction between private equity, private credit, and real assets."
   },
-
   "publication": {
     "datePublished": "2026-08-13T00:00:00+03:30",
     "dateModified": "2026-08-13T00:00:00+03:30",
     "authorRefs": []
   },
-
   "entityRefs": [
     "concept:private-equity"
   ],
-
-  "claimRefs": [],
-"candidateClaimRefs": [
-  "research-claim:private-capital-broader-than-private-equity",
-  "research-claim:private-capital-includes-private-equity",
-  "research-claim:private-capital-includes-private-credit",
-  "research-claim:private-capital-includes-real-assets",
-  "research-claim:private-capital-includes-venture-capital",
-  "research-claim:private-capital-includes-growth-capital",
-  "research-claim:private-capital-boundaries-vary",
-  "research-claim:private-credit-lender-position",
-  "research-claim:private-credit-return-contractual",
-  "research-claim:private-credit-and-private-equity-linked",
-  "research-claim:real-assets-include-physical-assets",
-  "research-claim:private-capital-private-access"
-],
-  "evidenceRefs": [],
-
-  "sourceRefs": [],
-
-  "relatedResearchRefs": [
-    "research:private-equity"
-  ],
-
-  "sections": [
-    {
-  "id": "introduction",
   "claimRefs": [
     "claim:private-capital-broader-than-private-equity",
-    "claim:private-capital-includes-private-equity",
-    "claim:private-capital-includes-private-credit",
-    "claim:private-capital-includes-real-assets"
-  ],
-  "sourceRefs": [
-    "source:ecb-private-markets-public-risk"
-  ],
-  "title": {
-    "fa": "مقدمه",
-    "en": "Introduction"
-  },
-  "content": [
-    {
-      "id": "intro-paragraph-01",
-      "type": "paragraph",
-      "text": "«سرمایه خصوصی» (Private Capital)، چتر مفهومی اصلی در حوزه سرمایه‌گذاری و تأمین مالی در بازارهای غیرعمومی است و دامنه آن از سرمایه‌گذاری خصوصی و جسورانه تا بدهی خصوصی و دارایی‌های واقعی را شامل می‌شود. پیدایش و تحول در سرمایه خصوصی، اندازه بازار جهانی، سازوکار خلق ارزش و پیامدهای آن برای اقتصاد ایران از جمله موارد مهمی است که برای درک این مفهوم نیاز است بررسی شود."
-    },
-    {
-      "id": "intro-paragraph-02",
-      "type": "paragraph",
-      "text": "از آنجا که سرمایه خصوصی (Private Capital) یکی از مفاهیم جامع در حوزه تأمین مالی و سرمایه‌گذاری در اقتصاد مدرن است، این مفهوم دامنه‌ای وسیع‌تر نسبت به «سرمایه‌گذاری خصوصی» (Private Equity) دارد. «سرمایه‌گذاری خصوصی» فقط یکی از اجزای یک اکوسیستم بزرگ‌تر است که شامل «سرمایه‌گذاری خطرپذیر» (Venture Capital)، «اعتبار خصوصی» (Private Credit) و «دارایی‌های واقعی» (Real Assets) نیز می‌شود."
-    },
-  {
-  "id": "intro-figure-01",
-    "type": "figure",
-  "src": "../assets/images/private-capital.png",
-  "alt": "سرمایه خصوصی و ساختار بازارهای خصوصی",
-  "caption": ""
-}
-  ],
-      "mentions": [
-  {
-  "id": "mention-introduction-private-equity",
-  "text": "سرمایه‌گذاری خصوصی",
-  "entityRef": "concept:private-equity",
-  "contentBlockId": "intro-paragraph-02",
-  "start": 151,
-  "end": 169,
-  "resolutionStatus": "RESOLVED"
-}
-]
-},
-    {
-  "id": "definition-and-scope",
-  "claimRefs": [
-    "claim:private-capital-private-access"
-  ],
-  "sourceRefs": [
-    "source:ecb-private-markets-public-risk"
-  ],
-  "title": {
-    "fa": "سرمایه خصوصی چیست؟",
-    "en": "What Is Private Capital?"
-  },
-  "content": [
-    {
-  "id": "definition-subheading-01",
-      "type": "subheading",
-  "text": "تعریف و دامنه سرمایه خصوصی"
-},
-    {
-"id": "definition-paragraph-01",
-      "type": "paragraph",
-      "text": "سرمایه خصوصی به طیفی از سرمایه‌گذاری‌ها و تأمین مالی‌هایی میان سرمایه‌گذاران و مالکان دارایی‌ها یا بنگاه‌هایی اشاره دارد که به‌طور معمول خارج از بازارهای عمومی انجام می‌شود. در این چارچوب، «خصوصی» به معنای عدم معامله عمومی ابزار یا دارایی در زمان سرمایه‌گذاری است، نه لزوماً مالکیت خصوصی به معنای حقوقی آن. به همین دلیل، یک شرکت خصوصی، یک پروژه زیرساختی، یک وام مستقیم به بنگاه یا یک سرمایه‌گذاری در دارایی واقعی می‌تواند در قلمرو «سرمایه خصوصی» قرار گیرد."
-    },
-    {
-"id": "definition-paragraph-02",
-      "type": "paragraph",
-      "text": "بانک مرکزی اروپا نیز بازارهای خصوصی را دربرگیرنده سه گروه اصلی «سرمایه‌گذاری خصوصی» (Private Equity)، «اعتبار خصوصی» (Private Credit) و «دارایی‌های واقعی» (Real Assets) معرفی می‌کند."
-    },
-    {
-"id": "definition-paragraph-03",
-      "type": "paragraph",
-      "text": "از نظر ساختار بازار، «سرمایه خصوصی» را باید از زیرمجموعه‌هایش متمایز کرد تا بتوان بدهی خصوصی، زیرساخت، املاک، منابع طبیعی، سرمایه‌گذاری جسورانه و دیگر استراتژی‌های غیرعمومی را در یک چارچوب مفهومی یکسان تحلیل کرد."
-    },
-    {
-"id": "definition-figure-01",
-      "type": "figure",
-      "src": "../assets/images/2026-08-13-private-capital-structure.png.png",
-      "alt": "شکل ۱ — هدایت منابع مالی توسط صندوق‌های بازارهای خصوصی",
-      "caption": "شکل ۱ — هدایت منابع مالی توسط صندوق‌های بازارهای خصوصی"
-    }
-  ]
-},
-    {
-  "id": "main-blocks",
-  "claimRefs": [
     "claim:private-capital-includes-private-equity",
     "claim:private-capital-includes-private-credit",
     "claim:private-capital-includes-real-assets",
     "claim:private-capital-includes-venture-capital",
     "claim:private-capital-includes-growth-capital",
-    "claim:private-capital-boundaries-vary"
-  ],
-  "sourceRefs": [
-    "source:ecb-private-markets-public-risk"
-  ],
-  "title": {
-
-    "fa": "بلوک‌های اصلی سرمایه خصوصی",
-    "en": "Main Blocks of Private Capital"
-  },
-  "content": [
-    {
-"id": "main-blocks-paragraph-01",
-      "type": "paragraph",
-      "text": "در یک طبقه‌بندی عملیاتی، «سرمایه خصوصی» را می‌توان در پنج بلوک اصلی دید: «سرمایه‌گذاری خصوصی»، «سرمایه‌گذاری خطرپذیر»، «سرمایه رشد»، «اعتبار خصوصی» و «دارایی‌های واقعی». مرزبندی دقیق میان این بلوک‌ها در منابع مختلف یکسان نیست و برخی منابع، از جمله در موضوع «اعتبار خصوصی»، دامنه متفاوتی از وام‌دهی مستقیم تا اعتبارات مبتنی بر دارایی را در گزارش‌های خود منظور می‌کنند."
-    }
-  ]
-},
-    {
-  "id": "private-equity",
-  "title": {
-    "fa": "سرمایه‌گذاری خصوصی (Private Equity)",
-    "en": "Private Equity"
-  },
-  "content": [
-    {
-"id": "private-equity-subheading-01",
-      "type": "subheading",
-      "text": "سرمایه‌گذاری خصوصی (Private Equity)"
-    },
-    {
-      "id": "private-equity-paragraph-01",
-      "type": "paragraph",
-      "text": "این مفهوم به سرمایه‌گذاری در حقوق صاحبان سهام شرکت‌های غیربورسی اشاره دارد و در ادبیات حرفه‌ای، استراتژی‌هایی مانند خرید اهرمی (Buyout)، سرمایه‌گذاری خطرپذیر، سرمایه رشد، بازسازی و احیای شرکت (Turnaround) و سرمایه‌گذاری در شرکت‌های دچار بحران (Distressed) را دربرمی‌گیرد."
-    },
-    {
-"id": "private-equity-paragraph-02",
-      "type": "paragraph",
-      "text": "در «سرمایه‌گذاری خطرپذیر»، تمرکز بیشتر بر بنگاه‌های جوان‌تر، نوآور و دارای ظرفیت رشد بالا است که به دلیل عدم قطعیت و ریسک عملیاتی و تجاری بیشتر، با محدودیت دسترسی به منابع مالی متعارف مواجه‌اند."
-    },
-    {
-  "id": "private-equity-paragraph-03",
-      "type": "paragraph",
-      "text": "در مقابل، «سرمایه رشد» نسبتاً برای تأمین مالی توسعه و گسترش بنگاه‌های بالغ به کار گرفته می‌شود و لزوماً مستلزم تملک کامل یا کسب کنترل شرکت نیست."
-    },
-    {
-"id": "private-equity-paragraph-04",
-      "type": "paragraph",
-      "text": "در «بازسازی و احیای شرکت» نیز هدف اصلی، اصلاح عملکرد عملیاتی و مالی بنگاه و بازگرداندن آن به مسیر پایدار رشد و سودآوری است؛ در حالی که سرمایه‌گذاری در شرکت‌های دچار بحران بر شناسایی و بهره‌برداری از فرصت‌های سرمایه‌گذاری در بنگاه‌هایی متمرکز است که با مشکلات مالی، کاهش نقدینگی یا احتمال نکول و ورشکستگی مواجه‌اند."
-    }
-  ]
-},
-    {
-  "id": "private-credit",
-  "claimRefs": [
+    "claim:private-capital-boundaries-vary",
     "claim:private-credit-lender-position",
     "claim:private-credit-return-contractual",
-    "claim:private-credit-and-private-equity-linked"
-  ],
-  "sourceRefs": [
-    "source:ecb-private-markets-public-risk",
-    "source:federal-reserve-private-credit-2024"
-  ],
-  "title": {
-    "fa": "اعتبار خصوصی (Private Credit)",
-    "en": "Private Credit"
-  },
-  "content": [
-    {
-"id": "private-credit-subheading-01",
-      "type": "subheading",
-      "text": "اعتبار خصوصی (Private Credit)"
-    },
-    {
-      "id": "private-credit-paragraph-01",
-      "type": "paragraph",
-      "text": "منطق «اعتبار خصوصی» از منطق سرمایه‌گذاری در حقوق صاحبان سهام متفاوت است؛ به این معنا که سرمایه‌گذار در این حوزه عمدتاً در جایگاه اعتباردهنده قرار دارد و بازده سرمایه‌گذاری او از محل دریافت بهره، کارمزد و دیگر اجزای قراردادی تأمین می‌شود."
-    },
-    {
-"id": "private-credit-paragraph-02",
-      "type": "paragraph",
-      "text": "از این منظر، ریسک و سازوکار ایجاد بازده در اعتبار خصوصی بیش از آنکه به افزایش ارزش حقوق صاحبان سهام وابسته باشد، به کیفیت اعتباری و توان بازپرداخت وام‌گیرنده، ساختار قرارداد تأمین مالی و میزان حمایت‌های اعتباری وابسته است."
-    },
-    {
- "id": "private-credit-paragraph-03",
-      "type": "paragraph",
-      "text": "بر اساس طبقه‌بندی ارائه‌شده از سوی بانک مرکزی اروپا، اعتبار خصوصی را می‌توان در چهار گونه متداول شامل وام‌دهی مستقیم (Direct Lending)، تأمین مالی میان‌لایه‌ای (Mezzanine)، موقعیت‌های اعتباری خاص (Special Credit Situations) و بدهی شرکت‌های دچار بحران مالی (Distressed Debt) دسته‌بندی کرد."
-    },
-    {
-"id": "private-credit-paragraph-04",
-      "type": "paragraph",
-      "text": "با وجود تفاوت در ساختار و سطح ریسک این چهار گونه، وجه مشترک آن‌ها تأمین مالی خارج از نظام سنتی وام‌دهی بانکی و اتکای بیشتر به قراردادهای خصوصی میان سرمایه‌گذار و وام‌گیرنده است."
-    },
-    {
-"id": "private-credit-paragraph-05",
-      "type": "paragraph",
-      "text": "در عین حال، اعتبار خصوصی و سرمایه‌گذاری خصوصی را نمی‌توان دو حوزه منفک از یکدیگر تلقی کرد. میان این دو بازار، پیوند عملیاتی قابل‌توجهی وجود دارد؛ زیرا بخشی از منابع اعتبار خصوصی برای تأمین مالی تملک شرکت‌ها مورد استفاده قرار می‌گیرد. به بیان دیگر، در ساختار بسیاری از معاملات، سرمایه‌گذاری خصوصی در بخش حقوق صاحبان سهام و اعتبار خصوصی در بخش بدهی تأمین مالی معامله به کار می‌رود."
-    }
-  ]
-},
-    {
-  "id": "real-assets",
-  "claimRefs": [
-    "claim:real-assets-include-physical-assets"
-  ],
-  "sourceRefs": [
-    "source:ecb-private-markets-public-risk"
-  ],
-  "title": {
-    "fa": "دارایی‌های واقعی (Real Assets)",
-    "en": "Real Assets"
-  },
-  "content": [
-    {
-"id": "real-assets-subheading-01",
-      "type": "subheading",
-      "text": "دارایی‌های واقعی (Real Assets)"
-    },
-    {
-      "id": "real-assets-paragraph-01",
-      "type": "paragraph",
-      "text": "دارایی‌های واقعی طیف متنوعی از دارایی‌های عینی و فیزیکی، از جمله املاک و مستغلات، زیرساخت‌ها و منابع طبیعی را دربرمی‌گیرد."
-    },
-    {
-"id": "real-assets-paragraph-02",
-      "type": "paragraph",
-      "text": "در این حوزه، منشأ بازده سرمایه‌گذاری لزوماً افزایش ارزش حقوق صاحبان سهام یک شرکت نیست؛ بلکه می‌تواند از ترکیبی از جریان‌های نقدی عملیاتی، درآمدهای اجاره‌ای، عوارض و تعرفه‌های زیرساختی، درآمد حاصل از بهره‌برداری از دارایی، تغییرات قیمت یا ارزش ذاتی دارایی و سایر منافع اقتصادی مرتبط با مالکیت یا بهره‌برداری از آن ناشی شود."
-    },
-    {
-"id": "real-assets-paragraph-03",
-      "type": "paragraph",
-      "text": "ازاین‌رو، ماهیت بازده در دارایی‌های واقعی تابع ویژگی‌های اقتصادی و قراردادی دارایی، ساختار مالکیت و بهره‌برداری، شرایط بازار و افق سرمایه‌گذاری است."
-    }
-  ]
-},
-    {
-  "id": "conclusion",
-  "claimRefs": [
+    "claim:private-credit-and-private-equity-linked",
+    "claim:real-assets-include-physical-assets",
     "claim:private-capital-private-access"
   ],
-  "sourceRefs": [
-    "source:ecb-private-markets-public-risk"
+  "candidateClaimRefs": [],
+  "evidenceRefs": [],
+  "sourceRefs": [],
+  "relatedResearchRefs": [
+    "research:private-equity"
   ],
-  "title": {
-    "fa": "جمع‌بندی",
-    "en": "Conclusion"
-  },
-  "content": [
+  "sections": [
     {
-"id": "conclusion-subheading-01",
-      "type": "subheading",
-      "text": "جمع‌بندی"
+      "id": "introduction",
+      "claimRefs": [
+        "claim:private-capital-broader-than-private-equity",
+        "claim:private-capital-includes-private-equity",
+        "claim:private-capital-includes-private-credit",
+        "claim:private-capital-includes-real-assets"
+      ],
+      "sourceRefs": [
+        "source:ecb-private-markets-public-risk"
+      ],
+      "title": {
+        "fa": "مقدمه",
+        "en": "Introduction"
+      },
+      "content": [
+        {
+          "id": "intro-paragraph-01",
+          "type": "paragraph",
+          "text": "«سرمایه خصوصی» (Private Capital)، چتر مفهومی اصلی در حوزه سرمایه‌گذاری و تأمین مالی در بازارهای غیرعمومی است و دامنه آن از سرمایه‌گذاری خصوصی و جسورانه تا بدهی خصوصی و دارایی‌های واقعی را شامل می‌شود. پیدایش و تحول در سرمایه خصوصی، اندازه بازار جهانی، سازوکار خلق ارزش و پیامدهای آن برای اقتصاد ایران از جمله موارد مهمی است که برای درک این مفهوم نیاز است بررسی شود."
+        },
+        {
+          "id": "intro-paragraph-02",
+          "type": "paragraph",
+          "text": "از آنجا که سرمایه خصوصی (Private Capital) یکی از مفاهیم جامع در حوزه تأمین مالی و سرمایه‌گذاری در اقتصاد مدرن است، این مفهوم دامنه‌ای وسیع‌تر نسبت به «سرمایه‌گذاری خصوصی» (Private Equity) دارد. «سرمایه‌گذاری خصوصی» فقط یکی از اجزای یک اکوسیستم بزرگ‌تر است که شامل «سرمایه‌گذاری خطرپذیر» (Venture Capital)، «اعتبار خصوصی» (Private Credit) و «دارایی‌های واقعی» (Real Assets) نیز می‌شود."
+        },
+        {
+          "id": "intro-figure-01",
+          "type": "figure",
+          "src": "../assets/images/private-capital.png",
+          "alt": "سرمایه خصوصی و ساختار بازارهای خصوصی",
+          "caption": ""
+        }
+      ],
+      "mentions": [
+        {
+          "id": "mention-introduction-private-equity",
+          "text": "سرمایه‌گذاری خصوصی",
+          "entityRef": "concept:private-equity",
+          "contentBlockId": "intro-paragraph-02",
+          "start": 151,
+          "end": 169,
+          "resolutionStatus": "RESOLVED"
+        }
+      ]
     },
     {
-      "id": "conclusion-paragraph-01",
-      "type": "paragraph",
-      "text": "در مجموع، مفهوم «سرمایه خصوصی» را نمی‌توان صرفاً بر مبنای یک ابزار مالی مشخص، نظیر سهام یا بدهی، تعریف یا طبقه‌بندی کرد. معیار مناسب‌تر، ماهیت خصوصی دسترسی به فرصت سرمایه‌گذاری، افق زمانی سرمایه‌گذاری و سازوکار خلق و تحقق بازده است."
+      "id": "definition-and-scope",
+      "claimRefs": [
+        "claim:private-capital-private-access"
+      ],
+      "sourceRefs": [
+        "source:ecb-private-markets-public-risk"
+      ],
+      "title": {
+        "fa": "سرمایه خصوصی چیست؟",
+        "en": "What Is Private Capital?"
+      },
+      "content": [
+        {
+          "id": "definition-subheading-01",
+          "type": "subheading",
+          "text": "تعریف و دامنه سرمایه خصوصی"
+        },
+        {
+          "id": "definition-paragraph-01",
+          "type": "paragraph",
+          "text": "سرمایه خصوصی به طیفی از سرمایه‌گذاری‌ها و تأمین مالی‌هایی میان سرمایه‌گذاران و مالکان دارایی‌ها یا بنگاه‌هایی اشاره دارد که به‌طور معمول خارج از بازارهای عمومی انجام می‌شود. در این چارچوب، «خصوصی» به معنای عدم معامله عمومی ابزار یا دارایی در زمان سرمایه‌گذاری است، نه لزوماً مالکیت خصوصی به معنای حقوقی آن. به همین دلیل، یک شرکت خصوصی، یک پروژه زیرساختی، یک وام مستقیم به بنگاه یا یک سرمایه‌گذاری در دارایی واقعی می‌تواند در قلمرو «سرمایه خصوصی» قرار گیرد."
+        },
+        {
+          "id": "definition-paragraph-02",
+          "type": "paragraph",
+          "text": "بانک مرکزی اروپا نیز بازارهای خصوصی را دربرگیرنده سه گروه اصلی «سرمایه‌گذاری خصوصی» (Private Equity)، «اعتبار خصوصی» (Private Credit) و «دارایی‌های واقعی» (Real Assets) معرفی می‌کند."
+        },
+        {
+          "id": "definition-paragraph-03",
+          "type": "paragraph",
+          "text": "از نظر ساختار بازار، «سرمایه خصوصی» را باید از زیرمجموعه‌هایش متمایز کرد تا بتوان بدهی خصوصی، زیرساخت، املاک، منابع طبیعی، سرمایه‌گذاری جسورانه و دیگر استراتژی‌های غیرعمومی را در یک چارچوب مفهومی یکسان تحلیل کرد."
+        },
+        {
+          "id": "definition-figure-01",
+          "type": "figure",
+          "src": "../assets/images/2026-08-13-private-capital-structure.png.png",
+          "alt": "شکل ۱ — هدایت منابع مالی توسط صندوق‌های بازارهای خصوصی",
+          "caption": "شکل ۱ — هدایت منابع مالی توسط صندوق‌های بازارهای خصوصی"
+        }
+      ]
     },
     {
-"id": "conclusion-paragraph-02",
-      "type": "paragraph",
-      "text": "به بیان دقیق‌تر، «خصوصی» بودن در این چارچوب بیش از آنکه به نوع دارایی یا ابزار تأمین مالی اشاره داشته باشد، ناظر بر نحوه دسترسی سرمایه‌گذار به فرصت سرمایه‌گذاری و ویژگی‌های بازار مربوطه است."
+      "id": "main-blocks",
+      "claimRefs": [
+        "claim:private-capital-includes-private-equity",
+        "claim:private-capital-includes-private-credit",
+        "claim:private-capital-includes-real-assets",
+        "claim:private-capital-includes-venture-capital",
+        "claim:private-capital-includes-growth-capital",
+        "claim:private-capital-boundaries-vary"
+      ],
+      "sourceRefs": [
+        "source:ecb-private-markets-public-risk"
+      ],
+      "title": {
+        "fa": "بلوک‌های اصلی سرمایه خصوصی",
+        "en": "Main Blocks of Private Capital"
+      },
+      "content": [
+        {
+          "id": "main-blocks-paragraph-01",
+          "type": "paragraph",
+          "text": "در یک طبقه‌بندی عملیاتی، «سرمایه خصوصی» را می‌توان در پنج بلوک اصلی دید: «سرمایه‌گذاری خصوصی»، «سرمایه‌گذاری خطرپذیر»، «سرمایه رشد»، «اعتبار خصوصی» و «دارایی‌های واقعی». مرزبندی دقیق میان این بلوک‌ها در منابع مختلف یکسان نیست و برخی منابع، از جمله در موضوع «اعتبار خصوصی»، دامنه متفاوتی از وام‌دهی مستقیم تا اعتبارات مبتنی بر دارایی را در گزارش‌های خود منظور می‌کنند."
+        }
+      ]
     },
     {
-"id": "conclusion-paragraph-03",
-      "type": "paragraph",
-      "text": "از این منظر، سرمایه خصوصی یک چارچوب فراگیر برای سرمایه‌گذاری در فرصت‌هایی است که دسترسی به آن‌ها عمدتاً از طریق بازارهای خصوصی و خارج از بازارهای عمومی سرمایه صورت می‌گیرد."
+      "id": "private-equity",
+      "title": {
+        "fa": "سرمایه‌گذاری خصوصی (Private Equity)",
+        "en": "Private Equity"
+      },
+      "content": [
+        {
+          "id": "private-equity-subheading-01",
+          "type": "subheading",
+          "text": "سرمایه‌گذاری خصوصی (Private Equity)"
+        },
+        {
+          "id": "private-equity-paragraph-01",
+          "type": "paragraph",
+          "text": "این مفهوم به سرمایه‌گذاری در حقوق صاحبان سهام شرکت‌های غیربورسی اشاره دارد و در ادبیات حرفه‌ای، استراتژی‌هایی مانند خرید اهرمی (Buyout)، سرمایه‌گذاری خطرپذیر، سرمایه رشد، بازسازی و احیای شرکت (Turnaround) و سرمایه‌گذاری در شرکت‌های دچار بحران (Distressed) را دربرمی‌گیرد."
+        },
+        {
+          "id": "private-equity-paragraph-02",
+          "type": "paragraph",
+          "text": "در «سرمایه‌گذاری خطرپذیر»، تمرکز بیشتر بر بنگاه‌های جوان‌تر، نوآور و دارای ظرفیت رشد بالا است که به دلیل عدم قطعیت و ریسک عملیاتی و تجاری بیشتر، با محدودیت دسترسی به منابع مالی متعارف مواجه‌اند."
+        },
+        {
+          "id": "private-equity-paragraph-03",
+          "type": "paragraph",
+          "text": "در مقابل، «سرمایه رشد» نسبتاً برای تأمین مالی توسعه و گسترش بنگاه‌های بالغ به کار گرفته می‌شود و لزوماً مستلزم تملک کامل یا کسب کنترل شرکت نیست."
+        },
+        {
+          "id": "private-equity-paragraph-04",
+          "type": "paragraph",
+          "text": "در «بازسازی و احیای شرکت» نیز هدف اصلی، اصلاح عملکرد عملیاتی و مالی بنگاه و بازگرداندن آن به مسیر پایدار رشد و سودآوری است؛ در حالی که سرمایه‌گذاری در شرکت‌های دچار بحران بر شناسایی و بهره‌برداری از فرصت‌های سرمایه‌گذاری در بنگاه‌هایی متمرکز است که با مشکلات مالی، کاهش نقدینگی یا احتمال نکول و ورشکستگی مواجه‌اند."
+        }
+      ]
     },
     {
-"id": "conclusion-paragraph-04",
-      "type": "paragraph",
-      "text": "در چنین چارچوبی، حقوق صاحبان سهام، اعتبار خصوصی و دارایی‌های واقعی، علیرغم تفاوت اساسی در ماهیت اقتصادی، ساختار ریسک و منشأ بازده‌شان، در یک ویژگی بنیادین مشترک‌اند: اتکا به فرصت‌های سرمایه‌گذاری با دسترسی خصوصی، افق زمانی میان‌مدت تا بلندمدت و امکان خلق ارزش از طریق ساختاردهی، مدیریت فعال، تأمین مالی یا بهره‌برداری از دارایی."
+      "id": "private-credit",
+      "claimRefs": [
+        "claim:private-credit-lender-position",
+        "claim:private-credit-return-contractual",
+        "claim:private-credit-and-private-equity-linked"
+      ],
+      "sourceRefs": [
+        "source:ecb-private-markets-public-risk",
+        "source:federal-reserve-private-credit-2024"
+      ],
+      "title": {
+        "fa": "اعتبار خصوصی (Private Credit)",
+        "en": "Private Credit"
+      },
+      "content": [
+        {
+          "id": "private-credit-subheading-01",
+          "type": "subheading",
+          "text": "اعتبار خصوصی (Private Credit)"
+        },
+        {
+          "id": "private-credit-paragraph-01",
+          "type": "paragraph",
+          "text": "منطق «اعتبار خصوصی» از منطق سرمایه‌گذاری در حقوق صاحبان سهام متفاوت است؛ به این معنا که سرمایه‌گذار در این حوزه عمدتاً در جایگاه اعتباردهنده قرار دارد و بازده سرمایه‌گذاری او از محل دریافت بهره، کارمزد و دیگر اجزای قراردادی تأمین می‌شود."
+        },
+        {
+          "id": "private-credit-paragraph-02",
+          "type": "paragraph",
+          "text": "از این منظر، ریسک و سازوکار ایجاد بازده در اعتبار خصوصی بیش از آنکه به افزایش ارزش حقوق صاحبان سهام وابسته باشد، به کیفیت اعتباری و توان بازپرداخت وام‌گیرنده، ساختار قرارداد تأمین مالی و میزان حمایت‌های اعتباری وابسته است."
+        },
+        {
+          "id": "private-credit-paragraph-03",
+          "type": "paragraph",
+          "text": "بر اساس طبقه‌بندی ارائه‌شده از سوی بانک مرکزی اروپا، اعتبار خصوصی را می‌توان در چهار گونه متداول شامل وام‌دهی مستقیم (Direct Lending)، تأمین مالی میان‌لایه‌ای (Mezzanine)، موقعیت‌های اعتباری خاص (Special Credit Situations) و بدهی شرکت‌های دچار بحران مالی (Distressed Debt) دسته‌بندی کرد."
+        },
+        {
+          "id": "private-credit-paragraph-04",
+          "type": "paragraph",
+          "text": "با وجود تفاوت در ساختار و سطح ریسک این چهار گونه، وجه مشترک آن‌ها تأمین مالی خارج از نظام سنتی وام‌دهی بانکی و اتکای بیشتر به قراردادهای خصوصی میان سرمایه‌گذار و وام‌گیرنده است."
+        },
+        {
+          "id": "private-credit-paragraph-05",
+          "type": "paragraph",
+          "text": "در عین حال، اعتبار خصوصی و سرمایه‌گذاری خصوصی را نمی‌توان دو حوزه منفک از یکدیگر تلقی کرد. میان این دو بازار، پیوند عملیاتی قابل‌توجهی وجود دارد؛ زیرا بخشی از منابع اعتبار خصوصی برای تأمین مالی تملک شرکت‌ها مورد استفاده قرار می‌گیرد. به بیان دیگر، در ساختار بسیاری از معاملات، سرمایه‌گذاری خصوصی در بخش حقوق صاحبان سهام و اعتبار خصوصی در بخش بدهی تأمین مالی معامله به کار می‌رود."
+        }
+      ]
     },
     {
- "id": "conclusion-paragraph-05",
-      "type": "paragraph",
-      "text": "به بیان دیگر، تمایز میان طبقات مختلف سرمایه خصوصی باید بر مبنای ماهیت دارایی پایه، جایگاه سرمایه‌گذار در ساختار سرمایه، منبع اصلی بازده، نحوه تحقق ارزش و سازوکار مدیریت ریسک صورت گیرد، نه صرفاً بر اساس برچسب ابزار مالی."
+      "id": "real-assets",
+      "claimRefs": [
+        "claim:real-assets-include-physical-assets"
+      ],
+      "sourceRefs": [
+        "source:ecb-private-markets-public-risk"
+      ],
+      "title": {
+        "fa": "دارایی‌های واقعی (Real Assets)",
+        "en": "Real Assets"
+      },
+      "content": [
+        {
+          "id": "real-assets-subheading-01",
+          "type": "subheading",
+          "text": "دارایی‌های واقعی (Real Assets)"
+        },
+        {
+          "id": "real-assets-paragraph-01",
+          "type": "paragraph",
+          "text": "دارایی‌های واقعی طیف متنوعی از دارایی‌های عینی و فیزیکی، از جمله املاک و مستغلات، زیرساخت‌ها و منابع طبیعی را دربرمی‌گیرد."
+        },
+        {
+          "id": "real-assets-paragraph-02",
+          "type": "paragraph",
+          "text": "در این حوزه، منشأ بازده سرمایه‌گذاری لزوماً افزایش ارزش حقوق صاحبان سهام یک شرکت نیست؛ بلکه می‌تواند از ترکیبی از جریان‌های نقدی عملیاتی، درآمدهای اجاره‌ای، عوارض و تعرفه‌های زیرساختی، درآمد حاصل از بهره‌برداری از دارایی، تغییرات قیمت یا ارزش ذاتی دارایی و سایر منافع اقتصادی مرتبط با مالکیت یا بهره‌برداری از آن ناشی شود."
+        },
+        {
+          "id": "real-assets-paragraph-03",
+          "type": "paragraph",
+          "text": "ازاین‌رو، ماهیت بازده در دارایی‌های واقعی تابع ویژگی‌های اقتصادی و قراردادی دارایی، ساختار مالکیت و بهره‌برداری، شرایط بازار و افق سرمایه‌گذاری است."
+        }
+      ]
+    },
+    {
+      "id": "conclusion",
+      "claimRefs": [
+        "claim:private-capital-private-access"
+      ],
+      "sourceRefs": [
+        "source:ecb-private-markets-public-risk"
+      ],
+      "title": {
+        "fa": "جمع‌بندی",
+        "en": "Conclusion"
+      },
+      "content": [
+        {
+          "id": "conclusion-subheading-01",
+          "type": "subheading",
+          "text": "جمع‌بندی"
+        },
+        {
+          "id": "conclusion-paragraph-01",
+          "type": "paragraph",
+          "text": "در مجموع، مفهوم «سرمایه خصوصی» را نمی‌توان صرفاً بر مبنای یک ابزار مالی مشخص، نظیر سهام یا بدهی، تعریف یا طبقه‌بندی کرد. معیار مناسب‌تر، ماهیت خصوصی دسترسی به فرصت سرمایه‌گذاری، افق زمانی سرمایه‌گذاری و سازوکار خلق و تحقق بازده است."
+        },
+        {
+          "id": "conclusion-paragraph-02",
+          "type": "paragraph",
+          "text": "به بیان دقیق‌تر، «خصوصی» بودن در این چارچوب بیش از آنکه به نوع دارایی یا ابزار تأمین مالی اشاره داشته باشد، ناظر بر نحوه دسترسی سرمایه‌گذار به فرصت سرمایه‌گذاری و ویژگی‌های بازار مربوطه است."
+        },
+        {
+          "id": "conclusion-paragraph-03",
+          "type": "paragraph",
+          "text": "از این منظر، سرمایه خصوصی یک چارچوب فراگیر برای سرمایه‌گذاری در فرصت‌هایی است که دسترسی به آن‌ها عمدتاً از طریق بازارهای خصوصی و خارج از بازارهای عمومی سرمایه صورت می‌گیرد."
+        },
+        {
+          "id": "conclusion-paragraph-04",
+          "type": "paragraph",
+          "text": "در چنین چارچوبی، حقوق صاحبان سهام، اعتبار خصوصی و دارایی‌های واقعی، علیرغم تفاوت اساسی در ماهیت اقتصادی، ساختار ریسک و منشأ بازده‌شان، در یک ویژگی بنیادین مشترک‌اند: اتکا به فرصت‌های سرمایه‌گذاری با دسترسی خصوصی، افق زمانی میان‌مدت تا بلندمدت و امکان خلق ارزش از طریق ساختاردهی، مدیریت فعال، تأمین مالی یا بهره‌برداری از دارایی."
+        },
+        {
+          "id": "conclusion-paragraph-05",
+          "type": "paragraph",
+          "text": "به بیان دیگر، تمایز میان طبقات مختلف سرمایه خصوصی باید بر مبنای ماهیت دارایی پایه، جایگاه سرمایه‌گذار در ساختار سرمایه، منبع اصلی بازده، نحوه تحقق ارزش و سازوکار مدیریت ریسک صورت گیرد، نه صرفاً بر اساس برچسب ابزار مالی."
+        }
+      ]
     }
-  ]
-}
+  ],
+  "citations": [
+    {
+      "id": "citation:private-capital-ecb-definition-01",
+      "sourceRef": "source:ecb-private-markets-public-risk",
+      "evidenceRef": "evidence:private-capital-includes-private-equity-01",
+      "contentBlockId": "definition-paragraph-02",
+      "start": 0,
+      "end": 16
+    },
+    {
+      "id": "citation:private-capital-ecb-private-credit-01",
+      "sourceRef": "source:ecb-private-markets-public-risk",
+      "evidenceRef": "evidence:private-capital-includes-private-credit-01",
+      "contentBlockId": "private-credit-paragraph-03",
+      "start": 35,
+      "end": 51
+    }
   ]
 }

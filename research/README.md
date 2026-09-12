@@ -10,7 +10,7 @@
 research/
 ├── index.json
 ├── schemas/
-│   └── research-schema-v1.json
+│   └── research-schema-v2.json
 ├── content/
 │   └── private-capital.json
 └── mappings/
@@ -30,9 +30,9 @@ Registry فعلی Research Documents را نگهداری می‌کند.
 * `research:private-capital`
 * `research:private-equity`
 
-### schemas/research-schema-v1.json
+### schemas/research-schema-v2.json
 
-قرارداد فعلی ساختار Research Document است.
+قرارداد فعلی ساختار Research Document و مبنای اعتبارسنجی Research است.
 
 ### content/
 
@@ -113,6 +113,6 @@ Sections
 
 مرحله بعد:
 
-**Define the Research Domain Model**
+**Research Documentation and Contract Freeze**
 
-در آن مرحله مدل مفهومی Research، Section، Mention، Reference و ارتباط آنها با Atlas قبل از ایجاد `research-schema-v2` تعریف خواهد شد.
+در این مرحله مستندات Research با Research v2، canonical References، Mentions، Citations و shared Data Loader هم‌تراز و سپس برای ورود به مرحله Rendering/SEO تثبیت می‌شوند.

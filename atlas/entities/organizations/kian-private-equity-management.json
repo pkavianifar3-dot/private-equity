@@ -1,4 +1,5 @@
 {
+  "version": "2.0",
   "id": "organization:kian-private-equity-management",
   "type": "Organization",
   "name": {
@@ -10,10 +11,8 @@
     "مدیریت سهام خصوصی کیان"
   ],
   "lifecycleStatus": "REVIEW",
-  "metadata": {
-    "organization_type": "private_company",
-    "legal_name_status": "reported",
-    "national_id": null,
-    "registration_number": null
-  }
+  "organization_type": "private_company",
+  "legal_name_status": "reported",
+  "national_id": null,
+  "registration_number": null
 }

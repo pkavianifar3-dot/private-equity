@@ -10,39 +10,30 @@
             .replace(/'/g, "&#039;");
     }
 
-    function entityURL(entityId) {
-        if (typeof entityId !== "string" || !entityId.includes(":")) {
-            return null;
+    function resolveMention(entityRef, entityResolver) {
+        if (
+            entityResolver &&
+            typeof entityResolver.resolve === "function"
+        ) {
+            const resolved = entityResolver.resolve(entityRef, "research");
+            return resolved ? resolved.url : null;
         }
 
-        const type = entityId.split(":")[0];
-
-        switch (type) {
-            case "person":
-                return `../atlas/person.html?id=${encodeURIComponent(entityId)}`;
-
-            case "organization":
-                return `../atlas/organization.html?id=${encodeURIComponent(entityId)}`;
-
-            case "investment":
-                return `../atlas/investment.html?id=${encodeURIComponent(entityId)}`;
-
-            case "concept":
-                return `../atlas/concept.html?id=${encodeURIComponent(entityId)}`;
-
-            default:
-                return null;
-        }
+        return global.PrivateCapitalURL.entityURL(entityRef, "research");
     }
 
-    function renderTextWithMentions(text, blockId, mentions) {
+    function renderTextWithMentions(
+        text,
+        blockId,
+        mentions,
+        citations,
+        citationIndex,
+        entityResolver
+    ) {
         const value = String(text || "");
+        const mentionItems = (Array.isArray(mentions) ? mentions : []);
 
-        if (!Array.isArray(mentions) || !mentions.length) {
-            return escapeHtml(value);
-        }
-
-        const applicableMentions = mentions
+        const applicableMentions = mentionItems
             .filter(mention =>
                 mention &&
                 mention.contentBlockId === blockId &&
@@ -56,17 +47,48 @@
             )
             .map(mention => ({
                 ...mention,
-                url: entityURL(mention.entityRef)
+                url: resolveMention(
+                    mention.entityRef,
+                    entityResolver
+                )
             }))
             .filter(mention => mention.url);
 
-        if (!applicableMentions.length) {
-            return escapeHtml(value);
-        }
-
         applicableMentions.sort((a, b) => a.start - b.start);
 
+        const citationRenderer = global.PrivateCapitalCitationRenderer;
+        const citationItems =
+            citationRenderer &&
+            typeof citationRenderer.getBlockCitations === "function"
+                ? citationRenderer.getBlockCitations(
+                    citations,
+                    blockId,
+                    value.length
+                )
+                : [];
+
         const parts = [];
+        const markersByEnd = new Map();
+
+        citationItems.forEach(citation => {
+            const marker =
+                citationRenderer &&
+                typeof citationRenderer.renderCitationMarker === "function"
+                    ? citationRenderer.renderCitationMarker(
+                        citation,
+                        citationIndex
+                    )
+                    : "";
+
+            if (!marker) {
+                return;
+            }
+
+            const markers = markersByEnd.get(citation.end) || [];
+            markers.push(marker);
+            markersByEnd.set(citation.end, markers);
+        });
+
         let cursor = 0;
 
         applicableMentions.forEach(mention => {
@@ -97,25 +119,49 @@
             cursor = mention.end;
         });
 
+        for (const [end, markers] of [...markersByEnd.entries()].sort(
+            ([a], [b]) => a - b
+        )) {
+            if (end < cursor) {
+                continue;
+            }
+
+            parts.push(escapeHtml(value.slice(cursor, end)));
+            parts.push(markers.join(""));
+            cursor = end;
+        }
+
         parts.push(escapeHtml(value.slice(cursor)));
 
         return parts.join("");
     }
 
-    function renderBlock(block, mentions) {
+    function renderBlock(
+        block,
+        mentions,
+        citations,
+        effectiveCitationIndex,
+        entityResolver
+    ) {
         switch (block.type) {
             case "paragraph":
                 return `<p>${renderTextWithMentions(
                     block.text || "",
                     block.id,
-                    mentions
+                    mentions,
+                    citations,
+                    effectiveCitationIndex,
+                    entityResolver
                 )}</p>`;
 
             case "subheading":
                 return `<h3>${renderTextWithMentions(
                     block.text || "",
                     block.id,
-                    mentions
+                    mentions,
+                    citations,
+                    effectiveCitationIndex,
+                    entityResolver
                 )}</h3>`;
 
             case "figure":
@@ -208,18 +254,47 @@ ${citations.join("\n")}
 </div>`;
     }
 
-    function renderArticleContentInto(target, sections, mentions, sources) {
+    function renderArticleContentInto(
+        target,
+        sections,
+        mentions,
+        sources,
+        citations,
+        citationIndex,
+        entityResolver
+    ) {
         if (!target || typeof target.innerHTML !== "string") {
             throw new TypeError("Article renderer target must be a DOM element");
         }
 
-        target.innerHTML = renderArticleContent(sections, mentions, sources);
+        target.innerHTML = renderArticleContent(
+            sections,
+            mentions,
+            sources,
+            citations,
+            citationIndex,
+            entityResolver
+        );
     }
 
-    function renderArticleContent(sections, mentions, sources) {
+    function renderArticleContent(
+        sections,
+        mentions,
+        sources,
+        citations,
+        citationIndex,
+        entityResolver
+    ) {
         if (!Array.isArray(sections)) {
             throw new TypeError("Article sections must be an array");
         }
+
+        const effectiveCitationIndex =
+            citationIndex ||
+            global.PrivateCapitalCitationRenderer.buildCitationIndex(
+                sections,
+                citations
+            );
 
         return sections.map(section => {
             const content = Array.isArray(section.content)
@@ -227,7 +302,15 @@ ${citations.join("\n")}
                 : [];
 
             const renderedContent = content
-                .map(block => renderBlock(block, mentions))
+                .map(block =>
+                    renderBlock(
+                        block,
+                        mentions,
+                        citations,
+                        effectiveCitationIndex,
+                        entityResolver
+                    )
+                )
                 .join("\n");
 
             return renderedContent + renderSectionSources(

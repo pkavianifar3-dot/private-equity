@@ -2,18 +2,18 @@
   "article": "articles/private-capital.html",
   "counts": {
     "h1": 1,
-    "h2": 4,
+    "h2": 3,
     "h3": 6,
     "p": 35,
     "figure": 2,
-    "ul": 1,
+    "ul": 0,
     "table": 0,
     "cta": 2,
     "title": 1,
     "meta": 15,
     "canonical": 1,
     "json_ld": 1,
-    "a": 18,
+    "a": 15,
     "button": 0,
     "img": 3
   }
