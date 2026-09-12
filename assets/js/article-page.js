@@ -57,7 +57,12 @@
         return sources;
     }
 
-    async function renderSection(section, citations, citationIndex) {
+    async function renderSection(
+        section,
+        citations,
+        citationIndex,
+        entityResolver
+    ) {
         const target = document.querySelector(
             `[data-article-renderer-section="${section.id}"]`
         );
@@ -101,7 +106,8 @@
             Array.isArray(section.mentions) ? section.mentions : [],
             sources,
             citations,
-            citationIndex
+            citationIndex,
+            entityResolver
         );
 
         const template = document.createElement("template");
@@ -118,9 +124,28 @@
             throw new TypeError("Research sections must be an array");
         }
 
-        const citationIndex = global.PrivateCapitalCitationRenderer.buildCitationIndex(research.sections, research.citations);
+        const entityRegistry =
+            await loadJSON("../atlas/entities/index.json");
+
+        const entityResolver =
+            global.PrivateCapitalEntityResolver.create(
+                entityRegistry,
+                global.PrivateCapitalURL
+            );
+
+        const citationIndex =
+            global.PrivateCapitalCitationRenderer.buildCitationIndex(
+                research.sections,
+                research.citations
+            );
+
         for (const section of research.sections) {
-            await renderSection(section, research.citations, citationIndex);
+            await renderSection(
+                section,
+                research.citations,
+                citationIndex,
+                entityResolver
+            );
         }
 
         const citationTarget = document.querySelector(

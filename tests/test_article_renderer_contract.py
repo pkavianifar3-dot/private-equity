@@ -503,6 +503,28 @@ class ArticleRendererPageIntegrationTests(unittest.TestCase):
             integration,
         )
 
+    def test_article_page_integration_wires_entity_resolver(self):
+        integration = (
+            ROOT / "assets" / "js" / "article-page.js"
+        ).read_text(encoding="utf-8")
+
+        self.assertIn(
+            'loadJSON("../atlas/entities/index.json")',
+            integration,
+        )
+        self.assertIn(
+            "global.PrivateCapitalEntityResolver.create(",
+            integration,
+        )
+        self.assertIn(
+            "global.PrivateCapitalURL",
+            integration,
+        )
+        self.assertIn(
+            "entityResolver",
+            integration,
+        )
+
     def test_article_page_integration_uses_renderer(self):
         integration = (
             ROOT / "assets" / "js" / "article-page.js"

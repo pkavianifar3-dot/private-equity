@@ -8,6 +8,11 @@ const urlResolverSource = fs.readFileSync(
 );
 
 const citationRendererSource = fs.readFileSync("assets/js/research/citation-renderer.js", "utf8");
+const entityResolverSource = fs.readFileSync(
+    "assets/js/core/entity-resolver.js",
+    "utf8"
+);
+
 const rendererSource = fs.readFileSync(
     "assets/js/article-renderer.js",
     "utf8"
@@ -20,6 +25,7 @@ context.window = context;
 
 vm.createContext(context);
 vm.runInContext(urlResolverSource, context);
+vm.runInContext(entityResolverSource, context);
 vm.runInContext(citationRendererSource, context);
 vm.runInContext(rendererSource, context);
 
@@ -658,6 +664,68 @@ console.log("Article Renderer conclusion legacy parity PASSED");
     );
 
     console.log("Article Renderer Mention safety contract PASSED");
+}
+
+{
+    const section = {
+        id: "mention-resolver-injection-test",
+        content: [
+            {
+                id: "paragraph-resolver-injection",
+                type: "paragraph",
+                text: "سرمایه‌گذاری خصوصی"
+            }
+        ],
+        mentions: [
+            {
+                id: "mention-resolver-injection",
+                text: "سرمایه‌گذاری خصوصی",
+                entityRef: "concept:private-equity",
+                contentBlockId: "paragraph-resolver-injection",
+                start: 0,
+                end: 18,
+                resolutionStatus: "RESOLVED"
+            }
+        ]
+    };
+
+    const injectedResolver = {
+        resolve(entityRef, contextName) {
+            assert.strictEqual(
+                entityRef,
+                "concept:private-equity"
+            );
+            assert.strictEqual(
+                contextName,
+                "research"
+            );
+
+            return {
+                entity: {
+                    id: entityRef
+                },
+                url: "../atlas/injected-entity.html?id=concept%3Aprivate-equity"
+            };
+        }
+    };
+
+    const html = renderArticleContent(
+        [section],
+        section.mentions,
+        [],
+        [],
+        null,
+        injectedResolver
+    );
+
+    assert(
+        html.includes(
+            '<a href="../atlas/injected-entity.html?id=concept%3Aprivate-equity">سرمایه‌گذاری خصوصی</a>'
+        ),
+        "Renderer must use the injected Entity Resolver URL"
+    );
+
+    console.log("Article Renderer Entity Resolver injection PASSED");
 }
 
 {

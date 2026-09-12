@@ -10,9 +10,26 @@
             .replace(/'/g, "&#039;");
     }
 
-    const entityURL = (entityId) => global.PrivateCapitalURL.entityURL(entityId, "research");
+    function resolveMention(entityRef, entityResolver) {
+        if (
+            entityResolver &&
+            typeof entityResolver.resolve === "function"
+        ) {
+            const resolved = entityResolver.resolve(entityRef, "research");
+            return resolved ? resolved.url : null;
+        }
 
-    function renderTextWithMentions(text, blockId, mentions, citations, citationIndex) {
+        return global.PrivateCapitalURL.entityURL(entityRef, "research");
+    }
+
+    function renderTextWithMentions(
+        text,
+        blockId,
+        mentions,
+        citations,
+        citationIndex,
+        entityResolver
+    ) {
         const value = String(text || "");
         const mentionItems = (Array.isArray(mentions) ? mentions : []);
 
@@ -30,7 +47,10 @@
             )
             .map(mention => ({
                 ...mention,
-                url: entityURL(mention.entityRef)
+                url: resolveMention(
+                    mention.entityRef,
+                    entityResolver
+                )
             }))
             .filter(mention => mention.url);
 
@@ -116,7 +136,13 @@
         return parts.join("");
     }
 
-    function renderBlock(block, mentions, citations, effectiveCitationIndex) {
+    function renderBlock(
+        block,
+        mentions,
+        citations,
+        effectiveCitationIndex,
+        entityResolver
+    ) {
         switch (block.type) {
             case "paragraph":
                 return `<p>${renderTextWithMentions(
@@ -124,7 +150,8 @@
                     block.id,
                     mentions,
                     citations,
-                    effectiveCitationIndex
+                    effectiveCitationIndex,
+                    entityResolver
                 )}</p>`;
 
             case "subheading":
@@ -133,7 +160,8 @@
                     block.id,
                     mentions,
                     citations,
-                    effectiveCitationIndex
+                    effectiveCitationIndex,
+                    entityResolver
                 )}</h3>`;
 
             case "figure":
@@ -226,15 +254,37 @@ ${citations.join("\n")}
 </div>`;
     }
 
-    function renderArticleContentInto(target, sections, mentions, sources, citations) {
+    function renderArticleContentInto(
+        target,
+        sections,
+        mentions,
+        sources,
+        citations,
+        citationIndex,
+        entityResolver
+    ) {
         if (!target || typeof target.innerHTML !== "string") {
             throw new TypeError("Article renderer target must be a DOM element");
         }
 
-        target.innerHTML = renderArticleContent(sections, mentions, sources, citations);
+        target.innerHTML = renderArticleContent(
+            sections,
+            mentions,
+            sources,
+            citations,
+            citationIndex,
+            entityResolver
+        );
     }
 
-    function renderArticleContent(sections, mentions, sources, citations, citationIndex) {
+    function renderArticleContent(
+        sections,
+        mentions,
+        sources,
+        citations,
+        citationIndex,
+        entityResolver
+    ) {
         if (!Array.isArray(sections)) {
             throw new TypeError("Article sections must be an array");
         }
@@ -252,7 +302,15 @@ ${citations.join("\n")}
                 : [];
 
             const renderedContent = content
-                .map(block => renderBlock(block, mentions, citations, effectiveCitationIndex))
+                .map(block =>
+                    renderBlock(
+                        block,
+                        mentions,
+                        citations,
+                        effectiveCitationIndex,
+                        entityResolver
+                    )
+                )
                 .join("\n");
 
             return renderedContent + renderSectionSources(
