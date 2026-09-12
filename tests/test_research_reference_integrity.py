@@ -1,5 +1,6 @@
 import importlib.util
 import json
+import shutil
 import tempfile
 import unittest
 from pathlib import Path
@@ -21,7 +22,14 @@ class ResearchReferenceIntegrityTests(unittest.TestCase):
 
         self.research_root = self.root / "research"
         self.content_root = self.research_root / "content"
+        self.schema_root = self.research_root / "schemas"
         self.content_root.mkdir(parents=True)
+        self.schema_root.mkdir(parents=True)
+
+        shutil.copyfile(
+            Path("research/schemas/research-schema-v2.json"),
+            self.schema_root / "research-schema-v2.json",
+        )
 
         self.original_root = VALIDATOR.ROOT
         VALIDATOR.ROOT = self.root / "atlas"
@@ -252,6 +260,551 @@ class ResearchReferenceIntegrityTests(unittest.TestCase):
             "citation end exceeds content block text length",
             errors[0],
         )
+
+
+    def test_unknown_mention_content_block_fails(self):
+        data = {
+            "sections": [
+                {
+                    "id": "section-one",
+                    "title": {"fa": "بخش اول"},
+                    "content": [
+                        {
+                            "id": "block-one",
+                            "type": "paragraph",
+                            "text": "متن پژوهش",
+                        }
+                    ],
+                    "mentions": [
+                        {
+                            "id": "mention:test",
+                            "text": "پژوهش",
+                            "entityRef": "concept:subject",
+                            "contentBlockId": "missing-block",
+                            "start": 0,
+                            "end": 7,
+                            "resolutionStatus": "RESOLVED",
+                        }
+                    ],
+                }
+            ]
+        }
+
+        errors = []
+        VALIDATOR.validate_research_mention_integrity(
+            data,
+            {"concept:subject"},
+            errors,
+        )
+
+        self.assertEqual(len(errors), 1)
+        self.assertIn(
+            "unknown mention content block missing-block",
+            errors[0],
+        )
+
+
+    def test_mention_content_block_must_belong_to_same_section(self):
+        data = {
+            "sections": [
+                {
+                    "id": "section-one",
+                    "title": {"fa": "بخش اول"},
+                    "content": [],
+                    "mentions": [
+                        {
+                            "id": "mention:test",
+                            "text": "پژوهش",
+                            "entityRef": "concept:subject",
+                            "contentBlockId": "block-two",
+                            "start": 0,
+                            "end": 2,
+                            "resolutionStatus": "RESOLVED",
+                        }
+                    ],
+                },
+                {
+                    "id": "section-two",
+                    "title": {"fa": "بخش دوم"},
+                    "content": [
+                        {
+                            "id": "block-two",
+                            "type": "paragraph",
+                            "text": "متن پژوهش",
+                        }
+                    ],
+                    "mentions": [],
+                },
+            ]
+        }
+
+        errors = []
+        VALIDATOR.validate_research_mention_integrity(
+            data,
+            {"concept:subject"},
+            errors,
+        )
+
+        self.assertEqual(len(errors), 1)
+        self.assertIn(
+            "unknown mention content block block-two",
+            errors[0],
+        )
+
+
+    def test_mention_start_and_end_must_be_provided_together(self):
+        data = {
+            "sections": [
+                {
+                    "id": "section-one",
+                    "title": {"fa": "بخش اول"},
+                    "content": [
+                        {
+                            "id": "block-one",
+                            "type": "paragraph",
+                            "text": "متن پژوهش",
+                        }
+                    ],
+                    "mentions": [
+                        {
+                            "id": "mention:test",
+                            "text": "پژوهش",
+                            "entityRef": "concept:subject",
+                            "contentBlockId": "block-one",
+                            "start": 0,
+                            "resolutionStatus": "RESOLVED",
+                        }
+                    ],
+                }
+            ]
+        }
+
+        errors = []
+        VALIDATOR.validate_research_mention_integrity(
+            data,
+            {"concept:subject"},
+            errors,
+        )
+
+        self.assertEqual(len(errors), 1)
+        self.assertIn(
+            "mention start and end must be provided together",
+            errors[0],
+        )
+
+
+    def test_mention_offsets_require_content_block(self):
+        data = {
+            "sections": [
+                {
+                    "id": "section-one",
+                    "title": {"fa": "بخش اول"},
+                    "content": [],
+                    "mentions": [
+                        {
+                            "id": "mention:test",
+                            "text": "پژوهش",
+                            "entityRef": "concept:subject",
+                            "start": 0,
+                            "end": 7,
+                            "resolutionStatus": "RESOLVED",
+                        }
+                    ],
+                }
+            ]
+        }
+
+        errors = []
+        VALIDATOR.validate_research_mention_integrity(
+            data,
+            {"concept:subject"},
+            errors,
+        )
+
+        self.assertEqual(len(errors), 1)
+        self.assertIn(
+            "mention offsets require contentBlockId",
+            errors[0],
+        )
+
+
+    def test_mention_offsets_require_textual_content_block(self):
+        data = {
+            "sections": [
+                {
+                    "id": "section-one",
+                    "title": {"fa": "بخش اول"},
+                    "content": [
+                        {
+                            "id": "figure-one",
+                            "type": "figure",
+                            "src": "figure.png",
+                            "alt": "Figure",
+                        }
+                    ],
+                    "mentions": [
+                        {
+                            "id": "mention:test",
+                            "text": "پژوهش",
+                            "entityRef": "concept:subject",
+                            "contentBlockId": "figure-one",
+                            "start": 0,
+                            "end": 7,
+                            "resolutionStatus": "RESOLVED",
+                        }
+                    ],
+                }
+            ]
+        }
+
+        errors = []
+        VALIDATOR.validate_research_mention_integrity(
+            data,
+            {"concept:subject"},
+            errors,
+        )
+
+        self.assertEqual(len(errors), 1)
+        self.assertIn(
+            "mention offsets require a textual content block",
+            errors[0],
+        )
+
+
+    def test_mention_end_exceeding_block_text_fails(self):
+        data = {
+            "sections": [
+                {
+                    "id": "section-one",
+                    "title": {"fa": "بخش اول"},
+                    "content": [
+                        {
+                            "id": "block-one",
+                            "type": "paragraph",
+                            "text": "متن کوتاه",
+                        }
+                    ],
+                    "mentions": [
+                        {
+                            "id": "mention:test",
+                            "text": "کوتاه",
+                            "entityRef": "concept:subject",
+                            "contentBlockId": "block-one",
+                            "start": 0,
+                            "end": 100,
+                            "resolutionStatus": "RESOLVED",
+                        }
+                    ],
+                }
+            ]
+        }
+
+        errors = []
+        VALIDATOR.validate_research_mention_integrity(
+            data,
+            {"concept:subject"},
+            errors,
+        )
+
+        self.assertEqual(len(errors), 1)
+        self.assertIn(
+            "mention end exceeds content block text length",
+            errors[0],
+        )
+
+
+    def test_mention_start_must_not_be_negative(self):
+        data = {
+            "sections": [
+                {
+                    "id": "section-one",
+                    "title": {"fa": "بخش اول"},
+                    "content": [
+                        {
+                            "id": "block-one",
+                            "type": "paragraph",
+                            "text": "متن پژوهش",
+                        }
+                    ],
+                    "mentions": [
+                        {
+                            "id": "mention:test",
+                            "text": "پژوهش",
+                            "entityRef": "concept:subject",
+                            "contentBlockId": "block-one",
+                            "start": -1,
+                            "end": 5,
+                            "resolutionStatus": "RESOLVED",
+                        }
+                    ],
+                }
+            ]
+        }
+
+        errors = []
+        VALIDATOR.validate_research_mention_integrity(
+            data,
+            {"concept:subject"},
+            errors,
+        )
+
+        self.assertEqual(len(errors), 1)
+        self.assertIn(
+            "mention start must not be negative",
+            errors[0],
+        )
+
+
+    def test_mention_start_must_be_before_end(self):
+        data = {
+            "sections": [
+                {
+                    "id": "section-one",
+                    "title": {"fa": "بخش اول"},
+                    "content": [
+                        {
+                            "id": "block-one",
+                            "type": "paragraph",
+                            "text": "متن پژوهش",
+                        }
+                    ],
+                    "mentions": [
+                        {
+                            "id": "mention:test",
+                            "text": "پژوهش",
+                            "entityRef": "concept:subject",
+                            "contentBlockId": "block-one",
+                            "start": 5,
+                            "end": 5,
+                            "resolutionStatus": "RESOLVED",
+                        }
+                    ],
+                }
+            ]
+        }
+
+        errors = []
+        VALIDATOR.validate_research_mention_integrity(
+            data,
+            {"concept:subject"},
+            errors,
+        )
+
+        self.assertEqual(len(errors), 1)
+        self.assertIn(
+            "mention start must be before end",
+            errors[0],
+        )
+
+
+    def test_resolved_mention_requires_known_entity(self):
+        data = {
+            "sections": [
+                {
+                    "id": "section-one",
+                    "title": {"fa": "بخش اول"},
+                    "content": [
+                        {
+                            "id": "block-one",
+                            "type": "paragraph",
+                            "text": "متن پژوهش",
+                        }
+                    ],
+                    "mentions": [
+                        {
+                            "id": "mention:test",
+                            "text": "پژوهش",
+                            "entityRef": "concept:unknown",
+                            "contentBlockId": "block-one",
+                            "start": 4,
+                            "end": 6,
+                            "resolutionStatus": "RESOLVED",
+                        }
+                    ],
+                }
+            ]
+        }
+
+        errors = []
+        VALIDATOR.validate_research_mention_integrity(
+            data,
+            {"concept:subject"},
+            errors,
+        )
+
+        self.assertEqual(len(errors), 1)
+        self.assertIn(
+            "unknown mention entity concept:unknown",
+            errors[0],
+        )
+
+
+    def test_resolved_mention_requires_entity_ref(self):
+        data = {
+            "sections": [
+                {
+                    "id": "section-one",
+                    "title": {"fa": "بخش اول"},
+                    "content": [
+                        {
+                            "id": "block-one",
+                            "type": "paragraph",
+                            "text": "متن پژوهش",
+                        }
+                    ],
+                    "mentions": [
+                        {
+                            "id": "mention:test",
+                            "text": "پژوهش",
+                            "entityRef": None,
+                            "contentBlockId": "block-one",
+                            "start": 4,
+                            "end": 6,
+                            "resolutionStatus": "RESOLVED",
+                        }
+                    ],
+                }
+            ]
+        }
+
+        errors = []
+        VALIDATOR.validate_research_mention_integrity(
+            data,
+            {"concept:subject"},
+            errors,
+        )
+
+        self.assertEqual(len(errors), 1)
+        self.assertIn(
+            "resolved mention requires entityRef",
+            errors[0],
+        )
+
+
+    def test_unresolved_mention_does_not_require_known_entity(self):
+        data = {
+            "sections": [
+                {
+                    "id": "section-one",
+                    "title": {"fa": "بخش اول"},
+                    "content": [
+                        {
+                            "id": "block-one",
+                            "type": "paragraph",
+                            "text": "متن پژوهش",
+                        }
+                    ],
+                    "mentions": [
+                        {
+                            "id": "mention:test",
+                            "text": "پژوهش",
+                            "entityRef": "concept:unknown",
+                            "contentBlockId": "block-one",
+                            "start": 4,
+                            "end": 6,
+                            "resolutionStatus": "UNRESOLVED",
+                        }
+                    ],
+                }
+            ]
+        }
+
+        errors = []
+        VALIDATOR.validate_research_mention_integrity(
+            data,
+            {"concept:subject"},
+            errors,
+        )
+
+        self.assertEqual(errors, [])
+
+
+    def test_rejected_mention_does_not_require_known_entity(self):
+        data = {
+            "sections": [
+                {
+                    "id": "section-one",
+                    "title": {"fa": "بخش اول"},
+                    "content": [
+                        {
+                            "id": "block-one",
+                            "type": "paragraph",
+                            "text": "متن پژوهش",
+                        }
+                    ],
+                    "mentions": [
+                        {
+                            "id": "mention:test",
+                            "text": "پژوهش",
+                            "entityRef": "concept:unknown",
+                            "contentBlockId": "block-one",
+                            "start": 4,
+                            "end": 6,
+                            "resolutionStatus": "REJECTED",
+                        }
+                    ],
+                }
+            ]
+        }
+
+        errors = []
+        VALIDATOR.validate_research_mention_integrity(
+            data,
+            {"concept:subject"},
+            errors,
+        )
+
+        self.assertEqual(errors, [])
+
+
+    def test_unknown_mention_content_block_is_checked_by_research_integrity(self):
+        self.write_research_document({
+            "id": "section-one",
+            "title": {
+                "fa": "بخش اول",
+            },
+            "content": [
+                {
+                    "id": "block-one",
+                    "type": "paragraph",
+                    "text": "متن پژوهش",
+                }
+            ],
+            "mentions": [
+                {
+                    "id": "mention:test",
+                    "text": "پژوهش",
+                    "entityRef": "concept:subject",
+                    "contentBlockId": "missing-block",
+                    "start": 0,
+                    "end": 2,
+                    "resolutionStatus": "RESOLVED",
+                }
+            ],
+        })
+
+        errors = []
+        entity_ids = {"concept:subject"}
+
+        original = VALIDATOR.validate_research_mention_integrity
+
+        try:
+            called = []
+
+            def spy(research_data, entity_ids, validation_errors):
+                called.append(research_data)
+
+            VALIDATOR.validate_research_mention_integrity = spy
+
+            VALIDATOR.validate_research_documents(
+                errors,
+                entity_ids,
+            )
+
+            self.assertTrue(called)
+        finally:
+            VALIDATOR.validate_research_mention_integrity = original
+
 
 
 if __name__ == "__main__":

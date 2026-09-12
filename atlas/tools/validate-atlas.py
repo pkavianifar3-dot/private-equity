@@ -1137,6 +1137,88 @@ def validate_research_citation_integrity(research_data, source_ids, evidence_rec
             elif end > len(text):
                 errors.append(f"{citation_id}: citation end exceeds content block text length")
 
+def validate_research_mention_integrity(research_data, entity_ids, errors):
+    sections = research_data.get("sections", [])
+    if not isinstance(sections, list):
+        return
+
+    for section in sections:
+        if not isinstance(section, dict):
+            continue
+
+        content_blocks = {
+            block.get("id"): block
+            for block in section.get("content", [])
+            if isinstance(block, dict) and block.get("id")
+        }
+
+        mentions = section.get("mentions", [])
+        if not isinstance(mentions, list):
+            continue
+
+        for mention in mentions:
+            if not isinstance(mention, dict):
+                continue
+
+            mention_id = mention.get("id", "<missing-mention-id>")
+            block_id = mention.get("contentBlockId")
+            entity_ref = mention.get("entityRef")
+            resolution_status = mention.get("resolutionStatus")
+
+            if resolution_status == "RESOLVED" and entity_ref is None:
+                errors.append(
+                    f"{mention_id}: resolved mention requires entityRef"
+                )
+
+            if (
+                resolution_status == "RESOLVED"
+                and entity_ref is not None
+                and entity_ref not in entity_ids
+            ):
+                errors.append(
+                    f"{mention_id}: unknown mention entity {entity_ref}"
+                )
+
+            if block_id is not None and block_id not in content_blocks:
+                errors.append(
+                    f"{mention_id}: unknown mention content block {block_id}"
+                )
+
+            start = mention.get("start")
+            end = mention.get("end")
+
+            if (start is None) != (end is None):
+                errors.append(
+                    f"{mention_id}: mention start and end must be provided together"
+                )
+
+            if (start is not None or end is not None) and block_id is None:
+                errors.append(
+                    f"{mention_id}: mention offsets require contentBlockId"
+                )
+
+            if block_id in content_blocks and start is not None and end is not None:
+                block = content_blocks[block_id]
+                if not isinstance(block.get("text"), str):
+                    errors.append(
+                        f"{mention_id}: mention offsets require a textual content block"
+                    )
+                elif end > len(block.get("text")):
+                    errors.append(
+                        f"{mention_id}: mention end exceeds content block text length"
+                    )
+
+            if start is not None and start < 0:
+                errors.append(
+                    f"{mention_id}: mention start must not be negative"
+                )
+
+            if start is not None and end is not None and start >= end:
+                errors.append(
+                    f"{mention_id}: mention start must be before end"
+                )
+
+
 def validate_research_integrity(
     entity_by_id,
     entity_ids,
@@ -1194,6 +1276,7 @@ def validate_research_integrity(
                 "'claims' must be an array"
             )
             research_claims = []
+
         validate_research_claim_integrity(
             research_claims,
             entity_by_id,
@@ -1410,7 +1493,7 @@ def validate_person_content(errors, source_ids):
                         )
 
 
-def validate_research_documents(errors):
+def validate_research_documents(errors, entity_ids):
     research_root = ROOT.parent / "research"
 
     schema_path = (
@@ -1448,6 +1531,14 @@ def validate_research_documents(errors):
             str(path.relative_to(ROOT.parent)),
             errors
         )
+
+        validate_research_mention_integrity(
+            data,
+            entity_ids,
+            errors
+        )
+
+
 def main():
     errors = []
     warnings = []
@@ -1514,7 +1605,7 @@ def main():
         research_predicate_types,
         evidence_records
     )
-    validate_research_documents(errors)    
+    validate_research_documents(errors, entity_ids)
     if errors:
         print("Atlas validation FAILED")
         print()
