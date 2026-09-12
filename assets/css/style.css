@@ -293,6 +293,19 @@ font-size:30px;
 .article-date{
     margin:0;
 }
+/* Article Figures */
+article figure{
+    margin:0 auto 24px;
+    max-width:100%;
+}
+
+article figure img{
+    display:block;
+    max-width:100%;
+    height:auto;
+    margin:0 auto;
+}
+
 
 @media(max-width:600px){
     .article-author img{
