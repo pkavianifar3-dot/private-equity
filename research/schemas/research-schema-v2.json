@@ -150,7 +150,7 @@
     },
     "atlasEntityRef": {
       "type": "string",
-      "pattern": "^(person|organization|investment|project|sector|concept):[a-z0-9]+(?:-[a-z0-9]+)*$"
+      "pattern": "^(person|organization|organization-unit|project|investment|fund|sector|concept|investor-category):[a-z0-9]+(?:-[a-z0-9]+)*$"
     },
     "claimRef": {
       "type": "string",
