@@ -1,180 +1,249 @@
 {
-  "version": "1.0",
+  "version": "2.0",
   "rules": [
     {
       "relation": "WORKED_AT",
       "subject_types": ["Person"],
-      "object_types": ["Organization"]
+      "object_types": ["Organization"],
+      "inverse": null,
+      "cardinality": "many-to-many",
+      "temporalAllowed": true
     },
     {
       "relation": "EXECUTIVE_ROLE_AT",
       "subject_types": ["Person"],
-      "object_types": ["Organization"]
+      "object_types": ["Organization"],
+      "inverse": null,
+      "cardinality": "many-to-many",
+      "temporalAllowed": true
     },
     {
       "relation": "CEO_OF",
       "subject_types": ["Person"],
-      "object_types": ["Organization"]
+      "object_types": ["Organization"],
+      "inverse": null,
+      "cardinality": "many-to-many",
+      "temporalAllowed": true
     },
     {
       "relation": "BOARD_MEMBER_OF",
       "subject_types": ["Person"],
-      "object_types": ["Organization"]
+      "object_types": ["Organization"],
+      "inverse": null,
+      "cardinality": "many-to-many",
+      "temporalAllowed": true
     },
     {
       "relation": "CHAIR_OF",
       "subject_types": ["Person"],
-      "object_types": ["OrganizationUnit"]
+      "object_types": ["OrganizationUnit"],
+      "inverse": null,
+      "cardinality": "many-to-many",
+      "temporalAllowed": true
     },
     {
       "relation": "VICE_CHAIR_OF",
       "subject_types": ["Person"],
-      "object_types": ["Organization"]
+      "object_types": ["Organization"],
+      "inverse": null,
+      "cardinality": "many-to-many",
+      "temporalAllowed": true
     },
     {
       "relation": "BOARD_SECRETARY_OF",
       "subject_types": ["Person"],
-      "object_types": ["Organization"]
+      "object_types": ["Organization"],
+      "inverse": null,
+      "cardinality": "many-to-many",
+      "temporalAllowed": true
     },
     {
       "relation": "REPRESENTED",
       "subject_types": ["Person", "Organization"],
-      "object_types": ["Organization"]
+      "object_types": ["Organization"],
+      "inverse": null,
+      "cardinality": "many-to-many",
+      "temporalAllowed": true
     },
     {
       "relation": "SUBSIDIARY_OF",
       "subject_types": ["Organization"],
-      "object_types": ["Organization"]
+      "object_types": ["Organization"],
+      "inverse": null,
+      "cardinality": "many-to-many",
+      "temporalAllowed": true
     },
     {
       "relation": "PART_OF",
       "subject_types": ["Organization", "OrganizationUnit"],
-      "object_types": ["Organization", "OrganizationUnit"]
+      "object_types": ["Organization", "OrganizationUnit"],
+      "inverse": null,
+      "cardinality": "many-to-many",
+      "temporalAllowed": true
     },
     {
       "relation": "INVESTED_IN",
       "subject_types": ["Organization", "Person"],
-      "object_types": ["Organization", "Project"]
+      "object_types": ["Organization", "Project"],
+      "inverse": null,
+      "cardinality": "many-to-many",
+      "temporalAllowed": true
     },
     {
       "relation": "INVESTMENT_EXECUTIVE_OF",
       "subject_types": ["Person"],
-      "object_types": ["Organization"]
+      "object_types": ["Organization"],
+      "inverse": null,
+      "cardinality": "many-to-many",
+      "temporalAllowed": true
     },
     {
       "relation": "MANAGES",
       "subject_types": ["Person", "Organization"],
-      "object_types": ["Organization", "Project", "Fund"]
+      "object_types": ["Organization", "Project", "Fund"],
+      "inverse": null,
+      "cardinality": "many-to-many",
+      "temporalAllowed": true
     },
     {
       "relation": "HAS_PROJECT",
       "subject_types": ["Organization"],
-      "object_types": ["Project"]
+      "object_types": ["Project"],
+      "inverse": "PROJECT_OF",
+      "cardinality": "many-to-many",
+      "temporalAllowed": true
     },
     {
       "relation": "PROJECT_OF",
       "subject_types": ["Project"],
-      "object_types": ["Organization"]
+      "object_types": ["Organization"],
+      "inverse": "HAS_PROJECT",
+      "cardinality": "many-to-many",
+      "temporalAllowed": true
     },
     {
       "relation": "OPERATES_IN",
       "subject_types": ["Organization", "Person"],
-      "object_types": ["Sector"]
+      "object_types": ["Sector"],
+      "inverse": null,
+      "cardinality": "many-to-many",
+      "temporalAllowed": true
     },
     {
       "relation": "TARGETS_SECTOR",
       "subject_types": ["Organization"],
-      "object_types": ["Sector"]
+      "object_types": ["Sector"],
+      "inverse": null,
+      "cardinality": "many-to-many",
+      "temporalAllowed": true
     },
     {
       "relation": "TARGETS_INVESTOR_CATEGORY",
       "subject_types": ["Organization"],
-      "object_types": ["InvestorCategory"]
+      "object_types": ["InvestorCategory"],
+      "inverse": null,
+      "cardinality": "many-to-many",
+      "temporalAllowed": true
     },
     {
       "relation": "SUPPORTED_BY",
       "subject_types": ["Claim"],
-      "object_types": ["Source", "Evidence"]
+      "object_types": ["Source", "Evidence"],
+      "inverse": null,
+      "cardinality": "many-to-many",
+      "temporalAllowed": false
     },
     {
-  "relation": "HAS_AUM",
-  "subject_types": ["Fund", "Organization"],
-  "value_type": "amount"
-},
-{
-  "relation": "INVESTMENT_AMOUNT",
-  "subject_types": ["Investment"],
-  "value_type": "amount"
-},
-{
-  "relation": "REPORTED_IRR",
-  "subject_types": ["Fund", "Investment"],
-  "value_type": "percentage"
-},
-{
-  "relation": "REPORTED_DEAL_COUNT",
-  "subject_types": ["Fund", "Organization"],
-  "value_type": "count"
-},
+      "relation": "HAS_AUM",
+      "subject_types": ["Fund", "Organization"],
+      "value_type": "amount",
+      "inverse": null,
+      "temporalAllowed": true
+    },
     {
-  "relation": "BROADER_THAN",
-  "subject_types": ["Concept"],
-  "object_types": ["Concept"]
-},
-{
-  "relation": "RELATED_TO",
-  "subject_types": ["Concept"],
-  "object_types": ["Concept"]
-},
+      "relation": "INVESTMENT_AMOUNT",
+      "subject_types": ["Investment"],
+      "value_type": "amount",
+      "inverse": null,
+      "temporalAllowed": true
+    },
     {
-  "relation": "INCLUDES",
-  "subject_types": ["Concept"],
-  "object_types": ["Concept"]
-},
+      "relation": "REPORTED_IRR",
+      "subject_types": ["Fund", "Investment"],
+      "value_type": "percentage",
+      "inverse": null,
+      "temporalAllowed": true
+    },
     {
-  "relation": "HAS_INVESTOR_POSITION",
-  "subject_types": [
-    "Concept"
-  ],
-  "object_types": [
-    "Concept"
-  ]
-},
+      "relation": "REPORTED_DEAL_COUNT",
+      "subject_types": ["Fund", "Organization"],
+      "value_type": "count",
+      "inverse": null,
+      "temporalAllowed": true
+    },
     {
-  "relation": "RETURN_DEPENDS_ON",
-  "subject_types": [
-    "Concept"
-  ],
-  "object_types": [
-    "Concept"
-  ]
-},
-{
-  "relation": "LINKED_TO",
-  "subject_types": [
-    "Concept"
-  ],
-  "object_types": [
-    "Concept"
-  ]
-},
+      "relation": "BROADER_THAN",
+      "subject_types": ["Concept"],
+      "object_types": ["Concept"],
+      "inverse": null,
+      "cardinality": "many-to-many",
+      "temporalAllowed": false
+    },
     {
-  "relation": "CHARACTERIZED_BY",
-  "subject_types": [
-    "Concept"
-  ],
-  "object_types": [
-    "Concept"
-  ]
-},
+      "relation": "RELATED_TO",
+      "subject_types": ["Concept"],
+      "object_types": ["Concept"],
+      "inverse": null,
+      "cardinality": "many-to-many",
+      "temporalAllowed": false
+    },
     {
-  "relation": "HAS_NON_UNIFORM_CLASSIFICATION",
-  "subject_types": [
-    "Concept"
-  ],
-  "object_types": [
-    "Concept"
-  ]
-}
+      "relation": "INCLUDES",
+      "subject_types": ["Concept"],
+      "object_types": ["Concept"],
+      "inverse": null,
+      "cardinality": "many-to-many",
+      "temporalAllowed": false
+    },
+    {
+      "relation": "HAS_INVESTOR_POSITION",
+      "subject_types": ["Concept"],
+      "object_types": ["Concept"],
+      "inverse": null,
+      "cardinality": "many-to-many",
+      "temporalAllowed": false
+    },
+    {
+      "relation": "RETURN_DEPENDS_ON",
+      "subject_types": ["Concept"],
+      "object_types": ["Concept"],
+      "inverse": null,
+      "cardinality": "many-to-many",
+      "temporalAllowed": false
+    },
+    {
+      "relation": "LINKED_TO",
+      "subject_types": ["Concept"],
+      "object_types": ["Concept"],
+      "inverse": null,
+      "cardinality": "many-to-many",
+      "temporalAllowed": false
+    },
+    {
+      "relation": "CHARACTERIZED_BY",
+      "subject_types": ["Concept"],
+      "object_types": ["Concept"],
+      "inverse": null,
+      "cardinality": "many-to-many",
+      "temporalAllowed": false
+    },
+    {
+      "relation": "HAS_NON_UNIFORM_CLASSIFICATION",
+      "subject_types": ["Concept"],
+      "object_types": ["Concept"],
+      "inverse": null,
+      "cardinality": "many-to-many",
+      "temporalAllowed": false
+    }
   ]
 }
