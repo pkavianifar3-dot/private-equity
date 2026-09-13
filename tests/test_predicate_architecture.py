@@ -25,6 +25,122 @@ class PredicateArchitectureTests(unittest.TestCase):
         with open("atlas/taxonomies/relation-rules.json", encoding="utf-8") as f:
             rules = {item["relation"] for item in json.load(f)["rules"]}
         self.assertEqual(rules, relation_types)
+    def test_every_rule_has_temporal_and_inverse_contract(self):
+        with open("atlas/taxonomies/relation-rules.json", encoding="utf-8") as f:
+            rules = json.load(f)["rules"]
+
+        for rule in rules:
+            self.assertIn("inverse", rule, rule["relation"])
+            self.assertIsInstance(rule["inverse"], (str, type(None)), rule["relation"])
+            self.assertIn("temporalAllowed", rule, rule["relation"])
+            self.assertIsInstance(rule["temporalAllowed"], bool, rule["relation"])
+
+    def test_inverse_relationships_are_symmetric(self):
+        with open("atlas/taxonomies/relation-rules.json", encoding="utf-8") as f:
+            rules = json.load(f)["rules"]
+
+        by_relation = {rule["relation"]: rule for rule in rules}
+
+        for relation, rule in by_relation.items():
+            inverse = rule["inverse"]
+            if inverse is None:
+                continue
+
+            self.assertIn(inverse, by_relation, relation)
+            self.assertEqual(
+                by_relation[inverse]["inverse"],
+                relation,
+                relation,
+            )
+
+    def test_cardinality_contract_for_entity_relations(self):
+        with open("atlas/taxonomies/relation-rules.json", encoding="utf-8") as f:
+            rules = json.load(f)["rules"]
+
+        for rule in rules:
+            if "object_types" in rule:
+                self.assertIn("cardinality", rule, rule["relation"])
+                self.assertEqual("many-to-many", rule["cardinality"], rule["relation"])
+            else:
+                self.assertNotIn("cardinality", rule, rule["relation"])
+
+    def test_temporal_is_rejected_when_predicate_disallows_it(self):
+        errors = []
+        claims = [{
+            "id": "claim:temporal-not-allowed",
+            "subject": "concept:a",
+            "predicate": "BROADER_THAN",
+            "object": "concept:b",
+            "temporal": {
+                "precision": "year",
+                "start": "1404",
+                "end": None
+            }
+        }]
+        entities = {
+            "concept:a": {"type": "Concept"},
+            "concept:b": {"type": "Concept"}
+        }
+        relation_types = {"BROADER_THAN"}
+        relation_rules = {
+            "BROADER_THAN": {
+                "subject_types": ["Concept"],
+                "object_types": ["Concept"],
+                "temporalAllowed": False
+            }
+        }
+
+        VALIDATOR.validate_claim_integrity(
+            claims,
+            entities,
+            set(entities),
+            relation_types,
+            relation_rules,
+            set(),
+            errors
+        )
+
+        self.assertEqual(len(errors), 1)
+        self.assertIn("does not allow temporal", errors[0])
+
+    def test_temporal_is_allowed_when_predicate_allows_it(self):
+        errors = []
+        claims = [{
+            "id": "claim:temporal-allowed",
+            "subject": "organization:a",
+            "predicate": "WORKED_AT",
+            "object": "organization:b",
+            "temporal": {
+                "precision": "year",
+                "start": "1404",
+                "end": None
+            }
+        }]
+        entities = {
+            "organization:a": {"type": "Organization"},
+            "organization:b": {"type": "Organization"}
+        }
+        relation_types = {"WORKED_AT"}
+        relation_rules = {
+            "WORKED_AT": {
+                "subject_types": ["Organization"],
+                "object_types": ["Organization"],
+                "temporalAllowed": True
+            }
+        }
+
+        VALIDATOR.validate_claim_integrity(
+            claims,
+            entities,
+            set(entities),
+            relation_types,
+            relation_rules,
+            set(),
+            errors
+        )
+
+        self.assertEqual(errors, [])
+
     def test_value_predicate_enforces_value_type(self):
         errors = []
         entities = {"investment:test": {"type": "Investment"}}

@@ -604,6 +604,11 @@ def validate_claim_integrity(
         if not rule:
             continue
 
+        if "temporal" in claim and rule.get("temporalAllowed") is False:
+            errors.append(
+                f"{claim_id}: predicate {predicate} does not allow temporal"
+            )
+
         if subject_id in entity_by_id:
             subject_type = entity_by_id[
                 subject_id
