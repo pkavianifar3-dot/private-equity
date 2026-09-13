@@ -100,8 +100,7 @@
       "type": "object",
       "required": [
         "title_fa",
-        "text",
-        "source_refs"
+        "text"
       ],
       "properties": {
         "title_fa": {
@@ -111,14 +110,6 @@
         "text": {
           "type": "string",
           "minLength": 1
-        },
-        "source_refs": {
-          "type": "array",
-          "items": {
-            "type": "string",
-            "minLength": 1
-          },
-          "uniqueItems": true
         }
       },
       "additionalProperties": false
