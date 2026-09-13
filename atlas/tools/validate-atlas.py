@@ -1438,7 +1438,7 @@ def validate_research_integrity(
                     for claim_ref in claim_refs:
                         if claim_ref not in claim_ids:
                             errors.append(
-                                f"{path.relative_to(ROOT.parent)}:"
+                                f"{path.relative_to(ROOT.parent).as_posix()}:"
                                 f"{section_id}: unknown canonical claim "
                                 f"{claim_ref}"
                             )
@@ -1452,7 +1452,7 @@ def validate_research_integrity(
                     for source_ref in source_refs:
                         if source_ref not in source_ids:
                             errors.append(
-                                f"{path.relative_to(ROOT.parent)}:"
+                                f"{path.relative_to(ROOT.parent).as_posix()}:"
                                 f"{section_id}: unknown canonical source "
                                 f"{source_ref}"
                             )
