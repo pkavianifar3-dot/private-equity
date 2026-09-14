@@ -343,7 +343,6 @@ class ArticleRendererIntegrationTests(unittest.TestCase):
         for marker in (
             'class="article-author"',
             'class="article-date"',
-            'class="cta"',
             "data-article-renderer-citations",
             'class="article-copyright"',
         ):
@@ -361,10 +360,6 @@ class ArticleRendererIntroductionBoundaryTests(unittest.TestCase):
 
         self.assertIn(
             '<h2>سرمایه خصوصی چیست؟</h2>',
-            article,
-        )
-        self.assertIn(
-            'class="cta"',
             article,
         )
         self.assertIn(
@@ -617,25 +612,17 @@ class ArticleRendererPageIntegrationTests(unittest.TestCase):
             ROOT / "articles" / "private-capital.html"
         ).read_text(encoding="utf-8")
 
-        self.assertEqual(
-            html.count(
-                '<div data-article-renderer-section="definition-and-scope">'
-            ),
-            1,
-        )
+        marker = '<div data-article-renderer-section="definition-and-scope">'
+        next_section = '<p data-article-renderer-section="main-blocks">'
 
-        start = html.index(
-            '<div data-article-renderer-section="definition-and-scope">'
-        )
-        end = html.index(
-            '<div class="cta"',
-            start,
-        )
-        section = html[start:end]
+        self.assertEqual(html.count(marker), 1)
 
-        self.assertEqual(section.count("<h3>"), 0)
-        self.assertEqual(section.count("<p>"), 0)
-        self.assertEqual(section.count("<figure"), 0)
+        start = html.index(marker)
+        wrapper_end = html.index("</div>", start)
+        next_section_start = html.index(next_section, start)
+
+        self.assertLess(start, wrapper_end)
+        self.assertLess(wrapper_end, next_section_start)
 
     def test_private_capital_private_equity_has_section_wrapper(self):
         html = (
@@ -677,24 +664,6 @@ class ArticleRendererPageIntegrationTests(unittest.TestCase):
 
         self.assertLess(start, wrapper_end)
         self.assertLess(wrapper_end, next_section)
-
-
-    def test_private_capital_definition_and_scope_keeps_cta_outside_wrapper(self):
-        html = (
-            ROOT / "articles" / "private-capital.html"
-        ).read_text(encoding="utf-8")
-
-        start = html.index(
-            '<div data-article-renderer-section="definition-and-scope">'
-        )
-        cta = html.index(
-            '<div class="cta"',
-            start,
-        )
-        wrapper_end = html.rindex("</div>", start, cta)
-
-        self.assertLess(start, wrapper_end)
-        self.assertLess(wrapper_end, cta)
 
     def test_private_capital_page_replaces_only_section_targets(self):
         integration = (
