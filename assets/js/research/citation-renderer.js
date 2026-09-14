@@ -99,9 +99,20 @@
                     ? entry.source.publisher
                     : "";
 
-            const label = publisher
-                ? `${title} — ${publisher}`
-                : title;
+            const sourceMetadata = [
+                publisher
+                    ? `<bdi dir="ltr">${escapeHtml(publisher)}</bdi>`
+                    : "",
+                typeof entry.source.publication_date === "string" &&
+                        entry.source.publication_date
+                    ? `<bdi dir="ltr">${escapeHtml(entry.source.publication_date)}</bdi>`
+                    : ""
+            ].filter(Boolean).join(" · ");
+
+            const sourceContent = `
+                <span class="citation-title" dir="rtl">${escapeHtml(title)}</span>
+                ${sourceMetadata ? `<span class="citation-meta" dir="rtl">${sourceMetadata}</span>` : ""}
+            `;
 
             const locations = (Array.isArray(citations) ? citations : [])
                 .filter(citation =>
@@ -116,10 +127,16 @@
 
             const sourceLink =
                 typeof entry.source.url === "string" && entry.source.url
-                    ? `<a href="${escapeHtml(entry.source.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(label)}</a>`
-                    : escapeHtml(label);
+                    ? `<a class="citation-source" href="${escapeHtml(entry.source.url)}" target="_blank" rel="noopener noreferrer" dir="rtl">${sourceContent}</a>`
+                    : sourceContent;
 
-            return `<li id="citation-source-${entry.number}"><strong>[${entry.number}]</strong> ${sourceLink}${locations ? ` ${locations}` : ""}</li>`;
+            return `
+                <li id="citation-source-${entry.number}" dir="rtl">
+                    <span class="citation-number" dir="ltr">[${entry.number}]</span>
+                    ${sourceLink}
+                    ${locations ? `<span class="citation-backlinks" dir="ltr">${locations}</span>` : ""}
+                </li>
+            `;
         });
 
         return `<div class="article-citations"><p>منابع</p><ul>${items.join("\n")}</ul></div>`;

@@ -989,3 +989,68 @@ article figure img{
 .atlas-page .atlas-source-item a{
     margin-top:3px;
 }
+
+/* Atlas — Citation Bibliography Presentation */
+
+.article-citations{
+    direction:rtl;
+    text-align:right;
+}
+
+.article-citations > p{
+    margin-bottom:12px;
+}
+
+.article-citations ul{
+    margin:0;
+    padding:0;
+    list-style:none;
+}
+
+.article-citations li{
+    display:flex;
+    align-items:flex-start;
+    gap:8px;
+    margin-bottom:14px;
+    line-height:1.9;
+}
+
+.article-citations .citation-number{
+    flex:0 0 auto;
+    direction:ltr;
+    unicode-bidi:isolate;
+}
+
+.article-citations .citation-source{
+    display:inline-flex;
+    flex-direction:column;
+    align-items:flex-start;
+    min-width:0;
+    direction:rtl;
+    text-align:right;
+}
+
+.article-citations .citation-title{
+    display:block;
+    direction:rtl;
+    unicode-bidi:isolate;
+}
+
+.article-citations .citation-meta{
+    display:block;
+    direction:rtl;
+    unicode-bidi:isolate;
+    font-size:.9em;
+    opacity:.8;
+}
+
+.article-citations .citation-backlinks{
+    flex:0 0 auto;
+    direction:ltr;
+    unicode-bidi:isolate;
+    white-space:nowrap;
+}
+
+.article-citations .citation-backlinks a{
+    white-space:nowrap;
+}
