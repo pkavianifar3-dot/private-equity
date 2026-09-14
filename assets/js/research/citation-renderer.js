@@ -109,10 +109,10 @@
                     citation.sourceRef === entry.sourceRef &&
                     typeof citation.id === "string"
                 )
-                .map(citation =>
-                    `<a href="#citation-location-${escapeHtml(citation.id)}">↩</a>`
+                .map((citation, index) =>
+                    `<a href="#citation-location-${escapeHtml(citation.id)}">↩ ${index + 1}</a>`
                 )
-                .join(" ");
+                .join(" · ");
 
             const sourceLink =
                 typeof entry.source.url === "string" && entry.source.url
