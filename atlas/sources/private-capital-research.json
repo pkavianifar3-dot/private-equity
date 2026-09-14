@@ -20,6 +20,16 @@
       "publisher": "McKinsey & Company",
       "publication_date": "2025-05-20",
       "url": "https://www.mckinsey.com/industries/private-capital/our-insights/global-private-markets-report-2025"
+    },
+    {
+      "id": "source:ecb-private-credit-stress-2026",
+      "type": "Source",
+      "source_type": "research",
+      "title_fa": "تنش در بازارهای جهانی اعتبار خصوصی و پیامدهای آن برای ثبات مالی منطقه یورو",
+      "title_en": "Stress in global private credit markets and its implications for euro area financial stability",
+      "publisher": "European Central Bank",
+      "publication_date": "2026",
+      "url": "https://www.ecb.europa.eu/press/financial-stability-publications/fsr/special/html/ecb.fsrart202605_04~3f2135af91.en.html"
     }
   ]
 }

@@ -196,8 +196,7 @@
         "claim:private-credit-and-private-equity-linked"
       ],
       "sourceRefs": [
-        "source:ecb-private-markets-public-risk",
-        "source:federal-reserve-private-credit-2024"
+        "source:ecb-private-markets-public-risk"
       ],
       "title": {
         "fa": "اعتبار خصوصی (Private Credit)",
@@ -322,9 +321,9 @@
       "id": "citation:private-capital-ecb-definition-01",
       "sourceRef": "source:ecb-private-markets-public-risk",
       "evidenceRef": "evidence:private-capital-includes-private-equity-01",
-      "contentBlockId": "definition-paragraph-02",
+      "contentBlockId": "intro-paragraph-02",
       "start": 0,
-      "end": 16
+      "end": 384
     },
     {
       "id": "citation:private-capital-ecb-private-credit-01",
@@ -333,6 +332,69 @@
       "contentBlockId": "private-credit-paragraph-03",
       "start": 35,
       "end": 51
-    }
+    },
+    {
+      "id": "citation:private-capital-mckinsey-intro-01",
+      "sourceRef": "source:mckinsey-global-private-markets-report-2025",
+      "contentBlockId": "intro-paragraph-02",
+      "start": 0,
+      "end": 384
+    },
+    {
+      "id": "citation:private-capital-ecb-main-blocks-01",
+      "sourceRef": "source:ecb-private-markets-public-risk",
+      "contentBlockId": "main-blocks-paragraph-01",
+      "start": 0,
+      "end": 367
+    },
+    {
+      "id": "citation:private-capital-ecb-private-equity-01",
+      "sourceRef": "source:ecb-private-markets-public-risk",
+      "contentBlockId": "private-equity-paragraph-01",
+      "start": 0,
+      "end": 193
+    },
+    {
+      "id": "citation:private-capital-ecb-private-credit-2026-01",
+      "sourceRef": "source:ecb-private-credit-stress-2026",
+      "contentBlockId": "private-credit-paragraph-05",
+      "start": 0,
+      "end": 379
+    },
+    {
+      "id": "citation:private-capital-ecb-real-assets-01",
+      "sourceRef": "source:ecb-private-markets-public-risk",
+      "contentBlockId": "real-assets-paragraph-03",
+      "start": 0,
+      "end": 148
+    },
+    {
+      "id": "citation:private-capital-ecb-venture-capital-01",
+      "sourceRef": "source:ecb-private-markets-public-risk",
+      "contentBlockId": "private-equity-paragraph-02",
+      "start": 0,
+      "end": 194
+    },
+    {
+      "id": "citation:private-capital-ecb-growth-capital-01",
+      "sourceRef": "source:ecb-private-markets-public-risk",
+      "contentBlockId": "private-equity-paragraph-03",
+      "start": 0,
+      "end": 144
+    },
+    {
+      "id": "citation:private-capital-ecb-turnaround-distressed-01",
+      "sourceRef": "source:ecb-private-markets-public-risk",
+      "contentBlockId": "private-equity-paragraph-04",
+      "start": 0,
+      "end": 314
+    },
+    {
+      "id": "citation:private-capital-ecb-private-credit-lending-01",
+      "sourceRef": "source:ecb-private-markets-public-risk",
+      "contentBlockId": "private-credit-paragraph-01",
+      "start": 0,
+      "end": 237
+    }                 
   ]
 }

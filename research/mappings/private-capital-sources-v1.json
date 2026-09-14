@@ -29,8 +29,8 @@
       "publisher": "European Central Bank",
       "publicationDate": "2026",
       "url": "https://www.ecb.europa.eu/press/financial-stability-publications/fsr/special/html/ecb.fsrart202605_04~3f2135af91.et.html",
-      "atlasSourceId": null,
-      "decision": "NEW_SOURCE_REVIEW"
+      "atlasSourceId": "source:ecb-private-credit-stress-2026",
+      "decision": "EXISTING_SOURCE"
     }
   ]
 }

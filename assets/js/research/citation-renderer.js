@@ -129,13 +129,41 @@
         const value = String(text || "");
         const items = getBlockCitations(citations, blockId, value.length);
         if (!items.length) return escapeHtml(value);
-        const parts = []; let cursor = 0;
-        items.forEach(c => {
-            if (c.start < cursor) return;
+
+        const parts = [];
+        let cursor = 0;
+        let i = 0;
+
+        while (i < items.length) {
+            const c = items[i];
+
+            if (c.start < cursor) {
+                i++;
+                continue;
+            }
+
             parts.push(escapeHtml(value.slice(cursor, c.end)));
-            parts.push(renderCitationMarker(c, citationIndex));
+
+            const sameRange = [c];
+            let j = i + 1;
+
+            while (
+                j < items.length &&
+                items[j].start === c.start &&
+                items[j].end === c.end
+            ) {
+                sameRange.push(items[j]);
+                j++;
+            }
+
+            sameRange.forEach(item => {
+                parts.push(renderCitationMarker(item, citationIndex));
+            });
+
             cursor = c.end;
-        });
+            i = j;
+        }
+
         parts.push(escapeHtml(value.slice(cursor)));
         return parts.join("");
     }

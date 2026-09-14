@@ -194,66 +194,6 @@ ${(block.rows || []).map(
         }
     }
 
-    function renderSourceCitation(source) {
-        if (
-            !source ||
-            typeof source.url !== "string" ||
-            !source.url
-        ) {
-            return "";
-        }
-
-        const title = typeof source.title_fa === "string"
-            ? source.title_fa
-            : typeof source.title_en === "string"
-                ? source.title_en
-                : source.id || "";
-
-        const publisher = typeof source.publisher === "string"
-            ? source.publisher
-            : "";
-
-        const label = publisher
-            ? `${title} — ${publisher}`
-            : title;
-
-        return `<li><a href="${escapeHtml(source.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(label)}</a></li>`;
-    }
-
-    function renderSectionSources(sourceRefs, sources) {
-        if (
-            !Array.isArray(sourceRefs) ||
-            !sourceRefs.length ||
-            !Array.isArray(sources) ||
-            !sources.length
-        ) {
-            return "";
-        }
-
-        const sourceById = new Map(
-            sources
-                .filter(source => source && typeof source.id === "string")
-                .map(source => [source.id, source])
-        );
-
-        const citations = sourceRefs
-            .map(sourceRef => sourceById.get(sourceRef))
-            .map(renderSourceCitation)
-            .filter(Boolean);
-
-        if (!citations.length) {
-            return "";
-        }
-
-        return `
-<div class="article-citations">
-<p>منابع</p>
-<ul>
-${citations.join("\n")}
-</ul>
-</div>`;
-    }
-
     function renderArticleContentInto(
         target,
         sections,
@@ -313,10 +253,7 @@ ${citations.join("\n")}
                 )
                 .join("\n");
 
-            return renderedContent + renderSectionSources(
-                section.sourceRefs,
-                sources
-            );
+            return renderedContent;
         }).join("\n");
     }
 
