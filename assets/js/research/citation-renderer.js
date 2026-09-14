@@ -122,7 +122,7 @@
             return `<li id="citation-source-${entry.number}"><strong>[${entry.number}]</strong> ${sourceLink}${locations ? ` ${locations}` : ""}</li>`;
         });
 
-        return `<div class="article-citations"><p>منابع</p><ol>${items.join("\n")}</ol></div>`;
+        return `<div class="article-citations"><p>منابع</p><ul>${items.join("\n")}</ul></div>`;
     }
 
     function renderInlineCitations(text, blockId, citations, citationIndex) {
