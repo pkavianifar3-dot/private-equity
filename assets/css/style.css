@@ -1006,6 +1006,18 @@ article figure img{
     margin-top:3px;
 }
 
+/* Atlas — Source ID readability */
+
+.atlas-page .atlas-source-id{
+    direction:ltr;
+    unicode-bidi:isolate;
+    font-family:'Vazirmatn',Tahoma,sans-serif;
+    font-size:.92em;
+    font-weight:400;
+    letter-spacing:0;
+    overflow-wrap:anywhere;
+}
+
 /* Atlas — Citation Bibliography Presentation */
 
 .article-citations{

@@ -550,7 +550,7 @@ def render_sources(sources, claims, evidence, content=None):
 
     items = []
 
-    for source_id in used_source_ids:
+    for number, source_id in enumerate(used_source_ids, start=1):
         source = sources[source_id]
 
         title = (
@@ -574,8 +574,10 @@ def render_sources(sources, claims, evidence, content=None):
         items.append(
             '<article class="card atlas-source" '
             f'id="source-{esc(source_id)}">'
+            f'<div class="atlas-source-number">[{number}]</div>'
             f"<h3>{source_body}</h3>"
-            f'<p><code>{esc(source_id)}</code></p>'
+            f'<p><span class="atlas-source-id">'
+            f"{esc(source_id)}</span></p>"
             "</article>"
         )
 
@@ -583,7 +585,7 @@ def render_sources(sources, claims, evidence, content=None):
         '<section class="atlas-section">'
         '<div class="container">'
         "<h2>منابع</h2>"
-        '<div class="atlas-grid">'
+        '<div class="atlas-sources-list">'
         + "".join(items)
         + "</div>"
         "</div>"
