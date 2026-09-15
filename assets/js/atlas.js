@@ -12,6 +12,7 @@
     const loadJSON = dataLoader.loadJSON;
     const loadCachedJSON = dataLoader.loadCachedJSON;
     const loadRelationContract = dataLoader.loadRelationContract;
+    let relationContract = null;
 
     function escapeHTML(value) {
         return String(value ?? "")
@@ -528,38 +529,10 @@
             .filter(Boolean);
     }
     function relationLabel(predicate) {
-        const labels = {
-            CEO_OF: "مدیرعامل",
-            EXECUTIVE_ROLE_AT: "سمت اجرایی",
-            BOARD_MEMBER_OF: "عضو هیئت‌مدیره",
-            CHAIR_OF: "رئیس",
-            VICE_CHAIR_OF: "نایب‌رئیس",
-            BOARD_SECRETARY_OF: "دبیر هیئت‌مدیره",
-            WORKED_AT: "فعالیت در",
-            REPRESENTED: "نمایندگی",
-            SUBSIDIARY_OF: "زیرمجموعه",
-            PART_OF: "بخشی از",
-            INVESTED_IN: "سرمایه‌گذاری",
-            INVESTMENT_AMOUNT: "مبلغ سرمایه‌گذاری",
-            INVESTMENT_EXECUTIVE_OF: "مدیر سرمایه‌گذاری در",
-            MANAGES: "مدیریت",
-            HAS_PROJECT: "پروژه",
-            PROJECT_OF: "پروژه متعلق به",
-            OPERATES_IN: "فعالیت در حوزه",
-            TARGETS_SECTOR: "هدف‌گذاری حوزه",
-            TARGETS_INVESTOR_CATEGORY: "هدف‌گذاری نوع سرمایه‌گذار",
-            SUPPORTED_BY: "پشتیبانی‌شده توسط",
-            BROADER_THAN: "کلی‌تر از",
-            RELATED_TO: "مرتبط با",
-            INCLUDES: "شامل",
-            HAS_NON_UNIFORM_CLASSIFICATION: "طبقه‌بندی یکنواخت ندارد",
-            CHARACTERIZED_BY: "مشخص‌شده با",
-            LINKED_TO: "مرتبط با",
-            HAS_INVESTOR_POSITION: "دارای جایگاه سرمایه‌گذاری",
-            RETURN_DEPENDS_ON: "بازده وابسته به",
-        };
+        const relationTypes = relationContract?.relationTypes?.relation_types || [];
+        const relation = relationTypes.find(item => item.id === predicate);
 
-        return labels[predicate] || predicate;
+        return relation?.label_fa || predicate;
     }
 
     function statusLabel(status) {
@@ -3281,7 +3254,7 @@ ${renderEvidenceSection(
             if (!entityId) {
                 return;
             }
-
+            relationContract = await loadRelationContract();
             if (entityId.startsWith("person:")) {
     await renderPerson(entityId);
     return;
