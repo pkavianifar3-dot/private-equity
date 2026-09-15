@@ -29,11 +29,9 @@ const registry = {
 };
 
 const urlResolver = {
-    entityURL(entityRef, contextName) {
+    entityURL(entityRef) {
         if (entityRef === "person:ali-sanginian") {
-            return contextName === "research"
-                ? "../atlas/person.html?id=person%3Aali-sanginian"
-                : "person.html?id=person%3Aali-sanginian";
+            return "/atlas/person/ali-sanginian/";
         }
 
         return null;
@@ -54,7 +52,7 @@ assert(resolved);
 assert.strictEqual(resolved.entity.id, "person:ali-sanginian");
 assert.strictEqual(
     resolved.url,
-    "../atlas/person.html?id=person%3Aali-sanginian"
+    "/atlas/person/ali-sanginian/"
 );
 
 assert.strictEqual(

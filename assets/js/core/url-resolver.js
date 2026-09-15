@@ -4,10 +4,10 @@
     const SITE_ORIGIN = "https://privatecapital.ir";
 
     const ROUTES = {
-        person: "person.html",
-        organization: "organization.html",
-        investment: "investment.html",
-        concept: "concept.html"
+        person: "person",
+        organization: "organization",
+        investment: "investment",
+        concept: "concept"
     };
 
     function resolveRoute(entityId) {
@@ -15,14 +15,20 @@
             return null;
         }
 
-        const [type] = entityId.split(":");
+        const [type, ...slugParts] = entityId.split(":");
+        const slug = slugParts.join(":");
+
+        if (!type || !slug) {
+            return null;
+        }
+
         const route = ROUTES[type];
 
         if (!route) {
             return null;
         }
 
-        return route + "?id=" + encodeURIComponent(entityId);
+        return `${route}/${encodeURIComponent(slug)}/`;
     }
 
     function entityURL(entityId, context) {
@@ -32,8 +38,7 @@
             return null;
         }
 
-        const prefix = context === "research" ? "../atlas/" : "";
-        return prefix + route;
+        return "/atlas/" + route;
     }
 
     function entityCanonicalURL(entityId) {
@@ -43,7 +48,7 @@
             return null;
         }
 
-        return SITE_ORIGIN + "/atlas/" + route;
+        return `${SITE_ORIGIN}/atlas/${route}`;
     }
 
     global.PrivateCapitalURL = {

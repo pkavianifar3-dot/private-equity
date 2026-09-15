@@ -230,6 +230,16 @@
         return data;
     }
     function getEntityIdFromURL() {
+        const atlasRoot = document.getElementById("atlas-root");
+
+        if (atlasRoot) {
+            const entityId = atlasRoot.dataset.entityId;
+
+            if (entityId) {
+                return entityId;
+            }
+        }
+
         const params = new URLSearchParams(window.location.search);
         return params.get("id");
     }

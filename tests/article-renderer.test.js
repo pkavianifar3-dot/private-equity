@@ -544,7 +544,7 @@ console.log("Article Renderer conclusion legacy parity PASSED");
 
     assert(
         mentionHtml.includes(
-            '<a href="../atlas/concept.html?id=concept%3Aprivate-equity">سرمایه‌گذاری خصوصی</a>'
+            '<a href="/atlas/concept/private-equity/">سرمایه‌گذاری خصوصی</a>'
         ),
         "Resolved Research Mention must link to the canonical Atlas concept"
     );
