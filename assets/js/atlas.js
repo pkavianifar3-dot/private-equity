@@ -477,7 +477,7 @@
         const sourceIds = [];
     
         evidenceList.forEach(evidence => {
-            const sourceId = evidence.source;
+            const sourceId = evidence.sourceRef;
     
             if (
                 sourceId &&
@@ -1266,7 +1266,7 @@ function renderEvidenceSection(
     const groupedByClaim = {};
 
     evidenceList.forEach(evidence => {
-        const claimId = evidence.claim;
+        const claimId = evidence.claimRef;
 
         if (!claimId) {
             return;
@@ -1317,7 +1317,7 @@ function renderEvidenceSection(
                 evidenceItems
                     .map(evidence => {
                         const source =
-                            sourceIndex[evidence.source];
+                            sourceIndex[evidence.sourceRef]
 
                         if (!source) {
                             return `
@@ -1769,7 +1769,7 @@ async function renderOrganization(entityId) {
                                     <strong>نوع سازمان</strong>
                                     <span>
                                         ${escapeHTML(
-                                            entity.metadata.organization_type
+                                            entity.organization_type
                                         )}
                                     </span>
                                 </div>
@@ -2910,7 +2910,7 @@ function renderConceptBreadcrumbs(
                                             
                                             ${escapeHTML(
                                                 investmentStatusLabel(
-                                                    entity.metadata.investment_status
+                                                    entity.investment_status
                                                 )
                                             )}
 
