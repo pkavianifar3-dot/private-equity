@@ -1,7 +1,17 @@
 {
   "version": "1.0",
   "relations": {
-    "BROADER_THAN": {"reverse_label_fa": "مفهوم بالاتر"},
-    "INCLUDES": {"reverse_label_fa": "بخشی از"}
+    "BROADER_THAN": {
+      "reverse_label_fa": "مفهوم بالاتر"
+    },
+    "INCLUDES": {
+      "reverse_label_fa": "بخشی از"
+    },
+    "RELATED_TO": {
+      "reverse_label_fa": "مرتبط با"
+    },
+    "LINKED_TO": {
+      "reverse_label_fa": "پیوند دارد با"
+    }
   }
 }

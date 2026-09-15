@@ -1287,29 +1287,43 @@ function renderEvidenceSection(
                 return "";
             }
 
-            const relation =
+            const renderedRelation =
                 entityId
-                    ? getConceptRelationDisplayLabel(
+                    ? PrivateCapitalRelationRenderer.renderRelation(
                         claim,
-                        entityId
+                        entityId,
+                        relationContract.relationTypes,
+                        relationContract.relationRules,
+                        relationContract.relationRendering
                     )
-                    : relationLabel(
-                        claim.predicate
-                    );
+                    : null;
+
+            if (entityId && !renderedRelation) {
+                return "";
+            }
+
+            const relation =
+                renderedRelation?.label ||
+                relationLabel(claim.predicate);
+
+            const objectId =
+                renderedRelation?.targetId ||
+                claim.object ||
+                null;
 
             const objectName =
-                claim.object
+                objectId
                     ? getEntityName(
                         entityIndex,
-                        claim.object
+                        objectId
                     )
                     : "";
 
             const objectEnglishName =
-                claim.object
+                objectId
                     ? getEntityEnglishName(
                         entityIndex,
-                        claim.object
+                        objectId
                     )
                     : "";
 
@@ -1842,85 +1856,6 @@ async function renderOrganization(entityId) {
     injectJSONLD(
         buildOrganizationJSONLD(entity, entityIndex, entityId)
     );
-}
-function getConceptRelationTargetId(
-    claim,
-    entityId
-) {
-    if (!claim || !entityId) {
-        return null;
-    }
-
-    if (
-        claim.predicate === "BROADER_THAN"
-    ) {
-        if (claim.object === entityId) {
-            return claim.subject || null;
-        }
-
-        if (claim.subject === entityId) {
-            return claim.object || null;
-        }
-    }
-
-    if (
-        claim.predicate === "INCLUDES"
-    ) {
-        if (claim.subject === entityId) {
-            return claim.object || null;
-        }
-    
-        if (claim.object === entityId) {
-            return claim.subject || null;
-        }
-    
-        return null;
-    }
-
-    if (
-        claim.predicate === "RELATED_TO" ||
-        claim.predicate === "LINKED_TO"
-    ) {
-        if (claim.subject === entityId) {
-            return claim.object || null;
-        }
-    
-        if (claim.object === entityId) {
-            return claim.subject || null;
-        }
-    }
-    
-    return null;
-}
-function getConceptRelationDisplayLabel(
-    claim,
-    entityId
-) {
-    if (!claim) {
-        return "";
-    }
-
-    if (claim.predicate === "BROADER_THAN") {
-        if (claim.subject === entityId) {
-            return "کلی‌تر از";
-        }
-
-        if (claim.object === entityId) {
-            return "مفهوم بالاتر";
-        }
-    }
-
-    if (claim.predicate === "INCLUDES") {
-        if (claim.subject === entityId) {
-            return "شامل";
-        }
-
-        if (claim.object === entityId) {
-            return "بخشی از";
-        }
-    }
-
-    return relationLabel(claim.predicate);
 }
 function renderConceptRelationSection(
     title,

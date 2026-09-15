@@ -46,7 +46,33 @@ assert(
     atlasJS.includes('entityId.startsWith("concept:")'),
     "concept dispatch is missing"
 );
+assert(
+    atlasJS.includes(
+        "PrivateCapitalRelationRenderer.renderRelation"
+    ),
+    "atlas must use the generic relation renderer"
+);
 
+assert(
+    atlasJS.includes(
+        "renderedRelation.targetId"
+    ),
+    "atlas relation rendering must use the resolved target"
+);
+
+assert(
+    !atlasJS.includes(
+        "function getConceptRelationTargetId"
+    ),
+    "legacy concept relation target helper must be removed"
+);
+
+assert(
+    !atlasJS.includes(
+        "function getConceptRelationDisplayLabel"
+    ),
+    "legacy concept relation display helper must be removed"
+);
 console.log("Atlas renderer structure PASSED");
 
 assert(!atlasJS.includes("paragraph.source_refs?.length"), "content renderer must not use legacy source_refs");
