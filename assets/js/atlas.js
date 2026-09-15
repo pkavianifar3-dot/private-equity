@@ -3199,6 +3199,11 @@ ${renderEvidenceSection(
             if (!entityId) {
                 return;
             }
+            const atlasRoot = document.getElementById("atlas-root");
+
+            if (atlasRoot?.dataset.staticRendered === "true") {
+                return;
+            }
             relationContract = await loadRelationContract();
             if (entityId.startsWith("person:")) {
     await renderPerson(entityId);
