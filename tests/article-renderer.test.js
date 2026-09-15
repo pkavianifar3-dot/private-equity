@@ -94,7 +94,18 @@ const research = JSON.parse(
         "utf8"
     )
 );
+const entityRegistry = JSON.parse(
+    fs.readFileSync(
+        "atlas/entities/index.json",
+        "utf8"
+    )
+);
 
+const realEntityResolver =
+    context.PrivateCapitalEntityResolver.create(
+        entityRegistry,
+        context.PrivateCapitalURL
+    );
 const renderedResearchContent = renderArticleContent(
     research.sections
 );
@@ -727,7 +738,110 @@ console.log("Article Renderer conclusion legacy parity PASSED");
 
     console.log("Article Renderer Entity Resolver injection PASSED");
 }
+{
+    const resolvedMentions = research.sections.flatMap(
+        section =>
+            (Array.isArray(section.mentions)
+                ? section.mentions
+                : []
+            ).filter(
+                mention =>
+                    mention &&
+                    mention.resolutionStatus === "RESOLVED"
+            )
+    );
 
+    assert(
+        resolvedMentions.length > 0,
+        "Research must contain at least one RESOLVED Mention for F7 E2E"
+    );
+
+    for (const mention of resolvedMentions) {
+        const section = research.sections.find(
+            item =>
+                Array.isArray(item.mentions) &&
+                item.mentions.some(
+                    candidate => candidate.id === mention.id
+                )
+        );
+
+        assert(
+            section,
+            `${mention.id}: owning Research section must exist`
+        );
+
+        const block = (section.content || []).find(
+            contentBlock =>
+                contentBlock &&
+                contentBlock.id === mention.contentBlockId
+        );
+
+        assert(
+            block,
+            `${mention.id}: contentBlockId must resolve to a Research content block`
+        );
+
+        assert.strictEqual(
+            typeof block.text,
+            "string",
+            `${mention.id}: Mention content block must contain text`
+        );
+
+        const matchedText = block.text.slice(
+            mention.start,
+            mention.end
+        );
+
+        assert.strictEqual(
+            matchedText,
+            mention.text,
+            `${mention.id}: Mention range must match its text`
+        );
+
+        const resolved =
+            realEntityResolver.resolve(
+                mention.entityRef,
+                "research"
+            );
+
+        assert(
+            resolved,
+            `${mention.id}: Entity Resolver must resolve ${mention.entityRef}`
+        );
+
+        assert.strictEqual(
+            resolved.entity.id,
+            mention.entityRef,
+            `${mention.id}: Resolver must return the canonical Entity`
+        );
+
+        assert(
+            resolved.url,
+            `${mention.id}: Resolver must return a canonical route URL`
+        );
+
+        const html = renderArticleContent(
+            [section],
+            section.mentions,
+            [],
+            [],
+            null,
+            realEntityResolver
+        );
+
+        const expectedLink =
+            `<a href="${resolved.url}">${mention.text}</a>`;
+
+        assert(
+            html.includes(expectedLink),
+            `${mention.id}: RESOLVED Mention must render as a canonical semantic link`
+        );
+    }
+
+    console.log(
+        `Article Renderer real Research → Mention → Entity → URL → Link E2E PASSED (${resolvedMentions.length} resolved mention${resolvedMentions.length === 1 ? "" : "s"})`
+    );
+}
 {
     const researchCitations = [
         {
