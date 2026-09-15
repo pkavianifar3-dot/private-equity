@@ -624,7 +624,23 @@ article figure img{
 .atlas-page .page-hero + .atlas-section {
     padding-top: 38px;
 }
+/* ---------- Readable content width ---------- */
 
+.atlas-page .atlas-identity-card,
+.atlas-page .atlas-summary,
+.atlas-page .atlas-content-section {
+    max-width: 980px;
+    margin-inline: auto;
+}
+
+.atlas-page .atlas-content-section {
+    line-height: 2.05;
+}
+
+.atlas-page .atlas-content-section p {
+    max-width: 900px;
+    margin-inline: auto;
+}
 /* ---------- Main profile cards ---------- */
 
 .atlas-page .atlas-top-grid {

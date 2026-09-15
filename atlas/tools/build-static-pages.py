@@ -150,6 +150,35 @@ def entity_name_en(entity):
 
     return None
 
+def build_source_index(sources, claims, evidence, content=None):
+    ordered_ids = []
+
+    def add_source(source_id):
+        if source_id in sources and source_id not in ordered_ids:
+            ordered_ids.append(source_id)
+
+    if content:
+        for section in content.get("sections", []):
+            for paragraph in section.get("paragraphs", []):
+                for source_ref in paragraph.get("sourceRefs", []):
+                    add_source(source_ref)
+
+    for claim in claims:
+        for evidence_ref in claim.get("evidenceRefs", []):
+            item = evidence.get(evidence_ref)
+
+            if not item:
+                continue
+
+            source_ref = item.get("sourceRef")
+
+            if source_ref:
+                add_source(source_ref)
+
+    return {
+        source_id: index
+        for index, source_id in enumerate(ordered_ids, start=1)
+    }
 
 def relation_label(predicate):
     labels = {
@@ -180,12 +209,20 @@ def relation_label(predicate):
     return labels.get(predicate, predicate.replace("_", " "))
 
 
-def claim_value_html(claim, entities):
+def claim_value_html(claim, entity_id, entities):
+    subject_id = claim.get("subject")
     object_id = claim.get("object")
 
-    if object_id and object_id in entities:
-        target = entities[object_id]
-        url = entity_url(object_id)
+    if subject_id == entity_id:
+        target_id = object_id
+    elif object_id == entity_id:
+        target_id = subject_id
+    else:
+        return ""
+
+    if target_id and target_id in entities:
+        target = entities[target_id]
+        url = entity_url(target_id)
 
         if url:
             return (
@@ -212,7 +249,7 @@ def claim_value_html(claim, entities):
     return esc(value)
 
 
-def render_claims(claims, entities):
+def render_claims(claims, entity_id, entities):
     if not claims:
         return ""
 
@@ -220,7 +257,7 @@ def render_claims(claims, entities):
 
     for claim in claims:
         predicate = claim.get("predicate", "")
-        target = claim_value_html(claim, entities)
+        target = claim_value_html(claim, entity_id, entities)
 
         if not target:
             continue
@@ -277,7 +314,7 @@ def render_claims(claims, entities):
         '<section class="atlas-section">'
         '<div class="container">'
         "<h2>ادعاها و روابط</h2>"
-        '<div class="atlas-grid">'
+        '<div class="grid atlas-claims-grid">'
         + "".join(items)
         + "</div>"
         "</div>"
@@ -285,7 +322,7 @@ def render_claims(claims, entities):
     )
 
 
-def render_content(content, sources):
+def render_content(content, source_index):
     if not content:
         return ""
 
@@ -312,22 +349,16 @@ def render_content(content, sources):
             source_links = []
 
             for source_id in paragraph.get("sourceRefs", []):
-                source = sources.get(source_id)
+                number = source_index.get(source_id)
 
-                if not source:
+                if not number:
                     continue
-
-                title = (
-                    source.get("title_fa")
-                    or source.get("title_en")
-                    or source.get("publisher")
-                    or "منبع"
-                )
 
                 source_links.append(
                     f'<a href="#source-{esc(source_id)}" '
-                    f'class="atlas-source-ref">'
-                    f'[{esc(title)}]</a>'
+                    f'class="atlas-source-ref" '
+                    f'aria-label="ارجاع به منبع {number}">'
+                    f'[{number}]</a>'
                 )
 
             source_html = ""
@@ -352,10 +383,13 @@ def render_content(content, sources):
         title_fa = section.get("title_fa", "")
         title_en = section.get("title_en")
 
-        title_en_html = ""
+        title_html = ""
+
+        if title_fa:
+            title_html += f"<h2>{esc(title_fa)}</h2>"
 
         if title_en:
-            title_en_html = (
+            title_html += (
                 '<div class="atlas-section-en">'
                 f"{esc(title_en)}"
                 "</div>"
@@ -365,8 +399,7 @@ def render_content(content, sources):
             '<section class="atlas-section">'
             '<div class="container">'
             '<article class="card atlas-content-section">'
-            f"<h2>{esc(title_fa)}</h2>"
-            f"{title_en_html}"
+            f"{title_html}"
             + "".join(paragraphs)
             + "</article>"
             "</div>"
@@ -481,7 +514,7 @@ def render_evidence(claims, evidence, sources):
         '<section class="atlas-section">'
         '<div class="container">'
         "<h2>شواهد و منابع</h2>"
-        '<div class="atlas-grid">'
+        '<div class="grid atlas-claims-grid">'
         + "".join(rows)
         + "</div>"
         "</div>"
@@ -684,7 +717,12 @@ def render_entity(entity, claims, evidence, sources, entities):
     ]
 
     content = load_content(entity)
-
+    source_index = build_source_index(
+        sources,
+        entity_claims,
+        evidence,
+        content,
+    )
     title = f"{name_fa} | اطلس | Private Capital"
 
     if name_en:
@@ -762,9 +800,9 @@ def render_entity(entity, claims, evidence, sources, entities):
 
 {render_identity(entity)}
 
-{render_content(content, sources)}
+{render_content(content, source_index)}
 
-{render_claims(entity_claims, entities)}
+{render_claims(entity_claims, entity_id, entities)}
 
 {render_data_quality(content)}
 
