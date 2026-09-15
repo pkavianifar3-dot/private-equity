@@ -1,0 +1,15 @@
+{
+  "version": "1.0",
+  "entities": {
+    "concept:private-equity": {
+      "researchMentions": [
+        {
+          "researchId": "research:private-capital",
+          "sectionId": "introduction",
+          "contentBlockId": "intro-paragraph-02",
+          "mentionId": "mention-introduction-private-equity"
+        }
+      ]
+    }
+  }
+}

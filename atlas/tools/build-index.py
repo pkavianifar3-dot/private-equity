@@ -15,7 +15,12 @@ EVIDENCE_INDEX_PATH = EVIDENCE_DIR / "index.json"
 
 SOURCES_DIR = ROOT / "sources"
 SOURCES_INDEX_PATH = SOURCES_DIR / "index.json"
+RESEARCH_ROOT = ROOT.parent / "research"
+RESEARCH_INDEX_PATH = RESEARCH_ROOT / "index.json"
+RESEARCH_CONTENT_DIR = RESEARCH_ROOT / "content"
 
+DISCOVERY_DIR = ROOT / "discovery"
+DISCOVERY_INDEX_PATH = DISCOVERY_DIR / "index.json"
 
 def load_json(path):
     with path.open("r", encoding="utf-8") as f:
@@ -254,6 +259,145 @@ def collect_record_sources(directory, collection_key, record_label):
         record_id: record_sources[record_id]
         for record_id in sorted(record_sources)
     }
+
+
+def collect_discovery_index():
+    research_registry = load_json(RESEARCH_INDEX_PATH)
+
+    research_entries = research_registry.get("research")
+
+    if not isinstance(research_entries, list):
+        raise ValueError(
+            f"{RESEARCH_INDEX_PATH.relative_to(ROOT.parent)}: "
+            "research must be an array"
+        )
+
+    research_registry_ids = set()
+
+    for research in research_entries:
+        research_id = research.get("id")
+
+        if not research_id:
+            raise ValueError(
+                f"{RESEARCH_INDEX_PATH.relative_to(ROOT.parent)}: "
+                "research entry missing required field: id"
+            )
+
+        if research_id in research_registry_ids:
+            raise ValueError(
+                f"Duplicate research ID: {research_id}"
+            )
+
+        research_registry_ids.add(research_id)
+
+    discovery_by_entity = {}
+
+    for path in sorted(RESEARCH_CONTENT_DIR.glob("*.json")):
+        data = load_json(path)
+
+        research_id = data.get("id")
+
+        if not research_id:
+            raise ValueError(
+                f"{path.relative_to(ROOT.parent)}: "
+                "research missing required field: id"
+            )
+
+        if research_id not in research_registry_ids:
+            raise ValueError(
+                f"{path.relative_to(ROOT.parent)}: "
+                f"research ID {research_id} is not registered"
+            )
+
+        sections = data.get("sections")
+
+        if not isinstance(sections, list):
+            raise ValueError(
+                f"{path.relative_to(ROOT.parent)}: "
+                "sections must be an array"
+            )
+
+        for section in sections:
+            section_id = section.get("id")
+
+            if not section_id:
+                raise ValueError(
+                    f"{path.relative_to(ROOT.parent)}: "
+                    "section missing required field: id"
+                )
+
+            mentions = section.get("mentions", [])
+
+            if not isinstance(mentions, list):
+                raise ValueError(
+                    f"{path.relative_to(ROOT.parent)}: "
+                    f"section {section_id}: mentions must be an array"
+                )
+
+            for mention in mentions:
+                mention_id = mention.get("id")
+                entity_ref = mention.get("entityRef")
+                content_block_id = mention.get("contentBlockId")
+                resolution_status = mention.get("resolutionStatus")
+
+                if not mention_id:
+                    raise ValueError(
+                        f"{path.relative_to(ROOT.parent)}: "
+                        f"section {section_id}: "
+                        "mention missing required field: id"
+                    )
+
+                if resolution_status != "RESOLVED":
+                    continue
+
+                if not entity_ref:
+                    raise ValueError(
+                        f"{path.relative_to(ROOT.parent)}: "
+                        f"mention {mention_id}: "
+                        "resolved mention missing entityRef"
+                    )
+
+                if not content_block_id:
+                    raise ValueError(
+                        f"{path.relative_to(ROOT.parent)}: "
+                        f"mention {mention_id}: "
+                        "resolved mention missing contentBlockId"
+                    )
+
+                discovery_by_entity.setdefault(
+                    entity_ref,
+                    []
+                ).append(
+                    {
+                        "researchId": research_id,
+                        "sectionId": section_id,
+                        "contentBlockId": content_block_id,
+                        "mentionId": mention_id
+                    }
+                )
+
+    discovery_by_entity = {
+        entity_id: {
+            "researchMentions": sorted(
+                mentions,
+                key=lambda mention: (
+                    mention["researchId"],
+                    mention["sectionId"],
+                    mention["contentBlockId"],
+                    mention["mentionId"]
+                )
+            )
+        }
+        for entity_id, mentions
+        in sorted(discovery_by_entity.items())
+    }
+
+    return {
+        "version": "1.0",
+        "entities": discovery_by_entity
+    }
+
+
 def write_json(path, output):
     with path.open("w", encoding="utf-8") as f:
         json.dump(
@@ -298,7 +442,7 @@ def main():
     )
 
     evidence_index = collect_evidence_index()
-    
+
     evidence_index_output = {
         "version": "1.0",
         "evidence": evidence_index["evidence"],
@@ -346,6 +490,28 @@ def main():
     print(
         f"Generated {SOURCES_INDEX_PATH.relative_to(ROOT)} "
         f"with {len(source_sources)} sources indexed."
+    )
+    discovery_index_output = collect_discovery_index()
+
+    DISCOVERY_DIR.mkdir(
+        parents=True,
+        exist_ok=True
+    )
+
+    write_json(
+        DISCOVERY_INDEX_PATH,
+        discovery_index_output
+    )
+
+    discovery_count = sum(
+        len(entry["researchMentions"])
+        for entry in discovery_index_output["entities"].values()
+    )
+
+    print(
+        f"Generated {DISCOVERY_INDEX_PATH.relative_to(ROOT)} "
+        f"with {len(discovery_index_output['entities'])} entities "
+        f"and {discovery_count} research mentions."
     )
 
 
