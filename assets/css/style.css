@@ -1054,3 +1054,27 @@ article figure img{
 .article-citations .citation-backlinks a{
     white-space:nowrap;
 }
+/* Atlas — Citation Bibliography Mobile */
+
+@media (max-width: 600px){
+    .article-citations li{
+        display:block;
+        margin-bottom:18px;
+    }
+
+    .article-citations .citation-number{
+        display:inline;
+        margin-left:6px;
+    }
+
+    .article-citations .citation-source{
+        display:inline-flex;
+        max-width:100%;
+    }
+
+    .article-citations .citation-backlinks{
+        display:block;
+        margin-top:4px;
+        white-space:normal;
+    }
+}
