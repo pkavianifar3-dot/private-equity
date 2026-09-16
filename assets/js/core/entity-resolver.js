@@ -25,7 +25,7 @@
             const url =
                 urlResolver &&
                 typeof urlResolver.entityURL === "function"
-                    ? urlResolver.entityURL(entityRef, context)
+                    ? urlResolver.entityURL(entityRef, entity.type, context)
                     : null;
 
             if (!url) {

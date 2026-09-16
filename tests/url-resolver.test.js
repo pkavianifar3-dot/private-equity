@@ -8,32 +8,43 @@ vm.runInNewContext(source, { window });
 const resolver = window.PrivateCapitalURL;
 
 assert.strictEqual(
-    resolver.entityURL("person:ali-sanginian", "atlas"),
+    resolver.entityURL("person:ali-sanginian", "Person"),
     "/atlas/person/ali-sanginian/"
 );
 
 assert.strictEqual(
-    resolver.entityURL("concept:private-equity", "research"),
+    resolver.entityURL("concept:private-equity", "Concept"),
     "/atlas/concept/private-equity/"
 );
 
 assert.strictEqual(
-    resolver.entityCanonicalURL("organization:foo-bar"),
+    resolver.entityCanonicalURL(
+        "organization:foo-bar",
+        "Organization"
+    ),
     "https://privatecapital.ir/atlas/organization/foo-bar/"
 );
 
 assert.strictEqual(
-    resolver.entityURL("project:test-project", "atlas"),
+    resolver.entityURL(
+        "organization:tehran-chamber-money-capital-commission",
+        "OrganizationUnit"
+    ),
     null
 );
 
 assert.strictEqual(
-    resolver.entityURL("invalid-id", "atlas"),
+    resolver.entityURL("project:test-project", "Project"),
     null
 );
 
 assert.strictEqual(
-    resolver.entityURL(null, "atlas"),
+    resolver.entityURL("invalid-id", "Person"),
+    null
+);
+
+assert.strictEqual(
+    resolver.entityURL(null, "Person"),
     null
 );
 

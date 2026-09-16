@@ -539,7 +539,11 @@ console.log("Article Renderer conclusion legacy parity PASSED");
 
     const mentionHtml = renderArticleContent(
         [introduction],
-        introduction.mentions
+        introduction.mentions,
+        [],
+        [],
+        null,
+        realEntityResolver
     );
 
     assert(
@@ -611,7 +615,11 @@ console.log("Article Renderer conclusion legacy parity PASSED");
 
     const html = renderArticleContent(
         [section],
-        section.mentions
+        section.mentions,
+        [],
+        [],
+        null,
+        realEntityResolver
     );
 
     assert.strictEqual(

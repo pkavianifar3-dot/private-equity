@@ -1,7 +1,8 @@
 (function () {
     "use strict";
 
-    const entityURL = (entityId) => window.PrivateCapitalURL.entityURL(entityId, "atlas");
+    const entityURL = (entityId, entityType) =>
+        window.PrivateCapitalURL.entityURL(entityId, entityType);
 
     const ATLAS_ROOT =
     window.location.pathname.includes("/atlas/")
@@ -166,7 +167,7 @@
                 "propertyID": "PrivateCapitalAtlasID",
                 "value": entity.id
             },
-            "url": window.PrivateCapitalURL.entityCanonicalURL(entityId)
+            "url": window.PrivateCapitalURL.entityCanonicalURL(entityId, entity.type)
         };
 
         if (entity.name?.en) {
@@ -196,7 +197,7 @@
                 "propertyID": "PrivateCapitalAtlasID",
                 "value": entity.id
             },
-            "url": window.PrivateCapitalURL.entityCanonicalURL(entityId)
+            "url": window.PrivateCapitalURL.entityCanonicalURL(entityId, entity.type)
         };
 
         if (entity.name?.en) {
@@ -694,12 +695,18 @@
         
         const objectURL =
             claim.object
-                ? entityURL(claim.object)
+                ? entityURL(
+                    claim.object,
+                    entityIndex[claim.object]?.type
+                )
                 : null;
         
         const investmentURL =
             linkedInvestment
-                ? entityURL(linkedInvestment.id)
+                ? entityURL(
+                    linkedInvestment.id,
+                    linkedInvestment.type
+                )
                 : null;
         
         const temporal =
@@ -832,7 +839,11 @@
         }
 
         const organizationName = getEntityName(entityIndex, claim.object);
-const organizationURL = entityURL(claim.object);
+        const organizationURL =
+            entityURL(
+                claim.object,
+                entityIndex[claim.object]?.type
+            );
         return `
             <div class="card atlas-current-role">
 
@@ -1022,8 +1033,11 @@ function renderTimelineSection(claims, entityIndex) {
                                     entityIndex,
                                     claim.object
                                 );
-const objectURL =
-    entityURL(claim.object);
+                            const objectURL =
+                                entityURL(
+                                    claim.object,
+                                    entityIndex[claim.object]?.type
+                                );
                             const period =
                                 formatTemporal(
                                     claim.temporal
@@ -1663,7 +1677,8 @@ async function renderOrganization(entityId) {
                                 .map(item => {
                                     const investmentURL =
                                         entityURL(
-                                            item.investment.id
+                                            item.investment.id,
+                                            item.investment.type
                                         );
     
                                     const targetName =
@@ -1860,7 +1875,7 @@ async function renderOrganization(entityId) {
     applyPageSEO({
         title: `${entity.name?.fa || ""} | اطلس | Private Capital`,
         description: `صفحه اطلس ${entity.name?.fa || ""} در Private Capital.`,
-        url: window.PrivateCapitalURL.entityCanonicalURL(entityId)
+        url: window.PrivateCapitalURL.entityCanonicalURL(entityId, entity.type)
     });
 
     injectJSONLD(
@@ -1936,7 +1951,10 @@ function renderConceptRelationSection(
 
                             const objectURL =
                                 objectId
-                                    ? entityURL(objectId)
+                                    ? entityURL(
+                                        objectId,
+                                        entityIndex[objectId]?.type
+                                    )
                                     : null;
 
                             return `
@@ -2127,7 +2145,10 @@ function renderConceptBreadcrumbs(
                 );
 
             const url =
-                entityURL(id);
+                entityURL(
+                    id,
+                    entityIndex[id]?.type
+                );
 
             return {
                 name,
@@ -2200,7 +2221,7 @@ function renderConceptBreadcrumbs(
                 "propertyID": "PrivateCapitalAtlasID",
                 "value": entity.id
             },
-            "url": window.PrivateCapitalURL.entityCanonicalURL(entityId)
+            "url": window.PrivateCapitalURL.entityCanonicalURL(entityId, entity.type)
         };
     
         if (entity.name?.en) {
@@ -2523,7 +2544,7 @@ function renderConceptBreadcrumbs(
             description:
                 `صفحه مفهوم ${entity.name?.fa || ""} در Private Capital.`,
     
-            url: window.PrivateCapitalURL.entityCanonicalURL(entityId)
+            url: window.PrivateCapitalURL.entityCanonicalURL(entityId, entity.type)
         });
         injectJSONLD(
             buildConceptJSONLD(
@@ -2547,7 +2568,7 @@ function renderConceptBreadcrumbs(
                 "propertyID": "PrivateCapitalAtlasID",
                 "value": entity.id
             },
-            "url": window.PrivateCapitalURL.entityCanonicalURL(entityId)
+            "url": window.PrivateCapitalURL.entityCanonicalURL(entityId, entity.type)
         };
     
         if (entity.name?.en) {
@@ -2657,7 +2678,10 @@ function renderConceptBreadcrumbs(
         
         const investorURL =
             investorId
-                ? entityURL(investorId)
+                ? entityURL(
+                    investorId,
+                    entityIndex[investorId]?.type
+                )
                 : null;
         
         const targetName =
@@ -2667,7 +2691,10 @@ function renderConceptBreadcrumbs(
         
         const targetURL =
             targetId
-                ? entityURL(targetId)
+                ? entityURL(
+                    targetId,
+                    entityIndex[targetId]?.type
+                )
                 : null;
         const investmentRelationshipHTML =
             investorName && targetName
@@ -2971,7 +2998,7 @@ function renderConceptBreadcrumbs(
             description:
                 `صفحه سرمایه‌گذاری ${entity.name?.fa || ""} در Private Capital.`,
     
-            url: window.PrivateCapitalURL.entityCanonicalURL(entityId)
+            url: window.PrivateCapitalURL.entityCanonicalURL(entityId, entity.type)
         });
         injectJSONLD(
             buildInvestmentJSONLD(
@@ -3184,7 +3211,7 @@ ${renderEvidenceSection(
             description: currentRoleClaim
                 ? `${entity.name?.fa || ""}؛ ${relationLabel(currentRoleClaim.predicate)} ${getEntityName(entityIndex, currentRoleClaim.object)}.`
                 : `صفحه اطلس ${entity.name?.fa || ""} در Private Capital.`,
-            url: window.PrivateCapitalURL.entityCanonicalURL(entityId)
+            url: window.PrivateCapitalURL.entityCanonicalURL(entityId, entity.type)
         });
 
         injectJSONLD(

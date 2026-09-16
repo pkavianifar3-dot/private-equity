@@ -33,21 +33,25 @@ def esc(value):
     return html.escape("" if value is None else str(value), quote=True)
 
 
-def entity_url(entity_id):
+def entity_url(entity_id, entity_type=None):
     if not entity_id or ":" not in entity_id:
         return None
 
-    entity_type, slug = entity_id.split(":", 1)
-    route = ROUTES.get(entity_type.capitalize())
+    _, slug = entity_id.split(":", 1)
 
-    if not route or not slug:
+    if not slug or not entity_type:
+        return None
+
+    route = ROUTES.get(entity_type)
+
+    if not route:
         return None
 
     return f"/atlas/{route}/{quote(slug, safe='')}/"
 
 
-def entity_canonical_url(entity_id):
-    url = entity_url(entity_id)
+def entity_canonical_url(entity_id, entity_type=None):
+    url = entity_url(entity_id, entity_type)
 
     if not url:
         return None
@@ -222,7 +226,7 @@ def claim_value_html(claim, entity_id, entities):
 
     if target_id and target_id in entities:
         target = entities[target_id]
-        url = entity_url(target_id)
+        url = entity_url(target_id, target.get("type"))
 
         if url:
             return (
@@ -648,7 +652,7 @@ def build_jsonld(entity, entity_claims):
     entity_type = entity.get("type")
     name_fa = entity_name(entity)
     name_en = entity_name_en(entity)
-    canonical = entity_canonical_url(entity_id)
+    canonical = entity_canonical_url(entity_id, entity_type)
 
     if entity_type == "Person":
         schema_type = "Person"
@@ -709,7 +713,7 @@ def render_entity(entity, claims, evidence, sources, entities):
     name_en = entity_name_en(entity)
     entity_type = entity.get("type")
 
-    canonical_url = entity_canonical_url(entity_id)
+    canonical_url = entity_canonical_url(entity_id, entity_type)
 
     entity_claims = [
         claim

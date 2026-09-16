@@ -4,25 +4,29 @@
     const SITE_ORIGIN = "https://privatecapital.ir";
 
     const ROUTES = {
-        person: "person",
-        organization: "organization",
-        investment: "investment",
-        concept: "concept"
+        Person: "person",
+        Organization: "organization",
+        Investment: "investment",
+        Concept: "concept"
     };
 
-    function resolveRoute(entityId) {
-        if (typeof entityId !== "string" || !entityId.includes(":")) {
+    function resolveRoute(entityId, entityType) {
+        if (
+            typeof entityId !== "string" ||
+            !entityId.includes(":") ||
+            typeof entityType !== "string"
+        ) {
             return null;
         }
 
-        const [type, ...slugParts] = entityId.split(":");
+        const [, ...slugParts] = entityId.split(":");
         const slug = slugParts.join(":");
 
-        if (!type || !slug) {
+        if (!slug) {
             return null;
         }
 
-        const route = ROUTES[type];
+        const route = ROUTES[entityType];
 
         if (!route) {
             return null;
@@ -31,8 +35,8 @@
         return `${route}/${encodeURIComponent(slug)}/`;
     }
 
-    function entityURL(entityId, context) {
-        const route = resolveRoute(entityId);
+    function entityURL(entityId, entityType, context) {
+        const route = resolveRoute(entityId, entityType);
 
         if (!route) {
             return null;
@@ -41,8 +45,8 @@
         return "/atlas/" + route;
     }
 
-    function entityCanonicalURL(entityId) {
-        const route = resolveRoute(entityId);
+    function entityCanonicalURL(entityId, entityType) {
+        const route = resolveRoute(entityId, entityType);
 
         if (!route) {
             return null;
