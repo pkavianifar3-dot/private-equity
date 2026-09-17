@@ -1,0 +1,296 @@
+{
+  "version": "1.0",
+  "entities": [
+    {
+      "id": "concept:contractual-components",
+      "type": "Concept",
+      "name": {
+        "fa": "اجزای قراردادی",
+        "en": "Contractual Components"
+      },
+      "lifecycleStatus": "REVIEW",
+      "route": "/atlas/concept/contractual-components/"
+    },
+    {
+      "id": "concept:growth-capital",
+      "type": "Concept",
+      "name": {
+        "fa": "سرمایه رشد",
+        "en": "Growth Capital"
+      },
+      "lifecycleStatus": "REVIEW",
+      "route": "/atlas/concept/growth-capital/"
+    },
+    {
+      "id": "concept:lender",
+      "type": "Concept",
+      "name": {
+        "fa": "اعتباردهنده",
+        "en": "Lender"
+      },
+      "lifecycleStatus": "REVIEW",
+      "route": "/atlas/concept/lender/"
+    },
+    {
+      "id": "concept:physical-assets",
+      "type": "Concept",
+      "name": {
+        "fa": "دارایی‌های فیزیکی",
+        "en": "Physical Assets"
+      },
+      "lifecycleStatus": "REVIEW",
+      "route": "/atlas/concept/physical-assets/"
+    },
+    {
+      "id": "concept:private-capital",
+      "type": "Concept",
+      "name": {
+        "fa": "سرمایه خصوصی",
+        "en": "Private Capital"
+      },
+      "lifecycleStatus": "REVIEW",
+      "route": "/atlas/concept/private-capital/"
+    },
+    {
+      "id": "concept:private-capital-classification",
+      "type": "Concept",
+      "name": {
+        "fa": "طبقه‌بندی سرمایه خصوصی",
+        "en": "Private Capital Classification"
+      },
+      "lifecycleStatus": "REVIEW",
+      "route": "/atlas/concept/private-capital-classification/"
+    },
+    {
+      "id": "concept:private-credit",
+      "type": "Concept",
+      "name": {
+        "fa": "اعتبار خصوصی",
+        "en": "Private Credit"
+      },
+      "lifecycleStatus": "REVIEW",
+      "route": "/atlas/concept/private-credit/"
+    },
+    {
+      "id": "concept:private-equity",
+      "type": "Concept",
+      "name": {
+        "fa": "سرمایه‌گذاری خصوصی",
+        "en": "Private Equity"
+      },
+      "lifecycleStatus": "REVIEW",
+      "route": "/atlas/concept/private-equity/"
+    },
+    {
+      "id": "concept:private-market-access",
+      "type": "Concept",
+      "name": {
+        "fa": "دسترسی به بازارهای خصوصی",
+        "en": "Private Market Access"
+      },
+      "lifecycleStatus": "REVIEW",
+      "route": "/atlas/concept/private-market-access/"
+    },
+    {
+      "id": "concept:real-assets",
+      "type": "Concept",
+      "name": {
+        "fa": "دارایی‌های واقعی",
+        "en": "Real Assets"
+      },
+      "lifecycleStatus": "REVIEW",
+      "route": "/atlas/concept/real-assets/"
+    },
+    {
+      "id": "concept:venture-capital",
+      "type": "Concept",
+      "name": {
+        "fa": "سرمایه‌گذاری خطرپذیر",
+        "en": "Venture Capital"
+      },
+      "lifecycleStatus": "REVIEW",
+      "route": "/atlas/concept/venture-capital/"
+    },
+    {
+      "id": "investment:kayson-achareh",
+      "type": "Investment",
+      "name": {
+        "fa": "سرمایه‌گذاری گروه کیسون در آچاره",
+        "en": "Kayson Investment in Achareh"
+      },
+      "lifecycleStatus": "REVIEW",
+      "route": "/atlas/investment/kayson-achareh/"
+    },
+    {
+      "id": "organization:achareh",
+      "type": "Organization",
+      "name": {
+        "fa": "آچاره",
+        "en": "Achareh"
+      },
+      "lifecycleStatus": "REVIEW",
+      "route": "/atlas/organization/achareh/"
+    },
+    {
+      "id": "organization:amin-investment-bank",
+      "type": "Organization",
+      "name": {
+        "fa": "شرکت تأمین سرمایه امین",
+        "en": "Amin Investment Bank"
+      },
+      "lifecycleStatus": "REVIEW",
+      "aliases": [
+        "تأمین سرمایه امین",
+        "Amin"
+      ],
+      "route": "/atlas/organization/amin-investment-bank/"
+    },
+    {
+      "id": "organization:iran-farabourse",
+      "type": "Organization",
+      "name": {
+        "fa": "فرابورس ایران",
+        "en": "Iran Fara Bourse"
+      },
+      "lifecycleStatus": "REVIEW",
+      "aliases": [
+        "فرابورس"
+      ],
+      "route": "/atlas/organization/iran-farabourse/"
+    },
+    {
+      "id": "organization:kayson-group",
+      "type": "Organization",
+      "name": {
+        "fa": "گروه کیسون",
+        "en": "Kayson Group"
+      },
+      "lifecycleStatus": "REVIEW",
+      "aliases": [
+        "کیسون",
+        "Kayson"
+      ],
+      "route": "/atlas/organization/kayson-group/"
+    },
+    {
+      "id": "organization:kian-financial-group",
+      "type": "Organization",
+      "name": {
+        "fa": "گروه مالی کیان",
+        "en": "Kian Financial Group"
+      },
+      "lifecycleStatus": "REVIEW",
+      "route": "/atlas/organization/kian-financial-group/"
+    },
+    {
+      "id": "organization:kian-private-equity-management",
+      "type": "Organization",
+      "name": {
+        "fa": "شرکت سهامی خاص مدیریت سهام خصوصی کیان",
+        "en": "Kian Private Equity Management"
+      },
+      "lifecycleStatus": "REVIEW",
+      "aliases": [
+        "شرکت مدیریت سهام خصوصی کیان",
+        "مدیریت سهام خصوصی کیان"
+      ],
+      "route": "/atlas/organization/kian-private-equity-management/"
+    },
+    {
+      "id": "organization:semega",
+      "type": "Organization",
+      "name": {
+        "fa": "گروه سرمایه‌گذاری میراث فرهنگی و گردشگری ایران (سمگا)",
+        "en": "SEMEGA"
+      },
+      "lifecycleStatus": "REVIEW",
+      "aliases": [
+        "سمگا"
+      ],
+      "route": "/atlas/organization/semega/"
+    },
+    {
+      "id": "organization:tehran-chamber-money-capital-commission",
+      "type": "OrganizationUnit",
+      "name": {
+        "fa": "کمیسیون بازار پول و سرمایه اتاق بازرگانی تهران",
+        "en": "Money and Capital Market Commission of Tehran Chamber of Commerce"
+      },
+      "lifecycleStatus": "REVIEW",
+      "aliases": [
+        "کمیسیون بازار پول و سرمایه اتاق تهران"
+      ]
+    },
+    {
+      "id": "organization:tourism-bank",
+      "type": "Organization",
+      "name": {
+        "fa": "بانک گردشگری",
+        "en": "Tourism Bank"
+      },
+      "lifecycleStatus": "REVIEW",
+      "route": "/atlas/organization/tourism-bank/"
+    },
+    {
+      "id": "person:ali-sanginian",
+      "type": "Person",
+      "name": {
+        "fa": "علی سنگینیان",
+        "en": "Ali Sanginian"
+      },
+      "lifecycleStatus": "PUBLISHED",
+      "domains": [
+        "sector:capital-market",
+        "sector:investment-banking",
+        "sector:corporate-investment",
+        "sector:private-equity"
+      ],
+      "route": "/atlas/person/ali-sanginian/"
+    },
+    {
+      "id": "project:dadman",
+      "type": "Project",
+      "name": {
+        "fa": "دادمان",
+        "en": "Dadman"
+      },
+      "lifecycleStatus": "REVIEW"
+    },
+    {
+      "id": "sector:capital-market",
+      "type": "Sector",
+      "name": {
+        "fa": "بازار سرمایه",
+        "en": "Capital Market"
+      },
+      "lifecycleStatus": "REVIEW"
+    },
+    {
+      "id": "sector:corporate-investment",
+      "type": "Sector",
+      "name": {
+        "fa": "سرمایه‌گذاری شرکتی",
+        "en": "Corporate Investment"
+      },
+      "lifecycleStatus": "REVIEW"
+    },
+    {
+      "id": "sector:investment-banking",
+      "type": "Sector",
+      "name": {
+        "fa": "بانکداری سرمایه‌گذاری",
+        "en": "Investment Banking"
+      },
+      "lifecycleStatus": "REVIEW"
+    },
+    {
+      "id": "sector:private-equity",
+      "type": "Sector",
+      "name": {
+        "fa": "سرمایه‌گذاری خصوصی",
+        "en": "Private Equity"
+      },
+      "lifecycleStatus": "REVIEW"
+    }
+  ]
+}
