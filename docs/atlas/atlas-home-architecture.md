@@ -111,6 +111,23 @@ Examples:
 - `/atlas/explore/?q=کیان`
 - `/atlas/explore/?type=Concept&q=capital`
 
+### Browse Group State
+
+Explore may preserve a presentation-level browse group through the `group` query parameter.
+
+Examples:
+
+- `/atlas/explore/?group=actors`
+- `/atlas/explore/?group=capital-transactions`
+- `/atlas/explore/?group=business-projects`
+- `/atlas/explore/?group=concepts-domains`
+
+A browse group maps to one or more canonical entity types according to the Browse Group Map.
+
+The `group` parameter does not replace or alter the meaning of `type`.
+
+If both `group` and `type` are present, `type` is the narrower filter and applies within the selected group.
+
 ### Entity Pages
 
 Existing entity URLs remain stable.

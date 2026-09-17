@@ -1165,11 +1165,80 @@ article figure img{
     border-color: #4A6B8A;
 }
 
+/* Atlas Explore browse groups */
+.atlas-explore-groups {
+    margin-bottom: 16px;
+}
+
+.atlas-explore-groups-label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.atlas-explore-group-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.atlas-explore-group-list button {
+    border: 1px solid #23384D;
+    border-radius: 999px;
+    padding: 8px 14px;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+}
+
+.atlas-explore-group-list button:hover {
+    border-color: #4A6B8A;
+}
+
+.atlas-explore-group-list button.is-active {
+    background: rgba(201,162,39,.10);
+    border-color: #C9A227;
+    color: #C9A227;
+}
+
+/* Atlas Explore type filter */
+.atlas-explore-type-filter {
+    margin-bottom: 28px;
+}
+
+.atlas-explore-active-filters {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 28px;
+    padding: 10px 14px;
+    border: 1px solid #C9A227;
+    border-radius: 8px;
+    background: rgba(201, 162, 39, .06);
+}
+
+.atlas-explore-active-filters-label {
+    font-weight: 600;
+    color: #C9A227;
+}
+
+.atlas-explore-active-filters-value {
+    color: #C9A227;
+}
+
+.atlas-explore-type-filter-label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
 .atlas-explore-filters {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
-    margin-bottom: 28px;
+    margin-bottom: 0;
 }
 
 .atlas-explore-filters button {
@@ -1182,10 +1251,14 @@ article figure img{
     cursor: pointer;
 }
 
-.atlas-explore-filters button:hover,
-.atlas-explore-filters button.is-active {
-    background: #0E1B2D;
+.atlas-explore-filters button:hover {
     border-color: #4A6B8A;
+}
+
+.atlas-explore-filters button.is-active {
+    background: rgba(201,162,39,.10);
+    border-color: #C9A227;
+    color: #C9A227;
 }
 
 .atlas-explore-summary {
