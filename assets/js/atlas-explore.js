@@ -107,41 +107,109 @@
         return TYPE_LABELS[type] || type;
     }
 
-    function matchesQuery(entity, query) {
+    function normalizeSearchText(value) {
+        return String(value ?? "")
+            .normalize("NFKC")
+            .replace(/ي/g, "ی")
+            .replace(/ى/g, "ی")
+            .replace(/ك/g, "ک")
+            .replace(/ۀ/g, "ه")
+            .replace(/ة/g, "ه")
+            .replace(/ـ/g, "")
+            .replace(/\u200c/g, " ")
+            .replace(/\s+/g, " ")
+            .trim()
+            .toLocaleLowerCase();
+    }
+
+    function getSearchMatchRank(entity, query) {
         if (!query) {
-            return true;
+            return 0;
         }
 
-        const normalizedQuery = query.toLocaleLowerCase();
+        const normalizedQuery = normalizeSearchText(query);
 
-        const fa = entity.name?.fa || "";
-        const en = entity.name?.en || "";
+        if (!normalizedQuery) {
+            return 0;
+        }
 
-        return (
-            fa.toLocaleLowerCase().includes(normalizedQuery) ||
-            en.toLocaleLowerCase().includes(normalizedQuery)
-        );
+        const names = [
+            entity.name?.fa || "",
+            entity.name?.en || ""
+        ]
+            .map(normalizeSearchText)
+            .filter(Boolean);
+
+        let bestRank = Infinity;
+
+        for (const name of names) {
+            if (name === normalizedQuery) {
+                bestRank = Math.min(bestRank, 0);
+                continue;
+            }
+
+            if (name.startsWith(normalizedQuery)) {
+                bestRank = Math.min(bestRank, 1);
+                continue;
+            }
+
+            const tokens = name.split(" ");
+
+            if (tokens.some((token) => token.startsWith(normalizedQuery))) {
+                bestRank = Math.min(bestRank, 2);
+                continue;
+            }
+
+            if (name.includes(normalizedQuery)) {
+                bestRank = Math.min(bestRank, 3);
+            }
+        }
+
+        return bestRank;
+    }
+
+    function matchesQuery(entity, query) {
+        return getSearchMatchRank(entity, query) !== Infinity;
     }
 
     function getFilteredEntities() {
         const group = BROWSE_GROUPS[state.group];
 
-        return catalog.filter((entity) => {
-            const matchesGroup =
-                !group || group.types.includes(entity.type);
+        return catalog
+            .filter((entity) => {
+                const matchesGroup =
+                    !group || group.types.includes(entity.type);
 
-            const matchesType =
-                !state.type || entity.type === state.type;
+                const matchesType =
+                    !state.type || entity.type === state.type;
 
-            const matchesSearch =
-                matchesQuery(entity, state.query);
+                const matchesSearch =
+                    matchesQuery(entity, state.query);
 
-            return (
-                matchesGroup &&
-                matchesType &&
-                matchesSearch
-            );
-        });
+                return (
+                    matchesGroup &&
+                    matchesType &&
+                    matchesSearch
+                );
+            })
+            .sort((a, b) => {
+                const rankA = getSearchMatchRank(a, state.query);
+                const rankB = getSearchMatchRank(b, state.query);
+
+                if (rankA !== rankB) {
+                    return rankA - rankB;
+                }
+
+                const nameA = normalizeSearchText(
+                    a.name?.fa || a.name?.en || a.id
+                );
+
+                const nameB = normalizeSearchText(
+                    b.name?.fa || b.name?.en || b.id
+                );
+
+                return nameA.localeCompare(nameB);
+            });
     }
 
     function renderSearch() {
@@ -409,6 +477,18 @@
             render();
         });
 
+        input?.addEventListener("keydown", (event) => {
+            if (event.key === "Escape") {
+                event.preventDefault();
+
+                state.query = "";
+                state.page = 1;
+                updateURL();
+                render();
+                return;
+            }
+        });
+
         root.querySelectorAll("[data-type]").forEach((button) => {
             button.addEventListener("click", () => {
                 state.type = button.dataset.type || "";
@@ -506,6 +586,29 @@
 
         if (catalog.length) {
             render();
+        }
+    });
+
+    document.addEventListener("keydown", (event) => {
+        const target = event.target;
+
+        const isTypingField =
+            target instanceof HTMLInputElement ||
+            target instanceof HTMLTextAreaElement ||
+            target instanceof HTMLSelectElement;
+
+        if (
+            event.key === "/" &&
+            !isTypingField &&
+            root
+        ) {
+            event.preventDefault();
+
+            const input = document.getElementById(
+                "atlas-explore-search-input"
+            );
+
+            input?.focus();
         }
     });
 
