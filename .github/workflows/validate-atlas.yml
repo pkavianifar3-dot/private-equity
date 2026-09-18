@@ -31,10 +31,12 @@ jobs:
         run: python -m unittest discover -s tests -p 'test_*.py'
 
       - name: Generate indexes
-        run: python atlas/tools/build-index.py
+        run: |
+          python atlas/tools/build-index.py
+          python atlas/tools/build-catalog.py
 
       - name: Check generated indexes
-        run: git diff --exit-code -- atlas/entities/index.json atlas/claims/index.json atlas/evidence/index.json atlas/sources/index.json atlas/discovery/index.json
+        run: git diff --exit-code -- atlas/entities/index.json atlas/claims/index.json atlas/evidence/index.json atlas/sources/index.json atlas/discovery/index.json atlas/catalog/index.json
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
