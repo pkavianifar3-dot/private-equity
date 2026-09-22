@@ -555,8 +555,8 @@ console.log("Article Renderer conclusion legacy parity PASSED");
 
     assert.strictEqual(
         (mentionHtml.match(/<a href=/g) || []).length,
-        1,
-        "Introduction pilot must render exactly one resolved entity link"
+        3,
+        "Introduction pilot must render exactly three resolved entity links"
     );
 
     console.log("Article Renderer resolved Mention contract PASSED");

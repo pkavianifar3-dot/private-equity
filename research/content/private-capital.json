@@ -18,7 +18,12 @@
     "authorRefs": []
   },
   "entityRefs": [
-    "concept:private-equity"
+    "concept:private-capital",
+    "concept:private-equity",
+    "concept:private-credit",
+    "concept:real-assets",
+    "concept:venture-capital",
+    "concept:growth-capital"
   ],
   "claimRefs": [
     "claim:private-capital-broader-than-private-equity",
@@ -84,6 +89,24 @@
           "start": 151,
           "end": 169,
           "resolutionStatus": "RESOLVED"
+        },
+        {
+          "id": "mention-introduction-private-capital",
+          "text": "سرمایه خصوصی",
+          "entityRef": "concept:private-capital",
+          "contentBlockId": "intro-paragraph-01",
+          "start": 1,
+          "end": 13,
+          "resolutionStatus": "RESOLVED"
+        },
+        {
+          "id": "mention-introduction-real-assets",
+          "text": "دارایی‌های واقعی",
+          "entityRef": "concept:real-assets",
+          "contentBlockId": "intro-paragraph-02",
+          "start": 341,
+          "end": 357,
+          "resolutionStatus": "RESOLVED"
         }
       ]
     },
@@ -141,6 +164,35 @@
       ],
       "sourceRefs": [
         "source:ecb-private-markets-public-risk"
+      ],
+      "mentions": [
+        {
+          "id": "mention-main-blocks-venture-capital",
+          "text": "سرمایه‌گذاری خطرپذیر",
+          "entityRef": "concept:venture-capital",
+          "contentBlockId": "main-blocks-paragraph-01",
+          "start": 96,
+          "end": 116,
+          "resolutionStatus": "RESOLVED"
+        },
+        {
+          "id": "mention-main-blocks-growth-capital",
+          "text": "سرمایه رشد",
+          "entityRef": "concept:growth-capital",
+          "contentBlockId": "main-blocks-paragraph-01",
+          "start": 120,
+          "end": 130,
+          "resolutionStatus": "RESOLVED"
+        },
+        {
+          "id": "mention-main-blocks-private-credit",
+          "text": "اعتبار خصوصی",
+          "entityRef": "concept:private-credit",
+          "contentBlockId": "main-blocks-paragraph-01",
+          "start": 134,
+          "end": 146,
+          "resolutionStatus": "RESOLVED"
+        }
       ],
       "title": {
         "fa": "بلوک‌های اصلی سرمایه خصوصی",
