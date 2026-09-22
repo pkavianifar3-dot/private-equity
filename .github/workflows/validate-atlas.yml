@@ -44,10 +44,17 @@ jobs:
 
       - name: Check Atlas JavaScript syntax
         run: node --check assets/js/atlas.js
+
+      - name: Generate static Research pages
+        run: node atlas/tools/build-research-pages.js
+
+      - name: Check generated Research pages
+        run: git diff --exit-code -- articles/private-capital.html
       - name: Check Article JavaScript syntax
         run: |
           node --check assets/js/article-renderer.js
           node --check assets/js/article-page.js
+          node --check atlas/tools/build-research-pages.js
       - name: Check Atlas renderer pages
         run: |
           test -f atlas/person.html
@@ -58,3 +65,5 @@ jobs:
         run: node tests/atlas-renderer.test.js
       - name: Test Article renderer
         run: node tests/article-renderer.test.js
+      - name: Test static Research page
+        run: node tests/research-static-page.test.js

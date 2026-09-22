@@ -613,7 +613,7 @@ class ArticleRendererPageIntegrationTests(unittest.TestCase):
         ).read_text(encoding="utf-8")
 
         marker = '<div data-article-renderer-section="definition-and-scope">'
-        next_section = '<p data-article-renderer-section="main-blocks">'
+        next_section = '<div data-article-renderer-section="main-blocks">'
 
         self.assertEqual(html.count(marker), 1)
 
@@ -645,8 +645,8 @@ class ArticleRendererPageIntegrationTests(unittest.TestCase):
         )
         section = html[start:end]
 
-        self.assertEqual(section.count("<h3>"), 0)
-        self.assertEqual(section.count("<p>"), 0)
+        self.assertGreater(section.count("<h3>"), 0)
+        self.assertGreater(section.count("<p>"), 0)
 
     def test_private_capital_private_equity_ends_before_private_credit(self):
         html = (
