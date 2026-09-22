@@ -1212,6 +1212,15 @@ def validate_research_mention_integrity(research_data, entity_ids, errors):
                     errors.append(
                         f"{mention_id}: mention end exceeds content block text length"
                     )
+                elif (
+                    start >= 0
+                    and start < end
+                    and isinstance(mention.get("text"), str)
+                    and mention.get("text") != block.get("text")[start:end]
+                ):
+                    errors.append(
+                        f"{mention_id}: mention text does not match content block span"
+                    )
 
             if start is not None and start < 0:
                 errors.append(

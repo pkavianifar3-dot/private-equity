@@ -850,6 +850,178 @@ console.log("Article Renderer conclusion legacy parity PASSED");
         `Article Renderer real Research → Mention → Entity → URL → Link E2E PASSED (${resolvedMentions.length} resolved mention${resolvedMentions.length === 1 ? "" : "s"})`
     );
 }
+
+{
+    const section = {
+        id: "mention-unknown-entity-test",
+        content: [
+            {
+                id: "paragraph-unknown-entity",
+                type: "paragraph",
+                text: "Unknown Entity"
+            }
+        ],
+        mentions: [
+            {
+                id: "mention-unknown-entity",
+                text: "Unknown Entity",
+                entityRef: "concept:does-not-exist",
+                contentBlockId: "paragraph-unknown-entity",
+                start: 0,
+                end: 14,
+                resolutionStatus: "RESOLVED"
+            }
+        ]
+    };
+
+    const html = renderArticleContent(
+        [section],
+        section.mentions,
+        [],
+        [],
+        null,
+        realEntityResolver
+    );
+
+    assert(
+        html.includes("<p>Unknown Entity</p>"),
+        "Unknown resolved Entity must remain plain text"
+    );
+
+    assert.strictEqual(
+        (html.match(/<a href=/g) || []).length,
+        0,
+        "Unknown resolved Entity must not create a link"
+    );
+
+    console.log("Article Renderer unknown Entity safety PASSED");
+}
+
+{
+    const section = {
+        id: "mention-escaping-test",
+        content: [
+            {
+                id: "paragraph-escaping",
+                type: "paragraph",
+                text: "<strong>Tag</strong>"
+            }
+        ],
+        mentions: [
+            {
+                id: "mention-escaping",
+                text: "<strong>Tag</strong>",
+                entityRef: "concept:private-equity",
+                contentBlockId: "paragraph-escaping",
+                start: 0,
+                end: 20,
+                resolutionStatus: "RESOLVED"
+            }
+        ]
+    };
+
+    const injectedResolver = {
+        resolve(entityRef, contextName) {
+            assert.strictEqual(entityRef, "concept:private-equity");
+            assert.strictEqual(contextName, "research");
+
+            return {
+                entity: {
+                    id: entityRef
+                },
+                url: "/atlas/test?x=1&y=2"
+            };
+        }
+    };
+
+    const html = renderArticleContent(
+        [section],
+        section.mentions,
+        [],
+        [],
+        null,
+        injectedResolver
+    );
+
+    assert(
+        html.includes(
+            '<a href="/atlas/test?x=1&amp;y=2">&lt;strong&gt;Tag&lt;/strong&gt;</a>'
+        ),
+        "Mention text and URL must be HTML-escaped"
+    );
+
+    console.log("Article Renderer Mention escaping PASSED");
+}
+
+{
+    const section = {
+        id: "mention-overlap-test",
+        content: [
+            {
+                id: "paragraph-overlap",
+                type: "paragraph",
+                text: "ABCDEFGH"
+            }
+        ],
+        mentions: [
+            {
+                id: "mention-overlap-first",
+                text: "ABCD",
+                entityRef: "concept:first",
+                contentBlockId: "paragraph-overlap",
+                start: 0,
+                end: 4,
+                resolutionStatus: "RESOLVED"
+            },
+            {
+                id: "mention-overlap-second",
+                text: "CDEF",
+                entityRef: "concept:second",
+                contentBlockId: "paragraph-overlap",
+                start: 2,
+                end: 6,
+                resolutionStatus: "RESOLVED"
+            }
+        ]
+    };
+
+    const injectedResolver = {
+        resolve(entityRef) {
+            return {
+                entity: {
+                    id: entityRef
+                },
+                url: `/atlas/test/${entityRef}`
+            };
+        }
+    };
+
+    const html = renderArticleContent(
+        [section],
+        section.mentions,
+        [],
+        [],
+        null,
+        injectedResolver
+    );
+
+    assert(
+        html.includes(
+            '<p><a href="/atlas/test/concept:first">ABCD</a>EFGH</p>'
+        ),
+        "Overlapping Mentions must render deterministically without corrupting text"
+    );
+
+    assert.strictEqual(
+        (html.match(/<a href=/g) || []).length,
+        1,
+        "Overlapping Mentions must not create duplicate overlapping links"
+    );
+
+    console.log("Article Renderer Mention overlap safety PASSED");
+}
+
+
 {
     const researchCitations = [
         {
