@@ -8,6 +8,12 @@
           "sectionId": "main-blocks",
           "contentBlockId": "main-blocks-paragraph-01",
           "mentionId": "mention-main-blocks-growth-capital"
+        },
+        {
+          "researchId": "research:private-capital",
+          "sectionId": "private-equity",
+          "contentBlockId": "private-equity-paragraph-03",
+          "mentionId": "mention-private-equity-growth-capital"
         }
       ]
     },
@@ -38,6 +44,12 @@
           "sectionId": "introduction",
           "contentBlockId": "intro-paragraph-02",
           "mentionId": "mention-introduction-private-equity"
+        },
+        {
+          "researchId": "research:private-capital",
+          "sectionId": "private-credit",
+          "contentBlockId": "private-credit-paragraph-05",
+          "mentionId": "mention-private-credit-private-equity"
         }
       ]
     },
@@ -58,6 +70,12 @@
           "sectionId": "main-blocks",
           "contentBlockId": "main-blocks-paragraph-01",
           "mentionId": "mention-main-blocks-venture-capital"
+        },
+        {
+          "researchId": "research:private-capital",
+          "sectionId": "private-equity",
+          "contentBlockId": "private-equity-paragraph-02",
+          "mentionId": "mention-private-equity-venture-capital"
         }
       ]
     }

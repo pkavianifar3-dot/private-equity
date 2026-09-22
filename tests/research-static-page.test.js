@@ -74,9 +74,15 @@ for (const url of expectedSemanticLinks) {
     );
 }
 
+const conceptLinks = html.match(/href="\/atlas\/concept\/[^"]+\/"/g) || [];
 assert(
-    (html.match(/href="\/atlas\/concept\/[^"]+\/"/g) || []).length === 6,
-    "static research page must contain exactly 6 concept semantic links"
+    conceptLinks.length === 9,
+    "static research page must contain exactly 9 concept semantic link occurrences"
+);
+
+assert(
+    new Set(conceptLinks).size === 6,
+    "static research page must contain exactly 6 unique concept semantic links"
 );
 
 for (const citationId of [
