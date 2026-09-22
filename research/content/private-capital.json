@@ -18,7 +18,12 @@
     "authorRefs": []
   },
   "entityRefs": [
-    "concept:private-equity"
+    "concept:private-capital",
+    "concept:private-equity",
+    "concept:private-credit",
+    "concept:real-assets",
+    "concept:venture-capital",
+    "concept:growth-capital"
   ],
   "claimRefs": [
     "claim:private-capital-broader-than-private-equity",
@@ -84,6 +89,24 @@
           "start": 151,
           "end": 169,
           "resolutionStatus": "RESOLVED"
+        },
+        {
+          "id": "mention-introduction-private-capital",
+          "text": "سرمایه خصوصی",
+          "entityRef": "concept:private-capital",
+          "contentBlockId": "intro-paragraph-01",
+          "start": 1,
+          "end": 13,
+          "resolutionStatus": "RESOLVED"
+        },
+        {
+          "id": "mention-introduction-real-assets",
+          "text": "دارایی‌های واقعی",
+          "entityRef": "concept:real-assets",
+          "contentBlockId": "intro-paragraph-02",
+          "start": 341,
+          "end": 357,
+          "resolutionStatus": "RESOLVED"
         }
       ]
     },
@@ -142,6 +165,35 @@
       "sourceRefs": [
         "source:ecb-private-markets-public-risk"
       ],
+      "mentions": [
+        {
+          "id": "mention-main-blocks-venture-capital",
+          "text": "سرمایه‌گذاری خطرپذیر",
+          "entityRef": "concept:venture-capital",
+          "contentBlockId": "main-blocks-paragraph-01",
+          "start": 96,
+          "end": 116,
+          "resolutionStatus": "RESOLVED"
+        },
+        {
+          "id": "mention-main-blocks-growth-capital",
+          "text": "سرمایه رشد",
+          "entityRef": "concept:growth-capital",
+          "contentBlockId": "main-blocks-paragraph-01",
+          "start": 120,
+          "end": 130,
+          "resolutionStatus": "RESOLVED"
+        },
+        {
+          "id": "mention-main-blocks-private-credit",
+          "text": "اعتبار خصوصی",
+          "entityRef": "concept:private-credit",
+          "contentBlockId": "main-blocks-paragraph-01",
+          "start": 134,
+          "end": 146,
+          "resolutionStatus": "RESOLVED"
+        }
+      ],
       "title": {
         "fa": "بلوک‌های اصلی سرمایه خصوصی",
         "en": "Main Blocks of Private Capital"
@@ -185,6 +237,26 @@
           "id": "private-equity-paragraph-04",
           "type": "paragraph",
           "text": "در «بازسازی و احیای شرکت» نیز هدف اصلی، اصلاح عملکرد عملیاتی و مالی بنگاه و بازگرداندن آن به مسیر پایدار رشد و سودآوری است؛ در حالی که سرمایه‌گذاری در شرکت‌های دچار بحران بر شناسایی و بهره‌برداری از فرصت‌های سرمایه‌گذاری در بنگاه‌هایی متمرکز است که با مشکلات مالی، کاهش نقدینگی یا احتمال نکول و ورشکستگی مواجه‌اند."
+        }
+      ],
+      "mentions": [
+        {
+          "id": "mention-private-equity-venture-capital",
+          "entityRef": "concept:venture-capital",
+          "contentBlockId": "private-equity-paragraph-02",
+          "start": 4,
+          "end": 24,
+          "resolutionStatus": "RESOLVED",
+          "text": "سرمایه‌گذاری خطرپذیر"
+        },
+        {
+          "id": "mention-private-equity-growth-capital",
+          "entityRef": "concept:growth-capital",
+          "contentBlockId": "private-equity-paragraph-03",
+          "start": 11,
+          "end": 21,
+          "resolutionStatus": "RESOLVED",
+          "text": "سرمایه رشد"
         }
       ]
     },
@@ -232,6 +304,17 @@
           "id": "private-credit-paragraph-05",
           "type": "paragraph",
           "text": "در عین حال، اعتبار خصوصی و سرمایه‌گذاری خصوصی را نمی‌توان دو حوزه منفک از یکدیگر تلقی کرد. میان این دو بازار، پیوند عملیاتی قابل‌توجهی وجود دارد؛ زیرا بخشی از منابع اعتبار خصوصی برای تأمین مالی تملک شرکت‌ها مورد استفاده قرار می‌گیرد. به بیان دیگر، در ساختار بسیاری از معاملات، سرمایه‌گذاری خصوصی در بخش حقوق صاحبان سهام و اعتبار خصوصی در بخش بدهی تأمین مالی معامله به کار می‌رود."
+        }
+      ],
+      "mentions": [
+        {
+          "id": "mention-private-credit-private-equity",
+          "entityRef": "concept:private-equity",
+          "contentBlockId": "private-credit-paragraph-05",
+          "start": 27,
+          "end": 45,
+          "resolutionStatus": "RESOLVED",
+          "text": "سرمایه‌گذاری خصوصی"
         }
       ]
     },
@@ -395,6 +478,6 @@
       "contentBlockId": "private-credit-paragraph-01",
       "start": 0,
       "end": 237
-    }                 
+    }
   ]
 }

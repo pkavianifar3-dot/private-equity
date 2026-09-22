@@ -617,7 +617,7 @@ class ResearchReferenceIntegrityTests(unittest.TestCase):
                             "entityRef": "concept:unknown",
                             "contentBlockId": "block-one",
                             "start": 4,
-                            "end": 6,
+                            "end": 9,
                             "resolutionStatus": "RESOLVED",
                         }
                     ],
@@ -659,7 +659,7 @@ class ResearchReferenceIntegrityTests(unittest.TestCase):
                             "entityRef": None,
                             "contentBlockId": "block-one",
                             "start": 4,
-                            "end": 6,
+                            "end": 9,
                             "resolutionStatus": "RESOLVED",
                         }
                     ],
@@ -701,7 +701,7 @@ class ResearchReferenceIntegrityTests(unittest.TestCase):
                             "entityRef": "concept:unknown",
                             "contentBlockId": "block-one",
                             "start": 4,
-                            "end": 6,
+                            "end": 9,
                             "resolutionStatus": "UNRESOLVED",
                         }
                     ],
@@ -739,7 +739,7 @@ class ResearchReferenceIntegrityTests(unittest.TestCase):
                             "entityRef": "concept:unknown",
                             "contentBlockId": "block-one",
                             "start": 4,
-                            "end": 6,
+                            "end": 9,
                             "resolutionStatus": "REJECTED",
                         }
                     ],
@@ -805,6 +805,84 @@ class ResearchReferenceIntegrityTests(unittest.TestCase):
         finally:
             VALIDATOR.validate_research_mention_integrity = original
 
+
+
+    def test_mention_text_matches_block_span(self):
+        data = {
+            "sections": [
+                {
+                    "id": "section-one",
+                    "content": [
+                        {
+                            "id": "block-one",
+                            "type": "paragraph",
+                            "text": "research text",
+                        }
+                    ],
+                    "mentions": [
+                        {
+                            "id": "mention:test",
+                            "text": "text",
+                            "entityRef": "concept:subject",
+                            "contentBlockId": "block-one",
+                            "start": 9,
+                            "end": 13,
+                            "resolutionStatus": "RESOLVED",
+                        }
+                    ],
+                }
+            ]
+        }
+
+        errors = []
+        VALIDATOR.validate_research_mention_integrity(
+            data,
+            {"concept:subject"},
+            errors,
+        )
+
+        self.assertEqual(errors, [])
+
+
+    def test_mention_text_must_match_block_span(self):
+        data = {
+            "sections": [
+                {
+                    "id": "section-one",
+                    "content": [
+                        {
+                            "id": "block-one",
+                            "type": "paragraph",
+                            "text": "research text",
+                        }
+                    ],
+                    "mentions": [
+                        {
+                            "id": "mention:test",
+                            "text": "research",
+                            "entityRef": "concept:subject",
+                            "contentBlockId": "block-one",
+                            "start": 7,
+                            "end": 10,
+                            "resolutionStatus": "RESOLVED",
+                        }
+                    ],
+                }
+            ]
+        }
+
+        errors = []
+        VALIDATOR.validate_research_mention_integrity(
+            data,
+            {"concept:subject"},
+            errors,
+        )
+
+        self.assertEqual(len(errors), 1)
+        self.assertIn(
+            "mention text does not match content block span",
+            errors[0],
+        )
 
 
 if __name__ == "__main__":

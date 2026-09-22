@@ -1,6 +1,42 @@
 {
   "version": "1.0",
   "entities": {
+    "concept:growth-capital": {
+      "researchMentions": [
+        {
+          "researchId": "research:private-capital",
+          "sectionId": "main-blocks",
+          "contentBlockId": "main-blocks-paragraph-01",
+          "mentionId": "mention-main-blocks-growth-capital"
+        },
+        {
+          "researchId": "research:private-capital",
+          "sectionId": "private-equity",
+          "contentBlockId": "private-equity-paragraph-03",
+          "mentionId": "mention-private-equity-growth-capital"
+        }
+      ]
+    },
+    "concept:private-capital": {
+      "researchMentions": [
+        {
+          "researchId": "research:private-capital",
+          "sectionId": "introduction",
+          "contentBlockId": "intro-paragraph-01",
+          "mentionId": "mention-introduction-private-capital"
+        }
+      ]
+    },
+    "concept:private-credit": {
+      "researchMentions": [
+        {
+          "researchId": "research:private-capital",
+          "sectionId": "main-blocks",
+          "contentBlockId": "main-blocks-paragraph-01",
+          "mentionId": "mention-main-blocks-private-credit"
+        }
+      ]
+    },
     "concept:private-equity": {
       "researchMentions": [
         {
@@ -8,6 +44,38 @@
           "sectionId": "introduction",
           "contentBlockId": "intro-paragraph-02",
           "mentionId": "mention-introduction-private-equity"
+        },
+        {
+          "researchId": "research:private-capital",
+          "sectionId": "private-credit",
+          "contentBlockId": "private-credit-paragraph-05",
+          "mentionId": "mention-private-credit-private-equity"
+        }
+      ]
+    },
+    "concept:real-assets": {
+      "researchMentions": [
+        {
+          "researchId": "research:private-capital",
+          "sectionId": "introduction",
+          "contentBlockId": "intro-paragraph-02",
+          "mentionId": "mention-introduction-real-assets"
+        }
+      ]
+    },
+    "concept:venture-capital": {
+      "researchMentions": [
+        {
+          "researchId": "research:private-capital",
+          "sectionId": "main-blocks",
+          "contentBlockId": "main-blocks-paragraph-01",
+          "mentionId": "mention-main-blocks-venture-capital"
+        },
+        {
+          "researchId": "research:private-capital",
+          "sectionId": "private-equity",
+          "contentBlockId": "private-equity-paragraph-02",
+          "mentionId": "mention-private-equity-venture-capital"
         }
       ]
     }
