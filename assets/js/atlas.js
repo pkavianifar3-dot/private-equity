@@ -1327,8 +1327,7 @@ function renderEvidenceSection(
             }
 
             const relation =
-                renderedRelation?.label ||
-                relationLabel(claim.predicate);
+                renderedRelation?.label || "";
 
             const objectId =
                 renderedRelation?.targetId ||

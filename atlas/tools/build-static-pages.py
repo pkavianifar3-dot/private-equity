@@ -11,6 +11,7 @@ CLAIMS_DIR = ROOT / "claims"
 EVIDENCE_DIR = ROOT / "evidence"
 SOURCES_DIR = ROOT / "sources"
 CONTENT_DIR = ROOT / "content"
+RELATION_RENDERING_PATH = ROOT / "taxonomies" / "relation-rendering.json"
 
 OUTPUT_ROOT = ROOT
 
@@ -57,6 +58,10 @@ def entity_canonical_url(entity_id, entity_type=None):
         return None
 
     return f"{SITE_ORIGIN}{url}"
+
+
+def load_relation_contract():
+    return load_json(RELATION_RENDERING_PATH)
 
 
 def load_entities():
@@ -184,35 +189,6 @@ def build_source_index(sources, claims, evidence, content=None):
         for index, source_id in enumerate(ordered_ids, start=1)
     }
 
-def relation_label(predicate):
-    labels = {
-        "CEO_OF": "مدیرعامل",
-        "EXECUTIVE_ROLE_AT": "نقش اجرایی در",
-        "WORKED_AT": "سابقه فعالیت در",
-        "BOARD_MEMBER_OF": "عضو هیئت‌مدیره",
-        "CHAIR_OF": "رئیس هیئت‌مدیره",
-        "VICE_CHAIR_OF": "نایب‌رئیس هیئت‌مدیره",
-        "BOARD_SECRETARY_OF": "دبیر هیئت‌مدیره",
-        "REPRESENTED": "نماینده",
-        "INVESTED_IN": "سرمایه‌گذاری در",
-        "INVESTMENT_EXECUTIVE_OF": "مدیر سرمایه‌گذاری در",
-        "MANAGES": "مدیریت",
-        "SUBSIDIARY_OF": "زیرمجموعه",
-        "PART_OF": "بخشی از",
-        "BROADER_THAN": "مفهوم بالاتر",
-        "RELATED_TO": "مرتبط با",
-        "INCLUDES": "شامل",
-        "HAS_NON_UNIFORM_CLASSIFICATION": "طبقه‌بندی",
-        "CHARACTERIZED_BY": "مشخصه",
-        "LINKED_TO": "ارتباط با",
-        "HAS_INVESTOR_POSITION": "جایگاه سرمایه‌گذار",
-        "RETURN_DEPENDS_ON": "وابستگی بازده",
-        "INVESTMENT_AMOUNT": "مبلغ سرمایه‌گذاری",
-    }
-
-    return labels.get(predicate, predicate.replace("_", " "))
-
-
 def claim_value_html(claim, entity_id, entities):
     subject_id = claim.get("subject")
     object_id = claim.get("object")
@@ -253,15 +229,72 @@ def claim_value_html(claim, entity_id, entities):
     return esc(value)
 
 
-def render_claims(claims, entity_id, entities):
+def render_claim_relation(claim, entity_id, relation_contract):
+    subject_id = claim.get("subject")
+    object_id = claim.get("object")
+    predicate = claim.get("predicate")
+
+    if not subject_id or not object_id or subject_id == object_id:
+        return None
+
+    relation = (
+        relation_contract.get("relations", {}).get(predicate)
+        if isinstance(relation_contract, dict)
+        else None
+    )
+
+    if not isinstance(relation, dict):
+        return None
+
+    if subject_id == entity_id:
+        label = relation.get("forward_label_fa")
+        if not isinstance(label, str) or not label.strip():
+            return None
+
+        return {
+            "direction": "forward",
+            "target_id": object_id,
+            "label": label,
+        }
+
+    if object_id == entity_id:
+        if relation.get("reverse_display_allowed") is not True:
+            return None
+
+        label = relation.get("reverse_label_fa")
+        if not isinstance(label, str) or not label.strip():
+            return None
+
+        return {
+            "direction": "reverse",
+            "target_id": subject_id,
+            "label": label,
+        }
+
+    return None
+
+
+def render_claims(claims, entity_id, entities, relation_contract):
     if not claims:
         return ""
 
     items = []
 
     for claim in claims:
-        predicate = claim.get("predicate", "")
-        target = claim_value_html(claim, entity_id, entities)
+        relation = render_claim_relation(
+            claim,
+            entity_id,
+            relation_contract,
+        )
+
+        if not relation:
+            continue
+
+        target = claim_value_html(
+            claim,
+            entity_id,
+            entities,
+        )
 
         if not target:
             continue
@@ -304,7 +337,7 @@ def render_claims(claims, entity_id, entities):
         items.append(
             '<article class="card atlas-claim">'
             f'<div class="atlas-claim-label">'
-            f'{esc(relation_label(predicate))}'
+            f'{esc(relation["label"])}'
             "</div>"
             f"<h3>{target}</h3>"
             f"{meta_html}"
@@ -707,7 +740,7 @@ def build_jsonld(entity, entity_claims):
     return data
 
 
-def render_entity(entity, claims, evidence, sources, entities):
+def render_entity(entity, claims, evidence, sources, entities, relation_contract):
     entity_id = entity["id"]
     name_fa = entity_name(entity)
     name_en = entity_name_en(entity)
@@ -808,7 +841,7 @@ def render_entity(entity, claims, evidence, sources, entities):
 
 {render_content(content, source_index)}
 
-{render_claims(entity_claims, entity_id, entities)}
+{render_claims(entity_claims, entity_id, entities, relation_contract)}
 
 {render_data_quality(content)}
 
@@ -869,6 +902,7 @@ def generate():
     claims = load_claims()
     evidence = load_evidence()
     sources = load_sources()
+    relation_contract = load_relation_contract()
 
     generated = []
 
@@ -893,6 +927,7 @@ def generate():
             evidence,
             sources,
             entities,
+            relation_contract,
         )
 
         output_path.write_text(

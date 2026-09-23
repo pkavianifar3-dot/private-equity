@@ -49,6 +49,20 @@ const rendering = {
     }
 };
 
+for (const relationType of types.relation_types) {
+    const rule = rules.rules.find(item => item.relation === relationType.id);
+    const existing = rendering.relations[relationType.id] || {};
+
+    rendering.relations[relationType.id] = {
+        ...existing,
+        forward_label_fa: relationType.label_fa,
+        forward_label_en: relationType.label_en,
+        reverse_label_fa: existing.reverse_label_fa ?? null,
+        subject_types: rule?.subject_types || [],
+        object_types: rule?.object_types || [],
+        reverse_display_allowed: existing.reverse_label_fa != null
+    };
+}
 const forward = PrivateCapitalRelationRenderer.renderRelation({ subject: "person:a", predicate: "CEO_OF", object: "organization:b" }, "person:a", types, rules, rendering);
 assert.deepStrictEqual(forward, { predicate: "CEO_OF", direction: "forward", targetId: "organization:b", label: "مدیرعامل" });
 
@@ -57,7 +71,8 @@ assert.deepStrictEqual(reverse, { predicate: "BROADER_THAN", direction: "reverse
 
 assert.strictEqual(PrivateCapitalRelationRenderer.renderRelation({ subject: "concept:a", predicate: "BROADER_THAN", object: "concept:a" }, "concept:a", types, rules, rendering), null);
 assert.strictEqual(PrivateCapitalRelationRenderer.renderRelation({ subject: "investment:a", predicate: "INVESTMENT_AMOUNT", object: null }, "investment:a", types, rules, rendering), null);
-assert.strictEqual(PrivateCapitalRelationRenderer.renderRelation({ subject: "concept:a", predicate: "BROADER_THAN", object: "concept:b" }, "concept:b", types, rules, { relations: {} }).label, null);
+assert.strictEqual(PrivateCapitalRelationRenderer.renderRelation({ subject: "concept:a", predicate: "BROADER_THAN", object: "concept:b" }, "concept:b", types, rules, { relations: {} }), null);
+assert.strictEqual(PrivateCapitalRelationRenderer.renderRelation({ subject: "person:a", predicate: "CEO_OF", object: "organization:b" }, "organization:b", types, rules, rendering), null);
 assert.strictEqual(PrivateCapitalRelationRenderer.renderRelation({ subject: "person:a", predicate: "CEO_OF", object: "organization:b" }, "person:x", types, rules, rendering), null);
 const relatedReverse =
     PrivateCapitalRelationRenderer.renderRelation(

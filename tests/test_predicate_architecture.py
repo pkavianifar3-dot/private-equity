@@ -163,12 +163,24 @@ class PredicateArchitectureTests(unittest.TestCase):
         with open("atlas/taxonomies/relation-rendering.json", encoding="utf-8") as f:
             rendering = json.load(f)["relations"]
 
-        self.assertTrue(set(rendering).issubset(relation_types))
-        self.assertTrue(set(rendering).issubset(rules))
+        self.assertEqual(relation_types, set(rendering))
+        self.assertEqual(relation_types, rules)
 
         for predicate, config in rendering.items():
-            self.assertIsInstance(config["reverse_label_fa"], str)
-            self.assertTrue(config["reverse_label_fa"].strip(), predicate)
+            self.assertIsInstance(config["forward_label_fa"], str)
+            self.assertTrue(config["forward_label_fa"].strip(), predicate)
+            self.assertIsInstance(config["forward_label_en"], str)
+            self.assertTrue(config["forward_label_en"].strip(), predicate)
+            self.assertIn("reverse_label_fa", config)
+            self.assertIsInstance(config["subject_types"], list)
+            self.assertIsInstance(config["object_types"], list)
+            self.assertIsInstance(config["reverse_display_allowed"], bool)
+
+            if config["reverse_display_allowed"]:
+                self.assertIsInstance(config["reverse_label_fa"], str)
+                self.assertTrue(config["reverse_label_fa"].strip(), predicate)
+            else:
+                self.assertIsNone(config["reverse_label_fa"], predicate)
 
 
 if __name__ == "__main__":
