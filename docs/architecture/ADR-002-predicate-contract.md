@@ -64,3 +64,10 @@ The remaining unused predicates are reserved without changing their current rule
 ## Claim / Evidence / Source Boundary
 
 The current provenance model is `Claim <- Evidence -> Source`. Evidence is a first-class knowledge object that references exactly one Claim and one Source in the current schema. Claim status such as `SUPPORTED` is epistemic status and is distinct from the `SUPPORTED_BY` predicate. Therefore `SUPPORTED_BY` remains a reserved knowledge-object predicate and is not used as an alternative provenance path unless the provenance model is explicitly redesigned.
+### Step 5 Semantic Claim Audit Decisions
+
+- **Anti-Redundancy Rule (INCLUDES vs BROADER_THAN)**:
+  - `INCLUDES` represents structural meronymy (part-whole composition across asset classes: Private Capital includes Private Equity, Venture Capital, Private Credit).
+  - `BROADER_THAN` represents abstract taxonomic hypernymy.
+  - When an asset-class structural `INCLUDES` relationship is established between two concepts, an additional hypernymic `BROADER_THAN` relation is redundant.
+  - **Resolution**: `claim:private-capital-broader-than-private-equity` has been retired and merged into `claim:private-capital-includes-private-equity`, preserving its evidence reference.

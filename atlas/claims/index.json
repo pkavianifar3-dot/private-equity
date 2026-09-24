@@ -15,7 +15,6 @@
     ],
     "concept:private-capital": [
       "claim:private-capital-boundaries-vary",
-      "claim:private-capital-broader-than-private-equity",
       "claim:private-capital-includes-growth-capital",
       "claim:private-capital-includes-private-credit",
       "claim:private-capital-includes-private-equity",
@@ -33,7 +32,6 @@
       "claim:private-credit-return-contractual"
     ],
     "concept:private-equity": [
-      "claim:private-capital-broader-than-private-equity",
       "claim:private-capital-includes-private-equity",
       "claim:private-credit-and-private-equity-linked"
     ],
@@ -109,7 +107,6 @@
     "claim:kian-private-equity-management-subsidiary-kian-financial-group": "ali-sanginian.json",
     "claim:kian-private-equity-operates-private-equity": "ali-sanginian.json",
     "claim:private-capital-boundaries-vary": "private-capital-boundaries-vary.json",
-    "claim:private-capital-broader-than-private-equity": "private-capital-broader-than.json",
     "claim:private-capital-includes-growth-capital": "private-capital-includes-growth-capital.json",
     "claim:private-capital-includes-private-credit": "private-capital-includes-private-credit.json",
     "claim:private-capital-includes-private-equity": "private-capital.json",

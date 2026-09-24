@@ -70,9 +70,6 @@
     "claim:private-capital-boundaries-vary": [
       "evidence:private-capital-boundaries-vary-01"
     ],
-    "claim:private-capital-broader-than-private-equity": [
-      "evidence:private-capital-broader-than-private-equity-01"
-    ],
     "claim:private-capital-includes-growth-capital": [
       "evidence:private-capital-includes-growth-capital-01"
     ],
@@ -80,6 +77,7 @@
       "evidence:private-capital-includes-private-credit-01"
     ],
     "claim:private-capital-includes-private-equity": [
+      "evidence:private-capital-broader-than-private-equity-01",
       "evidence:private-capital-includes-private-equity-01"
     ],
     "claim:private-capital-includes-real-assets": [

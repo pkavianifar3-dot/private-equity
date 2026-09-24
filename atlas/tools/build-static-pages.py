@@ -11,6 +11,7 @@ CLAIMS_DIR = ROOT / "claims"
 EVIDENCE_DIR = ROOT / "evidence"
 SOURCES_DIR = ROOT / "sources"
 CONTENT_DIR = ROOT / "content"
+RELATION_RENDERING_PATH = ROOT / "taxonomies" / "relation-rendering.json"
 
 OUTPUT_ROOT = ROOT
 
@@ -57,6 +58,10 @@ def entity_canonical_url(entity_id, entity_type=None):
         return None
 
     return f"{SITE_ORIGIN}{url}"
+
+
+def load_relation_contract():
+    return load_json(RELATION_RENDERING_PATH)
 
 
 def load_entities():
@@ -184,35 +189,6 @@ def build_source_index(sources, claims, evidence, content=None):
         for index, source_id in enumerate(ordered_ids, start=1)
     }
 
-def relation_label(predicate):
-    labels = {
-        "CEO_OF": "مدیرعامل",
-        "EXECUTIVE_ROLE_AT": "نقش اجرایی در",
-        "WORKED_AT": "سابقه فعالیت در",
-        "BOARD_MEMBER_OF": "عضو هیئت‌مدیره",
-        "CHAIR_OF": "رئیس هیئت‌مدیره",
-        "VICE_CHAIR_OF": "نایب‌رئیس هیئت‌مدیره",
-        "BOARD_SECRETARY_OF": "دبیر هیئت‌مدیره",
-        "REPRESENTED": "نماینده",
-        "INVESTED_IN": "سرمایه‌گذاری در",
-        "INVESTMENT_EXECUTIVE_OF": "مدیر سرمایه‌گذاری در",
-        "MANAGES": "مدیریت",
-        "SUBSIDIARY_OF": "زیرمجموعه",
-        "PART_OF": "بخشی از",
-        "BROADER_THAN": "مفهوم بالاتر",
-        "RELATED_TO": "مرتبط با",
-        "INCLUDES": "شامل",
-        "HAS_NON_UNIFORM_CLASSIFICATION": "طبقه‌بندی",
-        "CHARACTERIZED_BY": "مشخصه",
-        "LINKED_TO": "ارتباط با",
-        "HAS_INVESTOR_POSITION": "جایگاه سرمایه‌گذار",
-        "RETURN_DEPENDS_ON": "وابستگی بازده",
-        "INVESTMENT_AMOUNT": "مبلغ سرمایه‌گذاری",
-    }
-
-    return labels.get(predicate, predicate.replace("_", " "))
-
-
 def claim_value_html(claim, entity_id, entities):
     subject_id = claim.get("subject")
     object_id = claim.get("object")
@@ -253,15 +229,72 @@ def claim_value_html(claim, entity_id, entities):
     return esc(value)
 
 
-def render_claims(claims, entity_id, entities):
+def render_claim_relation(claim, entity_id, relation_contract):
+    subject_id = claim.get("subject")
+    object_id = claim.get("object")
+    predicate = claim.get("predicate")
+
+    if not subject_id or not object_id or subject_id == object_id:
+        return None
+
+    relation = (
+        relation_contract.get("relations", {}).get(predicate)
+        if isinstance(relation_contract, dict)
+        else None
+    )
+
+    if not isinstance(relation, dict):
+        return None
+
+    if subject_id == entity_id:
+        label = relation.get("forward_label_fa")
+        if not isinstance(label, str) or not label.strip():
+            return None
+
+        return {
+            "direction": "forward",
+            "target_id": object_id,
+            "label": label,
+        }
+
+    if object_id == entity_id:
+        if relation.get("reverse_display_allowed") is not True:
+            return None
+
+        label = relation.get("reverse_label_fa")
+        if not isinstance(label, str) or not label.strip():
+            return None
+
+        return {
+            "direction": "reverse",
+            "target_id": subject_id,
+            "label": label,
+        }
+
+    return None
+
+
+def render_claims(claims, entity_id, entities, relation_contract):
     if not claims:
         return ""
 
     items = []
 
     for claim in claims:
-        predicate = claim.get("predicate", "")
-        target = claim_value_html(claim, entity_id, entities)
+        relation = render_claim_relation(
+            claim,
+            entity_id,
+            relation_contract,
+        )
+
+        if not relation:
+            continue
+
+        target = claim_value_html(
+            claim,
+            entity_id,
+            entities,
+        )
 
         if not target:
             continue
@@ -304,7 +337,7 @@ def render_claims(claims, entity_id, entities):
         items.append(
             '<article class="card atlas-claim">'
             f'<div class="atlas-claim-label">'
-            f'{esc(relation_label(predicate))}'
+            f'{esc(relation["label"])}'
             "</div>"
             f"<h3>{target}</h3>"
             f"{meta_html}"
@@ -440,7 +473,7 @@ def render_data_quality(content):
     )
 
 
-def render_evidence(claims, evidence, sources):
+def render_evidence(claims, evidence, source_index):
     rows = []
 
     seen = set()
@@ -457,45 +490,35 @@ def render_evidence(claims, evidence, sources):
             if not item:
                 continue
 
-            source_ref = item.get("sourceRef")
-            source = sources.get(source_ref) if source_ref else None
-
             details = []
 
             evidence_type = item.get("evidenceType")
             strength = item.get("strength")
+            note = item.get("note")
+            source_number = source_index.get(item.get("sourceRef"))
 
             if evidence_type:
                 details.append(
-                    f"نوع: {esc(evidence_type)}"
+                    f"\u0646\u0648\u0639: {esc(evidence_type)}"
                 )
 
             if strength:
                 details.append(
-                    f"قدرت: {esc(strength)}"
+                    f"\u0642\u062f\u0631\u062a: {esc(strength)}"
                 )
 
-            if source:
-                title = (
-                    source.get("title_fa")
-                    or source.get("title_en")
-                    or source.get("publisher")
-                    or source.get("id")
-                )
-
-                source_url = source.get("url")
-
-                if source_url:
-                    source_html = (
-                        f'<a href="{esc(source_url)}" '
-                        f'rel="noopener noreferrer">'
-                        f"{esc(title)}</a>"
-                    )
-                else:
-                    source_html = esc(title)
-
+            if note:
                 details.append(
-                    f"منبع: {source_html}"
+                    f"\u062a\u0648\u0636\u06cc\u062d: {esc(note)}"
+                )
+
+            if source_number:
+                source_ref = esc(item.get("sourceRef", ""))
+                details.append(
+                    f'<a href="#source-{source_ref}" '
+                    f'class="atlas-source-ref">'
+                    f'\u0645\u0646\u0628\u0639: [{source_number}]'
+                    f"</a>"
                 )
 
             rows.append(
@@ -517,7 +540,7 @@ def render_evidence(claims, evidence, sources):
     return (
         '<section class="atlas-section">'
         '<div class="container">'
-        "<h2>شواهد و منابع</h2>"
+        "<h2>\u0634\u0648\u0627\u0647\u062f \u0648 \u0645\u0646\u0627\u0628\u0639</h2>"
         '<div class="grid atlas-claims-grid">'
         + "".join(rows)
         + "</div>"
@@ -526,36 +549,14 @@ def render_evidence(claims, evidence, sources):
     )
 
 
-def render_sources(sources, claims, evidence, content=None):
-    used_source_ids = []
-
-    if content:
-        for section in content.get("sections", []):
-            for paragraph in section.get("paragraphs", []):
-                for source_ref in paragraph.get("sourceRefs", []):
-                    if source_ref in sources and source_ref not in used_source_ids:
-                        used_source_ids.append(source_ref)
-
-    for claim in claims:
-        for evidence_ref in claim.get("evidenceRefs", []):
-            item = evidence.get(evidence_ref)
-
-            if not item:
-                continue
-
-            source_ref = item.get("sourceRef")
-
-            if source_ref and source_ref in sources:
-                if source_ref not in used_source_ids:
-                    used_source_ids.append(source_ref)
-
-    if not used_source_ids:
-        return ""
-
+def render_sources(sources, claims, evidence, source_index):
     items = []
 
-    for number, source_id in enumerate(used_source_ids, start=1):
-        source = sources[source_id]
+    for source_id, number in source_index.items():
+        source = sources.get(source_id)
+
+        if not source:
+            continue
 
         title = (
             source.get("title_fa")
@@ -585,10 +586,13 @@ def render_sources(sources, claims, evidence, content=None):
             "</article>"
         )
 
+    if not items:
+        return ""
+
     return (
         '<section class="atlas-section">'
         '<div class="container">'
-        "<h2>منابع</h2>"
+        "<h2>\u0645\u0646\u0627\u0628\u0639</h2>"
         '<div class="atlas-sources-list">'
         + "".join(items)
         + "</div>"
@@ -707,7 +711,7 @@ def build_jsonld(entity, entity_claims):
     return data
 
 
-def render_entity(entity, claims, evidence, sources, entities):
+def render_entity(entity, claims, evidence, sources, entities, relation_contract):
     entity_id = entity["id"]
     name_fa = entity_name(entity)
     name_en = entity_name_en(entity)
@@ -808,13 +812,13 @@ def render_entity(entity, claims, evidence, sources, entities):
 
 {render_content(content, source_index)}
 
-{render_claims(entity_claims, entity_id, entities)}
+{render_claims(entity_claims, entity_id, entities, relation_contract)}
 
 {render_data_quality(content)}
 
-{render_evidence(entity_claims, evidence, sources)}
+{render_evidence(entity_claims, evidence, source_index)}
 
-{render_sources(sources, entity_claims, evidence, content)}
+{render_sources(sources, entity_claims, evidence, source_index)}
 
 </div>
 
@@ -869,6 +873,7 @@ def generate():
     claims = load_claims()
     evidence = load_evidence()
     sources = load_sources()
+    relation_contract = load_relation_contract()
 
     generated = []
 
@@ -893,6 +898,7 @@ def generate():
             evidence,
             sources,
             entities,
+            relation_contract,
         )
 
         output_path.write_text(

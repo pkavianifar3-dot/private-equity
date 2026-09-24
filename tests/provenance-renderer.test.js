@@ -45,6 +45,28 @@ const index = window.PrivateCapitalProvenanceRenderer.buildSourceIndex({
     sources: [sourceA, sourceB]
 });
 
+const references = window.PrivateCapitalProvenanceRenderer.buildSourceReferenceIndex({
+    sources: [sourceA, sourceB]
+});
+
+assert.strictEqual(
+    references.sourceNumbers["source:a"],
+    1,
+    "first canonical source must receive reference 1"
+);
+
+assert.strictEqual(
+    references.sourceNumbers["source:b"],
+    2,
+    "second canonical source must receive reference 2"
+);
+
+assert.strictEqual(
+    references.sourceIndex["source:a"],
+    sourceA,
+    "reference index must preserve source records"
+);
+
 assert.strictEqual(
     index["source:a"],
     sourceA,

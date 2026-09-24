@@ -15,7 +15,7 @@
     },
     {
       "id": "evidence:private-capital-broader-than-private-equity-01",
-      "claimRef": "claim:private-capital-broader-than-private-equity",
+      "claimRef": "claim:private-capital-includes-private-equity",
       "sourceRef": "source:ecb-private-markets-public-risk",
       "evidenceType": "authoritative_publication",
       "strength": "strong",

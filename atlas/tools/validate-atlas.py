@@ -462,11 +462,39 @@ def load_taxonomies(errors):
                     f"Relation rendering config is invalid: {predicate}"
                 )
                 continue
-            reverse_label = config.get("reverse_label_fa")
-            if not isinstance(reverse_label, str) or not reverse_label.strip():
+            forward_label_fa = config.get("forward_label_fa")
+            if not isinstance(forward_label_fa, str) or not forward_label_fa.strip():
                 errors.append(
-                    f"Relation rendering reverse label is invalid: "
+                    f"Relation rendering forward label is invalid: "
                     f"{predicate}"
+                )
+
+            forward_label_en = config.get("forward_label_en")
+            if not isinstance(forward_label_en, str) or not forward_label_en.strip():
+                errors.append(
+                    f"Relation rendering English forward label is invalid: "
+                    f"{predicate}"
+                )
+
+            reverse_display_allowed = config.get("reverse_display_allowed")
+            if not isinstance(reverse_display_allowed, bool):
+                errors.append(
+                    f"Relation rendering reverse display flag is invalid: "
+                    f"{predicate}"
+                )
+                continue
+
+            reverse_label = config.get("reverse_label_fa")
+            if reverse_display_allowed:
+                if not isinstance(reverse_label, str) or not reverse_label.strip():
+                    errors.append(
+                        f"Relation rendering reverse label is invalid: "
+                        f"{predicate}"
+                    )
+            elif reverse_label is not None:
+                errors.append(
+                    f"Relation rendering reverse label must be null when "
+                    f"reverse display is disabled: {predicate}"
                 )
 
     role_types = {

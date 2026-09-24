@@ -1264,273 +1264,219 @@ function renderDataQualitySection(content, claims) {
         </section>
     `;
 }
-function renderEvidenceSection(
-    claims,
-    evidenceData,
-    sourceData,
-    entityIndex,
-    entityId = null
-) {
-    const evidenceList =
-        evidenceData?.evidence || [];
+    function renderSourcesSection(sourceData, sourceNumbers) {
+        const sources = Array.isArray(sourceData)
+            ? sourceData
+            : (sourceData?.sources || []);
 
-    if (!evidenceList.length) {
-        return "";
+        if (!sources.length) {
+            return "";
+        }
+
+        const sourcesHTML = sources
+            .map(source => {
+                const sourceNumber = sourceNumbers?.[source.id] || "";
+                const title =
+                    source.title_fa ||
+                    source.title_en ||
+                    source.publisher ||
+                    source.id;
+
+                const linkHTML = source.url
+                    ? `<a href="${escapeHTML(source.url)}" target="_blank" rel="noopener noreferrer">${escapeHTML(title)}</a>`
+                    : escapeHTML(title);
+
+                return `
+                    <article
+                        class="card atlas-source"
+                        id="source-${escapeHTML(source.id)}"
+                    >
+                        <div class="atlas-source-number">
+                            [${escapeHTML(String(sourceNumber))}]
+                        </div>
+                        <div>
+                            ${linkHTML}
+                        </div>
+                        ${
+                            source.publisher
+                                ? `<small>${escapeHTML(source.publisher)}</small>`
+                                : ""
+                        }
+                        <div class="atlas-source-id">
+                            ${escapeHTML(source.id)}
+                        </div>
+                    </article>
+                `;
+            })
+            .join("");
+
+        return `
+            <section class="atlas-section">
+                <div class="container">
+                    <h2>منابع</h2>
+                    <div class="atlas-sources-list">
+                        ${sourcesHTML}
+                    </div>
+                </div>
+            </section>
+        `;
     }
 
-    const sourceIndex =
-        window.PrivateCapitalProvenanceRenderer.buildSourceIndex(sourceData);
-
-    const claimIndex = {};
-
-    claims.forEach(claim => {
-        claimIndex[claim.id] = claim;
-    });
-
-    const groupedByClaim = {};
-
-    evidenceList.forEach(evidence => {
-        const claimId = evidence.claimRef;
-
-        if (!claimId) {
-            return;
+    function renderEvidenceSection(
+        claims,
+        evidenceData,
+        sourceData,
+        entityIndex,
+        entityId = null
+    ) {
+        if (!claims || claims.length === 0) {
+            return "";
         }
 
-        if (!groupedByClaim[claimId]) {
-            groupedByClaim[claimId] = [];
+        let provenanceRefs = null;
+        const provRenderer = window.PrivateCapitalProvenanceRenderer;
+        if (
+            provRenderer &&
+            typeof provRenderer.buildSourceReferenceIndex === "function"
+        ) {
+            const rawSources = Array.isArray(sourceData)
+                ? { sources: sourceData }
+                : (sourceData || { sources: [] });
+            provenanceRefs = provRenderer.buildSourceReferenceIndex(rawSources);
         }
 
-        groupedByClaim[claimId].push(evidence);
-    });
+        const sourceNumbers = provenanceRefs?.sourceNumbers || {};
 
-    const sections = Object.entries(groupedByClaim)
-        .map(([claimId, evidenceItems]) => {
-            const claim = claimIndex[claimId];
+        const allEvidence = Array.isArray(evidenceData)
+            ? evidenceData
+            : (evidenceData?.evidence || []);
 
-            if (!claim) {
-                return "";
+        const evidenceMap = {};
+        allEvidence.forEach(evidence => {
+            if (!evidenceMap[evidence.claimRef]) {
+                evidenceMap[evidence.claimRef] = [];
             }
+            evidenceMap[evidence.claimRef].push(evidence);
+        });
 
-            const renderedRelation =
-                entityId
-                    ? PrivateCapitalRelationRenderer.renderRelation(
+        const relationRenderer = window.PrivateCapitalRelationRenderer;
+
+        const sections = claims
+            .map(claim => {
+                const evidenceItems = evidenceMap[claim.id] || [];
+
+                let relation = claim.predicate;
+                let targetEntity = null;
+
+                if (relationRenderer && typeof relationRenderer.renderRelation === "function" && relationContract) {
+                    const rendered = relationRenderer.renderRelation(
                         claim,
                         entityId,
                         relationContract.relationTypes,
                         relationContract.relationRules,
                         relationContract.relationRendering
-                    )
-                    : null;
+                    );
+                    if (rendered) {
+                        relation = rendered.label || relation;
+                        targetEntity = rendered.targetId ? { id: rendered.targetId } : null;
+                    }
+                }
 
-            if (entityId && !renderedRelation) {
-                return "";
-            }
+                const objectId = targetEntity?.id || claim.object || null;
+                const objectName = objectId ? getEntityName(entityIndex, objectId) : "";
+                const objectEnglishName = objectId ? getEntityEnglishName(entityIndex, objectId) : "";
 
-            const relation =
-                renderedRelation?.label ||
-                relationLabel(claim.predicate);
-
-            const objectId =
-                renderedRelation?.targetId ||
-                claim.object ||
-                null;
-
-            const objectName =
-                objectId
-                    ? getEntityName(
-                        entityIndex,
-                        objectId
-                    )
-                    : "";
-
-            const objectEnglishName =
-                objectId
-                    ? getEntityEnglishName(
-                        entityIndex,
-                        objectId
-                    )
-                    : "";
-
-            const evidenceHTML =
-                evidenceItems
+                const evidenceHTML = evidenceItems
                     .map(evidence => {
-                        const source =
-                            sourceIndex[evidence.sourceRef]
+                        const sourceNumber = sourceNumbers[evidence.sourceRef] || "";
 
-                        if (!source) {
-                            return `
-                                <div class="atlas-evidence-item">
-
-                                    <div class="atlas-claim-label">
-                                        شاهد
-                                    </div>
-
-                                    <p>
-                                        ${escapeHTML(
-                                            evidence.id
-                                        )}
-                                    </p>
-
-                                </div>
-                            `;
+                        const metaParts = [];
+                        if (evidence.evidenceType) {
+                            metaParts.push(`نوع: ${escapeHTML(evidence.evidenceType)}`);
                         }
+                        if (evidence.strength) {
+                            metaParts.push(`قدرت: ${escapeHTML(evidence.strength)}`);
+                        }
+                        if (evidence.note) {
+                            metaParts.push(`توضیح: ${escapeHTML(evidence.note)}`);
+                        }
+
+                        const metaHTML = metaParts.length
+                            ? `<p class="atlas-meta">${metaParts.join(" | ")}</p>`
+                            : "";
+
+                        const sourceLinkHTML = evidence.sourceRef
+                            ? `<a href="#source-${escapeHTML(evidence.sourceRef)}" class="atlas-source-ref">منبع: [${escapeHTML(String(sourceNumber))}]</a>`
+                            : "";
 
                         return `
                             <div class="atlas-evidence-item">
-
                                 <div class="atlas-claim-label">
-                                    منبع پشتیبان
+                                    ${escapeHTML(evidence.id)}
                                 </div>
-
-                                <div
-                                    id="source-${escapeHTML(source.id)}"
-                                    class="atlas-source-item"
-                                >
-
-                                    <div>
-                                        ${escapeHTML(
-                                            source.title_fa || ""
-                                        )}
-                                    </div>
-
-                                    ${
-                                        source.publisher
-                                            ? `
-                                                <small>
-                                                    ${escapeHTML(
-                                                        source.publisher
-                                                    )}
-                                                </small>
-                                            `
-                                            : ""
-                                    }
-
-                                    ${
-                                        source.url
-                                            ? `
-                                                <a
-                                                    href="${escapeHTML(
-                                                        source.url
-                                                    )}"
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                >
-                                                    مشاهده منبع
-                                                </a>
-                                            `
-                                            : `
-                                                <small>
-                                                    لینک منبع هنوز ثبت نشده است.
-                                                </small>
-                                            `
-                                    }
-
-                                </div>
-
-                                ${
-                                    evidence.note
-                                        ? `
-                                            <p class="atlas-meta">
-                                                ${escapeHTML(
-                                                    evidence.note
-                                                )}
-                                            </p>
-                                        `
-                                        : ""
-                                }
-
+                                ${metaHTML}
+                                ${sourceLinkHTML}
                             </div>
                         `;
                     })
                     .join("");
 
-            return `
-                <article class="card atlas-evidence-group">
-
-                    <div class="atlas-claim-label">
-                        ${escapeHTML(relation)}
-                    </div>
-
-                    ${
-                        objectName
-                            ? `
-                                <h3>
-                                    ${escapeHTML(objectName)}
-                                </h3>
-                            `
-                            : ""
-                    }
-
-                    ${
-                        objectEnglishName
-                            ? `
-                                <p class="atlas-english">
-                                    ${escapeHTML(
-                                        objectEnglishName
-                                    )}
-                                </p>
-                            `
-                            : ""
-                    }
-
-                    ${
-                        claim.value
-                            ? `
-                                <div class="atlas-value">
-                                    <strong>مقدار:</strong>
-                                    ${formatClaimValue(
-                                        claim.value
-                                    )}
-                                </div>
-                            `
-                            : ""
-                    }
-
-                    <div class="atlas-status">
-                        ${escapeHTML(
-                            statusLabel(claim.status)
-                        )}
+                return `
+                    <article class="card atlas-evidence-group">
+                        <div class="atlas-claim-label">
+                            ${escapeHTML(relation)}
+                        </div>
                         ${
-                            claim.confidence
-                                ? ` · ${escapeHTML(
-                                    confidenceLabel(
-                                        claim.confidence
-                                    )
-                                )}`
+                            objectName
+                                ? `<h3>${escapeHTML(objectName)}</h3>`
                                 : ""
                         }
-                    </div>
+                        ${
+                            objectEnglishName
+                                ? `<p class="atlas-english">${escapeHTML(objectEnglishName)}</p>`
+                                : ""
+                        }
+                        ${
+                            claim.value
+                                ? `<div class="atlas-value"><strong>مقدار:</strong> ${formatClaimValue(claim.value)}</div>`
+                                : ""
+                        }
+                        <div class="atlas-status">
+                            ${escapeHTML(statusLabel(claim.status))}
+                            ${
+                                claim.confidence
+                                    ? ` · ${escapeHTML(confidenceLabel(claim.confidence))}`
+                                    : ""
+                            }
+                        </div>
+                        <div class="atlas-evidence-list">
+                            ${evidenceHTML}
+                        </div>
+                    </article>
+                `;
+            })
+            .filter(Boolean)
+            .join("");
 
-                    <div class="atlas-evidence-list">
-                        ${evidenceHTML}
+        let evidenceSectionHTML = "";
+        if (sections) {
+            evidenceSectionHTML = `
+                <section class="atlas-section">
+                    <div class="container">
+                        <h2>شواهد و منابع</h2>
+                        <div class="atlas-claims-grid">
+                            ${sections}
+                        </div>
                     </div>
-
-                </article>
+                </section>
             `;
-        })
-        .filter(Boolean)
-        .join("");
+        }
 
-    if (!sections) {
-        return "";
+        const sourcesSectionHTML = renderSourcesSection(sourceData, sourceNumbers);
+
+        return evidenceSectionHTML + sourcesSectionHTML;
     }
 
-    return `
-        <section class="atlas-section">
-
-            <div class="container">
-
-                <h2>شواهد و منابع</h2>
-
-                <div class="atlas-sources-list">
-                    ${sections}
-                </div>
-
-            </div>
-
-        </section>
-    `;
-}
     function renderIdentity(entity) {
     return `
         <div class="card atlas-identity-card">

@@ -26,7 +26,6 @@
     "concept:growth-capital"
   ],
   "claimRefs": [
-    "claim:private-capital-broader-than-private-equity",
     "claim:private-capital-includes-private-equity",
     "claim:private-capital-includes-private-credit",
     "claim:private-capital-includes-real-assets",
@@ -49,7 +48,6 @@
     {
       "id": "introduction",
       "claimRefs": [
-        "claim:private-capital-broader-than-private-equity",
         "claim:private-capital-includes-private-equity",
         "claim:private-capital-includes-private-credit",
         "claim:private-capital-includes-real-assets"

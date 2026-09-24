@@ -11,7 +11,23 @@
         return sourceIndex;
     }
 
+    function buildSourceReferenceIndex(sourceData) {
+        const sourceIndex = {};
+        const sourceNumbers = {};
+
+        (sourceData?.sources || []).forEach((source, index) => {
+            sourceIndex[source.id] = source;
+            sourceNumbers[source.id] = index + 1;
+        });
+
+        return {
+            sourceIndex,
+            sourceNumbers
+        };
+    }
+
     global.PrivateCapitalProvenanceRenderer = {
-        buildSourceIndex
+        buildSourceIndex,
+        buildSourceReferenceIndex
     };
 })(window);

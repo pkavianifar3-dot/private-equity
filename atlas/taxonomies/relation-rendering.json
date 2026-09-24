@@ -1,17 +1,382 @@
 {
-  "version": "1.0",
+  "version": "2.0",
   "relations": {
-    "BROADER_THAN": {
-      "reverse_label_fa": "مفهوم بالاتر"
+    "WORKED_AT": {
+      "forward_label_fa": "در سازمان فعالیت داشته",
+      "forward_label_en": "Worked At",
+      "reverse_label_fa": null,
+      "subject_types": [
+        "Person"
+      ],
+      "object_types": [
+        "Organization"
+      ],
+      "reverse_display_allowed": false
     },
-    "INCLUDES": {
-      "reverse_label_fa": "بخشی از"
+    "EXECUTIVE_ROLE_AT": {
+      "forward_label_fa": "سمت اجرایی در",
+      "forward_label_en": "Executive Role At",
+      "reverse_label_fa": null,
+      "subject_types": [
+        "Person"
+      ],
+      "object_types": [
+        "Organization"
+      ],
+      "reverse_display_allowed": false
+    },
+    "CEO_OF": {
+      "forward_label_fa": "مدیرعامل",
+      "forward_label_en": "CEO Of",
+      "reverse_label_fa": null,
+      "subject_types": [
+        "Person"
+      ],
+      "object_types": [
+        "Organization"
+      ],
+      "reverse_display_allowed": false
+    },
+    "BOARD_MEMBER_OF": {
+      "forward_label_fa": "عضو هیئت‌مدیره",
+      "forward_label_en": "Board Member Of",
+      "reverse_label_fa": null,
+      "subject_types": [
+        "Person"
+      ],
+      "object_types": [
+        "Organization"
+      ],
+      "reverse_display_allowed": false
+    },
+    "CHAIR_OF": {
+      "forward_label_fa": "رئیس",
+      "forward_label_en": "Chair Of",
+      "reverse_label_fa": null,
+      "subject_types": [
+        "Person"
+      ],
+      "object_types": [
+        "OrganizationUnit"
+      ],
+      "reverse_display_allowed": false
+    },
+    "VICE_CHAIR_OF": {
+      "forward_label_fa": "نایب‌رئیس",
+      "forward_label_en": "Vice Chair Of",
+      "reverse_label_fa": null,
+      "subject_types": [
+        "Person"
+      ],
+      "object_types": [
+        "Organization"
+      ],
+      "reverse_display_allowed": false
+    },
+    "BOARD_SECRETARY_OF": {
+      "forward_label_fa": "دبیر هیئت‌مدیره",
+      "forward_label_en": "Board Secretary Of",
+      "reverse_label_fa": null,
+      "subject_types": [
+        "Person"
+      ],
+      "object_types": [
+        "Organization"
+      ],
+      "reverse_display_allowed": false
+    },
+    "REPRESENTED": {
+      "forward_label_fa": "نمایندگی کرده",
+      "forward_label_en": "Represented",
+      "reverse_label_fa": null,
+      "subject_types": [
+        "Person",
+        "Organization"
+      ],
+      "object_types": [
+        "Organization"
+      ],
+      "reverse_display_allowed": false
+    },
+    "SUBSIDIARY_OF": {
+      "forward_label_fa": "زیرمجموعه",
+      "forward_label_en": "Subsidiary Of",
+      "reverse_label_fa": null,
+      "subject_types": [
+        "Organization"
+      ],
+      "object_types": [
+        "Organization"
+      ],
+      "reverse_display_allowed": false
+    },
+    "PART_OF": {
+      "forward_label_fa": "بخشی از",
+      "forward_label_en": "Part Of",
+      "reverse_label_fa": null,
+      "subject_types": [
+        "Organization",
+        "OrganizationUnit"
+      ],
+      "object_types": [
+        "Organization",
+        "OrganizationUnit"
+      ],
+      "reverse_display_allowed": false
+    },
+    "INVESTED_IN": {
+      "forward_label_fa": "سرمایه‌گذاری کرده",
+      "forward_label_en": "Invested In",
+      "reverse_label_fa": null,
+      "subject_types": [
+        "Organization",
+        "Person"
+      ],
+      "object_types": [
+        "Organization",
+        "Project"
+      ],
+      "reverse_display_allowed": false
+    },
+    "INVESTMENT_EXECUTIVE_OF": {
+      "forward_label_fa": "مدیر سرمایه‌گذاریِ",
+      "forward_label_en": "Investment Executive Of",
+      "reverse_label_fa": null,
+      "subject_types": [
+        "Person"
+      ],
+      "object_types": [
+        "Organization"
+      ],
+      "reverse_display_allowed": false
+    },
+    "MANAGES": {
+      "forward_label_fa": "مدیریت می‌کند",
+      "forward_label_en": "Manages",
+      "reverse_label_fa": null,
+      "subject_types": [
+        "Person",
+        "Organization"
+      ],
+      "object_types": [
+        "Organization",
+        "Project",
+        "Fund"
+      ],
+      "reverse_display_allowed": false
+    },
+    "HAS_PROJECT": {
+      "forward_label_fa": "دارای پروژه",
+      "forward_label_en": "Has Project",
+      "reverse_label_fa": null,
+      "subject_types": [
+        "Organization"
+      ],
+      "object_types": [
+        "Project"
+      ],
+      "reverse_display_allowed": false
+    },
+    "PROJECT_OF": {
+      "forward_label_fa": "پروژه متعلق به",
+      "forward_label_en": "Project Of",
+      "reverse_label_fa": null,
+      "subject_types": [
+        "Project"
+      ],
+      "object_types": [
+        "Organization"
+      ],
+      "reverse_display_allowed": false
+    },
+    "OPERATES_IN": {
+      "forward_label_fa": "فعالیت در",
+      "forward_label_en": "Operates In",
+      "reverse_label_fa": null,
+      "subject_types": [
+        "Organization",
+        "Person"
+      ],
+      "object_types": [
+        "Sector"
+      ],
+      "reverse_display_allowed": false
+    },
+    "TARGETS_SECTOR": {
+      "forward_label_fa": "هدف‌گذاری حوزه",
+      "forward_label_en": "Targets Sector",
+      "reverse_label_fa": null,
+      "subject_types": [
+        "Organization"
+      ],
+      "object_types": [
+        "Sector"
+      ],
+      "reverse_display_allowed": false
+    },
+    "TARGETS_INVESTOR_CATEGORY": {
+      "forward_label_fa": "هدف‌گذاری نوع سرمایه‌گذار",
+      "forward_label_en": "Targets Investor Category",
+      "reverse_label_fa": null,
+      "subject_types": [
+        "Organization"
+      ],
+      "object_types": [
+        "InvestorCategory"
+      ],
+      "reverse_display_allowed": false
+    },
+    "SUPPORTED_BY": {
+      "forward_label_fa": "پشتیبانی‌شده توسط",
+      "forward_label_en": "Supported By",
+      "reverse_label_fa": null,
+      "subject_types": [
+        "Claim"
+      ],
+      "object_types": [
+        "Source",
+        "Evidence"
+      ],
+      "reverse_display_allowed": false
+    },
+    "HAS_AUM": {
+      "forward_label_fa": "دارای ارزش دارایی تحت مدیریت",
+      "forward_label_en": "Has Assets Under Management",
+      "reverse_label_fa": null,
+      "subject_types": [
+        "Fund",
+        "Organization"
+      ],
+      "object_types": [],
+      "reverse_display_allowed": false
+    },
+    "INVESTMENT_AMOUNT": {
+      "forward_label_fa": "مبلغ سرمایه‌گذاری",
+      "forward_label_en": "Investment Amount",
+      "reverse_label_fa": null,
+      "subject_types": [
+        "Investment"
+      ],
+      "object_types": [],
+      "reverse_display_allowed": false
+    },
+    "REPORTED_IRR": {
+      "forward_label_fa": "نرخ بازده داخلی گزارش‌شده",
+      "forward_label_en": "Reported IRR",
+      "reverse_label_fa": null,
+      "subject_types": [
+        "Fund",
+        "Investment"
+      ],
+      "object_types": [],
+      "reverse_display_allowed": false
+    },
+    "REPORTED_DEAL_COUNT": {
+      "forward_label_fa": "تعداد معاملات گزارش‌شده",
+      "forward_label_en": "Reported Deal Count",
+      "reverse_label_fa": null,
+      "subject_types": [
+        "Fund",
+        "Organization"
+      ],
+      "object_types": [],
+      "reverse_display_allowed": false
+    },
+    "BROADER_THAN": {
+      "forward_label_fa": "کلی‌تر از",
+      "forward_label_en": "Broader Than",
+      "reverse_label_fa": "مفهوم بالاتر",
+      "subject_types": [
+        "Concept"
+      ],
+      "object_types": [
+        "Concept"
+      ],
+      "reverse_display_allowed": true
     },
     "RELATED_TO": {
-      "reverse_label_fa": "مرتبط با"
+      "forward_label_fa": "مرتبط با",
+      "forward_label_en": "Related To",
+      "reverse_label_fa": "مرتبط با",
+      "subject_types": [
+        "Concept"
+      ],
+      "object_types": [
+        "Concept"
+      ],
+      "reverse_display_allowed": true
+    },
+    "INCLUDES": {
+      "forward_label_fa": "شامل می‌شود",
+      "forward_label_en": "Includes",
+      "reverse_label_fa": "بخشی از",
+      "subject_types": [
+        "Concept"
+      ],
+      "object_types": [
+        "Concept"
+      ],
+      "reverse_display_allowed": true
+    },
+    "HAS_NON_UNIFORM_CLASSIFICATION": {
+      "forward_label_fa": "دارای طبقه‌بندی غیریکنواخت",
+      "forward_label_en": "Has Non-Uniform Classification",
+      "reverse_label_fa": null,
+      "subject_types": [
+        "Concept"
+      ],
+      "object_types": [
+        "Concept"
+      ],
+      "reverse_display_allowed": false
+    },
+    "HAS_INVESTOR_POSITION": {
+      "forward_label_fa": "دارای جایگاه سرمایه‌گذار",
+      "forward_label_en": "Has Investor Position",
+      "reverse_label_fa": null,
+      "subject_types": [
+        "Concept"
+      ],
+      "object_types": [
+        "Concept"
+      ],
+      "reverse_display_allowed": false
+    },
+    "RETURN_DEPENDS_ON": {
+      "forward_label_fa": "بازده وابسته به",
+      "forward_label_en": "Return Depends On",
+      "reverse_label_fa": null,
+      "subject_types": [
+        "Concept"
+      ],
+      "object_types": [
+        "Concept"
+      ],
+      "reverse_display_allowed": false
     },
     "LINKED_TO": {
-      "reverse_label_fa": "پیوند دارد با"
+      "forward_label_fa": "پیوند دارد با",
+      "forward_label_en": "Linked To",
+      "reverse_label_fa": "پیوند دارد با",
+      "subject_types": [
+        "Concept"
+      ],
+      "object_types": [
+        "Concept"
+      ],
+      "reverse_display_allowed": true
+    },
+    "CHARACTERIZED_BY": {
+      "forward_label_fa": "با این ویژگی شناخته می‌شود",
+      "forward_label_en": "Characterized By",
+      "reverse_label_fa": null,
+      "subject_types": [
+        "Concept"
+      ],
+      "object_types": [
+        "Concept"
+      ],
+      "reverse_display_allowed": false
     }
   }
 }
