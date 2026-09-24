@@ -473,7 +473,7 @@ def render_data_quality(content):
     )
 
 
-def render_evidence(claims, evidence, sources):
+def render_evidence(claims, evidence, source_index):
     rows = []
 
     seen = set()
@@ -490,45 +490,35 @@ def render_evidence(claims, evidence, sources):
             if not item:
                 continue
 
-            source_ref = item.get("sourceRef")
-            source = sources.get(source_ref) if source_ref else None
-
             details = []
 
             evidence_type = item.get("evidenceType")
             strength = item.get("strength")
+            note = item.get("note")
+            source_number = source_index.get(item.get("sourceRef"))
 
             if evidence_type:
                 details.append(
-                    f"نوع: {esc(evidence_type)}"
+                    f"\u0646\u0648\u0639: {esc(evidence_type)}"
                 )
 
             if strength:
                 details.append(
-                    f"قدرت: {esc(strength)}"
+                    f"\u0642\u062f\u0631\u062a: {esc(strength)}"
                 )
 
-            if source:
-                title = (
-                    source.get("title_fa")
-                    or source.get("title_en")
-                    or source.get("publisher")
-                    or source.get("id")
-                )
-
-                source_url = source.get("url")
-
-                if source_url:
-                    source_html = (
-                        f'<a href="{esc(source_url)}" '
-                        f'rel="noopener noreferrer">'
-                        f"{esc(title)}</a>"
-                    )
-                else:
-                    source_html = esc(title)
-
+            if note:
                 details.append(
-                    f"منبع: {source_html}"
+                    f"\u062a\u0648\u0636\u06cc\u062d: {esc(note)}"
+                )
+
+            if source_number:
+                source_ref = esc(item.get("sourceRef", ""))
+                details.append(
+                    f'<a href="#source-{source_ref}" '
+                    f'class="atlas-source-ref">'
+                    f'\u0645\u0646\u0628\u0639: [{source_number}]'
+                    f"</a>"
                 )
 
             rows.append(
@@ -550,7 +540,7 @@ def render_evidence(claims, evidence, sources):
     return (
         '<section class="atlas-section">'
         '<div class="container">'
-        "<h2>شواهد و منابع</h2>"
+        "<h2>\u0634\u0648\u0627\u0647\u062f \u0648 \u0645\u0646\u0627\u0628\u0639</h2>"
         '<div class="grid atlas-claims-grid">'
         + "".join(rows)
         + "</div>"
@@ -559,36 +549,14 @@ def render_evidence(claims, evidence, sources):
     )
 
 
-def render_sources(sources, claims, evidence, content=None):
-    used_source_ids = []
-
-    if content:
-        for section in content.get("sections", []):
-            for paragraph in section.get("paragraphs", []):
-                for source_ref in paragraph.get("sourceRefs", []):
-                    if source_ref in sources and source_ref not in used_source_ids:
-                        used_source_ids.append(source_ref)
-
-    for claim in claims:
-        for evidence_ref in claim.get("evidenceRefs", []):
-            item = evidence.get(evidence_ref)
-
-            if not item:
-                continue
-
-            source_ref = item.get("sourceRef")
-
-            if source_ref and source_ref in sources:
-                if source_ref not in used_source_ids:
-                    used_source_ids.append(source_ref)
-
-    if not used_source_ids:
-        return ""
-
+def render_sources(sources, claims, evidence, source_index):
     items = []
 
-    for number, source_id in enumerate(used_source_ids, start=1):
-        source = sources[source_id]
+    for source_id, number in source_index.items():
+        source = sources.get(source_id)
+
+        if not source:
+            continue
 
         title = (
             source.get("title_fa")
@@ -618,10 +586,13 @@ def render_sources(sources, claims, evidence, content=None):
             "</article>"
         )
 
+    if not items:
+        return ""
+
     return (
         '<section class="atlas-section">'
         '<div class="container">'
-        "<h2>منابع</h2>"
+        "<h2>\u0645\u0646\u0627\u0628\u0639</h2>"
         '<div class="atlas-sources-list">'
         + "".join(items)
         + "</div>"
@@ -845,9 +816,9 @@ def render_entity(entity, claims, evidence, sources, entities, relation_contract
 
 {render_data_quality(content)}
 
-{render_evidence(entity_claims, evidence, sources)}
+{render_evidence(entity_claims, evidence, source_index)}
 
-{render_sources(sources, entity_claims, evidence, content)}
+{render_sources(sources, entity_claims, evidence, source_index)}
 
 </div>
 
