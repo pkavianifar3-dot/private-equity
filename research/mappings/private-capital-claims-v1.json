@@ -2,234 +2,222 @@
   "researchId": "research:private-capital",
   "version": "1.2",
   "status": "REVIEW",
-
   "claims": [
     {
-  "id": "research-claim:private-capital-broader-than-private-equity",
-  "researchId": "research:private-capital",
-  "subject": "concept:private-capital",
-  "predicate": "BROADER_THAN",
-  "object": "concept:private-equity",
-  "claimText": "سرمایه خصوصی دامنه‌ای وسیع‌تر نسبت به سرمایه‌گذاری خصوصی دارد.",
-  "sourceRefs": [
-    "source:ecb-private-markets-public-risk"
-  ],
-  "evidenceRefs": [
-    "evidence:private-capital-broader-than-private-equity-01"
-  ],
-  "status": "PROMOTED",
-"confidence": "HIGH",
-"decision": "PROMOTED_TO_ATLAS",
-  "canonicalClaimRef": "claim:private-capital-broader-than-private-equity"
-},
-
-    {
-  "id": "research-claim:private-capital-includes-private-equity",
-  "researchId": "research:private-capital",
-  "subject": "concept:private-capital",
-  "predicate": "INCLUDES",
-  "object": "concept:private-equity",
-  "claimText": "مقاله سرمایه‌گذاری خصوصی را در چارچوب سرمایه خصوصی قرار می‌دهد.",
-  "sourceRefs": [
-  "source:ecb-private-markets-public-risk"
-],
-"evidenceRefs": [
-  "evidence:private-capital-includes-private-equity-01"
-],
-"status": "PROMOTED",
-"confidence": "HIGH",
-"decision": "PROMOTED_TO_ATLAS",
-"canonicalClaimRef": "claim:private-capital-includes-private-equity"
+      "id": "research-claim:private-capital-broader-than-private-equity",
+      "researchId": "research:private-capital",
+      "subject": "concept:private-capital",
+      "predicate": "BROADER_THAN",
+      "object": "concept:private-equity",
+      "claimText": "سرمایه خصوصی دامنه‌ای وسیع‌تر نسبت به سرمایه‌گذاری خصوصی دارد.",
+      "sourceRefs": [
+        "source:ecb-private-markets-public-risk"
+      ],
+      "evidenceRefs": [
+        "evidence:private-capital-broader-than-private-equity-01"
+      ],
+      "status": "PROMOTED",
+      "confidence": "HIGH",
+      "decision": "PROMOTED_TO_ATLAS",
+      "canonicalClaimRef": "claim:private-capital-includes-private-equity"
     },
-
-{
-  "id": "research-claim:private-capital-includes-private-credit",
-  "researchId": "research:private-capital",
-  "subject": "concept:private-capital",
-"predicate": "INCLUDES",
-"object": "concept:private-credit",
-"claimText": "مقاله اعتبار خصوصی را در چارچوب سرمایه خصوصی قرار می‌دهد.",
-"sourceRefs": [
-  "source:ecb-private-markets-public-risk"
-],
-"evidenceRefs": [
-  "evidence:private-capital-includes-private-credit-01"
-],
-"status": "PROMOTED",
-"confidence": "HIGH",
-"decision": "PROMOTED_TO_ATLAS",
-"canonicalClaimRef": "claim:private-capital-includes-private-credit"
-},
-
-{
-  "id": "research-claim:private-capital-includes-real-assets",
-  "researchId": "research:private-capital",
-  "subject": "concept:private-capital",
-"predicate": "INCLUDES",
-"object": "concept:real-assets",
-  "claimText": "سرمایه خصوصی دارایی‌های واقعی را نیز دربرمی‌گیرد.",
-"sourceRefs": [
-  "source:ecb-private-markets-public-risk"
-],
-"evidenceRefs": [
-  "evidence:private-capital-includes-real-assets-01"
-],
-"status": "PROMOTED",
-"confidence": "HIGH",
-"decision": "PROMOTED_TO_ATLAS",
-"canonicalClaimRef": "claim:private-capital-includes-real-assets"
-},
-
     {
-  "id": "research-claim:private-capital-includes-venture-capital",
-  "researchId": "research:private-capital",
-  "subject": "concept:private-capital",
-  "predicate": "INCLUDES",
-  "object": "concept:venture-capital",
-  "claimText": "مقاله سرمایه‌گذاری خطرپذیر را در دامنه سرمایه خصوصی قرار می‌دهد.",
-  "sourceRefs": [
-    "source:ecb-private-markets-public-risk"
-  ],
-  "evidenceRefs": [
-    "evidence:private-capital-includes-venture-capital-01"
-  ],
-  "status": "PROMOTED",
-  "confidence": "HIGH",
-  "decision": "PROMOTED_TO_ATLAS",
-  "canonicalClaimRef": "claim:private-capital-includes-venture-capital"
-},
-
+      "id": "research-claim:private-capital-includes-private-equity",
+      "researchId": "research:private-capital",
+      "subject": "concept:private-capital",
+      "predicate": "INCLUDES",
+      "object": "concept:private-equity",
+      "claimText": "مقاله سرمایه‌گذاری خصوصی را در چارچوب سرمایه خصوصی قرار می‌دهد.",
+      "sourceRefs": [
+        "source:ecb-private-markets-public-risk"
+      ],
+      "evidenceRefs": [
+        "evidence:private-capital-includes-private-equity-01"
+      ],
+      "status": "PROMOTED",
+      "confidence": "HIGH",
+      "decision": "PROMOTED_TO_ATLAS",
+      "canonicalClaimRef": "claim:private-capital-includes-private-equity"
+    },
     {
-  "id": "research-claim:private-capital-includes-growth-capital",
-  "researchId": "research:private-capital",
-  "subject": "concept:private-capital",
-  "predicate": "INCLUDES",
-  "object": "concept:growth-capital",
-  "claimText": "مقاله سرمایه رشد را یکی از بلوک‌های سرمایه خصوصی معرفی می‌کند.",
-  "sourceRefs": [
-    "source:ecb-private-markets-public-risk"
-  ],
-  "evidenceRefs": [
-    "evidence:private-capital-includes-growth-capital-01"
-  ],
-  "status": "PROMOTED",
-  "confidence": "HIGH",
-  "decision": "PROMOTED_TO_ATLAS",
-  "canonicalClaimRef": "claim:private-capital-includes-growth-capital"
-},
-
+      "id": "research-claim:private-capital-includes-private-credit",
+      "researchId": "research:private-capital",
+      "subject": "concept:private-capital",
+      "predicate": "INCLUDES",
+      "object": "concept:private-credit",
+      "claimText": "مقاله اعتبار خصوصی را در چارچوب سرمایه خصوصی قرار می‌دهد.",
+      "sourceRefs": [
+        "source:ecb-private-markets-public-risk"
+      ],
+      "evidenceRefs": [
+        "evidence:private-capital-includes-private-credit-01"
+      ],
+      "status": "PROMOTED",
+      "confidence": "HIGH",
+      "decision": "PROMOTED_TO_ATLAS",
+      "canonicalClaimRef": "claim:private-capital-includes-private-credit"
+    },
     {
-  "id": "research-claim:private-capital-boundaries-vary",
-  "researchId": "research:private-capital",
-  "subject": "concept:private-capital",
-  "predicate": "HAS_NON_UNIFORM_CLASSIFICATION",
-  "object": "concept:private-capital-classification",
-  "claimText": "مرزبندی بلوک‌های سرمایه خصوصی در منابع مختلف یکسان نیست.",
-  "sourceRefs": [
-    "source:ecb-private-markets-public-risk"
-  ],
-  "evidenceRefs": [
-    "evidence:private-capital-boundaries-vary-01"
-  ],
-  "status": "PROMOTED",
-  "confidence": "HIGH",
-  "decision": "PROMOTED_TO_ATLAS",
-  "canonicalClaimRef": "claim:private-capital-boundaries-vary"
-},
-
+      "id": "research-claim:private-capital-includes-real-assets",
+      "researchId": "research:private-capital",
+      "subject": "concept:private-capital",
+      "predicate": "INCLUDES",
+      "object": "concept:real-assets",
+      "claimText": "سرمایه خصوصی دارایی‌های واقعی را نیز دربرمی‌گیرد.",
+      "sourceRefs": [
+        "source:ecb-private-markets-public-risk"
+      ],
+      "evidenceRefs": [
+        "evidence:private-capital-includes-real-assets-01"
+      ],
+      "status": "PROMOTED",
+      "confidence": "HIGH",
+      "decision": "PROMOTED_TO_ATLAS",
+      "canonicalClaimRef": "claim:private-capital-includes-real-assets"
+    },
     {
-  "id": "research-claim:private-credit-lender-position",
-  "researchId": "research:private-capital",
-  "subject": "concept:private-credit",
-  "predicate": "HAS_INVESTOR_POSITION",
-  "object": "concept:lender",
-  "claimText": "در اعتبار خصوصی، سرمایه‌گذار عمدتاً در جایگاه اعتباردهنده قرار دارد.",
-  "sourceRefs": [
-    "source:federal-reserve-private-credit-2024"
-  ],
-  "evidenceRefs": [
-    "evidence:private-credit-lender-position-01"
-  ],
-  "status": "PROMOTED",
-  "confidence": "HIGH",
-  "decision": "PROMOTED_TO_ATLAS",
-  "canonicalClaimRef": "claim:private-credit-lender-position"
-},
-
+      "id": "research-claim:private-capital-includes-venture-capital",
+      "researchId": "research:private-capital",
+      "subject": "concept:private-capital",
+      "predicate": "INCLUDES",
+      "object": "concept:venture-capital",
+      "claimText": "مقاله سرمایه‌گذاری خطرپذیر را در دامنه سرمایه خصوصی قرار می‌دهد.",
+      "sourceRefs": [
+        "source:ecb-private-markets-public-risk"
+      ],
+      "evidenceRefs": [
+        "evidence:private-capital-includes-venture-capital-01"
+      ],
+      "status": "PROMOTED",
+      "confidence": "HIGH",
+      "decision": "PROMOTED_TO_ATLAS",
+      "canonicalClaimRef": "claim:private-capital-includes-venture-capital"
+    },
     {
-  "id": "research-claim:private-credit-return-contractual",
-  "researchId": "research:private-capital",
-  "subject": "concept:private-credit",
-  "predicate": "RETURN_DEPENDS_ON",
-  "object": "concept:contractual-components",
-  "claimText": "بازده اعتبار خصوصی عمدتاً از بهره، کارمزد و دیگر اجزای قراردادی تأمین می‌شود.",
-  "sourceRefs": [
-    "source:federal-reserve-private-credit-2024"
-  ],
-  "evidenceRefs": [
-  "evidence:private-credit-return-contractual-01"
-],
-  "status": "PROMOTED",
-"confidence": "HIGH",
-"decision": "PROMOTED_TO_ATLAS",
-"canonicalClaimRef": "claim:private-credit-return-contractual"
-},
-
+      "id": "research-claim:private-capital-includes-growth-capital",
+      "researchId": "research:private-capital",
+      "subject": "concept:private-capital",
+      "predicate": "INCLUDES",
+      "object": "concept:growth-capital",
+      "claimText": "مقاله سرمایه رشد را یکی از بلوک‌های سرمایه خصوصی معرفی می‌کند.",
+      "sourceRefs": [
+        "source:ecb-private-markets-public-risk"
+      ],
+      "evidenceRefs": [
+        "evidence:private-capital-includes-growth-capital-01"
+      ],
+      "status": "PROMOTED",
+      "confidence": "HIGH",
+      "decision": "PROMOTED_TO_ATLAS",
+      "canonicalClaimRef": "claim:private-capital-includes-growth-capital"
+    },
     {
-  "id": "research-claim:private-credit-and-private-equity-linked",
-  "researchId": "research:private-capital",
-  "subject": "concept:private-credit",
-  "predicate": "LINKED_TO",
-  "object": "concept:private-equity",
-  "claimText": "اعتبار خصوصی و سرمایه‌گذاری خصوصی در برخی معاملات از نظر تأمین مالی به یکدیگر پیوند عملیاتی دارند.",
-  "sourceRefs": [
-    "source:federal-reserve-private-credit-2024"
-  ],
-  "evidenceRefs": [
-  "evidence:private-credit-and-private-equity-linked-01"
-],
-  "status": "PROMOTED",
-"confidence": "HIGH",
-"decision": "PROMOTED_TO_ATLAS",
-"canonicalClaimRef": "claim:private-credit-and-private-equity-linked"
-},
-
+      "id": "research-claim:private-capital-boundaries-vary",
+      "researchId": "research:private-capital",
+      "subject": "concept:private-capital",
+      "predicate": "HAS_NON_UNIFORM_CLASSIFICATION",
+      "object": "concept:private-capital-classification",
+      "claimText": "مرزبندی بلوک‌های سرمایه خصوصی در منابع مختلف یکسان نیست.",
+      "sourceRefs": [
+        "source:ecb-private-markets-public-risk"
+      ],
+      "evidenceRefs": [
+        "evidence:private-capital-boundaries-vary-01"
+      ],
+      "status": "PROMOTED",
+      "confidence": "HIGH",
+      "decision": "PROMOTED_TO_ATLAS",
+      "canonicalClaimRef": "claim:private-capital-boundaries-vary"
+    },
+    {
+      "id": "research-claim:private-credit-lender-position",
+      "researchId": "research:private-capital",
+      "subject": "concept:private-credit",
+      "predicate": "HAS_INVESTOR_POSITION",
+      "object": "concept:lender",
+      "claimText": "در اعتبار خصوصی، سرمایه‌گذار عمدتاً در جایگاه اعتباردهنده قرار دارد.",
+      "sourceRefs": [
+        "source:federal-reserve-private-credit-2024"
+      ],
+      "evidenceRefs": [
+        "evidence:private-credit-lender-position-01"
+      ],
+      "status": "PROMOTED",
+      "confidence": "HIGH",
+      "decision": "PROMOTED_TO_ATLAS",
+      "canonicalClaimRef": "claim:private-credit-lender-position"
+    },
+    {
+      "id": "research-claim:private-credit-return-contractual",
+      "researchId": "research:private-capital",
+      "subject": "concept:private-credit",
+      "predicate": "RETURN_DEPENDS_ON",
+      "object": "concept:contractual-components",
+      "claimText": "بازده اعتبار خصوصی عمدتاً از بهره، کارمزد و دیگر اجزای قراردادی تأمین می‌شود.",
+      "sourceRefs": [
+        "source:federal-reserve-private-credit-2024"
+      ],
+      "evidenceRefs": [
+        "evidence:private-credit-return-contractual-01"
+      ],
+      "status": "PROMOTED",
+      "confidence": "HIGH",
+      "decision": "PROMOTED_TO_ATLAS",
+      "canonicalClaimRef": "claim:private-credit-return-contractual"
+    },
+    {
+      "id": "research-claim:private-credit-and-private-equity-linked",
+      "researchId": "research:private-capital",
+      "subject": "concept:private-credit",
+      "predicate": "LINKED_TO",
+      "object": "concept:private-equity",
+      "claimText": "اعتبار خصوصی و سرمایه‌گذاری خصوصی در برخی معاملات از نظر تأمین مالی به یکدیگر پیوند عملیاتی دارند.",
+      "sourceRefs": [
+        "source:federal-reserve-private-credit-2024"
+      ],
+      "evidenceRefs": [
+        "evidence:private-credit-and-private-equity-linked-01"
+      ],
+      "status": "PROMOTED",
+      "confidence": "HIGH",
+      "decision": "PROMOTED_TO_ATLAS",
+      "canonicalClaimRef": "claim:private-credit-and-private-equity-linked"
+    },
     {
       "id": "research-claim:real-assets-include-physical-assets",
-"researchId": "research:private-capital",
-     "subject": "concept:real-assets",
+      "researchId": "research:private-capital",
+      "subject": "concept:real-assets",
       "predicate": "INCLUDES",
       "object": "concept:physical-assets",
       "claimText": "دارایی‌های واقعی طیفی از دارایی‌های عینی و فیزیکی از جمله املاک و مستغلات، زیرساخت‌ها و منابع طبیعی را دربرمی‌گیرد.",
       "sourceRefs": [
-  "source:ecb-private-markets-public-risk"
-],
-"evidenceRefs": [
-  "evidence:real-assets-include-physical-assets-01"
-],
+        "source:ecb-private-markets-public-risk"
+      ],
+      "evidenceRefs": [
+        "evidence:real-assets-include-physical-assets-01"
+      ],
       "status": "PROMOTED",
-"confidence": "HIGH",
-"decision": "PROMOTED_TO_ATLAS",
-"canonicalClaimRef": "claim:real-assets-include-physical-assets"
+      "confidence": "HIGH",
+      "decision": "PROMOTED_TO_ATLAS",
+      "canonicalClaimRef": "claim:real-assets-include-physical-assets"
     },
-
     {
       "id": "research-claim:private-capital-private-access",
- "researchId": "research:private-capital",
+      "researchId": "research:private-capital",
       "subject": "concept:private-capital",
       "predicate": "CHARACTERIZED_BY",
       "object": "concept:private-market-access",
       "claimText": "در چارچوب مقاله، ویژگی بنیادین سرمایه خصوصی اتکا به فرصت‌های سرمایه‌گذاری با دسترسی خصوصی و خارج از بازارهای عمومی سرمایه است.",
       "sourceRefs": [
-  "source:ecb-private-markets-public-risk"
-],
-"evidenceRefs": [
-  "evidence:private-capital-private-access-01"
-],
-"status": "PROMOTED",
-"confidence": "HIGH",
-"decision": "PROMOTED_TO_ATLAS",
-"canonicalClaimRef": "claim:private-capital-private-access"
+        "source:ecb-private-markets-public-risk"
+      ],
+      "evidenceRefs": [
+        "evidence:private-capital-private-access-01"
+      ],
+      "status": "PROMOTED",
+      "confidence": "HIGH",
+      "decision": "PROMOTED_TO_ATLAS",
+      "canonicalClaimRef": "claim:private-capital-private-access"
     }
   ]
 }

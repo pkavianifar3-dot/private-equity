@@ -10,8 +10,9 @@
       "status": "SUPPORTED",
       "confidence": "HIGH",
       "evidenceRefs": [
-        "evidence:private-capital-includes-private-equity-01"
-      ]     
+        "evidence:private-capital-includes-private-equity-01",
+        "evidence:private-capital-broader-than-private-equity-01"
+      ]
     }
   ]
 }
