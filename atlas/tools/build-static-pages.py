@@ -540,7 +540,7 @@ def render_evidence(claims, evidence, source_index):
     return (
         '<section class="atlas-section">'
         '<div class="container">'
-        "<h2>\u0634\u0648\u0627\u0647\u062f \u0648 \u0645\u0646\u0627\u0628\u0639</h2>"
+        "<h2>\u0634\u0648\u0627\u0647\u062f</h2>"
         '<div class="grid atlas-claims-grid">'
         + "".join(rows)
         + "</div>"

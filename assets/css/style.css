@@ -407,7 +407,17 @@ article figure img{
 }
 
 .atlas-source-ref{
-    font-weight:700;
+    display: inline-block;
+    margin-top: 6px;
+    font-size: 0.85rem;
+    color: #C9A227;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.atlas-source-ref:hover{
+    color: #FFFFFF;
+    text-decoration: underline;
 }
 
 .atlas-timeline{
@@ -1352,21 +1362,24 @@ article figure img{
 .atlas-explore-pagination button {
     min-width: 5.5rem;
     padding: 0.65rem 1rem;
-    border: 1px solid #d6d6d6;
+    border: 1px solid #23384D;
     border-radius: 8px;
-    background: #fff;
-    color: #222;
+    background: #0E1B2D;
+    color: #F4F6F8;
     cursor: pointer;
     font: inherit;
+    transition: border-color 0.25s ease, color 0.25s ease;
 }
 
 .atlas-explore-pagination button:hover:not(:disabled) {
-    border-color: #999;
+    border-color: #C9A227;
+    color: #C9A227;
 }
 
 .atlas-explore-pagination button:disabled {
-    opacity: 0.45;
+    opacity: 0.4;
     cursor: not-allowed;
+    border-color: #1d3046;
 }
 
 @media (max-width: 700px) {
@@ -1745,26 +1758,50 @@ article figure img{
     flex-direction: column;
     gap: 8px;
     position: relative;
-    padding: 16px;
-    border: 1px solid var(--border-color, #e2e8f0);
-    border-radius: 8px;
-    background: var(--card-bg, #ffffff);
+    padding: 20px 22px;
+    border: 1px solid #23384D;
+    border-radius: 10px;
+    background: #0E1B2D;
+    transition: border-color 0.25s ease, transform 0.25s ease;
+}
+
+.atlas-source:hover {
+    border-color: #C9A227;
+    transform: translateY(-2px);
 }
 
 .atlas-source-number {
     font-weight: 700;
-    color: var(--primary-color, #1e3a8a);
+    color: #C9A227;
     font-size: 0.95rem;
+}
+
+.atlas-source h3 {
+    margin: 4px 0 6px;
+    font-size: 1.05rem;
+    line-height: 1.6;
+}
+
+.atlas-source h3 a {
+    color: #F4F6F8;
+    text-decoration: none;
+}
+
+.atlas-source h3 a:hover {
+    color: #C9A227;
+    text-decoration: underline;
 }
 
 .atlas-source-ref {
     display: inline-block;
     margin-top: 6px;
     font-size: 0.85rem;
-    color: var(--link-color, #2563eb);
-    text-decoration: underline;
+    color: #C9A227;
+    text-decoration: none;
+    font-weight: 600;
 }
 
 .atlas-source-ref:hover {
-    color: var(--link-hover-color, #1d4ed8);
+    color: #FFFFFF;
+    text-decoration: underline;
 }
