@@ -217,6 +217,14 @@ class StaticProvenancePresentationTests(unittest.TestCase):
                 page = MODULE.render_entity(
                     entity, claims, evidence, sources, entities, contract
                 )
+                self.assertIn('<a href="/atlas/">اطلس</a>', page)
+                saved_page = (
+                    MODULE.OUTPUT_ROOT
+                    / MODULE.ROUTES[entity["type"]]
+                    / entity_id.split(":", 1)[1]
+                    / "index.html"
+                ).read_text(encoding="utf-8")
+                self.assertIn('<a href="/atlas/">اطلس</a>', saved_page)
                 links = ProvenanceLinks()
                 links.feed(page)
                 self.assertEqual(
