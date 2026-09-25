@@ -274,88 +274,95 @@ def render_claim_relation(claim, entity_id, relation_contract):
     return None
 
 
-def render_claims(claims, entity_id, entities, relation_contract):
+def claim_evidence_items(claim, evidence):
+    return [
+        item for ref in claim.get("evidenceRefs", [])
+        if (item := evidence.get(ref)) and item.get("claimRef") == claim.get("id")
+    ]
+
+
+def fa_number(number):
+    return str(number).translate(str.maketrans("0123456789", "۰۱۲۳۴۵۶۷۸۹"))
+
+
+def render_claims(
+    claims, entity_id, entities, relation_contract, evidence=None, sources=None
+):
     if not claims:
         return ""
-
+    evidence = evidence or {}
+    sources = sources or {}
     items = []
-
     for claim in claims:
-        relation = render_claim_relation(
-            claim,
-            entity_id,
-            relation_contract,
-        )
-
+        relation = render_claim_relation(claim, entity_id, relation_contract)
         if not relation:
             continue
-
-        target = claim_value_html(
-            claim,
-            entity_id,
-            entities,
-        )
-
+        target = claim_value_html(claim, entity_id, entities)
         if not target:
             continue
-
-        meta = []
-
-        status = claim.get("status")
-        confidence = claim.get("confidence")
-
-        if status:
-            meta.append(f"وضعیت: {esc(status)}")
-
-        if confidence:
-            meta.append(f"اطمینان: {esc(confidence)}")
-
-        temporal = claim.get("temporal")
-
-        if isinstance(temporal, dict):
-            start = temporal.get("start")
-            end = temporal.get("end")
-            temporal_status = temporal.get("status")
-
-            if start and end:
-                meta.append(f"بازه: {esc(start)} تا {esc(end)}")
-            elif start:
-                meta.append(f"از: {esc(start)}")
-
-            if temporal_status:
-                meta.append(f"وضعیت زمانی: {esc(temporal_status)}")
-
-        meta_html = ""
-
-        if meta:
-            meta_html = (
-                '<p class="atlas-claim-meta">'
-                + " | ".join(meta)
-                + "</p>"
+        supported = claim_evidence_items(claim, evidence)
+        if supported:
+            source_ids = {
+                item.get("sourceRef") for item in supported
+                if item.get("sourceRef") in sources
+            }
+            evidence_count = fa_number(len(supported))
+            source_count = fa_number(len(source_ids))
+            summary = (
+                f'<a class="atlas-overview-link" href="#claim-{esc(claim["id"])}">'
+                f"{evidence_count} شاهد · {source_count} منبع"
+                "</a>"
             )
-
+        else:
+            meta = []
+            if claim.get("status"):
+                meta.append("وضعیت: " + esc(STATUS_LABELS.get(
+                    claim["status"], "وضعیت نامشخص"
+                )))
+            if claim.get("confidence"):
+                meta.append("اطمینان: " + esc(CONFIDENCE_LABELS.get(
+                    claim["confidence"], "نامشخص"
+                )))
+            summary = (
+                '<p class="atlas-claim-meta">' + " · ".join(meta) + "</p>"
+                if meta else ""
+            )
+        temporal = claim.get("temporal")
+        temporal_html = ""
+        if isinstance(temporal, dict):
+            parts = []
+            if temporal.get("start") and temporal.get("end"):
+                parts.append(
+                    f'بازه: {esc(temporal["start"])} تا {esc(temporal["end"])}'
+                )
+            elif temporal.get("start"):
+                parts.append(f'از: {esc(temporal["start"])}')
+            if temporal.get("status"):
+                parts.append(
+                    "وضعیت زمانی: " + esc(TEMPORAL_STATUS_LABELS.get(
+                        temporal["status"], temporal["status"]
+                    ))
+                )
+            if parts:
+                temporal_html = (
+                    '<p class="atlas-claim-meta">' + " · ".join(parts) + "</p>"
+                )
         items.append(
-            '<article class="card atlas-claim">'
-            f'<div class="atlas-claim-label">'
-            f'{esc(relation["label"])}'
-            "</div>"
+            '<article class="card atlas-claim atlas-overview-item">'
+            f'<div class="atlas-claim-label">{esc(relation["label"])}</div>'
             f"<h3>{target}</h3>"
-            f"{meta_html}"
-            "</article>"
+            + temporal_html
+            + summary
+            + "</article>"
         )
-
     if not items:
         return ""
-
     return (
-        '<section class="atlas-section">'
-        '<div class="container">'
-        "<h2>ادعاها و روابط</h2>"
+        '<section class="atlas-section atlas-relations-overview">'
+        '<div class="container"><h2>روابط در یک نگاه</h2>'
         '<div class="grid atlas-claims-grid">'
         + "".join(items)
-        + "</div>"
-        "</div>"
-        "</section>"
+        + "</div></div></section>"
     )
 
 
@@ -473,131 +480,236 @@ def render_data_quality(content):
     )
 
 
-def render_evidence(claims, evidence, source_index):
-    rows = []
+EVIDENCE_TYPE_LABELS = {
+    "explicit_self_statement": "اظهار صریح شخص",
+    "corporate_identity": "سند هویت سازمانی",
+    "explicit_corporate_statement": "بیانیه صریح سازمان",
+    "explicit_media_report": "گزارش صریح رسانه",
+    "investment_announcement": "اعلام سرمایه‌گذاری",
+    "historical_corporate_record": "سابقه تاریخی سازمان",
+    "explicit_title_statement": "اظهار صریح عنوان سمت",
+    "independent_media_report": "گزارش رسانه مستقل",
+    "historical_board_record": "سابقه تاریخی هیئت‌مدیره",
+    "project_statement": "اظهار درباره پروژه",
+    "authoritative_publication": "انتشار مرجع معتبر",
+}
+STRENGTH_LABELS = {
+    "strong": "اعتبار بالا",
+    "moderate": "اعتبار متوسط",
+    "weak": "اعتبار پایین",
+}
+STATUS_LABELS = {
+    "VERIFIED": "تأییدشده",
+    "SUPPORTED": "پشتیبانی‌شده",
+    "REPORTED": "گزارش‌شده",
+    "DISPUTED": "مورد اختلاف",
+}
+CONFIDENCE_LABELS = {
+    "HIGH": "بالا",
+    "MEDIUM": "متوسط",
+    "LOW": "پایین",
+    "UNKNOWN": "نامشخص",
+}
+TEMPORAL_STATUS_LABELS = {
+    "current": "فعلی",
+    "former": "پیشین",
+}
 
-    seen = set()
 
-    for claim in claims:
-        for ref in claim.get("evidenceRefs", []):
-            if ref in seen:
-                continue
-
-            seen.add(ref)
-
-            item = evidence.get(ref)
-
-            if not item:
-                continue
-
-            details = []
-
-            evidence_type = item.get("evidenceType")
-            strength = item.get("strength")
-            note = item.get("note")
-            source_number = source_index.get(item.get("sourceRef"))
-
-            if evidence_type:
-                details.append(
-                    f"\u0646\u0648\u0639: {esc(evidence_type)}"
-                )
-
-            if strength:
-                details.append(
-                    f"\u0642\u062f\u0631\u062a: {esc(strength)}"
-                )
-
-            if note:
-                details.append(
-                    f"\u062a\u0648\u0636\u06cc\u062d: {esc(note)}"
-                )
-
-            if source_number:
-                source_ref = esc(item.get("sourceRef", ""))
-                details.append(
-                    f'<a href="#source-{source_ref}" '
-                    f'class="atlas-source-ref">'
-                    f'\u0645\u0646\u0628\u0639: [{source_number}]'
-                    f"</a>"
-                )
-
-            rows.append(
-                '<article class="card atlas-evidence">'
-                '<div class="atlas-claim-label">'
-                f"{esc(item.get('id', ref))}"
-                "</div>"
-                + (
-                    "<p>" + " | ".join(details) + "</p>"
-                    if details
-                    else ""
-                )
-                + "</article>"
-            )
-
-    if not rows:
-        return ""
-
+def render_source_details(source, number, with_anchor=False, show_id=True):
+    source_id = source["id"]
+    title = (
+        source.get("title_fa")
+        or source.get("title_en")
+        or source.get("publisher")
+        or source_id
+    )
+    url = source.get("url")
+    body = (
+        f'<a href="{esc(url)}" target="_blank" rel="noopener noreferrer">'
+        f"{esc(title)}</a>"
+        if url else esc(title)
+    )
+    anchor = f' id="source-{esc(source_id)}"' if with_anchor else ""
+    publisher = source.get("publisher")
     return (
-        '<section class="atlas-section">'
-        '<div class="container">'
-        "<h2>\u0634\u0648\u0627\u0647\u062f \u0648 \u0645\u0646\u0627\u0628\u0639</h2>"
-        '<div class="grid atlas-claims-grid">'
-        + "".join(rows)
+        f'<div class="atlas-provenance-source"{anchor}>'
+        '<div class="atlas-provenance-source-heading">'
+        f'<div class="atlas-provenance-source-title">{body}</div>'
+        f'<span class="atlas-source-number"><bdi dir="ltr">[{number}]</bdi></span>'
+        '</div>'
+        + (f"<small>{esc(publisher)}</small>" if publisher else "")
+        + (f'<small class="atlas-source-id">{esc(source_id)}</small>'
+           if show_id else "")
         + "</div>"
-        "</div>"
-        "</section>"
     )
 
 
-def render_sources(sources, claims, evidence, source_index):
-    items = []
+def provenance_claim_title(claim, entity_id, entities, relation_contract):
+    relation = render_claim_relation(claim, entity_id, relation_contract)
+    forward = (
+        relation_contract.get("relations", {})
+        .get(claim.get("predicate"), {})
+        .get("forward_label_fa")
+        if isinstance(relation_contract, dict) else None
+    )
+    label = relation["label"] if relation else forward or "گزاره مستند"
+    subject_id = claim.get("subject")
+    object_id = claim.get("object")
+    target_id = relation["target_id"] if relation else object_id
+    owner_id = entity_id if relation else subject_id
+    owner = entity_name(entities[owner_id]) if owner_id in entities else ""
+    target = entity_name(entities[target_id]) if target_id in entities else ""
+    value = claim.get("value")
+    if not target and isinstance(value, dict):
+        target = value.get("raw") or ""
+    elif not target and value is not None:
+        target = str(value)
+    return " ".join(part for part in (owner, label, target) if part), label
 
+
+def render_provenance(
+    claims, evidence, sources, source_index, entities, entity_id, relation_contract
+):
+    cards = []
+    anchored = set()
+    seen_evidence = set()
+    for claim in claims:
+        supported = [
+            item for item in claim_evidence_items(claim, evidence)
+            if item["id"] not in seen_evidence
+        ]
+        if not supported:
+            continue
+        for item in supported:
+            seen_evidence.add(item["id"])
+        title, _ = provenance_claim_title(
+            claim, entity_id, entities, relation_contract
+        )
+        evidence_rows = []
+        claim_sources = {}
+        technical = []
+        for index, item in enumerate(supported, start=1):
+            details = []
+            if item.get("evidenceType"):
+                details.append(
+                    "نوع شاهد: " + esc(EVIDENCE_TYPE_LABELS.get(
+                        item["evidenceType"], "نوع شاهد نامشخص"
+                    ))
+                )
+            if item.get("strength"):
+                details.append(
+                    "اعتبار: " + esc(STRENGTH_LABELS.get(
+                        item["strength"], "اعتبار نامشخص"
+                    ))
+                )
+            if item.get("note"):
+                details.append("توضیح: " + esc(item["note"]))
+            source_id = item.get("sourceRef")
+            source = sources.get(source_id)
+            if source and source_id in source_index:
+                claim_sources[source_id] = source
+                source_link = (
+                    f'<a class="atlas-source-ref" '
+                    f'href="#source-{esc(source_id)}" '
+                    f'aria-label="رفتن به منبع شماره {source_index[source_id]}">'
+                    f'<bdi dir="ltr">[{source_index[source_id]}]</bdi></a>'
+                )
+            elif source_id:
+                source_link = '<span class="atlas-meta">منبع در دسترس نیست</span>'
+            else:
+                source_link = ""
+            evidence_rows.append(
+                '<div class="atlas-evidence-item">'
+                '<div class="atlas-evidence-header">'
+                + source_link
+                + f'<strong>شاهد {fa_number(index)}</strong>'
+                + "</div>"
+                + (f'<p class="atlas-meta">{" | ".join(details)}</p>'
+                   if details else "")
+                + "</div>"
+            )
+            technical.append(
+                '<li>شناسه شاهد: <bdi dir="ltr">'
+                f'{esc(item["id"])}</bdi></li>'
+            )
+        source_rows = []
+        for source_id, source in claim_sources.items():
+            first = source_id not in anchored
+            anchored.add(source_id)
+            source_rows.append(
+                render_source_details(
+                    source, source_index[source_id], first, show_id=False
+                )
+            )
+            technical.append(
+                '<li>شناسه منبع: <bdi dir="ltr">'
+                f'{esc(source_id)}</bdi></li>'
+            )
+        source_html = (
+            '<div class="atlas-provenance-sources">'
+            '<h4>منابع این ادعا</h4>'
+            + "".join(source_rows)
+            + "</div>"
+            if source_rows else ""
+        )
+        status_parts = []
+        if claim.get("status"):
+            status_parts.append(STATUS_LABELS.get(
+                claim["status"], "وضعیت نامشخص"
+            ))
+        if claim.get("confidence"):
+            status_parts.append(
+                "اطمینان " + CONFIDENCE_LABELS.get(
+                    claim["confidence"], "نامشخص"
+                )
+            )
+        cards.append(
+            '<article class="card atlas-evidence-group atlas-provenance-card"'
+            f' id="claim-{esc(claim["id"])}">'
+            f"<h3>{esc(title)}</h3>"
+            + (f'<div class="atlas-status">{esc(" · ".join(status_parts))}</div>'
+               if status_parts else "")
+            + '<div class="atlas-evidence-list">'
+            + "".join(evidence_rows)
+            + "</div>"
+            + ('<div class="provenance-card-divider"></div>' if source_rows else "")
+            + source_html
+            + '<details class="atlas-provenance-technical">'
+              '<summary>جزئیات فنی</summary><ul>'
+            + "".join(technical)
+            + "</ul></details></article>"
+        )
+    remaining = []
     for source_id, number in source_index.items():
         source = sources.get(source_id)
-
-        if not source:
-            continue
-
-        title = (
-            source.get("title_fa")
-            or source.get("title_en")
-            or source.get("publisher")
-            or source_id
-        )
-
-        source_url = source.get("url")
-
-        if source_url:
-            source_body = (
-                f'<a href="{esc(source_url)}" '
-                f'rel="noopener noreferrer">'
-                f"{esc(title)}</a>"
+        if source and source_id not in anchored:
+            remaining.append(
+                '<article class="card atlas-source">'
+                + render_source_details(source, number, True)
+                + "</article>"
             )
-        else:
-            source_body = esc(title)
-
-        items.append(
-            '<article class="card atlas-source" '
-            f'id="source-{esc(source_id)}">'
-            f'<div class="atlas-source-number">[{number}]</div>'
-            f"<h3>{source_body}</h3>"
-            f'<p><span class="atlas-source-id">'
-            f"{esc(source_id)}</span></p>"
-            "</article>"
-        )
-
-    if not items:
-        return ""
-
-    return (
-        '<section class="atlas-section">'
-        '<div class="container">'
-        "<h2>\u0645\u0646\u0627\u0628\u0639</h2>"
+    extra_html = (
+        '<div class="atlas-provenance-extras"><h3>منابع متن</h3>'
         '<div class="atlas-sources-list">'
-        + "".join(items)
+        + "".join(remaining)
+        + "</div></div>"
+        if remaining else ""
+    )
+    if not cards and not extra_html:
+        return ""
+    cards_html = (
+        '<div class="grid atlas-claims-grid">'
+        + "".join(cards)
         + "</div>"
-        "</div>"
-        "</section>"
+        if cards else ""
+    )
+    return (
+        '<section class="atlas-section atlas-provenance-section">'
+        '<div class="container"><h2>شواهد و منابع</h2>'
+        + cards_html
+        + extra_html
+        + "</div></section>"
     )
 
 
@@ -812,13 +924,11 @@ def render_entity(entity, claims, evidence, sources, entities, relation_contract
 
 {render_content(content, source_index)}
 
-{render_claims(entity_claims, entity_id, entities, relation_contract)}
+{render_claims(entity_claims, entity_id, entities, relation_contract, evidence, sources)}
 
 {render_data_quality(content)}
 
-{render_evidence(entity_claims, evidence, source_index)}
-
-{render_sources(sources, entity_claims, evidence, source_index)}
+{render_provenance(entity_claims, evidence, sources, source_index, entities, entity_id, relation_contract)}
 
 </div>
 

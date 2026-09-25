@@ -85,6 +85,42 @@ assert.strictEqual(
     "source index must not fabricate missing sources"
 );
 
+assert.strictEqual(
+    window.PrivateCapitalProvenanceRenderer.evidenceTypeLabel("authoritative_publication"),
+    "انتشار مرجع معتبر",
+    "technical evidence types must have readable Persian labels"
+);
+assert.strictEqual(
+    window.PrivateCapitalProvenanceRenderer.evidenceTypeLabel("investment_announcement"),
+    "اعلام سرمایه‌گذاری"
+);
+assert.strictEqual(
+    window.PrivateCapitalProvenanceRenderer.strengthLabel("strong"),
+    "اعتبار بالا",
+    "evidence strength must have a readable Persian label"
+);
+assert.strictEqual(
+    window.PrivateCapitalProvenanceRenderer.evidenceTypeLabel("unknown_type"),
+    "نوع شاهد نامشخص",
+    "unknown values must not expose raw technical keys"
+);
+
+const sourceIds = Array.from(
+    window.PrivateCapitalProvenanceRenderer.collectSourceIds(
+        [{ sourceRef: "source:b" }, { sourceRef: "source:a" }],
+        {
+            sections: [
+                { paragraphs: [{ sourceRefs: ["source:a", "source:only-content"] }] }
+            ]
+        }
+    )
+);
+assert.deepStrictEqual(
+    sourceIds,
+    ["source:a", "source:only-content", "source:b"],
+    "content citations and evidence must share ordered, deduplicated sources"
+);
+
 console.log("Provenance renderer behavior PASSED");
 
 console.log("Provenance renderer contract PASSED");

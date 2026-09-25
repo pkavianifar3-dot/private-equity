@@ -479,25 +479,18 @@
     }
     
     
-    async function loadSourcesForEvidence(evidenceList) {
+    async function loadSourcesForProvenance(evidenceList, content = null) {
         const sourceIndex =
             await loadCachedJSON(
                 `${ATLAS_ROOT}/sources/index.json`
             );
-    
-        const sourceIds = [];
-    
-        evidenceList.forEach(evidence => {
-            const sourceId = evidence.sourceRef;
-    
-            if (
-                sourceId &&
-                !sourceIds.includes(sourceId)
-            ) {
-                sourceIds.push(sourceId);
-            }
-        });
-    
+
+        const sourceIds =
+            window.PrivateCapitalProvenanceRenderer.collectSourceIds(
+                evidenceList,
+                content
+            );
+
         if (!sourceIds.length) {
             return [];
         }
@@ -666,10 +659,41 @@
 
         return entity.name?.en || "";
     }
+
+    function renderClaimStatus(claim) {
+        return `<div class="atlas-status">
+            ${escapeHTML(statusLabel(claim.status))}
+            ${claim.confidence
+                ? ` · ${escapeHTML(confidenceLabel(claim.confidence))}`
+                : ""}
+        </div>`;
+    }
+
+    function renderOverviewLink(claim, evidenceList, sourceList) {
+        const refs = new Set(claim.evidenceRefs || []);
+        const items = (evidenceList || []).filter(
+            item => refs.has(item.id) && item.claimRef === claim.id
+        );
+        if (!items.length) {
+            return "";
+        }
+        const knownSources = new Set(
+            (sourceList || []).map(source => source.id)
+        );
+        const sourceCount = new Set(
+            items.map(item => item.sourceRef).filter(id => knownSources.has(id))
+        ).size;
+        const digits = number => new Intl.NumberFormat("fa-IR").format(number);
+        return `<a class="atlas-overview-link"
+            href="#claim-${escapeHTML(claim.id)}">
+            ${digits(items.length)} شاهد · ${digits(sourceCount)} منبع
+        </a>`;
+    }
     function renderClaimCard(
         claim,
         entityIndex,
-        investmentIndex = {}
+        investmentIndex = {},
+        overview = null
     ) {
         if (!claim || typeof claim !== "object") {
             return "";
@@ -679,10 +703,21 @@
             return "";
         }
     
-        const object =
-            claim.object
-                ? entityIndex[claim.object]
+        const renderedRelation = overview?.entityId &&
+            window.PrivateCapitalRelationRenderer &&
+            relationContract
+                ? window.PrivateCapitalRelationRenderer.renderRelation(
+                    claim,
+                    overview.entityId,
+                    relationContract.relationTypes,
+                    relationContract.relationRules,
+                    relationContract.relationRendering
+                )
                 : null;
+        const displayId = renderedRelation?.targetId || claim.object;
+        const displayLabel = renderedRelation?.label ||
+            relationLabel(claim.predicate);
+        const object = displayId ? entityIndex[displayId] : null;
         
         const linkedInvestment =
             claim.predicate === "INVESTED_IN"
@@ -694,10 +729,10 @@
                 : null;
         
         const objectURL =
-            claim.object
+            displayId
                 ? entityURL(
-                    claim.object,
-                    entityIndex[claim.object]?.type
+                    displayId,
+                    entityIndex[displayId]?.type
                 )
                 : null;
         
@@ -713,18 +748,18 @@
             formatTemporal(claim.temporal);
         
         const objectName =
-            claim.object
+            displayId
                 ? getEntityName(
                     entityIndex,
-                    claim.object
+                    displayId
                 )
                 : "";
         
         const objectEnglishName =
-            claim.object
+            displayId
                 ? getEntityEnglishName(
                     entityIndex,
-                    claim.object
+                    displayId
                 )
                 : "";
     
@@ -738,11 +773,14 @@
                 `
                 : "";
     
+        const overviewLink = overview
+            ? renderOverviewLink(claim, overview.evidenceList, overview.sourceList)
+            : "";
         return `
-            <article class="card atlas-claim">
+            <article class="card atlas-claim${overview ? " atlas-overview-item" : ""}">
     
                 <div class="atlas-claim-label">
-                    ${escapeHTML(relationLabel(claim.predicate))}
+                    ${escapeHTML(displayLabel)}
                 </div>
     
                 ${
@@ -820,14 +858,7 @@
     
                 ${valueHTML}
     
-                <div class="atlas-status">
-                    ${escapeHTML(statusLabel(claim.status))}
-                    ${
-                        claim.confidence
-                            ? ` · ${escapeHTML(confidenceLabel(claim.confidence))}`
-                            : ""
-                    }
-                </div>
+${overviewLink || renderClaimStatus(claim)}
     
             </article>
         `;
@@ -1113,7 +1144,8 @@ function renderTimelineSection(claims, entityIndex) {
         title,
         claims,
         entityIndex,
-        investmentIndex = {}
+        investmentIndex = {},
+        overview = null
     ) {
     
         if (!claims.length) {
@@ -1121,7 +1153,7 @@ function renderTimelineSection(claims, entityIndex) {
         }
 
         return `
-            <section class="atlas-section">
+            <section class="atlas-section${overview ? " atlas-relations-overview" : ""}">
 
                 <div class="container">
 
@@ -1136,7 +1168,8 @@ function renderTimelineSection(claims, entityIndex) {
                                     renderClaimCard(
                                         claim,
                                         entityIndex,
-                                        investmentIndex
+                                        investmentIndex,
+                                        overview
                                     )
                             )
                           
@@ -1264,61 +1297,56 @@ function renderDataQualitySection(content, claims) {
         </section>
     `;
 }
-    function renderSourcesSection(sourceData, sourceNumbers) {
+    function renderSourceDetails(source, sourceNumber, withAnchor, showId = true) {
+        const title =
+            source.title_fa ||
+            source.title_en ||
+            source.publisher ||
+            source.id;
+        const titleHTML = source.url
+            ? `<a href="${escapeHTML(source.url)}" target="_blank" rel="noopener noreferrer">${escapeHTML(title)}</a>`
+            : escapeHTML(title);
+        const anchor = withAnchor
+            ? `id="source-${escapeHTML(source.id)}"`
+            : "";
+
+        return `
+            <div class="atlas-provenance-source" ${anchor}>
+                <div class="atlas-provenance-source-heading">
+                    <div class="atlas-provenance-source-title">${titleHTML}</div>
+                    <span class="atlas-source-number"><bdi dir="ltr">[${escapeHTML(String(sourceNumber))}]</bdi></span>
+                </div>
+                ${source.publisher
+                    ? `<small>${escapeHTML(source.publisher)}</small>`
+                    : ""}
+                ${showId
+                    ? `<small class="atlas-source-id">${escapeHTML(source.id)}</small>`
+                    : ""}
+            </div>
+        `;
+    }
+
+    function renderSourcesSection(sourceData, sourceNumbers, anchoredSources) {
         const sources = Array.isArray(sourceData)
             ? sourceData
             : (sourceData?.sources || []);
+        const remaining = sources.filter(source => !anchoredSources.has(source.id));
 
-        if (!sources.length) {
+        if (!remaining.length) {
             return "";
         }
 
-        const sourcesHTML = sources
-            .map(source => {
-                const sourceNumber = sourceNumbers?.[source.id] || "";
-                const title =
-                    source.title_fa ||
-                    source.title_en ||
-                    source.publisher ||
-                    source.id;
-
-                const linkHTML = source.url
-                    ? `<a href="${escapeHTML(source.url)}" target="_blank" rel="noopener noreferrer">${escapeHTML(title)}</a>`
-                    : escapeHTML(title);
-
-                return `
-                    <article
-                        class="card atlas-source"
-                        id="source-${escapeHTML(source.id)}"
-                    >
-                        <div class="atlas-source-number">
-                            [${escapeHTML(String(sourceNumber))}]
-                        </div>
-                        <div>
-                            ${linkHTML}
-                        </div>
-                        ${
-                            source.publisher
-                                ? `<small>${escapeHTML(source.publisher)}</small>`
-                                : ""
-                        }
-                        <div class="atlas-source-id">
-                            ${escapeHTML(source.id)}
-                        </div>
-                    </article>
-                `;
-            })
-            .join("");
-
         return `
-            <section class="atlas-section">
-                <div class="container">
-                    <h2>منابع</h2>
-                    <div class="atlas-sources-list">
-                        ${sourcesHTML}
-                    </div>
+            <div class="atlas-provenance-extras">
+                <h3>منابع متن</h3>
+                <div class="atlas-sources-list">
+                    ${remaining.map(source => `
+                        <article class="card atlas-source">
+                            ${renderSourceDetails(source, sourceNumbers[source.id], true)}
+                        </article>
+                    `).join("")}
                 </div>
-            </section>
+            </div>
         `;
     }
 
@@ -1329,28 +1357,19 @@ function renderDataQualitySection(content, claims) {
         entityIndex,
         entityId = null
     ) {
-        if (!claims || claims.length === 0) {
-            return "";
-        }
-
-        let provenanceRefs = null;
+        const sources = Array.isArray(sourceData)
+            ? sourceData
+            : (sourceData?.sources || []);
         const provRenderer = window.PrivateCapitalProvenanceRenderer;
-        if (
-            provRenderer &&
-            typeof provRenderer.buildSourceReferenceIndex === "function"
-        ) {
-            const rawSources = Array.isArray(sourceData)
-                ? { sources: sourceData }
-                : (sourceData || { sources: [] });
-            provenanceRefs = provRenderer.buildSourceReferenceIndex(rawSources);
-        }
-
-        const sourceNumbers = provenanceRefs?.sourceNumbers || {};
+        const provenanceRefs =
+            provRenderer.buildSourceReferenceIndex({ sources });
+        const sourceIndex = provenanceRefs.sourceIndex;
+        const sourceNumbers = provenanceRefs.sourceNumbers;
+        const anchoredSources = new Set();
 
         const allEvidence = Array.isArray(evidenceData)
             ? evidenceData
             : (evidenceData?.evidence || []);
-
         const evidenceMap = {};
         allEvidence.forEach(evidence => {
             if (!evidenceMap[evidence.claimRef]) {
@@ -1360,15 +1379,21 @@ function renderDataQualitySection(content, claims) {
         });
 
         const relationRenderer = window.PrivateCapitalRelationRenderer;
-
-        const sections = claims
+        const sections = (claims || [])
             .map(claim => {
-                const evidenceItems = evidenceMap[claim.id] || [];
+                const refs = new Set(claim.evidenceRefs || []);
+                const evidenceItems = (evidenceMap[claim.id] || [])
+                    .filter(item => refs.has(item.id));
+                if (!evidenceItems.length) {
+                    return "";
+                }
 
-                let relation = claim.predicate;
+                let relation = relationLabel(claim.predicate);
                 let targetEntity = null;
-
-                if (relationRenderer && typeof relationRenderer.renderRelation === "function" && relationContract) {
+                if (relationRenderer &&
+                    typeof relationRenderer.renderRelation === "function" &&
+                    relationContract
+                ) {
                     const rendered = relationRenderer.renderRelation(
                         claim,
                         entityId,
@@ -1378,103 +1403,138 @@ function renderDataQualitySection(content, claims) {
                     );
                     if (rendered) {
                         relation = rendered.label || relation;
-                        targetEntity = rendered.targetId ? { id: rendered.targetId } : null;
+                        targetEntity = rendered.targetId
+                            ? { id: rendered.targetId }
+                            : null;
                     }
                 }
-
+                const ownerId = targetEntity && claim.object === entityId
+                    ? entityId
+                    : claim.subject;
                 const objectId = targetEntity?.id || claim.object || null;
-                const objectName = objectId ? getEntityName(entityIndex, objectId) : "";
-                const objectEnglishName = objectId ? getEntityEnglishName(entityIndex, objectId) : "";
+                const ownerName = ownerId
+                    ? getEntityName(entityIndex, ownerId)
+                    : "";
+                const objectName = objectId
+                    ? getEntityName(entityIndex, objectId)
+                    : "";
+                const claimTitle = [ownerName, relation, objectName]
+                    .filter(Boolean).join(" ");
 
-                const evidenceHTML = evidenceItems
-                    .map(evidence => {
-                        const sourceNumber = sourceNumbers[evidence.sourceRef] || "";
-
-                        const metaParts = [];
-                        if (evidence.evidenceType) {
-                            metaParts.push(`نوع: ${escapeHTML(evidence.evidenceType)}`);
-                        }
-                        if (evidence.strength) {
-                            metaParts.push(`قدرت: ${escapeHTML(evidence.strength)}`);
-                        }
-                        if (evidence.note) {
-                            metaParts.push(`توضیح: ${escapeHTML(evidence.note)}`);
-                        }
-
-                        const metaHTML = metaParts.length
-                            ? `<p class="atlas-meta">${metaParts.join(" | ")}</p>`
+                const claimSources = new Map();
+                const technical = [];
+                const digits = number =>
+                    new Intl.NumberFormat("fa-IR").format(number);
+                const evidenceHTML = evidenceItems.map((evidence, index) => {
+                    const source = sourceIndex[evidence.sourceRef];
+                    if (source) {
+                        claimSources.set(source.id, source);
+                    }
+                    const metaParts = [];
+                    if (evidence.evidenceType) {
+                        metaParts.push(`نوع شاهد: ${escapeHTML(
+                            provRenderer.evidenceTypeLabel(evidence.evidenceType)
+                        )}`);
+                    }
+                    if (evidence.strength) {
+                        metaParts.push(`اعتبار: ${escapeHTML(
+                            provRenderer.strengthLabel(evidence.strength)
+                        )}`);
+                    }
+                    if (evidence.note) {
+                        metaParts.push(`توضیح: ${escapeHTML(evidence.note)}`);
+                    }
+                    technical.push(
+                        `<li>شناسه شاهد: <bdi dir="ltr">${escapeHTML(evidence.id)}</bdi></li>`
+                    );
+                    const sourceLink = source
+                        ? `<a class="atlas-source-ref" href="#source-${escapeHTML(source.id)}" aria-label="رفتن به منبع شماره ${escapeHTML(String(sourceNumbers[source.id]))}"><bdi dir="ltr">[${escapeHTML(String(sourceNumbers[source.id]))}]</bdi></a>`
+                        : evidence.sourceRef
+                            ? '<span class="atlas-meta">منبع در دسترس نیست</span>'
                             : "";
-
-                        const sourceLinkHTML = evidence.sourceRef
-                            ? `<a href="#source-${escapeHTML(evidence.sourceRef)}" class="atlas-source-ref">منبع: [${escapeHTML(String(sourceNumber))}]</a>`
-                            : "";
-
-                        return `
-                            <div class="atlas-evidence-item">
-                                <div class="atlas-claim-label">
-                                    ${escapeHTML(evidence.id)}
-                                </div>
-                                ${metaHTML}
-                                ${sourceLinkHTML}
+                    return `
+                        <div class="atlas-evidence-item">
+                            <div class="atlas-evidence-header">
+                                ${sourceLink}
+                                <strong>شاهد ${digits(index + 1)}</strong>
                             </div>
-                        `;
-                    })
-                    .join("");
+                            ${metaParts.length
+                                ? `<p class="atlas-meta">${metaParts.join(" | ")}</p>`
+                                : ""}
+                        </div>
+                    `;
+                }).join("");
+
+                const sourceHTML = Array.from(claimSources.values())
+                    .map(source => {
+                        const first = !anchoredSources.has(source.id);
+                        anchoredSources.add(source.id);
+                        technical.push(
+                            `<li>شناسه منبع: <bdi dir="ltr">${escapeHTML(source.id)}</bdi></li>`
+                        );
+                        return renderSourceDetails(
+                            source,
+                            sourceNumbers[source.id],
+                            first,
+                            false
+                        );
+                    }).join("");
+                const status = [
+                    claim.status && statusLabel(claim.status),
+                    claim.confidence &&
+                        confidenceLabel(claim.confidence)
+                ].filter(Boolean).join(" · ");
 
                 return `
-                    <article class="card atlas-evidence-group">
-                        <div class="atlas-claim-label">
-                            ${escapeHTML(relation)}
-                        </div>
-                        ${
-                            objectName
-                                ? `<h3>${escapeHTML(objectName)}</h3>`
-                                : ""
-                        }
-                        ${
-                            objectEnglishName
-                                ? `<p class="atlas-english">${escapeHTML(objectEnglishName)}</p>`
-                                : ""
-                        }
-                        ${
-                            claim.value
-                                ? `<div class="atlas-value"><strong>مقدار:</strong> ${formatClaimValue(claim.value)}</div>`
-                                : ""
-                        }
-                        <div class="atlas-status">
-                            ${escapeHTML(statusLabel(claim.status))}
-                            ${
-                                claim.confidence
-                                    ? ` · ${escapeHTML(confidenceLabel(claim.confidence))}`
-                                    : ""
-                            }
-                        </div>
-                        <div class="atlas-evidence-list">
-                            ${evidenceHTML}
-                        </div>
+                    <article class="card atlas-evidence-group atlas-provenance-card"
+                        id="claim-${escapeHTML(claim.id)}">
+                        <h3>${escapeHTML(claimTitle || relation)}</h3>
+                        ${claim.value
+                            ? `<div class="atlas-value"><strong>مقدار:</strong> ${formatClaimValue(claim.value)}</div>`
+                            : ""}
+                        ${status
+                            ? `<div class="atlas-status">${escapeHTML(status)}</div>`
+                            : ""}
+                        <div class="atlas-evidence-list">${evidenceHTML}</div>
+                        ${sourceHTML
+                            ? `
+                                <div class="provenance-card-divider"></div>
+                                <div class="atlas-provenance-sources">
+                                    <h4>منابع این ادعا</h4>
+                                    ${sourceHTML}
+                                </div>
+                            `
+                            : ""}
+                        <details class="atlas-provenance-technical">
+                            <summary>جزئیات فنی</summary>
+                            <ul>${technical.join("")}</ul>
+                        </details>
                     </article>
                 `;
             })
             .filter(Boolean)
             .join("");
 
-        let evidenceSectionHTML = "";
-        if (sections) {
-            evidenceSectionHTML = `
-                <section class="atlas-section">
-                    <div class="container">
-                        <h2>شواهد و منابع</h2>
-                        <div class="atlas-claims-grid">
-                            ${sections}
-                        </div>
-                    </div>
-                </section>
-            `;
+        const otherSources = renderSourcesSection(
+            sources,
+            sourceNumbers,
+            anchoredSources
+        );
+        if (!sections && !otherSources) {
+            return "";
         }
 
-        const sourcesSectionHTML = renderSourcesSection(sourceData, sourceNumbers);
-
-        return evidenceSectionHTML + sourcesSectionHTML;
+        return `
+            <section class="atlas-section atlas-provenance-section">
+                <div class="container">
+                    <h2>شواهد و منابع</h2>
+                    ${sections
+                        ? `<div class="grid atlas-claims-grid">${sections}</div>`
+                        : ""}
+                    ${otherSources}
+                </div>
+            </section>
+        `;
     }
 
     function renderIdentity(entity) {
@@ -1569,7 +1629,7 @@ async function renderOrganization(entityId) {
         await loadEvidenceForClaims(organizationClaims);
     
     const sourceList =
-        await loadSourcesForEvidence(evidenceList);
+        await loadSourcesForProvenance(evidenceList);
     
     const evidenceData = {
         evidence: evidenceList
@@ -1804,17 +1864,19 @@ async function renderOrganization(entityId) {
         </section>
 
         ${renderClaimsSection(
-            "روابط و ادعاها",
+            "روابط در یک نگاه",
             claims,
             entityIndex,
-            investmentIndex
+            investmentIndex,
+            { evidenceList, sourceList, entityId }
         )}
         ${investmentSummaryHTML}
         ${renderEvidenceSection(
             organizationClaims,
             evidenceData,
             sourceData,
-            entityIndex
+            entityIndex,
+            entityId
         )}
     `;
 
@@ -1833,7 +1895,9 @@ function renderConceptRelationSection(
     claims,
     entityIndex,
     entityId,
-    relationContract
+    relationContract,
+    evidenceList = [],
+    sourceList = []
 ) {
     if (!Array.isArray(claims) || !claims.length) {
         return "";
@@ -1852,7 +1916,7 @@ function renderConceptRelationSection(
         ).values()
     );
     return `
-        <section class="atlas-section">
+        <section class="atlas-section atlas-relations-overview">
 
             <div class="container">
 
@@ -1904,7 +1968,7 @@ function renderConceptRelationSection(
                                     : null;
 
                             return `
-                                <article class="card atlas-claim">
+                                <article class="card atlas-claim atlas-overview-item">
 
                                     <div class="atlas-claim-label">
                                         ${escapeHTML(
@@ -1986,22 +2050,7 @@ function renderConceptRelationSection(
                                             : ""
                                     }
 
-                                    <div class="atlas-status">
-                                        ${escapeHTML(
-                                            statusLabel(
-                                                claim.status
-                                            )
-                                        )}
-                                        ${
-                                            claim.confidence
-                                                ? ` · ${escapeHTML(
-                                                    confidenceLabel(
-                                                        claim.confidence
-                                                    )
-                                                )}`
-                                                : ""
-                                        }
-                                    </div>
+${renderOverviewLink(claim, evidenceList, sourceList) || renderClaimStatus(claim)}
 
                                 </article>
                             `;
@@ -2206,7 +2255,7 @@ function renderConceptBreadcrumbs(
             await loadEvidenceForClaims(conceptClaims);
     
         const sourceList =
-            await loadSourcesForEvidence(evidenceList);
+            await loadSourcesForProvenance(evidenceList);
     
         const evidenceData = {
             evidence: evidenceList
@@ -2403,21 +2452,27 @@ function renderConceptBreadcrumbs(
                 broaderClaims,
                 entityIndex,
                 entityId,
-                relationContract
+                relationContract,
+                evidenceList,
+                sourceList
             )}
             ${renderConceptRelationSection(
                 "مفهوم بالاتر",
                 broaderThanClaims,
                 entityIndex,
                 entityId,
-                relationContract
+                relationContract,
+                evidenceList,
+                sourceList
             )}
             ${renderConceptRelationSection(
                 "مرتبط با",
                 relatedClaims,
                 entityIndex,
                 entityId,
-                relationContract
+                relationContract,
+                evidenceList,
+                sourceList
             )}
             
             ${renderConceptRelationSection(
@@ -2425,21 +2480,27 @@ function renderConceptBreadcrumbs(
                 includesClaims,
                 entityIndex,
                 entityId,
-                relationContract
+                relationContract,
+                evidenceList,
+                sourceList
             )}
             ${renderConceptRelationSection(
                 "بخشی از",
                 includedInClaims,
                 entityIndex,
                 entityId,
-                relationContract
+                relationContract,
+                evidenceList,
+                sourceList
             )}
             ${renderConceptRelationSection(
                 "طبقه‌بندی",
                 classificationClaims,
                 entityIndex,
                 entityId,
-                relationContract
+                relationContract,
+                evidenceList,
+                sourceList
             )}
             
             ${renderConceptRelationSection(
@@ -2447,7 +2508,9 @@ function renderConceptBreadcrumbs(
                 characterizedByClaims,
                 entityIndex,
                 entityId,
-                relationContract
+                relationContract,
+                evidenceList,
+                sourceList
             )}
             
             ${renderConceptRelationSection(
@@ -2455,7 +2518,9 @@ function renderConceptBreadcrumbs(
                 linkedToClaims,
                 entityIndex,
                 entityId,
-                relationContract
+                relationContract,
+                evidenceList,
+                sourceList
             )}
             
             ${renderConceptRelationSection(
@@ -2463,7 +2528,9 @@ function renderConceptBreadcrumbs(
                 investorPositionClaims,
                 entityIndex,
                 entityId,
-                relationContract
+                relationContract,
+                evidenceList,
+                sourceList
             )}
             
             ${renderConceptRelationSection(
@@ -2471,7 +2538,9 @@ function renderConceptBreadcrumbs(
                 returnDependsOnClaims,
                 entityIndex,
                 entityId,
-                relationContract
+                relationContract,
+                evidenceList,
+                sourceList
             )}
             
             ${renderEvidenceSection(
@@ -2601,7 +2670,7 @@ function renderConceptBreadcrumbs(
             await loadEvidenceForClaims(investmentClaims);
     
         const sourceList =
-            await loadSourcesForEvidence(evidenceList);
+            await loadSourcesForProvenance(evidenceList);
     
         const evidenceData = {
             evidence: evidenceList
@@ -2919,12 +2988,14 @@ function renderConceptBreadcrumbs(
                         claim.predicate !== "INVESTMENT_AMOUNT"
                 ).length
                     ? renderClaimsSection(
-                        "ادعاها و روابط",
+                        "روابط در یک نگاه",
                         investmentClaims.filter(
                             claim =>
                                 claim.predicate !== "INVESTMENT_AMOUNT"
                         ),
-                        entityIndex
+                        entityIndex,
+                        {},
+                        { evidenceList, sourceList, entityId }
                     )
                     : ""
             }
@@ -2933,7 +3004,8 @@ function renderConceptBreadcrumbs(
                 investmentClaims,
                 evidenceData,
                 sourceData,
-                entityIndex
+                entityIndex,
+                entityId
             )}
         `;
     
@@ -2992,7 +3064,7 @@ function renderConceptBreadcrumbs(
             await loadEvidenceForClaims(allClaims);
         
         const sourceList =
-            await loadSourcesForEvidence(evidenceList);
+            await loadSourcesForProvenance(evidenceList, content);
         
         const evidenceData = {
             evidence: evidenceList
@@ -3106,25 +3178,33 @@ function renderConceptBreadcrumbs(
 
 ${renderTimelineSection(
     personClaims,
-    entityIndex
+    entityIndex,
+    {},
+    { evidenceList, sourceList, entityId }
 )}
 
 ${renderClaimsSection(
     "سوابق اجرایی و مدیریتی",
     executiveClaims,
-    entityIndex
+    entityIndex,
+    {},
+    { evidenceList, sourceList, entityId }
 )}
 
 ${renderClaimsSection(
     "عضویت‌ها و نقش‌های هیئت‌مدیره",
     boardClaims,
-    entityIndex
+    entityIndex,
+    {},
+    { evidenceList, sourceList, entityId }
 )}
 
 ${renderClaimsSection(
     "فعالیت‌های سرمایه‌گذاری",
     investmentClaims,
-    entityIndex
+    entityIndex,
+    {},
+    { evidenceList, sourceList, entityId }
 )}
 
 ${
@@ -3132,7 +3212,9 @@ ${
         ? renderClaimsSection(
             "ساختار سازمانی مرتبط",
             relatedOrganizationClaims,
-            entityIndex
+            entityIndex,
+            {},
+            { evidenceList, sourceList, entityId }
         )
         : ""
 }
@@ -3148,7 +3230,8 @@ ${renderEvidenceSection(
     allClaims,
     evidenceData,
     sourceData,
-    entityIndex
+    entityIndex,
+    entityId
 )}
 
         `;
