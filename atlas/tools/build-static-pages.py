@@ -895,7 +895,7 @@ def render_entity(entity, claims, evidence, sources, entities, relation_contract
 <a href="/">خانه</a>
 <a href="/watch.html">دیده‌بان</a>
 <a href="/articles.html">پژوهش‌ها</a>
-<a href="/resources.html">اطلس</a>
+<a href="/atlas/">اطلس</a>
 <a href="/services.html">خدمات</a>
 <a href="/membership.html">عضویت ویژه</a>
 <a href="/about.html">درباره ما</a>
