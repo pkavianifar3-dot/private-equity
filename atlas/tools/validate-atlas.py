@@ -31,6 +31,7 @@ def load_json(path):
 
 def add_schema_errors(instance, schema_path, label, errors):
     try:
+        label = label.replace("\\", "/")
         schema = load_json(schema_path)
 
         resolver = RefResolver(
@@ -47,18 +48,35 @@ def add_schema_errors(instance, schema_path, label, errors):
             validator.iter_errors(instance),
             key=lambda e: list(e.absolute_path)
         ):
+            record = instance
+            record_id = record.get("id") if isinstance(record, dict) else None
+            for part in error.absolute_path:
+                if isinstance(record, dict):
+                    record = record.get(part)
+                elif isinstance(record, list) and isinstance(part, int) and part < len(record):
+                    record = record[part]
+                else:
+                    break
+                if isinstance(record, dict) and record.get("id"):
+                    record_id = record["id"]
+
+            record_label = (
+                f"{label}:{record_id}"
+                if record_id and record_id not in label
+                else label
+            )
             location = ".".join(
                 str(part) for part in error.absolute_path
             )
 
             if location:
                 errors.append(
-                    f"{label}: schema error at "
+                    f"{record_label}: schema error at "
                     f"{location}: {error.message}"
                 )
             else:
                 errors.append(
-                    f"{label}: schema error: {error.message}"
+                    f"{record_label}: schema error: {error.message}"
                 )
 
     except Exception as exc:
@@ -446,7 +464,15 @@ def load_taxonomies(errors):
         {}
     )
 
-    if isinstance(relation_rendering, dict):
+    if not isinstance(relation_rendering, dict):
+        errors.append("taxonomies/relation-rendering.json: relations must be an object")
+    else:
+        for predicate in sorted(relation_types - set(relation_rendering)):
+            errors.append(
+                "taxonomies/relation-rendering.json: "
+                f"missing rendering contract for predicate {predicate}"
+            )
+
         for predicate, config in relation_rendering.items():
             if predicate not in relation_types:
                 errors.append(
@@ -462,6 +488,23 @@ def load_taxonomies(errors):
                     f"Relation rendering config is invalid: {predicate}"
                 )
                 continue
+            rule = relation_rules.get(predicate)
+            if rule:
+                for field in ("subject_types", "object_types"):
+                    actual = config.get(field)
+                    expected = rule.get(field, [])
+                    if (
+                        not isinstance(actual, list)
+                        or not all(isinstance(item, str) for item in actual)
+                        or not isinstance(expected, list)
+                        or not all(isinstance(item, str) for item in expected)
+                        or set(actual) != set(expected)
+                    ):
+                        errors.append(
+                            "taxonomies/relation-rendering.json: "
+                            f"{predicate}: {field} does not match "
+                            "taxonomies/relation-rules.json"
+                        )
             forward_label_fa = config.get("forward_label_fa")
             if not isinstance(forward_label_fa, str) or not forward_label_fa.strip():
                 errors.append(
@@ -1079,6 +1122,44 @@ def validate_evidence_integrity(
                 f"{claim_id}: evidenceRefs do not match "
                 f"Evidence records"
             )
+
+
+def add_record_paths_to_errors(errors):
+    """Locate record-level failures without changing validator contracts."""
+    locations = {}
+    for directory, collection in (
+        ("entities", None),
+        ("claims", "claims"),
+        ("evidence", "evidence"),
+        ("sources", "sources"),
+    ):
+        for path in (ROOT / directory).rglob("*.json"):
+            if path.name == "index.json":
+                continue
+            try:
+                data = load_json(path)
+            except (OSError, ValueError):
+                continue
+            if collection is None:
+                records = [data]
+            elif isinstance(data, dict):
+                records = data.get(collection, [])
+            else:
+                continue
+            if not isinstance(records, list):
+                continue
+            for record in records:
+                if isinstance(record, dict) and isinstance(record.get("id"), str):
+                    locations[record["id"]] = path.relative_to(ROOT).as_posix()
+
+    result = []
+    for error in errors:
+        record_id = error.split(": ", 1)[0]
+        path = locations.get(record_id)
+        result.append(f"{path}:{error}" if path else error)
+    return result
+
+
 def validate_research_claim_integrity(
     research_claims,
     entity_by_id,
@@ -1649,6 +1730,7 @@ def main():
     )
     validate_research_documents(errors, entity_ids)
     if errors:
+        errors = add_record_paths_to_errors(errors)
         print("Atlas validation FAILED")
         print()
 

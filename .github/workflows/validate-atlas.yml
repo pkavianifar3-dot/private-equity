@@ -50,6 +50,16 @@ jobs:
 
       - name: Check generated Research pages
         run: git diff --exit-code -- articles/private-capital.html
+
+      - name: Generate and check static Atlas entity pages
+        run: |
+          python atlas/tools/build-static-pages.py
+          git diff --exit-code -- atlas/person atlas/organization atlas/investment atlas/concept
+          if [ -n "$(git ls-files --others --exclude-standard -- atlas/person atlas/organization atlas/investment atlas/concept)" ]; then
+            echo "Untracked static Atlas pages were generated"
+            exit 1
+          fi
+
       - name: Check Article JavaScript syntax
         run: |
           node --check assets/js/article-renderer.js
