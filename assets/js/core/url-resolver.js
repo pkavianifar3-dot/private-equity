@@ -26,7 +26,9 @@
             return null;
         }
 
-        const route = ROUTES[entityType];
+        const route = Object.prototype.hasOwnProperty.call(ROUTES, entityType)
+            ? ROUTES[entityType]
+            : null;
 
         if (!route) {
             return null;
