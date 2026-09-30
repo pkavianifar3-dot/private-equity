@@ -7,15 +7,16 @@
         const subject = claim.subject;
         const object = claim.object;
 
-        if (!subject || !object || subject === object) return null;
+        if (typeof subject !== "string" || !subject ||
+            typeof object !== "string" || !object || subject === object) return null;
 
-        const rule = (relationRules && relationRules.rules || [])
-            .find(item => item.relation === claim.predicate);
+        const rules = Array.isArray(relationRules?.rules) ? relationRules.rules : [];
+        const rule = rules.find(item => item && item.relation === claim.predicate);
 
         if (!rule) return null;
 
-        const relationType = (relationTypes && relationTypes.relation_types || [])
-            .find(item => item.id === claim.predicate);
+        const types = Array.isArray(relationTypes?.relation_types) ? relationTypes.relation_types : [];
+        const relationType = types.find(item => item && item.id === claim.predicate);
 
         if (!relationType) return null;
 
@@ -28,7 +29,7 @@
         const forwardLabel = rendering.forward_label_fa;
 
         if (subject === currentEntityId) {
-            if (!forwardLabel || !forwardLabel.trim()) return null;
+            if (typeof forwardLabel !== "string" || !forwardLabel.trim()) return null;
 
             return {
                 predicate: claim.predicate,
@@ -43,7 +44,7 @@
 
             const reverseLabel = rendering.reverse_label_fa;
 
-            if (!reverseLabel || !reverseLabel.trim()) return null;
+            if (typeof reverseLabel !== "string" || !reverseLabel.trim()) return null;
 
             return {
                 predicate: claim.predicate,

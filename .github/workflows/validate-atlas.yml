@@ -48,8 +48,21 @@ jobs:
       - name: Generate static Research pages
         run: node atlas/tools/build-research-pages.js
 
+      - name: Generate Research connections
+        run: python atlas/tools/build-research-connections.py
+
       - name: Check generated Research pages
-        run: git diff --exit-code -- articles/private-capital.html
+        run: git diff --exit-code -- articles/private-capital.html atlas/discovery/research-by-entity.json
+
+      - name: Generate and check static Atlas entity pages
+        run: |
+          python atlas/tools/build-static-pages.py
+          git diff --exit-code -- atlas/person atlas/organization atlas/investment atlas/concept
+          if [ -n "$(git ls-files --others --exclude-standard -- atlas/person atlas/organization atlas/investment atlas/concept)" ]; then
+            echo "Untracked static Atlas pages were generated"
+            exit 1
+          fi
+
       - name: Check Article JavaScript syntax
         run: |
           node --check assets/js/article-renderer.js
@@ -63,6 +76,8 @@ jobs:
           test -f atlas/concept.html
       - name: Test Atlas renderer structure
         run: node tests/atlas-renderer.test.js
+      - name: Test Entity routes and relation contracts
+        run: node tests/entity-navigation-contract.test.js
       - name: Test Article renderer
         run: node tests/article-renderer.test.js
       - name: Test static Research page

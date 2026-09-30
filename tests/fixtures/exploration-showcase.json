@@ -1,0 +1,7 @@
+{
+  "id": "research:preview-private-capital-note",
+  "url": "/articles/_preview/private-capital-note.html",
+  "title": "یادداشت تکمیلی سرمایه خصوصی — نمونهٔ نمایشی preview",
+  "entityRefs": ["concept:private-capital"],
+  "previewFixture": true
+}

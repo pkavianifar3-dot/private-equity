@@ -25,7 +25,7 @@ def load_json(path):
 
 
 def entity_url(entity_id, entity_type):
-    if not entity_id or ":" not in entity_id:
+    if not isinstance(entity_id, str) or ":" not in entity_id or not isinstance(entity_type, str):
         return None
 
     _, slug = entity_id.split(":", 1)

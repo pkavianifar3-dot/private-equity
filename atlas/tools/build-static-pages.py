@@ -1,4 +1,5 @@
 import html
+import importlib.util
 import json
 from pathlib import Path
 from urllib.parse import quote
@@ -14,6 +15,12 @@ CONTENT_DIR = ROOT / "content"
 RELATION_RENDERING_PATH = ROOT / "taxonomies" / "relation-rendering.json"
 
 OUTPUT_ROOT = ROOT
+
+_connections_spec = importlib.util.spec_from_file_location(
+    "research_connections", Path(__file__).with_name("research_connections.py")
+)
+research_connections = importlib.util.module_from_spec(_connections_spec)
+_connections_spec.loader.exec_module(research_connections)
 
 SITE_ORIGIN = "https://privatecapital.ir"
 
@@ -35,7 +42,7 @@ def esc(value):
 
 
 def entity_url(entity_id, entity_type=None):
-    if not entity_id or ":" not in entity_id:
+    if not isinstance(entity_id, str) or ":" not in entity_id or not isinstance(entity_type, str):
         return None
 
     _, slug = entity_id.split(":", 1)
@@ -189,7 +196,7 @@ def build_source_index(sources, claims, evidence, content=None):
         for index, source_id in enumerate(ordered_ids, start=1)
     }
 
-def claim_value_html(claim, entity_id, entities):
+def claim_value_html(claim, entity_id, entities, route_resolver=entity_url):
     subject_id = claim.get("subject")
     object_id = claim.get("object")
 
@@ -202,7 +209,7 @@ def claim_value_html(claim, entity_id, entities):
 
     if target_id and target_id in entities:
         target = entities[target_id]
-        url = entity_url(target_id, target.get("type"))
+        url = route_resolver(target_id, target.get("type"))
 
         if url:
             return (
@@ -230,18 +237,25 @@ def claim_value_html(claim, entity_id, entities):
 
 
 def render_claim_relation(claim, entity_id, relation_contract):
+    if not isinstance(claim, dict) or not isinstance(entity_id, str) or not entity_id:
+        return None
     subject_id = claim.get("subject")
     object_id = claim.get("object")
     predicate = claim.get("predicate")
 
-    if not subject_id or not object_id or subject_id == object_id:
+    if (
+        not isinstance(subject_id, str) or not subject_id
+        or not isinstance(object_id, str) or not object_id
+        or not isinstance(predicate, str) or subject_id == object_id
+    ):
         return None
 
-    relation = (
-        relation_contract.get("relations", {}).get(predicate)
+    relations = (
+        relation_contract.get("relations", {})
         if isinstance(relation_contract, dict)
         else None
     )
+    relation = relations.get(predicate) if isinstance(relations, dict) else None
 
     if not isinstance(relation, dict):
         return None
@@ -286,7 +300,8 @@ def fa_number(number):
 
 
 def render_claims(
-    claims, entity_id, entities, relation_contract, evidence=None, sources=None
+    claims, entity_id, entities, relation_contract, evidence=None, sources=None,
+    route_resolver=entity_url
 ):
     if not claims:
         return ""
@@ -297,7 +312,7 @@ def render_claims(
         relation = render_claim_relation(claim, entity_id, relation_contract)
         if not relation:
             continue
-        target = claim_value_html(claim, entity_id, entities)
+        target = claim_value_html(claim, entity_id, entities, route_resolver)
         if not target:
             continue
         supported = claim_evidence_items(claim, evidence)
@@ -823,13 +838,17 @@ def build_jsonld(entity, entity_claims):
     return data
 
 
-def render_entity(entity, claims, evidence, sources, entities, relation_contract):
+def render_entity(
+    entity, claims, evidence, sources, entities, relation_contract,
+    *, preview=False, route_resolver=entity_url, research_index=None,
+    exploration_html=""
+):
     entity_id = entity["id"]
     name_fa = entity_name(entity)
     name_en = entity_name_en(entity)
     entity_type = entity.get("type")
 
-    canonical_url = entity_canonical_url(entity_id, entity_type)
+    canonical_url = None if preview else entity_canonical_url(entity_id, entity_type)
 
     entity_claims = [
         claim
@@ -857,7 +876,29 @@ def render_entity(entity, claims, evidence, sources, entities, relation_contract
     if content and content.get("summary"):
         description = content["summary"]
 
-    jsonld = build_jsonld(entity, entity_claims)
+    jsonld = None if preview else build_jsonld(entity, entity_claims)
+    seo_link = (
+        f'<link rel="canonical" href="{esc(canonical_url)}">'
+        if canonical_url else '<meta name="robots" content="noindex,nofollow">'
+    )
+    structured_data = (
+        '<script type="application/ld+json">\n'
+        + json.dumps(jsonld, ensure_ascii=False, indent=2)
+        + '\n</script>'
+        if jsonld else ''
+    )
+    preview_resolver = (
+        '<script src="/atlas/tools/preview-url-resolver.js"></script>\n'
+        if preview else ''
+    )
+    related_research = (
+        research_connections.render_atlas_research(entity_id, research_index)
+        if research_index else ""
+    )
+    if related_research:
+        related_research = "\n\n" + related_research
+    if exploration_html:
+        exploration_html = "\n\n" + exploration_html
 
     return f"""<!DOCTYPE html>
 <html lang="fa" dir="rtl">
@@ -868,7 +909,7 @@ def render_entity(entity, claims, evidence, sources, entities, relation_contract
 <title>{esc(title)}</title>
 
 <meta name="description" content="{esc(description)}">
-<link rel="canonical" href="{esc(canonical_url)}">
+{seo_link}
 
 <link rel="stylesheet" href="/assets/css/style.css">
 
@@ -877,9 +918,7 @@ def render_entity(entity, claims, evidence, sources, entities, relation_contract
 <link rel="apple-touch-icon" href="/assets/images/apple-touch-icon.png">
 <link rel="manifest" href="/assets/images/site.webmanifest">
 
-<script type="application/ld+json">
-{json.dumps(jsonld, ensure_ascii=False, indent=2)}
-</script>
+{structured_data}
 </head>
 
 <body class="atlas-page">
@@ -924,11 +963,11 @@ def render_entity(entity, claims, evidence, sources, entities, relation_contract
 
 {render_content(content, source_index)}
 
-{render_claims(entity_claims, entity_id, entities, relation_contract, evidence, sources)}
+{render_claims(entity_claims, entity_id, entities, relation_contract, evidence, sources, route_resolver)}{exploration_html}
 
 {render_data_quality(content)}
 
-{render_provenance(entity_claims, evidence, sources, source_index, entities, entity_id, relation_contract)}
+{render_provenance(entity_claims, evidence, sources, source_index, entities, entity_id, relation_contract)}{related_research}
 
 </div>
 
@@ -964,7 +1003,7 @@ def render_entity(entity, claims, evidence, sources, entities, relation_contract
 
 <script src="/assets/js/main.js"></script>
 <script src="/assets/js/core/url-resolver.js"></script>
-<script src="/assets/js/core/relation-renderer.js"></script>
+{preview_resolver}<script src="/assets/js/core/relation-renderer.js"></script>
 <script src="/assets/js/core/data-loader.js"></script>
 <script src="/assets/js/core/provenance-renderer.js"></script>
 <script src="/assets/js/atlas.js"></script>
@@ -984,6 +1023,7 @@ def generate():
     evidence = load_evidence()
     sources = load_sources()
     relation_contract = load_relation_contract()
+    research_index = research_connections.read_json(research_connections.INDEX_PATH)
 
     generated = []
 
@@ -1009,6 +1049,7 @@ def generate():
             sources,
             entities,
             relation_contract,
+            research_index=research_index,
         )
 
         output_path.write_text(
