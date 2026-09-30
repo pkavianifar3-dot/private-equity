@@ -101,4 +101,17 @@ assert(
     "runtime article enhancement must remain available"
 );
 
+const connections = html.match(
+    /<div data-research-connections>([\s\S]*?)<\/div><!-- research-connections -->/
+);
+assert(connections, "static Research connections target must exist");
+assert(
+    connections[1].includes('href="/articles/what-is-private-equity.html"'),
+    "curated related Research must link to its published page"
+);
+assert(
+    !connections[1].includes('href="/atlas/concept/'),
+    "REVIEW Entity refs must not be exposed in the new public context panel"
+);
+
 console.log("Research static HTML contract PASSED");

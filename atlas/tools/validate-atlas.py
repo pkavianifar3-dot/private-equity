@@ -1616,6 +1616,25 @@ def validate_person_content(errors, source_ids):
                         )
 
 
+def validate_research_entity_refs(data, entity_ids, errors, location):
+    """Article/section associations are independent of text occurrences."""
+    research_id = data.get("id", "<missing-id>")
+    owners = [(research_id, data.get("entityRefs", []))]
+    sections = data.get("sections", [])
+    for section in sections if isinstance(sections, list) else []:
+        if isinstance(section, dict):
+            owners.append((
+                f"{research_id}:{section.get('id', '<missing-section-id>')}",
+                section.get("entityRefs", []),
+            ))
+    for owner, refs in owners:
+        if not isinstance(refs, list):
+            continue  # The schema reports the malformed collection.
+        for ref in refs:
+            if isinstance(ref, str) and ref not in entity_ids:
+                errors.append(f"{location}:{owner}: unknown entityRef {ref}")
+
+
 def validate_research_documents(errors, entity_ids):
     research_root = ROOT.parent / "research"
 
@@ -1653,6 +1672,12 @@ def validate_research_documents(errors, entity_ids):
             schema_path,
             str(path.relative_to(ROOT.parent)),
             errors
+        )
+
+        if not isinstance(data, dict):
+            continue
+        validate_research_entity_refs(
+            data, entity_ids, errors, path.relative_to(ROOT.parent).as_posix()
         )
 
         validate_research_mention_integrity(

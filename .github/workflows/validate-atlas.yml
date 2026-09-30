@@ -48,8 +48,11 @@ jobs:
       - name: Generate static Research pages
         run: node atlas/tools/build-research-pages.js
 
+      - name: Generate Research connections
+        run: python atlas/tools/build-research-connections.py
+
       - name: Check generated Research pages
-        run: git diff --exit-code -- articles/private-capital.html
+        run: git diff --exit-code -- articles/private-capital.html atlas/discovery/research-by-entity.json
 
       - name: Generate and check static Atlas entity pages
         run: |

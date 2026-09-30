@@ -1,4 +1,5 @@
 import html
+import importlib.util
 import json
 from pathlib import Path
 from urllib.parse import quote
@@ -14,6 +15,12 @@ CONTENT_DIR = ROOT / "content"
 RELATION_RENDERING_PATH = ROOT / "taxonomies" / "relation-rendering.json"
 
 OUTPUT_ROOT = ROOT
+
+_connections_spec = importlib.util.spec_from_file_location(
+    "research_connections", Path(__file__).with_name("research_connections.py")
+)
+research_connections = importlib.util.module_from_spec(_connections_spec)
+_connections_spec.loader.exec_module(research_connections)
 
 SITE_ORIGIN = "https://privatecapital.ir"
 
@@ -833,7 +840,8 @@ def build_jsonld(entity, entity_claims):
 
 def render_entity(
     entity, claims, evidence, sources, entities, relation_contract,
-    *, preview=False, route_resolver=entity_url
+    *, preview=False, route_resolver=entity_url, research_index=None,
+    exploration_html=""
 ):
     entity_id = entity["id"]
     name_fa = entity_name(entity)
@@ -883,6 +891,14 @@ def render_entity(
         '<script src="/atlas/tools/preview-url-resolver.js"></script>\n'
         if preview else ''
     )
+    related_research = (
+        research_connections.render_atlas_research(entity_id, research_index)
+        if research_index else ""
+    )
+    if related_research:
+        related_research = "\n\n" + related_research
+    if exploration_html:
+        exploration_html = "\n\n" + exploration_html
 
     return f"""<!DOCTYPE html>
 <html lang="fa" dir="rtl">
@@ -947,11 +963,11 @@ def render_entity(
 
 {render_content(content, source_index)}
 
-{render_claims(entity_claims, entity_id, entities, relation_contract, evidence, sources, route_resolver)}
+{render_claims(entity_claims, entity_id, entities, relation_contract, evidence, sources, route_resolver)}{exploration_html}
 
 {render_data_quality(content)}
 
-{render_provenance(entity_claims, evidence, sources, source_index, entities, entity_id, relation_contract)}
+{render_provenance(entity_claims, evidence, sources, source_index, entities, entity_id, relation_contract)}{related_research}
 
 </div>
 
@@ -1007,6 +1023,7 @@ def generate():
     evidence = load_evidence()
     sources = load_sources()
     relation_contract = load_relation_contract()
+    research_index = research_connections.read_json(research_connections.INDEX_PATH)
 
     generated = []
 
@@ -1032,6 +1049,7 @@ def generate():
             sources,
             entities,
             relation_contract,
+            research_index=research_index,
         )
 
         output_path.write_text(

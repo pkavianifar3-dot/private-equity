@@ -2037,3 +2037,62 @@ article figure img{
         padding:18px;
     }
 }
+/* Research ↔ Atlas connections: editorial context stays distinct from citations. */
+.research-connections{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));
+    gap:18px;
+    margin:44px 0 28px;
+    padding:24px 0;
+    border-top:1px solid #33475A;
+    border-bottom:1px solid #33475A;
+}
+.knowledge-connection{
+    padding:26px;
+    background:#0E1B2D;
+    border:1px solid #23384D;
+    border-radius:10px;
+}
+.knowledge-connection h2{
+    font-size:clamp(21px,2vw,27px);
+    margin:0 0 12px;
+}
+.knowledge-connection > p:not(.atlas-kicker){
+    margin:0 0 18px;
+    font-size:14px;
+}
+.knowledge-connection-list{
+    padding:0;
+    margin:16px 0 0;
+    list-style:none;
+}
+.knowledge-connection-list li{
+    padding:12px 0;
+    border-top:1px solid rgba(255,255,255,.1);
+    line-height:1.7;
+}
+.knowledge-connection-list a{
+    display:block;
+    font-weight:700;
+    text-underline-offset:4px;
+}
+.knowledge-connection-list a:focus-visible{
+    outline:2px solid #C9A227;
+    outline-offset:3px;
+}
+.knowledge-connection-meta{
+    display:block;
+    color:#AAB7C5;
+    font-size:13px;
+    direction:auto;
+}
+.atlas-research-section{
+    padding-top:24px;
+}
+.atlas-research-section .knowledge-connection{
+    border-right:3px solid #C9A227;
+}
+@media(max-width:600px){
+    .research-connections{margin:30px 0 20px;padding:18px 0;}
+    .knowledge-connection{padding:20px;}
+}
