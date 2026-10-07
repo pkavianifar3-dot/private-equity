@@ -4,7 +4,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-RESEARCH_PATH = ROOT / "research" / "content" / "private-capital.json"
+RESEARCH_PATH = ROOT / "research" / "content" / "private-markets" / "private-capital" / "research.json"
 ARTICLE_PATH = ROOT / "articles" / "private-capital.html"
 
 
@@ -172,7 +172,7 @@ class ArticleRendererBoundaryTests(unittest.TestCase):
         import json
 
         research = json.loads(
-            (ROOT / "research" / "content" / "private-capital.json")
+            (ROOT / "research" / "content" / "private-markets" / "private-capital" / "research.json")
             .read_text(encoding="utf-8")
         )
 
@@ -406,7 +406,7 @@ class ArticleRendererMigrationBoundaryTests(unittest.TestCase):
                 ROOT
                 / "research"
                 / "content"
-                / "private-capital.json"
+                / "private-markets" / "private-capital" / "research.json"
             ).read_text(encoding="utf-8")
         )
 
@@ -431,7 +431,7 @@ class ArticleRendererResearchSourceContractTests(unittest.TestCase):
             ROOT
             / "research"
             / "content"
-            / "private-capital.json"
+            / "private-markets" / "private-capital" / "research.json"
         )
 
         self.assertTrue(
@@ -440,7 +440,7 @@ class ArticleRendererResearchSourceContractTests(unittest.TestCase):
         )
 
         self.assertNotIn(
-            "research/content/private-capital.json",
+            "research/content/private-markets/private-capital/research.json",
             article,
             "Research source should not be hardcoded into article HTML yet",
         )
@@ -463,18 +463,12 @@ class ArticleRendererPageIntegrationTests(unittest.TestCase):
             "const loadJSON = dataLoader.loadJSON;",
             integration,
         )
-        self.assertIn(
-            "function getArticleSlug()",
-            integration,
-        )
+        self.assertNotIn("function getArticleSlug()", integration)
         self.assertIn(
             'function getResearchPath()',
             integration,
         )
-        self.assertIn(
-            '`../research/content/${getArticleSlug()}.json`',
-            integration,
-        )
+        self.assertIn("article[data-research-source]", integration)
 
     def test_article_page_integration_uses_shared_data_loader(self):
         integration = (

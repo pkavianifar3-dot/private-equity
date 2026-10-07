@@ -90,7 +90,7 @@ console.log("Article Renderer behavior PASSED");
 
 const research = JSON.parse(
     fs.readFileSync(
-        "research/content/private-capital.json",
+        "research/content/private-markets/private-capital/research.json",
         "utf8"
     )
 );

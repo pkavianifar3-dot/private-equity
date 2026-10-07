@@ -132,7 +132,7 @@ class ResearchConnectionTests(unittest.TestCase):
     def test_real_published_article_has_six_preview_refs_and_no_public_refs(self):
         root = ROOT
         catalog = connections.read_json(root / "atlas/catalog/index.json")["entities"]
-        article = connections.read_json(root / "research/content/private-capital.json")
+        article = connections.read_json(root / "research/content/private-markets/private-capital/research.json")
         self.assertEqual(len(article["entityRefs"]), 6)
         self.assertEqual(connections.reverse_index(root, catalog)["entities"], {})
         panel = connections.render_article_context(article, catalog, root)

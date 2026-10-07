@@ -63,8 +63,8 @@ class DiscoveryIndexIntegrityTest(unittest.TestCase):
                         self.assertIn(research_id, self.research_by_id)
 
                         content_path = (
-                            RESEARCH_CONTENT_DIR
-                            / f"{research_id.split(':', 1)[1]}.json"
+                            next(p for p in RESEARCH_CONTENT_DIR.rglob("research.json")
+                                 if load_json(p)["id"] == research_id)
                         )
                         self.assertTrue(content_path.exists())
 

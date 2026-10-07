@@ -155,29 +155,29 @@
                 )}</p>`;
 
             case "subheading":
-                return `<h3>${renderTextWithMentions(
+                return `<h${[3,4,5,6].includes(block.level) ? block.level : 3}>${renderTextWithMentions(
                     block.text || "",
                     block.id,
                     mentions,
                     citations,
                     effectiveCitationIndex,
                     entityResolver
-                )}</h3>`;
+                )}</h${[3,4,5,6].includes(block.level) ? block.level : 3}>`;
 
             case "figure":
                 return `
 <figure>
 <img src="${escapeHtml(block.src || "")}" alt="${escapeHtml(block.alt || "")}">
-${block.caption ? `<figcaption>${escapeHtml(block.caption)}</figcaption>` : ""}
+${block.caption || block.credit ? `<figcaption>${escapeHtml(block.caption || "")}${block.credit ? `<span class="figure-credit">${escapeHtml(block.credit)}</span>` : ""}</figcaption>` : ""}
 </figure>`;
 
             case "list":
                 return `
-<ul>
+<${block.ordered ? "ol" : "ul"}>
 ${(block.items || []).map(
     item => `<li>${escapeHtml(item)}</li>`
 ).join("\n")}
-</ul>`;
+</${block.ordered ? "ol" : "ul"}>`;
 
             case "table":
                 return `

@@ -31,6 +31,7 @@ class Stage2QualityGateTests(unittest.TestCase):
         ):
             shutil.copytree(REPO / "atlas" / directory, self.root / directory)
         shutil.copytree(REPO / "research", self.root.parent / "research")
+        shutil.copytree(REPO / "articles", self.root.parent / "articles")
 
         for name, value in (
             ("ROOT", self.root),

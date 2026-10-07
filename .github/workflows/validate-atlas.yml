@@ -51,8 +51,16 @@ jobs:
       - name: Generate Research connections
         run: python atlas/tools/build-research-connections.py
 
-      - name: Check generated Research pages
-        run: git diff --exit-code -- articles/private-capital.html atlas/discovery/research-by-entity.json
+      - name: Check generated Research pages and assets
+        run: |
+          git diff --exit-code -- articles assets/images atlas/discovery/research-by-entity.json
+          if [ -n "$(git ls-files --others --exclude-standard -- articles assets/images)" ]; then
+            echo "Untracked Research output was generated"
+            exit 1
+          fi
+
+      - name: Check Research package discovery
+        run: node tests/research-package.test.js
 
       - name: Generate and check static Atlas entity pages
         run: |

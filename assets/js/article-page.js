@@ -1,26 +1,12 @@
 (function (global) {
     "use strict";
 
-    function getArticleSlug() {
-        const pathname = global.location && global.location.pathname
-            ? global.location.pathname
-            : "";
-
-        const filename = pathname.split("/").pop() || "";
-        const slug = filename.replace(/\.html$/, "");
-
-        if (!slug) {
-            throw new Error("Article slug could not be determined from URL");
-        }
-
-        return slug;
-    }
-
     const dataLoader = global.PrivateCapitalDataLoader.create("../atlas");
     const loadJSON = dataLoader.loadJSON;
 
     function getResearchPath() {
-        return `../research/content/${getArticleSlug()}.json`;
+        // A statically generated article has no source attribute and does not fetch source JSON.
+        return document.querySelector("article[data-research-source]")?.getAttribute("data-research-source") || null;
     }
 
     async function loadResearch(path) {
@@ -118,6 +104,7 @@
 
     async function renderArticleSections() {
         const researchPath = getResearchPath();
+        if (!researchPath) return;
         const research = await loadResearch(researchPath);
 
         if (!research || !Array.isArray(research.sections)) {

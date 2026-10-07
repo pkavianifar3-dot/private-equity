@@ -1,6 +1,15 @@
 import json
 from pathlib import Path
 
+import importlib.util
+
+_package_spec = importlib.util.spec_from_file_location(
+    "research_packages", Path(__file__).resolve().parent / "research_packages.py"
+)
+_packages = importlib.util.module_from_spec(_package_spec)
+_package_spec.loader.exec_module(_packages)
+content_files = _packages.content_files
+
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -290,9 +299,10 @@ def collect_discovery_index():
 
         research_registry_ids.add(research_id)
 
+    _packages.registry(ROOT.parent, _packages.discover(RESEARCH_CONTENT_DIR))
     discovery_by_entity = {}
 
-    for path in sorted(RESEARCH_CONTENT_DIR.glob("*.json")):
+    for path in content_files(RESEARCH_CONTENT_DIR):
         data = load_json(path)
 
         research_id = data.get("id")

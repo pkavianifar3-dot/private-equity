@@ -3,6 +3,15 @@ import json
 import sys
 from pathlib import Path
 
+import importlib.util
+
+_package_spec = importlib.util.spec_from_file_location(
+    "research_packages", Path(__file__).resolve().parent / "research_packages.py"
+)
+_packages = importlib.util.module_from_spec(_package_spec)
+_package_spec.loader.exec_module(_packages)
+content_files = _packages.content_files
+
 import jdatetime
 
 from jsonschema import Draft202012Validator, RefResolver
@@ -908,7 +917,7 @@ def collect_research_ids(errors):
         )
         return research_ids
 
-    for path in sorted(content_root.glob("*.json")):
+    for path in content_files(content_root):
         data = load_registry(path, errors)
 
         research_id = data.get("id")
@@ -1366,13 +1375,13 @@ def validate_research_integrity(
     research_claims_path = (
         research_root
         / "mappings"
-        / "private-capital-claims-v1.json"
+        / "private-capital" / "private-capital-claims-v1.json"
     )
 
     research_sources_path = (
         research_root
         / "mappings"
-        / "private-capital-sources-v1.json"
+        / "private-capital" / "private-capital-sources-v1.json"
     )
 
     if research_claims_path.exists():
@@ -1384,7 +1393,7 @@ def validate_research_integrity(
         add_schema_errors(
             research_claims_data,
             research_root / "schemas" / "candidate-claims-schema-v1.json",
-            "research/mappings/private-capital-claims-v1.json",
+            "research/mappings/private-capital/private-capital-claims-v1.json",
             errors
         )
 
@@ -1395,7 +1404,7 @@ def validate_research_integrity(
 
         if not isinstance(research_claims, list):
             errors.append(
-                "research/mappings/private-capital-claims-v1.json: "
+                "research/mappings/private-capital/private-capital-claims-v1.json: "
                 "'claims' must be an array"
             )
             research_claims = []
@@ -1493,7 +1502,7 @@ def validate_research_integrity(
 
         if not isinstance(research_sources, list):
             errors.append(
-                "research/mappings/private-capital-sources-v1.json: "
+                "research/mappings/private-capital/private-capital-sources-v1.json: "
                 "'sources' must be an array"
             )
             research_sources = []
@@ -1526,7 +1535,7 @@ def validate_research_integrity(
 
     if research_content_root.exists():
         for path in sorted(
-            research_content_root.glob("*.json")
+            content_files(research_content_root)
         ):
             data = load_registry(
                 path,
@@ -1635,6 +1644,25 @@ def validate_research_entity_refs(data, entity_ids, errors, location):
                 errors.append(f"{location}:{owner}: unknown entityRef {ref}")
 
 
+def validate_research_package_assets(data, path, errors):
+    """A published package owns its local image bytes and usable alt text."""
+    if path.name != "research.json" or data.get("status") != "PUBLISHED":
+        return
+    for section in data.get("sections", []):
+        for block in section.get("content", []):
+            if block.get("type") != "figure":
+                continue
+            owner = f"{path}:{data.get('id')}:{block.get('id')}"
+            if not isinstance(block.get("alt"), str) or not block["alt"].strip():
+                errors.append(f"{owner}: published figure requires alt text")
+            src = block.get("src", "")
+            if not isinstance(src, str) or not src.startswith(("/assets/images/", "../assets/images/")):
+                errors.append(f"{owner}: figure requires a public asset path")
+                continue
+            if not (path.parent / "assets" / Path(src).name).is_file():
+                errors.append(f"{owner}: package asset missing for {src}")
+
+
 def validate_research_documents(errors, entity_ids):
     research_root = ROOT.parent / "research"
 
@@ -1659,9 +1687,13 @@ def validate_research_documents(errors, entity_ids):
         )
         return
 
-    for path in sorted(
-        content_root.glob("*.json")
-    ):
+    if (research_root / "index.json").exists():
+        try:
+            _packages.registry(research_root.parent, _packages.discover(content_root))
+        except (ValueError, KeyError, OSError) as exc:
+            errors.append(f"research package registry: {exc}")
+
+    for path in content_files(content_root):
         data = load_registry(
             path,
             errors
@@ -1679,6 +1711,7 @@ def validate_research_documents(errors, entity_ids):
         validate_research_entity_refs(
             data, entity_ids, errors, path.relative_to(ROOT.parent).as_posix()
         )
+        validate_research_package_assets(data, path, errors)
 
         validate_research_mention_integrity(
             data,

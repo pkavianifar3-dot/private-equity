@@ -11,6 +11,15 @@ from pathlib import PurePosixPath
 from html.parser import HTMLParser
 from pathlib import Path
 
+import importlib.util
+
+_package_spec = importlib.util.spec_from_file_location(
+    "research_packages", Path(__file__).resolve().parent / "research_packages.py"
+)
+_packages = importlib.util.module_from_spec(_package_spec)
+_package_spec.loader.exec_module(_packages)
+content_files = _packages.content_files
+
 
 ROOT = Path(__file__).resolve().parents[2]
 INDEX_PATH = ROOT / "atlas/discovery/research-by-entity.json"
@@ -56,7 +65,7 @@ def published_registry(root):
 
 def structured_articles(root):
     articles = {}
-    for path in sorted((root / "research/content").glob("*.json")):
+    for path in sorted(content_files(root / "research/content")):
         article = read_json(path)
         article_id = article["id"]
         if article_id in articles:

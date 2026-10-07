@@ -56,7 +56,7 @@ class ResearchEntityReferenceTests(unittest.TestCase):
             (ROOT / "research/schemas/research-schema-v2.json").read_text(encoding="utf-8")
         )
         article = json.loads(
-            (ROOT / "research/content/private-capital.json").read_text(encoding="utf-8")
+            (ROOT / "research/content/private-markets/private-capital/research.json").read_text(encoding="utf-8")
         )
         article["entityRefs"].append(article["entityRefs"][0])
         errors = list(Draft202012Validator(schema).iter_errors(article))

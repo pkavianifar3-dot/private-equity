@@ -11,7 +11,8 @@
       "id": "research:private-equity",
       "type": "Research",
       "url": "/articles/what-is-private-equity.html",
-      "status": "PUBLISHED"
+      "status": "PUBLISHED",
+      "sourceMode": "legacy-html"
     }
   ]
 }
