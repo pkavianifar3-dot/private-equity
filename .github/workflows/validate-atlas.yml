@@ -7,89 +7,100 @@ on:
   pull_request:
     branches:
       - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: privatecapital-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
   validate-atlas:
-    runs-on: ubuntu-latest
-
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      pages: read
+    outputs:
+      pages-ready: ${{ steps.publication.outputs.ready }}
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - name: Checkout the event commit
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1, Node 24
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0, Node 24
         with:
-          python-version: "3.x"
+          python-version: "3.14.0"
 
-      - name: Install Python dependencies
-        run: pip install -r requirements.txt
-
-      - name: Validate Atlas
-        run: python atlas/tools/validate-atlas.py
-
-      - name: Test Python validation logic
-        run: python -m unittest discover -s tests -p 'test_*.py'
-
-      - name: Generate indexes
-        run: |
-          python atlas/tools/build-index.py
-          python atlas/tools/build-catalog.py
-
-      - name: Check generated indexes
-        run: git diff --exit-code -- atlas/entities/index.json atlas/claims/index.json atlas/evidence/index.json atlas/sources/index.json atlas/discovery/index.json atlas/catalog/index.json
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0, Node 24
         with:
-          node-version: "20"
+          node-version: "24.21.0"
+          package-manager-cache: false
 
-      - name: Check Atlas JavaScript syntax
-        run: node --check assets/js/atlas.js
+      - name: Install constrained Python dependencies
+        run: python -m pip install -r requirements.txt -c requirements-release.txt
 
-      - name: Generate static Research pages
-        run: node atlas/tools/build-research-pages.js
+      - name: Validate, test, build, check drift and inspect the candidate
+        run: python tools/release.py verify --ci --output "$RUNNER_TEMP/privatecapital-site"
 
-      - name: Generate Research connections
-        run: python atlas/tools/build-research-connections.py
-
-      - name: Check generated Research pages and assets
+      - name: Report candidate eligibility without exposing its files
         run: |
-          git diff --exit-code -- articles assets/images atlas/discovery/research-by-entity.json
-          if [ -n "$(git ls-files --others --exclude-standard -- articles assets/images)" ]; then
-            echo "Untracked Research output was generated"
-            exit 1
-          fi
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          report = json.loads((Path(os.environ['RUNNER_TEMP']) / 'privatecapital-site.manifest.json').read_text())
+          with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as summary:
+              summary.write('## Release verification\n\n')
+              summary.write(f"Commit: `{report['commit']}`\n\n")
+              summary.write(f"Artifact SHA-256: `{report['artifact_sha256']}`\n\n")
+              summary.write(f"Checked {report['checks']['files']} files; {report['checks']['sitemap_urls']} sitemap URLs.\n\n")
+              summary.write(f"Publication blockers: **{len(report['publication_blockers'])}**. Files remain on this runner; no preview artifact is uploaded.\n")
+          PY
 
-      - name: Check Research package discovery
-        run: node tests/research-package.test.js
+      # No feature branch/PR can enter this step. Activation requires a separate
+      # approved Pages-settings migration and ADR-004 public projection.
+      - name: Gate production upload on approved publication and Pages source
+        id: publication
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && vars.PAGES_RELEASE_ENABLED == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python tools/release.py publication --output "$RUNNER_TEMP/privatecapital-site"
+          test "$(gh api "repos/$GITHUB_REPOSITORY/pages" --jq .build_type)" = workflow
+          test "$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/main" --jq .object.sha)" = "$GITHUB_SHA"
+          echo "ready=true" >> "$GITHUB_OUTPUT"
 
-      - name: Generate and check static Atlas entity pages
-        run: |
-          python atlas/tools/build-static-pages.py
-          git diff --exit-code -- atlas/person atlas/organization atlas/investment atlas/concept
-          if [ -n "$(git ls-files --others --exclude-standard -- atlas/person atlas/organization atlas/investment atlas/concept)" ]; then
-            echo "Untracked static Atlas pages were generated"
-            exit 1
-          fi
+      - name: Upload only the verified public artifact
+        if: steps.publication.outputs.ready == 'true'
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          name: github-pages-${{ github.sha }}
+          path: ${{ runner.temp }}/privatecapital-site
+          retention-days: 1
 
-      - name: Check Article JavaScript syntax
-        run: |
-          node --check assets/js/article-renderer.js
-          node --check assets/js/article-page.js
-          node --check assets/js/research-notes.js
-          node --check atlas/tools/build-research-pages.js
-      - name: Check Atlas renderer pages
-        run: |
-          test -f atlas/person.html
-          test -f atlas/organization.html
-          test -f atlas/investment.html
-          test -f atlas/concept.html
-      - name: Test Atlas renderer structure
-        run: node tests/atlas-renderer.test.js
-      - name: Test Entity routes and relation contracts
-        run: node tests/entity-navigation-contract.test.js
-      - name: Test Article renderer
-        run: node tests/article-renderer.test.js
-      - name: Test Research rich content and reference presentation
-        run: node tests/research-rich-blocks.test.js
-      - name: Test static Research page
-        run: node tests/research-static-page.test.js
+  deploy:
+    needs: validate-atlas
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && needs.validate-atlas.outputs.pages-ready == 'true'
+    runs-on: ubuntu-24.04
+    permissions:
+      pages: write
+      id-token: write
+    concurrency:
+      group: github-pages
+      cancel-in-progress: false
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      # No checkout or build here: this job deploys the artifact from the
+      # successful gate in THIS run, named after THIS immutable commit.
+      - name: Deploy the verified artifact
+        id: deployment
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1, Node 24
+        with:
+          artifact_name: github-pages-${{ github.sha }}

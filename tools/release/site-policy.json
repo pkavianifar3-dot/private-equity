@@ -1,0 +1,71 @@
+{
+  "version": "1.0",
+  "purpose": "Local compatibility packaging only; NOT publication approval. ADR-004 cutover is deferred.",
+  "pages": [
+    "/",
+    "/about.html",
+    "/articles.html",
+    "/atlas/",
+    "/atlas/explore/",
+    "/contact.html",
+    "/copyright.html",
+    "/membership.html",
+    "/resources.html",
+    "/services.html",
+    "/watch.html",
+    "/atlas/person.html",
+    "/atlas/organization.html",
+    "/atlas/investment.html",
+    "/atlas/concept.html",
+    "/404.html"
+  ],
+  "dynamic_templates": [
+    "/atlas/person.html",
+    "/atlas/organization.html",
+    "/atlas/investment.html",
+    "/atlas/concept.html"
+  ],
+  "canonical_aliases": {
+    "/resources.html": "/atlas/"
+  },
+  "sitemap_pages": [
+    "/",
+    "/about.html",
+    "/articles.html",
+    "/atlas/",
+    "/atlas/explore/",
+    "/contact.html",
+    "/copyright.html",
+    "/membership.html",
+    "/services.html",
+    "/watch.html"
+  ],
+  "legacy_review_entity_ids": [
+    "concept:contractual-components",
+    "concept:growth-capital",
+    "concept:lender",
+    "concept:physical-assets",
+    "concept:private-capital",
+    "concept:private-capital-classification",
+    "concept:private-credit",
+    "concept:private-equity",
+    "concept:private-market-access",
+    "concept:real-assets",
+    "concept:venture-capital",
+    "investment:kayson-achareh",
+    "organization:achareh",
+    "organization:amin-investment-bank",
+    "organization:iran-farabourse",
+    "organization:kayson-group",
+    "organization:kian-financial-group",
+    "organization:kian-private-equity-management",
+    "organization:semega",
+    "organization:tehran-chamber-money-capital-commission",
+    "organization:tourism-bank",
+    "project:dadman",
+    "sector:capital-market",
+    "sector:corporate-investment",
+    "sector:investment-banking",
+    "sector:private-equity"
+  ]
+}
