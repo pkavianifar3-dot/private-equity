@@ -160,3 +160,15 @@ The public repository still contains `research/content/private-markets/private-c
 ## Authorized branch submission
 
 The owner authorized committing and pushing Stage 5 to `feat/research-content-ingestion-foundation` for remote CI review, without main integration, deployment or settings changes. Pre-commit verification passed again with the same artifact hash, all tests/builds/drift checks and 150 HTTP checks. One image response (`private-equity-guide.png`) needed a recorded transport retry and passed byte/framing validation. Publication still rejects the compatibility candidate with 64 diagnostics. Remote CI status is pending at initial submission and will be recorded after the run completes; local success is not remote CI approval.
+
+## Remote CI result for the implementation commit
+
+- Implementation commit: `ceec4826c2382f1902bd4a76283f24f66d8fb4d3`.
+- Message: `feat(release): add gated Pages pipeline and deterministic public artifact checks`.
+- Push to `origin/feat/research-content-ingestion-foundation`: successful.
+- GitHub Actions run `38083464735`, workflow `Validate Atlas`, exact matching head SHA: **completed / success**.
+- Run URL: https://github.com/pkavianifar3-dot/private-equity/actions/runs/38083464735
+- Hosted Ubuntu checkout, Python/Node setup, constrained dependency installation and the complete validation/test/build/drift/artifact step: **success**.
+- Candidate eligibility summary: **success**. Production publication/upload steps: **skipped**; deploy job: **skipped**. No candidate files were uploaded publicly.
+
+This result supersedes the earlier pre-submission statements that hosted execution was pending. Those sections record the local audit state before the authorized push. The documentation-only follow-up records this completed implementation run; it does not claim its own future CI result. Publication remains blocked by the unchanged REVIEW/unsupported-type projection, branch-based Pages settings migration and the domain/TLS checks. No main merge, deployment, GitHub setting change or Stage 6 work was performed.
