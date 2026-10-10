@@ -1,7 +1,8 @@
-"""Preview-only exploration presentation over existing Research/Atlas contracts.
+"""Shared exploration presentation over existing Research/Atlas contracts.
 
 The selectors are pure and can be reused when a public presentation is approved.
-No inferred or similarity-based association is created here.
+Navigation uses explicit editorial links and confirmed primary Entity equality;
+no title inference or similarity-based association is created here.
 """
 
 import hashlib
@@ -152,8 +153,8 @@ def rail(headings, cards, *, context):
             + toc_nav(headings, mobile=True) + ''.join(cards) + '</div></aside>')
 
 
-def research_rail(article, catalog, root, resolver, editorial_related, headings):
-    atlas = pick_article_entities(article, catalog, resolver, preview=True)
+def research_rail(article, catalog, root, resolver, editorial_related, headings, *, preview=False):
+    atlas = pick_article_entities(article, catalog, resolver, preview=preview)
     related = pick_editorial(article, root, editorial_related)
     return rail(headings, [
         card("کاوش در پژوهش‌ها", related, "/articles.html",
@@ -174,3 +175,36 @@ def atlas_rail(entity_id, claims, entities, relation_contract, resolver,
         card("کاوش در پژوهش‌ها", research, "/articles.html",
              empty="پژوهش مرتبطی ثبت نشده است."),
     ], context="اطلس")
+
+
+def research_page(page, article, catalog, root, resolver, editorial_related, *, preview=False):
+    """Build a shared reading layout; public cards always filter unpublished Entities.
+
+    Explicit layout markers allow a repeat build or an isolated preview to replace
+    the generated rail without wrapping the article a second time.
+    """
+    layout = re.compile(
+        r'<div class="explore-reading-layout" data-research-exploration>'
+        r'<article class="explore-reading">(.*?)</article>'
+        r'.*?</div><!-- research-exploration -->', re.S,
+    )
+    page = layout.sub(lambda match: '<article>' + match.group(1) + '</article>', page)
+    connections = re.compile(
+        r'<div data-research-connections>.*?</div><!-- research-connections -->', re.S,
+    )
+    page = connections.sub('', page)
+    start, end = page.find('<article>'), page.find('</article>')
+    if start < 0 or end < start:
+        raise ValueError(f"{article['id']}: article element missing")
+    body, headings = article_toc(page[start + len('<article>'):end])
+    cards = research_rail(article, catalog, root, resolver, editorial_related, headings, preview=preview)
+    if not preview:
+        cards = '<div data-research-connections>' + cards + '</div><!-- research-connections -->'
+    composed = ('<div class="explore-reading-layout" data-research-exploration>'
+                '<article class="explore-reading">' + body + '</article>' + cards
+                + '</div><!-- research-exploration -->')
+    page = page[:start] + composed + page[end + len('</article>'):]
+    style = '<link rel="stylesheet" href="/assets/css/exploration.css">'
+    if style not in page:
+        page = page.replace('</head>', style + '\n</head>', 1)
+    return page

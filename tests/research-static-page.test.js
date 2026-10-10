@@ -114,4 +114,25 @@ assert(
     "REVIEW Entity refs must not be exposed in the new public context panel"
 );
 
+for (const slug of ["private-capital","private-capital-research"]) {
+    const page=fs.readFileSync(`articles/${slug}.html`,"utf8");
+    assert.strictEqual((page.match(/data-research-exploration/g)||[]).length,1);
+    assert(page.includes('class="research-article-header"'));
+    assert(page.includes('class="research-bibliography research-endmatter"'));
+    assert(!page.includes('<sup class="citation"'));
+    assert(page.includes('src="/assets/js/research-notes.js"'));
+    const other=slug==="private-capital"?"private-capital-research":"private-capital";
+    const rail=page.split('<aside class="explore-rail"')[1].split('</aside>')[0];
+    assert(rail.includes(`href="/articles/${other}.html"`),"the two approved articles must cross-link in exploration");
+    assert(!rail.includes(`href="/articles/${slug}.html"`),"exploration must not link to the current article");
+    const tocTargets=[...page.matchAll(/href="#(research-section-[^"]+)"/g)].map(m=>m[1]);
+    assert(tocTargets.length>0);
+    for (const target of tocTargets) assert(page.includes(`id="${target}"`));
+}
+const newPage=fs.readFileSync("articles/private-capital-research.html","utf8");
+assert(newPage.includes("مفهوم، دامنه، تمایز و سازوکار"));
+assert(!newPage.includes('href="/atlas/concept/'),"new page must not expose current REVIEW concepts");
+assert.strictEqual((newPage.match(/class="research-note-ref"/g)||[]).length,20);
+assert(fs.readFileSync("articles.html","utf8").includes('href="articles/private-capital-research.html"'));
+assert(fs.readFileSync("sitemap.xml","utf8").includes('https://privatecapital.ir/articles/private-capital-research.html'));
 console.log("Research static HTML contract PASSED");

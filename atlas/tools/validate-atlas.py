@@ -1628,6 +1628,13 @@ def validate_person_content(errors, source_ids):
 def validate_research_entity_refs(data, entity_ids, errors, location):
     """Article/section associations are independent of text occurrences."""
     research_id = data.get("id", "<missing-id>")
+    primary = data.get("primaryEntityRef")
+    if isinstance(primary, str):
+        if primary not in entity_ids:
+            errors.append(f"{location}:{research_id}: unknown primaryEntityRef {primary}")
+        refs = data.get("entityRefs", [])
+        if isinstance(refs, list) and primary not in refs:
+            errors.append(f"{location}:{research_id}: primaryEntityRef {primary} must be in article entityRefs")
     owners = [(research_id, data.get("entityRefs", []))]
     sections = data.get("sections", [])
     for section in sections if isinstance(sections, list) else []:

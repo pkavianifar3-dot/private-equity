@@ -341,7 +341,7 @@ class ArticleRendererIntegrationTests(unittest.TestCase):
 
     def test_article_keeps_presentation_shell(self):
         for marker in (
-            'class="article-author"',
+            'class="article-author research-byline"',
             'class="article-date"',
             "data-article-renderer-citations",
             'class="article-copyright"',
@@ -358,9 +358,9 @@ class ArticleRendererIntroductionBoundaryTests(unittest.TestCase):
             ROOT / "articles" / "private-capital.html"
         ).read_text(encoding="utf-8")
 
-        self.assertIn(
-            '<h2>سرمایه خصوصی چیست؟</h2>',
+        self.assertRegex(
             article,
+            r'<h2(?:\s[^>]*)?>سرمایه خصوصی چیست؟</h2>',
         )
         self.assertIn(
             "data-article-renderer-citations",
@@ -639,7 +639,7 @@ class ArticleRendererPageIntegrationTests(unittest.TestCase):
         )
         section = html[start:end]
 
-        self.assertGreater(section.count("<h3>"), 0)
+        self.assertRegex(section, r"<h3(?:\s[^>]*)?>")
         self.assertGreater(section.count("<p>"), 0)
 
     def test_private_capital_private_equity_ends_before_private_credit(self):
@@ -689,15 +689,17 @@ class ArticleRendererPageIntegrationTests(unittest.TestCase):
         start = html.index(
             '<div data-article-renderer-section="introduction">'
         )
-        end = html.index(
-            '<h2>سرمایه خصوصی چیست؟</h2>',
-            start,
-        )
+        import re
+        following = re.search(r'<h2(?:\s[^>]*)?>سرمایه خصوصی چیست؟</h2>', html[start:])
+        self.assertIsNotNone(following)
+        end = start + following.start()
         section = html[start:end]
 
+        self.assertIn('<figure class="research-cover explore-lead-media">', section)
+        self.assertIn('../assets/images/private-capital.png', section)
         before = html[:start]
         self.assertNotIn(
-            "<figure>",
+            "<figure",
             before,
             "Introduction figure must not remain outside its renderer boundary",
         )

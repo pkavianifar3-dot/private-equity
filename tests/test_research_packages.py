@@ -47,6 +47,16 @@ class PackageContractTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "source missing"):
                 packages.registry(root, packages.discover(root / "research/content"))
 
+    def test_registry_source_status_mismatch_fails_before_publication(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            write(root / "research/content/markets/new/research.json",
+                  {"id": "research:new", "url": "/articles/new.html", "status": "PUBLISHED"})
+            write(root / "research/index.json", {"research": [
+                {"id": "research:new", "url": "/articles/new.html", "status": "REVIEW"}]})
+            with self.assertRaisesRegex(ValueError, "research:new.*URL/status mismatch"):
+                packages.registry(root, packages.discover(root / "research/content"))
+
     def test_actual_legacy_article_has_no_fabricated_source(self):
         records = packages.discover(ROOT / "research/content")
         registry = packages.registry(ROOT, records)

@@ -22,7 +22,7 @@ function discover() {
         if (!/^research:[a-z0-9]+(?:-[a-z0-9]+)*$/.test(data.id||"")) throw new Error(`${file}: invalid ID`);
         if (records.has(data.id)) throw new Error(`${file}: duplicate Research ID ${data.id}`);
         const entry = identities.get(data.id);
-        if (!entry || entry.url !== data.url) throw new Error(`${file}: ${data.id}: registry URL mismatch`);
+        if (!entry || entry.url !== data.url || entry.status !== data.status) throw new Error(`${file}: ${data.id}: registry URL/status mismatch`);
         records.set(data.id,{file,data});
     }
     for (const row of registry) if (!records.has(row.id) &&

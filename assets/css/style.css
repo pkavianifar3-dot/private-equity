@@ -2096,3 +2096,74 @@ article figure img{
     .research-connections{margin:30px 0 20px;padding:18px 0;}
     .knowledge-connection{padding:20px;}
 }
+
+/* Structured Research package: notes, figures and dense reference tables. */
+.research-summary{max-width:65ch;color:#C7D0D9;margin:14px 0 30px}
+.research-section{min-width:0;margin:28px 0 42px}
+.research-section > h2{margin-bottom:20px}
+.research-footnote{border-right:2px solid rgba(201,162,39,.5);padding:6px 14px;margin:9px 0 17px;color:#C7D0D9;font-size:.91rem;line-height:1.85}
+.research-footnote-number{display:inline-block;color:#C9A227;font-weight:700;margin-left:8px}
+.research-section figcaption{font-size:.88rem;color:#C7D0D9;line-height:1.75;margin-top:12px;text-align:center}
+.research-section .figure-credit{display:block;color:#9EACBA;font-size:.83rem}
+.research-table-scroll{max-width:100%;overflow-x:auto;margin:24px 0;scrollbar-width:thin}
+.research-table-scroll table{width:100%;min-width:660px;border-collapse:collapse;line-height:1.75;font-size:.9rem}
+.research-table-scroll td{padding:11px 12px;vertical-align:top;border:1px solid #29415B}
+.research-table-scroll caption{text-align:right;margin:10px 0;color:#C7D0D9}
+.research-table-scroll tr:first-child{font-weight:700;background:#132940}
+@media(max-width:700px){.research-section{margin:23px 0 34px}.research-table-scroll table{font-size:.85rem}}
+
+/* Structured Research typography and publication controls. */
+.research-page-section .research-article-header{margin-bottom:30px}
+.research-article-header h1{font-size:clamp(28px,3.3vw,42px);line-height:1.55;margin:0 0 20px}
+.research-article-header hr{border:0;border-top:1px solid rgba(201,162,39,.5);margin-top:19px}
+.research-byline{margin:0 0 6px}
+.research-page-section .research-opening{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(220px,.9fr);gap:24px;align-items:center;margin:0 0 32px}
+.research-page-section .research-summary{margin:0;max-width:65ch;font-size:1.06rem;line-height:2;color:#D5E0E8}
+.research-page-section .research-cover{margin:0;min-width:0}
+.research-cover img{width:100%;height:auto;border-radius:8px;border:1px solid rgba(201,162,39,.2)}
+.research-page-section .research-section{padding:0;margin:0 0 38px}
+.research-page-section .research-section > h2{font-size:clamp(25px,2.7vw,36px);line-height:1.5;margin:0 0 16px}
+.research-page-section .research-section p{margin:0 0 18px}
+.research-page-section .research-section figure{margin:24px 0}
+.research-caption,.research-credit{display:block;text-align:center;line-height:1.7}
+.research-caption{font-size:.93rem;color:#E1E7ED}
+.research-credit{font-size:.83rem;color:#AAB8C5;margin-top:5px}
+.research-table-caption{margin:0 0 12px}
+.research-table-scroll{margin:0 0 24px}
+.research-table-scroll table[dir="rtl"]{direction:rtl;text-align:right}
+.research-table-scroll th{padding:11px 12px;vertical-align:top;border:1px solid #29415B;background:#132940}
+.research-note-ref{display:inline-block;white-space:nowrap;line-height:1;vertical-align:super;font-size:.7em;margin-inline:3px}
+.research-notes{border-top:1px solid #29415B;margin:36px 0 26px;padding-top:12px}
+.research-notes summary{cursor:pointer;color:#E1C866;font-weight:700;padding:8px 0;outline-offset:4px}
+.research-notes summary:focus-visible{outline:2px solid #E4BD49}
+.research-notes ol{padding:12px 28px 8px 0;max-width:75ch}
+.research-notes li{margin:0 0 10px;padding:0 4px;line-height:1.75;font-size:.88rem;color:#C8D2DC;unicode-bidi:plaintext}
+.research-notes li:target{background:rgba(201,162,39,.13)}
+@media(max-width:700px){
+  .research-page-section .research-opening{display:flex;flex-direction:column;align-items:stretch;gap:16px}
+  .research-cover{order:-1}
+  .research-page-section .research-section{margin-bottom:30px}
+  .research-article-header h1{font-size:29px}
+}
+
+/* Source entries follow their citation language, while the section label remains Persian. */
+.research-page-section .article-citations li{display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:10px;row-gap:0;text-align:start}
+.research-page-section .article-citations .citation-source{display:flex;direction:inherit;text-align:start;align-items:flex-start}
+.research-page-section .article-citations .citation-title,.research-page-section .article-citations .citation-meta{direction:inherit;text-align:start}
+.research-page-section .article-citations .citation-backlinks{grid-column:2;white-space:normal;font-size:.84rem}
+@media(max-width:600px){.research-page-section .article-citations li{display:grid;grid-template-columns:auto minmax(0,1fr)}.research-page-section .article-citations .citation-backlinks{margin-top:0}}
+
+/* Opted-in Research articles share one compact language for both endmatter panels. */
+.research-page-section .research-endmatter{border-top:1px solid #29415B;margin:24px 0 0;padding:0}
+.research-page-section .research-endmatter summary{display:flex;align-items:center;justify-content:space-between;gap:12px;cursor:pointer;padding:15px 0;color:#E1C866;font-weight:700;list-style:none;outline-offset:3px}
+.research-page-section .research-endmatter summary::-webkit-details-marker{display:none}
+.research-page-section .research-endmatter summary::after{content:"⌄";display:inline-block;transition:transform .22s ease;line-height:1;font-size:1.25em}
+.research-page-section .research-endmatter[open] summary::after{transform:rotate(180deg)}
+.research-page-section .research-endmatter summary:focus-visible{outline:2px solid #E4BD49;border-radius:3px}
+.research-page-section .research-endmatter[open] .research-panel-body{animation:research-panel-reveal .22s ease-out both}
+@keyframes research-panel-reveal{from{opacity:0;transform:translateY(-5px)}to{opacity:1;transform:translateY(0)}}
+@media(prefers-reduced-motion:reduce){.research-page-section .research-endmatter[open] .research-panel-body{animation:none}.research-page-section .research-endmatter summary::after{transition:none}}
+.research-page-section .research-endmatter .article-citations{direction:rtl;text-align:right}
+.research-page-section .research-endmatter .article-citations ul{margin:0}
+.research-page-section .citation-inline{font-size:.88em;vertical-align:baseline;direction:ltr;unicode-bidi:isolate;white-space:nowrap}
+.research-page-section .citation-inline a{color:#C9A227}

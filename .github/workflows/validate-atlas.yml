@@ -75,6 +75,7 @@ jobs:
         run: |
           node --check assets/js/article-renderer.js
           node --check assets/js/article-page.js
+          node --check assets/js/research-notes.js
           node --check atlas/tools/build-research-pages.js
       - name: Check Atlas renderer pages
         run: |
@@ -88,5 +89,7 @@ jobs:
         run: node tests/entity-navigation-contract.test.js
       - name: Test Article renderer
         run: node tests/article-renderer.test.js
+      - name: Test Research rich content and reference presentation
+        run: node tests/research-rich-blocks.test.js
       - name: Test static Research page
         run: node tests/research-static-page.test.js

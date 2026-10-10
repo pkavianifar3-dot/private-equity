@@ -34,6 +34,7 @@ class PrepareTests(unittest.TestCase):
                 zipfile.writestr("word/document.xml", DOC)
                 zipfile.writestr("word/_rels/document.xml.rels", RELS)
                 zipfile.writestr("word/media/image1.png", b"image")
+                zipfile.writestr("word/footnotes.xml", '<w:footnotes xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:footnote w:id="1"><w:p><w:r><w:t>Footnote</w:t></w:r></w:p></w:footnote></w:footnotes>')
             ingest.extract(docx, root / "extract")
             metadata = root / "metadata.json"
             metadata.write_text(json.dumps({"id":"research:demo","url":"/articles/demo.html",
@@ -49,5 +50,10 @@ class PrepareTests(unittest.TestCase):
             self.assertTrue(result["sections"][1]["content"][1]["ordered"])
             self.assertTrue((root / "package/assets").is_dir())
             self.assertIn("Footnote", (root / "package/editorial-review.json").read_text(encoding="utf-8"))
+            notes = [b for section in result["sections"] for b in section["content"]
+                     if b["type"] == "note"]
+            self.assertEqual(len(notes), 1)
+            self.assertEqual(notes[0]["text"], "Footnote")
+            self.assertEqual(notes[0]["anchor"], {"contentBlockId": "block-0001", "offset": 5})
 
 if __name__ == "__main__": unittest.main()

@@ -34,6 +34,18 @@ def relations(archive):
             for node in tree.findall(f"{{{PKG}}}Relationship")}
 
 
+def note_positions(element):
+    offsets, length = [], 0
+    for node in element.iter():
+        if node.tag == f"{{{W}}}t":
+            length += len(node.text or "")
+        elif node.tag in (f"{{{W}}}footnoteReference", f"{{{W}}}endnoteReference"):
+            offsets.append({"id": node.get(f"{{{W}}}id"),
+                            "kind": "footnote" if node.tag == f"{{{W}}}footnoteReference" else "endnote",
+                            "offset": length})
+    return offsets
+
+
 def paragraph(p, rels):
     content = text(p)
     style = p.find("w:pPr/w:pStyle", NS)
@@ -58,10 +70,10 @@ def paragraph(p, rels):
             links.append({"text": text(link), "target": rels[rid]["target"]})
     if links:
         result["hyperlinks"] = links
-    notes = [node.get(f"{{{W}}}id") for node in p.iter()
-             if node.tag in (f"{{{W}}}footnoteReference", f"{{{W}}}endnoteReference")]
+    notes = note_positions(p)
     if notes:
-        result["noteIds"] = notes
+        result["noteIds"] = [note["id"] for note in notes]
+        result["noteRefs"] = notes
     media = []
     for blip in p.findall(".//a:blip", NS):
         rid = blip.get(f"{{{R}}}embed")
@@ -97,8 +109,12 @@ def extract(docx, output):
         document = ET.fromstring(archive.read("word/document.xml"))
         body = document.find("w:body", NS)
         blocks = []
+        comment_anchors = {}
         for child in body:
             if child.tag == f"{{{W}}}p":
+                for anchor in child.iter():
+                    if anchor.tag == f"{{{W}}}commentRangeStart":
+                        comment_anchors[anchor.get(f"{{{W}}}id")] = len(blocks)
                 item = paragraph(child, rels)
                 if item["text"] or item.get("media") or item.get("noteIds"):
                     blocks.append(item)
@@ -106,7 +122,15 @@ def extract(docx, output):
                 rows = [[" ".join(text(p) for p in cell.findall(".//w:p", NS))
                          for cell in row.findall("w:tc", NS)]
                         for row in child.findall("w:tr", NS)]
-                blocks.append({"kind": "table", "rows": rows})
+                note_refs = [{**ref, "row": row_index, "column": cell_index}
+                             for row_index, row in enumerate(child.findall("w:tr", NS))
+                             for cell_index, cell in enumerate(row.findall("w:tc", NS))
+                             for ref in note_positions(cell)]
+                table = {"kind": "table", "rows": rows}
+                if note_refs:
+                    table["noteIds"] = [note["id"] for note in note_refs]
+                    table["noteRefs"] = note_refs
+                blocks.append(table)
         output.mkdir(parents=True, exist_ok=True)
         media = []
         for entry in entries:
@@ -126,7 +150,14 @@ def extract(docx, output):
                 notes[name] = [{"id": e.get(f"{{{W}}}id"), "text": text(e)}
                                for e in ET.fromstring(archive.read(name))
                                if e.get(f"{{{W}}}id") not in ("-1", "0")]
-        result = {"sourceFile": docx.name, "sha256": hashlib.sha256(docx.read_bytes()).hexdigest(),
+        comments = []
+        if "word/comments.xml" in archive.namelist():
+            for comment in ET.fromstring(archive.read("word/comments.xml")):
+                if comment.tag == f"{{{W}}}comment":
+                    identifier = comment.get(f"{{{W}}}id")
+                    comments.append({"id": identifier, "blockIndex": comment_anchors.get(identifier),
+                                     "text": text(comment)})
+        result = {"comments": comments, "sourceFile": docx.name, "sha256": hashlib.sha256(docx.read_bytes()).hexdigest(),
                   "blocks": blocks, "assets": sorted(media, key=lambda m: m["source"]), "notes": notes,
                   "editorialChecks": ["Confirm title, lead, heading hierarchy, captions, credit and alt text",
                                       "Map citations and bibliography to verified canonical Atlas Sources",

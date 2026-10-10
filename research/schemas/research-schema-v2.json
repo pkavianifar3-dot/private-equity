@@ -132,6 +132,41 @@
         "$ref": "#/$defs/citation"
       },
       "uniqueItems": true
+    },
+    "presentation": {
+      "type": "object",
+      "description": "Optional editorial display metadata; never substitutes for canonical authorRefs.",
+      "properties": {
+        "byline": {
+          "type": "string"
+        },
+        "portraitSrc": {
+          "type": "string"
+        },
+        "coverSrc": {
+          "type": "string"
+        },
+        "coverAlt": {
+          "type": "string"
+        },
+        "mentionLinkPolicy": {
+          "type": "string",
+          "enum": [
+            "first-per-section"
+          ]
+        },
+        "referenceStyle": {
+          "type": "string",
+          "enum": [
+            "inline-collapsible"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "primaryEntityRef": {
+      "$ref": "#/$defs/atlasEntityRef",
+      "description": "Optional editorially confirmed main subject of the whole article. Must also be in article-level entityRefs. Used for exact same-subject Research navigation; never inferred from titles or mentions."
     }
   },
   "additionalProperties": false,
@@ -242,7 +277,8 @@
             "subheading",
             "figure",
             "list",
-            "table"
+            "table",
+            "note"
           ]
         },
         "text": {
@@ -292,6 +328,43 @@
         },
         "ordered": {
           "type": "boolean"
+        },
+        "noteNumber": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "direction": {
+          "type": "string",
+          "enum": [
+            "rtl",
+            "ltr"
+          ]
+        },
+        "anchor": {
+          "type": "object",
+          "required": [
+            "contentBlockId",
+            "offset"
+          ],
+          "properties": {
+            "contentBlockId": {
+              "type": "string",
+              "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+            },
+            "offset": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "row": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "column": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          "additionalProperties": false
         }
       },
       "additionalProperties": false

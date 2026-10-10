@@ -41,6 +41,7 @@ def prepare(extraction_path, metadata_path, output):
         section["content"].append({"id": f"block-{index:04d}", "type": kind, **fields})
 
     for item in extraction["blocks"]:
+        item_anchor_target = None
         kind = item["kind"]
         if kind == "heading" and item.get("level") == 1:
             if item["text"].strip() != metadata["title"]["fa"].strip():
@@ -55,6 +56,7 @@ def prepare(extraction_path, metadata_path, output):
             block("subheading", text=item["text"], **({"level": item["level"]} if item.get("level", 3) != 3 else {}))
         elif kind == "table":
             block("table", rows=item["rows"])
+            item_anchor_target = section["content"][-1]
         elif kind == "list-item":
             ordered = item.get("numbering") == "ordered"
             level = item.get("level", 0)
@@ -73,6 +75,7 @@ def prepare(extraction_path, metadata_path, output):
         elif kind == "paragraph":
             if item.get("text"):
                 block("paragraph", text=item["text"])
+                item_anchor_target = section["content"][-1]
             for media in item.get("media", []):
                 source = media["source"]
                 # Word relationships are relative to word/document.xml.
@@ -85,8 +88,26 @@ def prepare(extraction_path, metadata_path, output):
                     review.append(f"Embedded {media['kind']} needs visual/data review: {source}")
         if item.get("hyperlinks"):
             review.append(f"Inline hyperlinks require citation/source mapping near block {index}")
-        if item.get("noteIds"):
-            review.append(f"Footnote/endnote IDs require canonical Source review: {item['noteIds']}")
+        note_refs = item.get("noteRefs") or [
+            {"id": note_id, "kind": "footnote"} for note_id in item.get("noteIds", [])
+        ]
+        anchor_target = item_anchor_target
+        for note in note_refs:
+            location = "word/footnotes.xml" if note["kind"] == "footnote" else "word/endnotes.xml"
+            source_note = next((entry for entry in extraction.get("notes", {}).get(location, [])
+                                if entry["id"] == note["id"]), None)
+            if source_note is None:
+                review.append(f"Unresolved {note['kind']} {note['id']} near block {index}")
+                continue
+            anchor = {"contentBlockId": anchor_target["id"], "offset": note["offset"]} if (
+                anchor_target and "offset" in note and anchor_target["type"] in ("paragraph", "table")
+            ) else None
+            if anchor and "row" in note:
+                anchor.update(row=note["row"], column=note["column"])
+            block("note", text=source_note["text"], noteNumber=int(note["id"]),
+                  **({"anchor": anchor} if anchor else {}))
+        if note_refs:
+            review.append(f"Footnote/endnote references require editorial citation review: {note_refs}")
     if not sections:
         raise ValueError("DOCX extraction has no structured article body")
     doc = {"id": identity, "type": "Research", "schemaVersion": "2.0", "url": url,
@@ -101,7 +122,7 @@ def prepare(extraction_path, metadata_path, output):
         dest = output / "assets" / Path(asset["file"]).name
         dest.parent.mkdir(exist_ok=True)
         shutil.copyfile(source, dest)
-    (output / "editorial-review.json").write_text(json.dumps({"checks": review + extraction["editorialChecks"]}, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    (output / "editorial-review.json").write_text(json.dumps({"checks": review + extraction["editorialChecks"], "notes": extraction.get("notes", {}), "comments": extraction.get("comments", [])}, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     return doc
 
 
