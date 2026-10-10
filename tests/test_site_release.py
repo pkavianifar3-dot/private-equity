@@ -124,7 +124,8 @@ class ReleaseTests(unittest.TestCase):
         text = site.sitemap_text(ROOT)
         self.assertIn('https://privatecapital.ir/articles/private-capital-research.html', text)
         self.assertIn('https://privatecapital.ir/atlas/person/ali-sanginian/', text)
-        self.assertNotIn('/atlas/concept/private-capital/', text)
+        self.assertIn('/atlas/concept/private-capital/', text)
+        self.assertNotIn('/atlas/concept/lender/', text)
         self.assertNotIn('/resources.html', text)
         self.assertNotIn('/atlas/person.html', text)
         self.assertIn('/copyright.html', text)
@@ -141,7 +142,9 @@ class ReleaseTests(unittest.TestCase):
                 for path in ('atlas/entities/index.json', 'atlas/catalog/index.json'):
                     (self.output / path).write_text(json.dumps(fixture), encoding="utf-8")
                 blockers = site.publication_blockers(ROOT, self.output)
-                self.assertEqual(bool(blockers), status != 'PUBLISHED')
+                self.assertEqual(any('migration approval required' in b for b in blockers), status != 'PUBLISHED')
+                # Replacing an index with a fake identity cannot authorize the remaining graph.
+                self.assertTrue(blockers)
         fixture = {'entities': [{'id': 'project:test', 'type': 'Project', 'lifecycleStatus': 'PUBLISHED'}]}
         (self.output / 'atlas/entities/index.json').write_text(json.dumps(fixture), encoding="utf-8")
         self.assertTrue(any('no approved public' in b for b in site.publication_blockers(ROOT, self.output)))
@@ -149,9 +152,9 @@ class ReleaseTests(unittest.TestCase):
     def test_inventory_captures_old_inline_inbound_references_and_query_routes(self):
         rows = site.inventory(ROOT)
         pc = next(x for x in rows if x['url'] == '/atlas/concept/private-capital/')
-        self.assertEqual(pc['status'], 'REVIEW')
+        self.assertEqual(pc['status'], 'PUBLISHED')
         self.assertIn('/articles/private-capital.html', pc['inbound_links'])
-        self.assertFalse(pc['in_sitemap'])
+        self.assertTrue(pc['in_sitemap'])
         query = next(x for x in rows if x['url'] == '/atlas/person.html?id=person:ali-sanginian')
         self.assertEqual(query['canonical'], site.ORIGIN + '/atlas/person/ali-sanginian/')
 

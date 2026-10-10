@@ -22,6 +22,7 @@ for (const file of fs.readdirSync(sourceDir).filter(
 }
 
 let totalEvidence = 0;
+const evidenceIds = new Set();
 
 for (const file of fs.readdirSync(evidenceDir).filter(
   name => name.endsWith(".json") && name !== "index.json"
@@ -35,6 +36,8 @@ for (const file of fs.readdirSync(evidenceDir).filter(
 
   for (const evidence of data.evidence) {
     totalEvidence += 1;
+    assert(!evidenceIds.has(evidence.id), `${file}: duplicate Evidence ${evidence.id}`);
+    evidenceIds.add(evidence.id);
 
     assert.ok(
       evidence.id,
@@ -89,10 +92,13 @@ for (const file of fs.readdirSync(evidenceDir).filter(
   }
 }
 
-assert.strictEqual(
-  totalEvidence,
-  26,
-  `Expected 26 Evidence records, found ${totalEvidence}`
-);
+const indexedEvidence = readJson(path.join(evidenceDir, "index.json")).evidence;
+assert(totalEvidence >= 26, "Existing evidence must remain present");
+assert.deepStrictEqual([...evidenceIds].sort(), Object.keys(indexedEvidence).sort(),
+  "Evidence index must cover every record exactly once");
+for (const [id, file] of Object.entries(indexedEvidence)) {
+  assert(readJson(path.join(evidenceDir, file)).evidence.some(e => e.id === id),
+    `${id}: Evidence index must point to its actual owning file`);
+}
 
 console.log("Evidence provenance data contract: PASS");

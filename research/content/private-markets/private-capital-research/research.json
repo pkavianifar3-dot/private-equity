@@ -28,7 +28,8 @@
     "source:cfa-private-real-estate-investments-2026",
     "source:cfa-general-partner-investor-perspectives-2026",
     "source:cfa-investments-private-capital-equity-debt-2026",
-    "source:preqin-what-is-private-capital"
+    "source:preqin-what-is-private-capital",
+    "source:deloitte-asian-investment"
   ],
   "relatedResearchRefs": [
     "research:private-capital"
@@ -154,9 +155,9 @@
           "id": "block-0015",
           "type": "figure",
           "src": "/assets/images/research/private-capital-research/4d700a3286bd-image1.png",
-          "alt": "شکل1: ارزش دارایی‌های تحت مدیریت صندوق‌های ثروت ملی و صندوق‌های بازنشستگی عمومی که در بازارهای خصوصی سرمایه‌گذاری شده‌اند (به تریلیون دلار)",
-          "caption": "شکل1: ارزش دارایی‌های تحت مدیریت صندوق‌های ثروت ملی و صندوق‌های بازنشستگی عمومی که در بازارهای خصوصی سرمایه‌گذاری شده‌اند (به تریلیون دلار)",
-          "credit": "منبع: Global SWF به نقل از (CFA Institute, 2026b) "
+          "alt": "شکل ۱: دارایی‌های صندوق‌های ثروت ملی و بازنشستگی عمومی در بازارهای خصوصی؛ ۲۰۱۴–۲۰۲۳، تریلیون دلار",
+          "caption": "شکل ۱: دارایی‌های صندوق‌های ثروت ملی و بازنشستگی عمومی در بازارهای خصوصی؛ ۲۰۱۴–۲۰۲۳، تریلیون دلار",
+          "credit": "منبع: Global SWF، به نقل از Deloitte؛ دادهٔ اولیه مستقیماً بررسی نشده است."
         },
         {
           "id": "block-0016",
@@ -754,6 +755,13 @@
       "contentBlockId": "block-0027",
       "start": 513,
       "end": 527
+    },
+    {
+      "id": "citation:deloitte-chart",
+      "sourceRef": "source:deloitte-asian-investment",
+      "contentBlockId": "block-0009",
+      "start": 608,
+      "end": 609
     }
   ],
   "presentation": {

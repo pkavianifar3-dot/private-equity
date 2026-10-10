@@ -5,7 +5,8 @@
       "claim:private-credit-return-contractual"
     ],
     "concept:growth-capital": [
-      "claim:private-capital-includes-growth-capital"
+      "claim:private-capital-includes-growth-capital",
+      "claim:private-capital-includes-growth-capital-reviewed"
     ],
     "concept:lender": [
       "claim:private-credit-lender-position"
@@ -15,35 +16,50 @@
     ],
     "concept:private-capital": [
       "claim:private-capital-boundaries-vary",
+      "claim:private-capital-boundaries-vary-reviewed",
       "claim:private-capital-includes-growth-capital",
+      "claim:private-capital-includes-growth-capital-reviewed",
       "claim:private-capital-includes-private-credit",
+      "claim:private-capital-includes-private-credit-reviewed",
       "claim:private-capital-includes-private-equity",
+      "claim:private-capital-includes-private-equity-reviewed",
       "claim:private-capital-includes-real-assets",
+      "claim:private-capital-includes-real-assets-reviewed",
       "claim:private-capital-includes-venture-capital",
-      "claim:private-capital-private-access"
+      "claim:private-capital-includes-venture-capital-reviewed",
+      "claim:private-capital-private-access",
+      "claim:private-capital-private-access-reviewed"
     ],
     "concept:private-capital-classification": [
-      "claim:private-capital-boundaries-vary"
+      "claim:private-capital-boundaries-vary",
+      "claim:private-capital-boundaries-vary-reviewed"
     ],
     "concept:private-credit": [
       "claim:private-capital-includes-private-credit",
+      "claim:private-capital-includes-private-credit-reviewed",
       "claim:private-credit-and-private-equity-linked",
+      "claim:private-credit-and-private-equity-linked-reviewed",
       "claim:private-credit-lender-position",
       "claim:private-credit-return-contractual"
     ],
     "concept:private-equity": [
       "claim:private-capital-includes-private-equity",
-      "claim:private-credit-and-private-equity-linked"
+      "claim:private-capital-includes-private-equity-reviewed",
+      "claim:private-credit-and-private-equity-linked",
+      "claim:private-credit-and-private-equity-linked-reviewed"
     ],
     "concept:private-market-access": [
-      "claim:private-capital-private-access"
+      "claim:private-capital-private-access",
+      "claim:private-capital-private-access-reviewed"
     ],
     "concept:real-assets": [
       "claim:private-capital-includes-real-assets",
+      "claim:private-capital-includes-real-assets-reviewed",
       "claim:real-assets-include-physical-assets"
     ],
     "concept:venture-capital": [
-      "claim:private-capital-includes-venture-capital"
+      "claim:private-capital-includes-venture-capital",
+      "claim:private-capital-includes-venture-capital-reviewed"
     ],
     "investment:kayson-achareh": [
       "claim:kayson-achareh-investment-amount"
@@ -52,7 +68,8 @@
       "claim:kayson-invested-in-achareh"
     ],
     "organization:amin-investment-bank": [
-      "claim:ali-sanginian-ceo-amin-investment-bank"
+      "claim:ali-sanginian-ceo-amin-investment-bank",
+      "claim:ali-sanginian-ceo-amin-investment-bank-observed-1395"
     ],
     "organization:kayson-group": [
       "claim:ali-sanginian-deputy-investment-kayson",
@@ -80,6 +97,7 @@
     "person:ali-sanginian": [
       "claim:ali-sanginian-board-tourism-bank",
       "claim:ali-sanginian-ceo-amin-investment-bank",
+      "claim:ali-sanginian-ceo-amin-investment-bank-observed-1395",
       "claim:ali-sanginian-ceo-kian-private-equity-management",
       "claim:ali-sanginian-ceo-semega",
       "claim:ali-sanginian-chair-tehran-chamber-commission",
@@ -96,6 +114,7 @@
   "claims": {
     "claim:ali-sanginian-board-tourism-bank": "ali-sanginian.json",
     "claim:ali-sanginian-ceo-amin-investment-bank": "ali-sanginian.json",
+    "claim:ali-sanginian-ceo-amin-investment-bank-observed-1395": "stage-5-reviewed.json",
     "claim:ali-sanginian-ceo-kian-private-equity-management": "ali-sanginian.json",
     "claim:ali-sanginian-ceo-semega": "ali-sanginian.json",
     "claim:ali-sanginian-chair-tehran-chamber-commission": "ali-sanginian.json",
@@ -107,13 +126,21 @@
     "claim:kian-private-equity-management-subsidiary-kian-financial-group": "ali-sanginian.json",
     "claim:kian-private-equity-operates-private-equity": "ali-sanginian.json",
     "claim:private-capital-boundaries-vary": "private-capital-boundaries-vary.json",
+    "claim:private-capital-boundaries-vary-reviewed": "stage-5-reviewed.json",
     "claim:private-capital-includes-growth-capital": "private-capital-includes-growth-capital.json",
+    "claim:private-capital-includes-growth-capital-reviewed": "stage-5-reviewed.json",
     "claim:private-capital-includes-private-credit": "private-capital-includes-private-credit.json",
+    "claim:private-capital-includes-private-credit-reviewed": "stage-5-reviewed.json",
     "claim:private-capital-includes-private-equity": "private-capital.json",
+    "claim:private-capital-includes-private-equity-reviewed": "stage-5-reviewed.json",
     "claim:private-capital-includes-real-assets": "private-capital-includes-real-assets.json",
+    "claim:private-capital-includes-real-assets-reviewed": "stage-5-reviewed.json",
     "claim:private-capital-includes-venture-capital": "private-capital-includes-venture-capital.json",
+    "claim:private-capital-includes-venture-capital-reviewed": "stage-5-reviewed.json",
     "claim:private-capital-private-access": "private-capital-private-access.json",
+    "claim:private-capital-private-access-reviewed": "stage-5-reviewed.json",
     "claim:private-credit-and-private-equity-linked": "private-credit-and-private-equity-linked.json",
+    "claim:private-credit-and-private-equity-linked-reviewed": "stage-5-reviewed.json",
     "claim:private-credit-lender-position": "private-credit-lender-position.json",
     "claim:private-credit-return-contractual": "private-credit-return-contractual.json",
     "claim:real-assets-include-physical-assets": "real-assets-include-physical-assets.json"

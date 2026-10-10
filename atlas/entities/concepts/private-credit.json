@@ -7,5 +7,20 @@
     "en": "Private Credit"
   },
   "aliases": [],
-  "lifecycleStatus": "REVIEW"
+  "lifecycleStatus": "PUBLISHED",
+  "metadata": {
+    "public_profile": {
+      "text": "اعتبار خصوصی، تأمین مالی بدهی در بازار خصوصی است. ECB این حوزه را از سرمایه‌گذاری مالکانه متمایز می‌کند؛ CFA برای دستهٔ بدهی اصطلاح private debt را به کار می‌برد.",
+      "sourceRefs": [
+        "source:ecb-private-markets-public-risk",
+        "source:cfa-alternative-investment-features-2026"
+      ],
+      "locators": [
+        "Overview of private market segments and strategies; private credit paragraph",
+        "Overview"
+      ],
+      "origin": "editorial_synthesis",
+      "reviewed_on": "2026-10-11"
+    }
+  }
 }

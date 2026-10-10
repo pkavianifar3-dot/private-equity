@@ -60,6 +60,25 @@
       "publisher": "Preqin",
       "publication_date": null,
       "url": "https://www.preqin.com/academy/lesson-2-private-capital/what-is-private-capital"
+    },
+    {
+      "id": "source:deloitte-asian-investment",
+      "type": "Source",
+      "source_type": "research",
+      "title_fa": "تغییر جریان سرمایه‌گذاری آسیایی",
+      "title_en": "Shifting tides of Asian investment",
+      "publisher": "Deloitte",
+      "publication_date": null,
+      "url": "https://www.deloitte.com/global/en/industries/investment-management/perspectives/shifting-tides-of-asian-investment.html"
+    },
+    {
+      "id": "source:globalswf-reports",
+      "type": "Source",
+      "source_type": "secondary",
+      "title_fa": "فهرست گزارش‌های Global SWF؛ دادهٔ اولیهٔ نمودار مستقیماً احراز نشده",
+      "publisher": "Global SWF",
+      "publication_date": null,
+      "url": "https://globalswf.com/reports"
     }
   ]
 }

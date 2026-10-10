@@ -214,9 +214,9 @@ class ResearchConnectionTests(unittest.TestCase):
         catalog = connections.read_json(root / "atlas/catalog/index.json")["entities"]
         article = connections.read_json(root / "research/content/private-markets/private-capital/research.json")
         self.assertEqual(len(article["entityRefs"]), 6)
-        self.assertEqual(connections.reverse_index(root, catalog)["entities"], {})
+        self.assertEqual(set(connections.reverse_index(root, catalog)["entities"]), set(article["entityRefs"]))
         panel = connections.render_article_context(article, catalog, root)
-        self.assertNotIn('id="research-atlas-heading"', panel)
+        self.assertIn('id="research-atlas-heading"', panel)
         self.assertIn('/articles/what-is-private-equity.html', panel)
 
 

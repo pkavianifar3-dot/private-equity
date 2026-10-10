@@ -74,7 +74,8 @@ for (const url of expectedSemanticLinks) {
     );
 }
 
-const conceptLinks = html.match(/href="\/atlas\/concept\/[^"]+\/"/g) || [];
+const articleBody = html.replace(/<aside class="explore-rail"[\s\S]*?<\/aside>/g, "");
+const conceptLinks = articleBody.match(/href="\/atlas\/concept\/[^"]+\/"/g) || [];
 assert(
     conceptLinks.length === 9,
     "static research page must contain exactly 9 concept semantic link occurrences"
@@ -110,8 +111,8 @@ assert(
     "curated related Research must link to its published page"
 );
 assert(
-    !connections[1].includes('href="/atlas/concept/'),
-    "REVIEW Entity refs must not be exposed in the new public context panel"
+    expectedSemanticLinks.every(url => connections[1].includes(`href="${url}"`)),
+    "Approved PUBLISHED Entity refs must remain discoverable in the context panel"
 );
 
 for (const slug of ["private-capital","private-capital-research"]) {
@@ -131,7 +132,13 @@ for (const slug of ["private-capital","private-capital-research"]) {
 }
 const newPage=fs.readFileSync("articles/private-capital-research.html","utf8");
 assert(newPage.includes("مفهوم، دامنه، تمایز و سازوکار"));
-assert(!newPage.includes('href="/atlas/concept/'),"new page must not expose current REVIEW concepts");
+assert(newPage.includes('href="/atlas/concept/private-capital/'),"new page must link to its approved primary Entity");
+const entities=JSON.parse(fs.readFileSync("atlas/entities/index.json","utf8")).entities;
+for (const e of entities.filter(e=>e.lifecycleStatus!=="PUBLISHED" && e.type==="Concept")) {
+    const url=`/atlas/concept/${e.id.split(":")[1]}/`;
+    assert(!html.includes(`href="${url}"`) && !newPage.includes(`href="${url}"`),
+      `${e.id}: non-public concepts must not gain Research links`);
+}
 assert.strictEqual((newPage.match(/class="research-note-ref"/g)||[]).length,20);
 assert(fs.readFileSync("articles.html","utf8").includes('href="articles/private-capital-research.html"'));
 assert(fs.readFileSync("sitemap.xml","utf8").includes('https://privatecapital.ir/articles/private-capital-research.html'));

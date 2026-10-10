@@ -107,9 +107,9 @@ function renderResearch(research, entities, sourceIndex, options = {}) {
 
     const entityResolver =
         global.PrivateCapitalEntityResolver.create(
-            // ADR-004 preserves the old guide's existing inline references until
-            // cutover. New published articles must not add REVIEW references.
-            options.preview || research.id === "research:private-capital" ? entities :
+            // Public articles resolve only approved PUBLISHED Entities.
+            // Preview retains the complete canonical inventory.
+            options.preview ? entities :
                 {...entities, entities: (entities.entities || []).filter(entity => entity.lifecycleStatus === "PUBLISHED")},
             global.PrivateCapitalURL
         );

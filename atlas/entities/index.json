@@ -17,7 +17,7 @@
         "fa": "سرمایه رشد",
         "en": "Growth Capital"
       },
-      "lifecycleStatus": "REVIEW"
+      "lifecycleStatus": "PUBLISHED"
     },
     {
       "id": "concept:lender",
@@ -44,7 +44,7 @@
         "fa": "سرمایه خصوصی",
         "en": "Private Capital"
       },
-      "lifecycleStatus": "REVIEW"
+      "lifecycleStatus": "PUBLISHED"
     },
     {
       "id": "concept:private-capital-classification",
@@ -53,7 +53,7 @@
         "fa": "طبقه‌بندی سرمایه خصوصی",
         "en": "Private Capital Classification"
       },
-      "lifecycleStatus": "REVIEW"
+      "lifecycleStatus": "PUBLISHED"
     },
     {
       "id": "concept:private-credit",
@@ -62,7 +62,7 @@
         "fa": "اعتبار خصوصی",
         "en": "Private Credit"
       },
-      "lifecycleStatus": "REVIEW"
+      "lifecycleStatus": "PUBLISHED"
     },
     {
       "id": "concept:private-equity",
@@ -71,7 +71,7 @@
         "fa": "سرمایه‌گذاری خصوصی",
         "en": "Private Equity"
       },
-      "lifecycleStatus": "REVIEW"
+      "lifecycleStatus": "PUBLISHED"
     },
     {
       "id": "concept:private-market-access",
@@ -80,7 +80,7 @@
         "fa": "دسترسی به بازارهای خصوصی",
         "en": "Private Market Access"
       },
-      "lifecycleStatus": "REVIEW"
+      "lifecycleStatus": "PUBLISHED"
     },
     {
       "id": "concept:real-assets",
@@ -89,7 +89,7 @@
         "fa": "دارایی‌های واقعی",
         "en": "Real Assets"
       },
-      "lifecycleStatus": "REVIEW"
+      "lifecycleStatus": "PUBLISHED"
     },
     {
       "id": "concept:venture-capital",
@@ -98,7 +98,7 @@
         "fa": "سرمایه‌گذاری خطرپذیر",
         "en": "Venture Capital"
       },
-      "lifecycleStatus": "REVIEW"
+      "lifecycleStatus": "PUBLISHED"
     },
     {
       "id": "investment:kayson-achareh",
@@ -116,7 +116,7 @@
         "fa": "آچاره",
         "en": "Achareh"
       },
-      "lifecycleStatus": "REVIEW"
+      "lifecycleStatus": "PUBLISHED"
     },
     {
       "id": "organization:amin-investment-bank",
@@ -125,7 +125,7 @@
         "fa": "شرکت تأمین سرمایه امین",
         "en": "Amin Investment Bank"
       },
-      "lifecycleStatus": "REVIEW"
+      "lifecycleStatus": "PUBLISHED"
     },
     {
       "id": "organization:iran-farabourse",
@@ -152,7 +152,7 @@
         "fa": "گروه مالی کیان",
         "en": "Kian Financial Group"
       },
-      "lifecycleStatus": "REVIEW"
+      "lifecycleStatus": "PUBLISHED"
     },
     {
       "id": "organization:kian-private-equity-management",

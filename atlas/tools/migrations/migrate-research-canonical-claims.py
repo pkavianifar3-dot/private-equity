@@ -1,4 +1,5 @@
 import json
+import argparse
 import re
 from pathlib import Path
 
@@ -7,9 +8,11 @@ CONTENT = ROOT / "research" / "content"
 MAPPINGS = ROOT / "research" / "mappings"
 
 
-def load_promotions():
+def load_promotions(mapping_dir=MAPPINGS):
     result = {}
-    for path in MAPPINGS.glob("*.json"):
+    if not mapping_dir.is_dir():
+        raise ValueError("Editorial mappings are external; supply --mappings-dir pointing to the verified private archive")
+    for path in mapping_dir.rglob("*.json"):
         data = json.loads(path.read_text(encoding="utf-8"))
         for claim in data.get("claims", []):
             if claim.get("status") == "PROMOTED":
@@ -46,7 +49,10 @@ def replace_top_level_array(text,key,values):
 
 
 def main():
-    promotions = load_promotions()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--mappings-dir", type=Path, default=MAPPINGS)
+    args = parser.parse_args()
+    promotions = load_promotions(args.mappings_dir)
     changed = 0
 
     for path in sorted(CONTENT.glob("*.json")):

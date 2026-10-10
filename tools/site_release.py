@@ -13,6 +13,7 @@ from urllib.parse import unquote, urljoin, urlsplit
 from xml.etree import ElementTree as ET
 import json
 import re
+import public_projection
 
 ORIGIN = "https://privatecapital.ir"
 ROOT = Path(__file__).resolve().parents[1]
@@ -141,11 +142,11 @@ def asset_allowed(relative):
     return relative in ("assets/Vazirmatn-Regular.woff2", "assets/Vazirmatn-Bold.woff2")
 
 
-def package_paths(root):
+def package_paths(root, public=False):
     config = policy(root)
     indexed = read_json(root / "atlas/entities/index.json")["entities"]
     for entity in indexed:
-        if entity["lifecycleStatus"] != "PUBLISHED" and entity["id"] not in config["legacy_review_entity_ids"]:
+        if not public and entity["lifecycleStatus"] != "PUBLISHED" and entity["id"] not in config["legacy_review_entity_ids"]:
             raise ValueError(f"{entity['id']}: new non-public Entity exposure is not allowed in the compatibility candidate")
     result = {url_file(u) for u in config["pages"]}
     result.update(url_file(r["url"]) for r in articles(root))
@@ -185,6 +186,13 @@ def package_paths(root):
             if asset not in result:
                 result.add(asset)
                 queue.append(asset)
+    if public:
+        overrides = public_projection.overrides(root)
+        _, excluded = public_projection.private_paths(root)
+        result.difference_update(excluded)
+        # Each family index and file is regenerated as a closed snapshot.
+        result = {p for p in result if not any(p.startswith('atlas/'+f+'/') for f in ('claims','evidence','sources'))}
+        result.update(overrides)
     return sorted(result)
 
 
@@ -192,19 +200,22 @@ def digest_files(root, paths):
     return {p: sha256(safe_file(root, p).read_bytes()).hexdigest() for p in sorted(paths)}
 
 
-def package(root, output):
+def package(root, output, public=False):
     output = output.resolve()
     if output.is_relative_to(root.resolve()) or root.resolve().is_relative_to(output) or output.is_symlink():
         raise ValueError("Artifact directory must be isolated from the repository root")
     if output.exists() and any(output.iterdir()):
         raise ValueError(f"Artifact directory is not empty; use a fresh directory: {output}")
-    paths = package_paths(root)
+    paths = package_paths(root, public=public)
+    overrides = public_projection.overrides(root) if public else {}
     output.mkdir(parents=True, exist_ok=True)
     for relative in paths:
         target = output / relative
         target.parent.mkdir(parents=True, exist_ok=True)
         # Text line endings must not depend on Git's Windows checkout settings.
-        data = safe_file(root, relative).read_bytes()
+        data = overrides.get(relative)
+        if data is None:
+            data = safe_file(root, relative).read_bytes()
         if Path(relative).suffix in (".html", ".css", ".js", ".json", ".xml", ".txt", ".webmanifest") or relative == "CNAME":
             data = data.replace(b"\r\n", b"\n")
         target.write_bytes(data)
@@ -258,9 +269,10 @@ def sitemap_text(root):
     return '<?xml version="1.0" encoding="UTF-8"?>\n' + ET.tostring(document, encoding="unicode") + "\n"
 
 
-def check_artifact(root, output):
+def check_artifact(root, output, public=False):
     """Check the actual bytes to be uploaded, including link/asset closure."""
-    expected = set(package_paths(root))
+    expected = set(package_paths(root, public=public))
+    overrides = public_projection.overrides(root) if public else {}
     actual = {p.relative_to(output).as_posix() for p in output.rglob("*") if p.is_file()}
     errors = []
     if actual != expected:
@@ -339,7 +351,9 @@ def check_artifact(root, output):
     # Detect tampering between verification and upload. This is also useful on
     # Windows, where the source checkout may use CRLF and the artifact uses LF.
     for relative in sorted(expected & actual):
-        source = safe_file(root, relative).read_bytes()
+        source = overrides.get(relative)
+        if source is None:
+            source = safe_file(root, relative).read_bytes()
         if Path(relative).suffix in (".html", ".css", ".js", ".json", ".xml", ".txt", ".webmanifest") or relative == "CNAME":
             source = source.replace(b"\r\n", b"\n")
         if (output / relative).read_bytes() != source:
@@ -361,6 +375,7 @@ def publication_blockers(root, output):
     for article in read_json(root / "research/index.json")["research"]:
         if article.get("status") != "PUBLISHED" and (output / url_file(article["url"])).exists():
             blockers.append(f"{article['id']}: unpublished Research page in artifact")
+    blockers.extend(public_projection.check(root, output))
     return sorted(set(blockers))
 
 
@@ -388,7 +403,7 @@ def inventory(root):
                            canonical=page.canonicals[0] if page.canonicals else "runtime-only" if url in config["dynamic_templates"] else None,
                            inbound_links=sorted(inbound[url]), in_sitemap=ORIGIN+url in sitemap_urls,
                            indexability="noindex" if any("noindex" in x for x in page.robots) else "indexable (legacy boundary deferred)",
-                           proposal="KEEP pending editorial review; NOINDEX/REMOVE-404 only by approval" if review else "KEEP",
+                           proposal="REMOVE from public artifact / 404; retain canonical and local review page" if review else "KEEP",
                            risk="Existing Research/Atlas links and JSON consumers depend on this address" if review else "Preserve canonical and navigation",
                            required_test="HTTP + canonical + inbound links + runtime + publication gate"))
     # Query entry points still work and set canonical SEO in Atlas JS. They are
@@ -398,26 +413,27 @@ def inventory(root):
         result.append(dict(url=f"/atlas/{kind}.html?id={entity['id']}", file=f"atlas/{kind}.html",
                            entity=entity["id"], status=entity["lifecycleStatus"], canonical=ORIGIN+route,
                            inbound_links=[], in_sitemap=False, indexability="runtime canonical",
-                           proposal="KEEP legacy query compatibility",risk="Requires indexed runtime JSON; do not remove it during packaging",
+                           proposal="SAFE NOT-FOUND / noindex; HTTP 200 shell limitation" if entity["lifecycleStatus"] != "PUBLISHED" else "KEEP legacy query compatibility",
+                           risk="Shared shell may return HTTP 200; no Entity data or canonical is delivered" if entity["lifecycleStatus"] != "PUBLISHED" else "Reuses reviewed static content from the closed public index",
                            required_test="Browser query render and canonical -> static Entity URL"))
     return result
 
 
 def inventory_markdown(root):
     rows = inventory(root)
-    lines = ["# Stage 5 URL disposition matrix", "", "Generated from the current local candidate. No URL removal, redirect, or Entity noindex is authorized.", "",
-             "The sitemap deliberately includes PUBLISHED routed Entities only. Existing REVIEW pages remain locally available and indexable until a separately approved cutover; the publication gate blocks this candidate.", "",
+    lines = ["# Stage 5 URL disposition matrix", "", "Generated from canonical/local routes. Public projection is approved locally; deployment remains disabled. REVIEW static routes and aliases are omitted from the public artifact, not deleted from canonical data.", "",
+             "The sitemap includes PUBLISHED routed Entities only. REVIEW pages remain local; their static URLs return 404 in the isolated public artifact. Shared legacy query shells return a safe not-found view with noindex; their HTTP response can remain 200.", "",
              "| URL / Entity | Current status | Canonical / destination | Inbound pages | Sitemap / indexing | Proposal | Compatibility risk / required test |",
              "| --- | --- | --- | --- | --- | --- | --- |"]
     for row in rows:
         inbound = ", ".join(row["inbound_links"]) or "—"
         alias = f"<br>Existing file alias: `/{row['file']}`" if row["file"].endswith("index.html") else ""
         lines.append(f"| `{row['url']}`{alias}<br>{row['entity'] or '—'} | {row['status']} | {row['canonical'] or '—'} | {inbound} | {'yes' if row['in_sitemap'] else 'no'} / {row['indexability']} | {row['proposal']} | {row['risk']}<br>{row['required_test']} |")
-    lines += ["", "## Migration plan (not executed)", "",
-              "1. Review each REVIEW Entity and its evidence; only editorial approval may promote it.",
-              "2. Choose KEEP with approved content, a genuinely relevant REDIRECT, NOINDEX, or REMOVE-404 per URL; no blanket redirect to Atlas home.",
-              "3. Reconcile old Research inline references, graph links, catalog and legacy query routes together.",
-              "4. Generate a closed public JSON projection from canonical inputs. The current full runtime indexes cannot simply be removed.",
-              "5. Retest all inbound links, static pages, legacy query SEO, indexes and rollback before activating ADR-004.",
+    lines += ["", "## Local projection implemented; production activation pending", "",
+              "1. Selective editorial approval is implemented locally: 12 PUBLISHED Entities; 15 REVIEW records remain internal.",
+              "2. Existing approved URLs are preserved; withheld static URLs and aliases are omitted / 404. No redirects are introduced.",
+              "3. Research links and reverse indexes use approved Entities; legacy private queries show a generic noindex not-found view.",
+              "4. The release CLI builds a closed public projection; canonical data and historical revisions remain complete internally.",
+              "5. Local validation, tests, link checks, drift, publication gate and HTTP checks passed; current-change remote CI and production activation remain pending.",
               "6. Atlas exploration rail stays local-only unless explicitly approved for public use.", ""]
     return "\n".join(lines)

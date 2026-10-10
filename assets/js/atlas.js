@@ -3260,6 +3260,29 @@ ${renderEvidenceSection(
             if (atlasRoot?.dataset.staticRendered === "true") {
                 return;
             }
+            const publicIndex = await loadCachedJSON(`${ATLAS_ROOT}/entities/index.json`);
+            const resolved = (publicIndex.entities || []).find(entity => entity.id === entityId);
+            if (!resolved || resolved.lifecycleStatus !== "PUBLISHED") {
+                setMeta("robots", "noindex,nofollow");
+                document.querySelector('link[rel="canonical"]')?.remove();
+                renderError("صفحه پیدا نشد.");
+                return;
+            }
+            if (publicIndex.projection === "public") {
+                // Reuse the reviewed static representation for legacy query URLs.
+                // The snapshot contains only approved identities; no private fetch occurs.
+                const response = await fetch(entityURL(resolved.id, resolved.type));
+                if (!response.ok) throw new Error("Missing public Entity page");
+                const page = new DOMParser().parseFromString(await response.text(), "text/html");
+                const content = page.getElementById("atlas-root");
+                if (!content || content.dataset.staticRendered !== "true") throw new Error("Invalid public Entity page");
+                atlasRoot.innerHTML = content.innerHTML;
+                applyPageSEO({title: page.title, description: page.querySelector('meta[name="description"]')?.content,
+                    url: window.PrivateCapitalURL.entityCanonicalURL(resolved.id, resolved.type)});
+                const jsonld = page.querySelector('script[type="application/ld+json"]');
+                if (jsonld) injectJSONLD(JSON.parse(jsonld.textContent));
+                return;
+            }
             relationContract = await loadRelationContract();
             if (entityId.startsWith("person:")) {
     await renderPerson(entityId);
@@ -3287,7 +3310,8 @@ throw new Error(
 
         } catch (error) {
             console.error("Atlas Renderer Error:", error);
-            renderError(error.message);
+            setMeta("robots", "noindex,nofollow");
+            renderError("صفحه پیدا نشد.");
         }
     }
 

@@ -19,6 +19,19 @@
   "lifecycleStatus": "PUBLISHED",
   "metadata": {
     "entity_role": "executive_and_board_member",
-    "last_reviewed": "1405-06"
+    "last_reviewed": "1405-06",
+    "public_profile": {
+      "text": "علی سنگینیان از مدیران بازار سرمایه ایران است. مصاحبهٔ بازار و سرمایه در آذر ۱۳۹۱ او را مدیرعامل تأمین سرمایه امین معرفی می‌کند؛ گزارش معاصر چیلان در ۹ تیر ۱۳۹۵ نیز این سمت را ذکر می‌کند. این شواهد تاریخ آغاز و پایان کامل دوره را تعیین نمی‌کنند.",
+      "sourceRefs": [
+        "source:sanginian-market-capital-interview-1391",
+        "source:tehran-chamber-independent-report"
+      ],
+      "locators": [
+        "صفحات چاپی ۶۴ و ۶۸؛ معرفی و انتقال به امین",
+        "عنوان سمت‌ها در ابتدای گزارش، ۲۰۱۶/۰۶/۲۹"
+      ],
+      "origin": "sourced_profile",
+      "reviewed_on": "2026-10-11"
+    }
   }
 }

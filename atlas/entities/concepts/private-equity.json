@@ -7,5 +7,18 @@
     "en": "Private Equity"
   },
   "aliases": [],
-  "lifecycleStatus": "REVIEW"
+  "lifecycleStatus": "PUBLISHED",
+  "metadata": {
+    "public_profile": {
+      "text": "سرمایه‌گذاری خصوصی، سرمایه‌گذاری مالکانه برای تأمین مالی بنگاه‌ها در بازار خصوصی است. در چارچوب ECB، سرمایه‌گذاری خطرپذیر، سرمایه رشد و تملک از راهبردهای این حوزه‌اند.",
+      "sourceRefs": [
+        "source:ecb-private-markets-public-risk"
+      ],
+      "locators": [
+        "Overview of private market segments and strategies; private equity paragraph"
+      ],
+      "origin": "editorial_synthesis",
+      "reviewed_on": "2026-10-11"
+    }
+  }
 }

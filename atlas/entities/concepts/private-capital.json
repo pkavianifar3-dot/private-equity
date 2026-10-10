@@ -7,5 +7,20 @@
     "en": "Private Capital"
   },
   "aliases": [],
-  "lifecycleStatus": "REVIEW"
+  "lifecycleStatus": "PUBLISHED",
+  "metadata": {
+    "public_profile": {
+      "text": "سرمایه خصوصی، سرمایه‌گذاری و تأمین مالی خارج از بازارهای عمومی است. در چارچوب CFA شامل سرمایه مالکانه و بدهی خصوصی است؛ Preqin دامنهٔ گسترده‌تری شامل املاک، زیرساخت و منابع طبیعی دارد. این چارچوب‌ها یک طبقه‌بندی جهانی واحد نیستند.",
+      "sourceRefs": [
+        "source:cfa-alternative-investment-features-2026",
+        "source:preqin-what-is-private-capital"
+      ],
+      "locators": [
+        "Overview",
+        "The Definition of Private Capital"
+      ],
+      "origin": "editorial_synthesis",
+      "reviewed_on": "2026-10-11"
+    }
+  }
 }

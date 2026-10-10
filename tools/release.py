@@ -41,7 +41,7 @@ def generated_snapshot(root):
     return {p.relative_to(root).as_posix(): sha256(p.read_bytes().replace(b"\r\n", b"\n")).hexdigest() for p in files}
 
 
-def http_smoke(root, output, diagnostics=None):
+def http_smoke(root, output, diagnostics=None, public=False):
     spec = importlib.util.spec_from_file_location("release_smoke_preview", root / "tools/preview-release.py")
     preview = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(preview)
@@ -83,7 +83,7 @@ def http_smoke(root, output, diagnostics=None):
                 raise ValueError(f"HTTP smoke: request failed for {url}: {type(error).__name__}: {error}") from error
     try:
         origin = f"http://127.0.0.1:{server.server_port}"
-        for relative in site.package_paths(root):
+        for relative in site.package_paths(root, public=public):
             url = site.page_url(relative) if relative.endswith(".html") else "/" + relative
             status, headers, body = fetch(origin, url)
             if status != 200 or not body:
@@ -98,7 +98,7 @@ def http_smoke(root, output, diagnostics=None):
                 raise ValueError(f"HTTP smoke: asset/runtime body differs: {url}")
             checks += 1
         # Filename aliases and canonical directory addresses both exist today.
-        for relative in site.package_paths(root):
+        for relative in site.package_paths(root, public=public):
             if not relative.endswith("index.html"):
                 continue
             url = "/" + relative
@@ -107,7 +107,15 @@ def http_smoke(root, output, diagnostics=None):
             if status != 200 or document.canonicals:
                 raise ValueError(f"HTTP smoke: invalid filename alias {url}")
             checks += 1
-        for url in ("/release-missing-route-test", "/assets/"):
+        missing_urls = ["/release-missing-route-test", "/assets/"]
+        if public:
+            _, private_paths = site.public_projection.private_paths(root)
+            for relative in sorted(private_paths):
+                if relative.endswith("index.html"):
+                    missing_urls.extend((site.page_url(relative), "/" + relative))
+                else:
+                    missing_urls.append("/" + relative)
+        for url in missing_urls:
             status, headers, body = fetch(origin, url)
             if status != 404 or "صفحه پیدا نشد" not in body.decode("utf-8"):
                 raise ValueError(f"HTTP smoke: invalid 404 for {url}")
@@ -149,12 +157,12 @@ def verify(root, output, ci=False):
         dirty = subprocess.check_output(["git", "status", "--porcelain"], cwd=root, text=True).strip()
         if dirty:
             raise ValueError("CI source tree changed during verification:\n" + dirty)
-    site.package(root, output)
-    result = site.check_artifact(root, output)
+    site.package(root, output, public=True)
+    result = site.check_artifact(root, output, public=True)
     transport_retries = []
-    result["http_checks"] = http_smoke(root, output, transport_retries)
+    result["http_checks"] = http_smoke(root, output, transport_retries, public=True)
     result["http_transport_retries"] = transport_retries
-    files = site.digest_files(output, site.package_paths(root))
+    files = site.digest_files(output, site.package_paths(root, public=True))
     blockers = site.publication_blockers(root, output)
     sha = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=root, text=True).strip()
     report = dict(commit=sha, candidate_kind="local-compatibility-only" if blockers else "public-eligible",
@@ -184,15 +192,15 @@ def main():
         if args.command == "verify":
             verify(root, args.output, args.ci)
         elif args.command == "build":
-            site.package(root, args.output)
-            print(site.check_artifact(root, args.output))
+            site.package(root, args.output, public=True)
+            print(site.check_artifact(root, args.output, public=True))
         elif args.command == "check":
-            print(site.check_artifact(root, args.output))
+            print(site.check_artifact(root, args.output, public=True))
         elif args.command == "smoke":
-            site.check_artifact(root, args.output)
-            print(f"HTTP checks passed: {http_smoke(root, args.output)}")
+            site.check_artifact(root, args.output, public=True)
+            print(f"HTTP checks passed: {http_smoke(root, args.output, public=True)}")
         elif args.command == "publication":
-            site.check_artifact(root, args.output)
+            site.check_artifact(root, args.output, public=True)
             blockers = site.publication_blockers(root, args.output)
             if blockers:
                 raise ValueError("PUBLICATION BLOCKED; local candidate only:\n" + "\n".join(blockers))

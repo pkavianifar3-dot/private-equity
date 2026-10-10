@@ -1,5 +1,7 @@
 # Stage 5 — safe release and URL alignment
 
+> **Current local state (2026-10-11):** The authorized editorial preparation and closed public projection are recorded in [stage-5-editorial-preparation.md](stage-5-editorial-preparation.md). Eleven Entities were selectively promoted; fifteen remain REVIEW and are absent from the isolated public artifact. The latest local verification passed: 183 Python tests, 21 JavaScript test files, 91 files / 31 pages / 25 sitemap URLs, 810 link/runtime checks and 135 HTTP checks, with zero content publication blockers. The content gate remains strict; production activation, current-change remote CI and manual Pages/DNS/TLS review are still pending. No commit/push/merge/deploy or remote settings changes occurred for this preparation. The sections below are the historical Stage 5 audit and prior branch submission, not the current uncommitted state.
+
 **Date:** 2026-10-10. **Roadmap:** principal section 4.5, step 5 (not the later Similarity step).
 **Baseline:** `f82938a15c8ae3090277992d230511623f4da728` on `feat/research-content-ingestion-foundation`.
 **Status:** local implementation and verification; public release blocked pending the approved migration decisions below. No commit, push, merge, deployment or remote settings change in this step.
