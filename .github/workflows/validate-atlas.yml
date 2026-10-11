@@ -8,6 +8,27 @@ on:
     branches:
       - main
   workflow_dispatch:
+    inputs:
+      release_authorized:
+        description: "Explicit authorization for this run to publish (gate must also be on)"
+        type: boolean
+        default: false
+      recovery_run_id:
+        description: "Approved successful main run ID; blank for normal verification/release"
+        type: string
+        default: ""
+      recovery_artifact_id:
+        description: "Exact immutable recovery artifact ID from that run"
+        type: string
+        default: ""
+      recovery_sha:
+        description: "Full SHA of the approved source bundle"
+        type: string
+        default: ""
+      recovery_dry_run:
+        description: "Verify/prepare recovery without authorizing upload/deploy"
+        type: boolean
+        default: true
 
 permissions:
   contents: read
@@ -18,10 +39,12 @@ concurrency:
 
 jobs:
   validate-atlas:
+    if: github.event_name != 'workflow_dispatch' || inputs.recovery_run_id == ''
     runs-on: ubuntu-24.04
     permissions:
       contents: read
       pages: read
+      actions: read
     outputs:
       pages-ready: ${{ steps.publication.outputs.ready }}
     steps:
@@ -48,6 +71,28 @@ jobs:
       - name: Validate, test, build, check drift and inspect the candidate
         run: python tools/release.py verify --ci --output "$RUNNER_TEMP/privatecapital-site"
 
+      - name: Recheck publication and archive only the public bundle
+        env:
+          PYTHONDONTWRITEBYTECODE: "1"
+        run: |
+          python tools/recovery.py create --output "$RUNNER_TEMP/privatecapital-site" --report "$RUNNER_TEMP/privatecapital-site.manifest.json" --bundle "$RUNNER_TEMP/public-recovery"
+          python tools/recovery.py rehearse --bundle "$RUNNER_TEMP/public-recovery" --output "$RUNNER_TEMP/recovery-rehearsal"
+
+      - name: Retain public-only candidate and separate manifest (not deployment approval)
+        id: archive
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: public-recovery-${{ github.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/public-recovery
+          retention-days: 30
+          if-no-files-found: error
+
+      - name: Verify actual retention after archival
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BUNDLE_ID: ${{ steps.archive.outputs.artifact-id }}
+        run: python tools/recovery.py retention --artifact-id "$BUNDLE_ID" --bundle "$RUNNER_TEMP/public-recovery"
+
       - name: Report candidate eligibility without exposing its files
         run: |
           python - <<'PY'
@@ -59,17 +104,20 @@ jobs:
               summary.write(f"Commit: `{report['commit']}`\n\n")
               summary.write(f"Artifact SHA-256: `{report['artifact_sha256']}`\n\n")
               summary.write(f"Checked {report['checks']['files']} files; {report['checks']['sitemap_urls']} sitemap URLs.\n\n")
-              summary.write(f"Publication blockers: **{len(report['publication_blockers'])}**. Files remain on this runner; no preview artifact is uploaded.\n")
+              summary.write(f"Publication blockers: **{len(report['publication_blockers'])}**. Only the checked public bundle and separate manifest are retained for 30 days. This is not deploy approval; feature/PR bundles cannot be recovery sources.\n")
           PY
 
       # No feature branch/PR can enter this step. Activation requires a separate
       # approved Pages-settings migration and ADR-004 public projection.
       - name: Gate production upload on approved publication and Pages source
         id: publication
-        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && vars.PAGES_RELEASE_ENABLED == 'true'
+        if: github.ref == 'refs/heads/main' && github.event_name == 'workflow_dispatch' && inputs.release_authorized && vars.PAGES_RELEASE_ENABLED == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
+          PAGES_RELEASE_ENABLED: ${{ vars.PAGES_RELEASE_ENABLED }}
+          RELEASE_AUTHORIZED: ${{ inputs.release_authorized }}
         run: |
+          python tools/recovery.py gate
           python tools/release.py publication --output "$RUNNER_TEMP/privatecapital-site"
           test "$(gh api "repos/$GITHUB_REPOSITORY/pages" --jq .build_type)" = workflow
           test "$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/main" --jq .object.sha)" = "$GITHUB_SHA"
@@ -81,13 +129,69 @@ jobs:
         with:
           name: github-pages-${{ github.sha }}
           path: ${{ runner.temp }}/privatecapital-site
-          retention-days: 1
+          retention-days: 30
 
-  deploy:
-    needs: validate-atlas
-    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && needs.validate-atlas.outputs.pages-ready == 'true'
+  recover-prepare:
+    if: github.event_name == 'workflow_dispatch' && inputs.recovery_run_id != '' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-24.04
     permissions:
+      contents: read
+      actions: read
+      pages: read
+    outputs:
+      pages-ready: ${{ steps.ready.outputs.ready }}
+    steps:
+      - name: Checkout current approved recovery implementation
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: "3.14.0"
+      - run: python -m pip install -r requirements.txt -c requirements-release.txt
+      - name: Verify immutable artifact provenance and download bounded bundle
+        id: source
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SOURCE_RUN: ${{ inputs.recovery_run_id }}
+          SOURCE_ARTIFACT: ${{ inputs.recovery_artifact_id }}
+          SOURCE_SHA: ${{ inputs.recovery_sha }}
+        run: python tools/recovery.py fetch --run-id "$SOURCE_RUN" --artifact-id "$SOURCE_ARTIFACT" --sha "$SOURCE_SHA" --bundle "$RUNNER_TEMP/recovery-input"
+      - name: Checkout only the verified historical source for content checks
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ steps.source.outputs.source-sha }}
+          path: recovery-source
+          persist-credentials: false
+      - name: Recheck bytes, links and old/current publication boundaries; rehearse Pages tar
+        env:
+          PYTHONDONTWRITEBYTECODE: "1"
+        run: python tools/recovery.py rehearse --source-root "$GITHUB_WORKSPACE/recovery-source" --bundle "$RUNNER_TEMP/recovery-input" --output "$RUNNER_TEMP/recovered-site"
+      - name: Authorize preparation for deployment (dry run never enters this step)
+        id: ready
+        if: inputs.release_authorized && !inputs.recovery_dry_run && vars.PAGES_RELEASE_ENABLED == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PAGES_RELEASE_ENABLED: ${{ vars.PAGES_RELEASE_ENABLED }}
+          RELEASE_AUTHORIZED: ${{ inputs.release_authorized }}
+        run: |
+          python tools/recovery.py gate
+          echo "ready=true" >> "$GITHUB_OUTPUT"
+      - name: Convert only recovered public directory to the official Pages artifact
+        if: steps.ready.outputs.ready == 'true'
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9
+        with:
+          name: github-pages-${{ github.sha }}
+          path: ${{ runner.temp }}/recovered-site
+          retention-days: 30
+
+  deploy:
+    needs: [validate-atlas, recover-prepare]
+    if: always() && github.ref == 'refs/heads/main' && github.event_name == 'workflow_dispatch' && inputs.release_authorized && vars.PAGES_RELEASE_ENABLED == 'true' && (needs.validate-atlas.outputs.pages-ready == 'true' || needs.recover-prepare.outputs.pages-ready == 'true')
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
       pages: write
       id-token: write
     concurrency:
@@ -97,10 +201,19 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      # No checkout or build here: this job deploys the artifact from the
-      # successful gate in THIS run, named after THIS immutable commit.
-      - name: Deploy the verified artifact
+      - name: Checkout safeguards only; do not rebuild the site
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - name: Recheck authorization, Actions source and current main after Environment approval
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PAGES_RELEASE_ENABLED: ${{ vars.PAGES_RELEASE_ENABLED }}
+          RELEASE_AUTHORIZED: ${{ inputs.release_authorized }}
+        run: python tools/recovery.py gate
+      - name: Deploy the verified artifact from this run only
         id: deployment
-        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1, Node 24
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346
         with:
           artifact_name: github-pages-${{ github.sha }}
