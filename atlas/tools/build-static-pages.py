@@ -22,6 +22,12 @@ _connections_spec = importlib.util.spec_from_file_location(
 research_connections = importlib.util.module_from_spec(_connections_spec)
 _connections_spec.loader.exec_module(research_connections)
 
+_exploration_spec = importlib.util.spec_from_file_location(
+    "exploration", Path(__file__).with_name("exploration.py")
+)
+exploration = importlib.util.module_from_spec(_exploration_spec)
+_exploration_spec.loader.exec_module(exploration)
+
 SITE_ORIGIN = "https://privatecapital.ir"
 
 ROUTES = {
@@ -895,16 +901,10 @@ def render_entity(
         '<script src="/atlas/tools/preview-url-resolver.js"></script>\n'
         if preview else ''
     )
-    related_research = (
-        research_connections.render_atlas_research(entity_id, research_index)
-        if research_index else ""
-    )
-    if related_research:
-        related_research = "\n\n" + related_research
     if exploration_html:
         exploration_html = "\n\n" + exploration_html
 
-    return f"""<!DOCTYPE html>
+    page = f"""<!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="UTF-8">
@@ -971,7 +971,7 @@ def render_entity(
 
 {render_data_quality(content)}
 
-{render_provenance(entity_claims, evidence, sources, source_index, entities, entity_id, relation_contract)}{related_research}
+{render_provenance(entity_claims, evidence, sources, source_index, entities, entity_id, relation_contract)}
 
 </div>
 
@@ -1019,6 +1019,10 @@ def render_entity(
 </body>
 </html>
 """
+    return exploration.atlas_page(
+        page, entity_id, entity_claims, entities, relation_contract, route_resolver,
+        render_claim_relation, research_index, preview=preview,
+    )
 
 
 def generate():

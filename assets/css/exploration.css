@@ -1,4 +1,4 @@
-/* Shared exploration presentation; loaded only by opted-in Research and local Atlas previews. */
+/* Shared exploration presentation; shared by Research, public Atlas and isolated previews. */
 .explore-reading-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(255px,290px);gap:clamp(24px,3vw,42px);align-items:start}
 .explore-reading-layout > article,.explore-reading-layout > .atlas-primary{min-width:0}
 .explore-reading-layout h2[id],.explore-reading-layout h3[id]{scroll-margin-top:110px}

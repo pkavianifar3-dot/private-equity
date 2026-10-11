@@ -87,25 +87,11 @@ def preview_research_page(page, article, catalog, related_selector=None):
 
 
 def preview_atlas_page(page, entity_id, claims, entities, relation_contract, research_index):
-    """Place the Entity's rendered sections beside a TOC and exploration rail."""
-    hero = page.find('<section class="page-hero">')
-    hero_end = page.find('</section>', hero)
-    root_end = page.find('\n</div>\n\n</main>', hero_end)
-    if hero < 0 or hero_end < 0 or root_end < 0:
-        raise ValueError(f"{entity_id}: Atlas root/hero contract missing")
-    hero_end += len('</section>')
-    content, headings = exploration.article_toc(
-        page[hero_end:root_end], levels=(2,), prefix="atlas",
-    )
-    rail = exploration.atlas_rail(
-        entity_id, claims, entities, relation_contract, preview_entity_url,
-        static_builder.render_claim_relation, research_index, headings,
-    )
-    layout = ('<div class="explore-reading-layout atlas-reading-layout">'
-              '<div class="atlas-primary">' + content + '</div>' + rail + '</div>')
-    return (page[:hero_end] + layout + page[root_end:]).replace(
-        '</head>', '<link rel="stylesheet" href="/assets/css/exploration-preview.css">\n</head>', 1,
-    )
+    """Reuse public composition with explicit preview publication and routing."""
+    return exploration.atlas_page(
+        page, entity_id, claims, entities, relation_contract, preview_entity_url,
+        static_builder.render_claim_relation, research_index, preview=True,
+    ).replace('/assets/css/exploration.css', '/assets/css/exploration-preview.css')
 
 
 def preview_entity_url(entity_id, entity_type):

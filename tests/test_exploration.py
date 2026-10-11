@@ -121,5 +121,58 @@ class ExplorationTests(unittest.TestCase):
         self.assertNotIn("نباید", str(preview))
 
 
+    def test_atlas_layout_is_repeatable_public_filtered_and_preview_explicit(self):
+        page = '<html><head></head><body><main><div id="atlas-root">' + \
+               '<section class="page-hero"><h1>Entity</h1></section>' + \
+               '<section><h2>روابط</h2><p>محتوا</p></section>\n</div>\n\n</main></body></html>'
+        entities = {ref: {"id": ref, "type": kind, "lifecycleStatus": status,
+                          "name": {"fa": ref}}
+                    for ref, kind, status in (("concept:public", "Concept", "PUBLISHED"),
+                                               ("concept:review", "Concept", "REVIEW"),
+                                               ("sector:unrouted", "Sector", "PUBLISHED"))}
+        claims = [{"id": "claim:" + str(i), "subject": "concept:root",
+                   "object": ref, "predicate": "REL"} for i, ref in enumerate(entities)]
+        contract = {"relations": {"REL": {"forward_label_fa": "مرتبط با",
+                                         "reverse_display_allowed": False}}}
+        index = {"entities": {"concept:root": [
+            {"url": "/articles/real.html", "title": "پژوهش"},
+            {"url": "/articles/fixture.html", "title": "نمونه", "previewFixture": True}]}}
+        args = ("concept:root", claims, entities, contract, static.entity_url,
+                static.render_claim_relation, index)
+        public = exploration.atlas_page(page, *args)
+        self.assertEqual(exploration.atlas_page(public, *args), public)
+        self.assertEqual(public.count('data-atlas-exploration'), 1)
+        self.assertEqual(public.count('class="explore-rail"'), 1)
+        self.assertIn('href="/assets/css/exploration.css"', public)
+        self.assertIn('href="/atlas/concept/public/"', public)
+        self.assertNotIn('href="/atlas/concept/review/"', public)
+        self.assertNotIn('href="/atlas/sector/', public)
+        self.assertIn('href="/articles/real.html"', public)
+        self.assertNotIn('href="/articles/fixture.html"', public)
+        self.assertLess(public.index('کاوش در اطلس'), public.index('کاوش در پژوهش‌ها'))
+        self.assertIn('class="explore-mobile-toc"', public)
+        preview = exploration.atlas_page(public, *args, preview=True)
+        self.assertIn('href="/atlas/concept/review/"', preview)
+        self.assertIn('href="/articles/fixture.html"', preview)
+        with self.assertRaisesRegex(ValueError, 'Atlas root/hero contract missing'):
+            exploration.atlas_page('<html></html>', *args)
+
+    def test_static_builder_all_public_types_and_legacy_shells_share_exploration(self):
+        for kind, prefix in (("Person", "person"), ("Organization", "organization"),
+                             ("Investment", "investment"), ("Concept", "concept")):
+            with self.subTest(kind=kind):
+                entity = {"id": prefix + ":fixture", "type": kind,
+                          "lifecycleStatus": "PUBLISHED", "name": {"fa": "مدخل"}}
+                page = static.render_entity(entity, [], {}, {}, {entity['id']: entity},
+                                            {"relations": {}})
+                self.assertEqual(page.count('class="explore-rail"'), 1)
+                self.assertIn('پژوهش مرتبطی ثبت نشده است.', page)
+                self.assertIn('رابطهٔ قابل نمایش ثبت نشده است.', page)
+                self.assertIn('class="explore-mobile-toc"', page)
+                self.assertIn('href="/assets/css/exploration.css"', page)
+                shell = (ROOT / f"atlas/{prefix}.html").read_text(encoding="utf-8")
+                self.assertIn('href="/assets/css/exploration.css"', shell)
+
+
 if __name__ == "__main__":
     unittest.main()
