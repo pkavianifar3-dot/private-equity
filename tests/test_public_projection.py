@@ -1,5 +1,6 @@
 import importlib.util
 import json
+import re
 from pathlib import Path
 import sys
 import tempfile
@@ -91,5 +92,32 @@ class PublicProjectionTests(unittest.TestCase):
         self.assertIn('CFA',page);self.assertIn('Preqin',page)
         self.assertIn('/articles/private-capital.html',page)
         self.assertIn('/articles/private-capital-research.html',page)
+
+
+    def test_every_public_entity_has_a_single_shared_rail_with_real_toc_targets(self):
+        public = site.read_json(self.output / 'atlas/entities/index.json')['entities']
+        self.assertTrue(public)
+        for entity in public:
+            route = projection.ROUTES[entity['type']]
+            path = self.output / f"atlas/{route}/{entity['id'].split(':', 1)[1]}/index.html"
+            with self.subTest(entity=entity['id']):
+                page = path.read_text(encoding='utf-8')
+                self.assertEqual(page.count('data-atlas-exploration'), 1)
+                self.assertEqual(page.count('class="explore-rail"'), 1)
+                self.assertNotIn('id="related-research-heading"', page)
+                self.assertIn('href="/assets/css/exploration.css"', page)
+                self.assertNotIn('exploration-preview.css', page)
+                headings = re.findall(r'<h2[^>]* id="(atlas-section-[^"]+)"', page)
+                rail = page.split('<aside class="explore-rail"', 1)[1].split('</aside>', 1)[0]
+                targets = re.findall(r'href="#(atlas-section-[^"]+)"', rail)
+                self.assertTrue(headings)
+                self.assertEqual(len(headings), len(set(headings)))
+                self.assertEqual(set(headings), set(targets))
+                self.assertLess(rail.index('کاوش در اطلس'), rail.index('کاوش در پژوهش‌ها'))
+                self.assertIn('class="explore-mobile-toc"', rail)
+                self.assertIn('class="explore-card explore-mobile-card"', rail)
+                self.assertIn('href="/atlas/"', rail)
+                self.assertIn('href="/articles.html"', rail)
+
 
 if __name__=='__main__':unittest.main()

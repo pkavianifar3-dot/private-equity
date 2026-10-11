@@ -104,12 +104,13 @@ def pick_related_entities(entity_id, claims, entities, relation_contract, resolv
     return list(selected.values())
 
 
-def pick_research(index, entity_id):
+def pick_research(index, entity_id, *, preview=False):
     """The generated reverse index already enforces publication and routes."""
     return [
         {"url": row["url"], "title": row["title"],
          "meta": "نمونهٔ نمایشی؛ فقط در preview" if row.get("previewFixture") else ""}
-        for row in index["entities"].get(entity_id, [])
+        for row in (index or {}).get("entities", {}).get(entity_id, [])
+        if preview or not row.get("previewFixture")
     ]
 
 
@@ -165,10 +166,10 @@ def research_rail(article, catalog, root, resolver, editorial_related, headings,
 
 
 def atlas_rail(entity_id, claims, entities, relation_contract, resolver,
-               render_relation, research_index, headings):
-    research = pick_research(research_index, entity_id)
+               render_relation, research_index, headings, *, preview=False):
+    research = pick_research(research_index, entity_id, preview=preview)
     related = pick_related_entities(entity_id, claims, entities, relation_contract,
-                                    resolver, render_relation, preview=True)
+                                    resolver, render_relation, preview=preview)
     return rail(headings, [
         card("کاوش در اطلس", related, "/atlas/",
              empty="رابطهٔ قابل نمایش ثبت نشده است."),
@@ -204,6 +205,34 @@ def research_page(page, article, catalog, root, resolver, editorial_related, *, 
                 '<article class="explore-reading">' + body + '</article>' + cards
                 + '</div><!-- research-exploration -->')
     page = page[:start] + composed + page[end + len('</article>'):]
+    style = '<link rel="stylesheet" href="/assets/css/exploration.css">'
+    if style not in page:
+        page = page.replace('</head>', style + '\n</head>', 1)
+    return page
+
+
+def atlas_page(page, entity_id, claims, entities, relation_contract, resolver,
+               render_relation, research_index, *, preview=False):
+    """Compose the same Entity layout for public builds and isolated previews."""
+    layout = re.compile(
+        r'<div class="explore-reading-layout atlas-reading-layout" data-atlas-exploration>'
+        r'<div class="atlas-primary">(.*?)</div><aside.*?</div><!-- atlas-exploration -->',
+        re.S,
+    )
+    page = layout.sub(lambda match: match.group(1), page)
+    hero = page.find('<section class="page-hero">')
+    hero_end = page.find('</section>', hero)
+    root_end = page.find('\n</div>\n\n</main>', hero_end)
+    if hero < 0 or hero_end < 0 or root_end < 0:
+        raise ValueError(f"{entity_id}: Atlas root/hero contract missing")
+    hero_end += len('</section>')
+    content, headings = article_toc(page[hero_end:root_end], levels=(2,), prefix="atlas")
+    cards = atlas_rail(entity_id, claims, entities, relation_contract, resolver,
+                       render_relation, research_index, headings, preview=preview)
+    composed = ('<div class="explore-reading-layout atlas-reading-layout" data-atlas-exploration>'
+                '<div class="atlas-primary">' + content + '</div>' + cards
+                + '</div><!-- atlas-exploration -->')
+    page = page[:hero_end] + composed + page[root_end:]
     style = '<link rel="stylesheet" href="/assets/css/exploration.css">'
     if style not in page:
         page = page.replace('</head>', style + '\n</head>', 1)
