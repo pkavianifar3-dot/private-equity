@@ -42,6 +42,7 @@
   "evidenceRefs": [],
   "sourceRefs": [],
   "relatedResearchRefs": [
+    "research:private-capital-research",
     "research:private-equity"
   ],
   "sections": [
@@ -477,5 +478,12 @@
       "start": 0,
       "end": 237
     }
-  ]
+  ],
+  "presentation": {
+    "byline": "پیمان کاویانی فر",
+    "portraitSrc": "/assets/images/peyman-kaviani-far.jpg",
+    "mentionLinkPolicy": "first-per-section",
+    "referenceStyle": "inline-collapsible"
+  },
+  "primaryEntityRef": "concept:private-capital"
 }

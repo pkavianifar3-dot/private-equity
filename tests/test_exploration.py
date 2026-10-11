@@ -21,12 +21,29 @@ static = load("build-static-pages")
 
 class ExplorationTests(unittest.TestCase):
     def test_preview_styles_scope_sticky_focus_and_mobile(self):
-        css = (ROOT / "atlas/tools/exploration-preview.css").read_text(encoding="utf-8")
+        css = (ROOT / "assets/css/exploration.css").read_text(encoding="utf-8")
         self.assertIn(".explore-rail-inner{position:sticky", css)
         self.assertIn("@media(max-width:980px)", css)
         self.assertIn("@media(max-width:700px)", css)
         self.assertIn(":focus-visible", css)
         self.assertIn(".explore-mobile-toc nav{display:block}", css)
+
+    def test_shared_research_layout_is_repeatable_and_public_filtered(self):
+        article = {"id":"research:test", "entityRefs":["concept:review","concept:public"]}
+        catalog = [{"id":"concept:"+key,"type":"Concept","lifecycleStatus":status,"name":{"fa":key}}
+                   for key,status in [("review","REVIEW"),("public","PUBLISHED")]]
+        page = '<html><head></head><body><article><h2>آغاز</h2><p>محتوا</p>' + \
+               '<div data-research-connections></div><!-- research-connections --></article></body></html>'
+        resolver = lambda ref,kind: '/atlas/concept/'+ref.split(':')[1]+'/'
+        editorial = lambda article,root: []
+        public = exploration.research_page(page,article,catalog,ROOT,resolver,editorial)
+        self.assertNotIn('href="/atlas/concept/review/"',public)
+        self.assertIn('href="/atlas/concept/public/"',public)
+        self.assertEqual(exploration.research_page(public,article,catalog,ROOT,resolver,editorial),public)
+        local = exploration.research_page(public,article,catalog,ROOT,resolver,editorial,preview=True)
+        self.assertIn('href="/atlas/concept/review/"',local)
+        self.assertEqual(local.count('data-research-exploration'),1)
+        self.assertNotIn('data-research-connections',local)
 
     def test_toc_uses_actual_headings_and_stable_targets(self):
         content = '<h2>سرمایه خصوصی چیست؟</h2><p>بدنه</p><h3>دامنه <em>بازار</em></h3>'

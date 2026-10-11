@@ -1,6 +1,15 @@
 import json
 from pathlib import Path
 
+import importlib.util
+
+_package_spec = importlib.util.spec_from_file_location(
+    "research_packages", Path(__file__).resolve().parent / "research_packages.py"
+)
+_packages = importlib.util.module_from_spec(_package_spec)
+_package_spec.loader.exec_module(_packages)
+content_files = _packages.content_files
+
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -273,6 +282,7 @@ def collect_discovery_index():
         )
 
     research_registry_ids = set()
+    research_registry_status = {}
 
     for research in research_entries:
         research_id = research.get("id")
@@ -289,10 +299,13 @@ def collect_discovery_index():
             )
 
         research_registry_ids.add(research_id)
+        research_registry_status[research_id] = research.get("status")
 
+    _packages.registry(ROOT.parent, _packages.discover(RESEARCH_CONTENT_DIR))
     discovery_by_entity = {}
+    entities = {entity["id"]: entity for entity in collect_entities()}
 
-    for path in sorted(RESEARCH_CONTENT_DIR.glob("*.json")):
+    for path in content_files(RESEARCH_CONTENT_DIR):
         data = load_json(path)
 
         research_id = data.get("id")
@@ -308,6 +321,10 @@ def collect_discovery_index():
                 f"{path.relative_to(ROOT.parent)}: "
                 f"research ID {research_id} is not registered"
             )
+        if research_registry_status[research_id] != data.get("status"):
+            raise ValueError(f"{path.relative_to(ROOT.parent)}: {research_id}: registry/source status mismatch")
+        if data.get("status") != "PUBLISHED":
+            continue
 
         sections = data.get("sections")
 
@@ -363,6 +380,13 @@ def collect_discovery_index():
                         f"mention {mention_id}: "
                         "resolved mention missing contentBlockId"
                     )
+
+                # ADR-004 defers removal of the old guide's existing discovery
+                # references. Publishing a new article cannot expand REVIEW exposure.
+                if research_id != "research:private-capital" and (
+                    entities.get(entity_ref, {}).get("lifecycleStatus") != "PUBLISHED"
+                ):
+                    continue
 
                 discovery_by_entity.setdefault(
                     entity_ref,

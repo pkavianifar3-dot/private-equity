@@ -1,0 +1,169 @@
+{
+  "version": "1.0",
+  "claims": [
+    {
+      "id": "claim:private-capital-includes-private-equity-reviewed",
+      "revision": 2,
+      "subject": "concept:private-capital",
+      "predicate": "INCLUDES",
+      "object": "concept:private-equity",
+      "status": "SUPPORTED",
+      "confidence": "HIGH",
+      "evidenceRefs": [
+        "evidence:private-capital-includes-private-equity-reviewed-1",
+        "evidence:private-capital-includes-private-equity-reviewed-2"
+      ],
+      "supersedes": "claim:private-capital-includes-private-equity",
+      "context": {
+        "source_framework": "CFA / Preqin",
+        "reviewed_on": "2026-10-11"
+      }
+    },
+    {
+      "id": "claim:private-capital-includes-private-credit-reviewed",
+      "revision": 2,
+      "subject": "concept:private-capital",
+      "predicate": "INCLUDES",
+      "object": "concept:private-credit",
+      "status": "SUPPORTED",
+      "confidence": "HIGH",
+      "evidenceRefs": [
+        "evidence:private-capital-includes-private-credit-reviewed-1",
+        "evidence:private-capital-includes-private-credit-reviewed-2"
+      ],
+      "supersedes": "claim:private-capital-includes-private-credit",
+      "context": {
+        "source_framework": "CFA / Preqin; private credit corresponds to the credit segment described by ECB",
+        "reviewed_on": "2026-10-11"
+      }
+    },
+    {
+      "id": "claim:private-capital-includes-real-assets-reviewed",
+      "revision": 2,
+      "subject": "concept:private-capital",
+      "predicate": "INCLUDES",
+      "object": "concept:real-assets",
+      "status": "SUPPORTED",
+      "confidence": "MEDIUM",
+      "evidenceRefs": [
+        "evidence:private-capital-includes-real-assets-reviewed-1",
+        "evidence:private-capital-includes-real-assets-reviewed-2"
+      ],
+      "supersedes": "claim:private-capital-includes-real-assets",
+      "context": {
+        "source_framework": "Preqin scope; grouping as real assets is an editorial synthesis, not the CFA hierarchy",
+        "reviewed_on": "2026-10-11"
+      }
+    },
+    {
+      "id": "claim:private-capital-includes-venture-capital-reviewed",
+      "revision": 2,
+      "subject": "concept:private-capital",
+      "predicate": "INCLUDES",
+      "object": "concept:venture-capital",
+      "status": "SUPPORTED",
+      "confidence": "HIGH",
+      "evidenceRefs": [
+        "evidence:private-capital-includes-venture-capital-reviewed-1"
+      ],
+      "supersedes": "claim:private-capital-includes-venture-capital",
+      "context": {
+        "source_framework": "Preqin; ECB instead describes venture capital as a private-equity strategy",
+        "reviewed_on": "2026-10-11"
+      }
+    },
+    {
+      "id": "claim:private-capital-includes-growth-capital-reviewed",
+      "revision": 2,
+      "subject": "concept:private-capital",
+      "predicate": "INCLUDES",
+      "object": "concept:growth-capital",
+      "status": "SUPPORTED",
+      "confidence": "HIGH",
+      "evidenceRefs": [
+        "evidence:private-capital-includes-growth-capital-reviewed-1"
+      ],
+      "supersedes": "claim:private-capital-includes-growth-capital",
+      "context": {
+        "source_framework": "ECB; growth capital is a private-equity strategy; inclusion here denotes scope, not a peer asset class",
+        "reviewed_on": "2026-10-11"
+      }
+    },
+    {
+      "id": "claim:private-capital-boundaries-vary-reviewed",
+      "revision": 2,
+      "subject": "concept:private-capital",
+      "predicate": "HAS_NON_UNIFORM_CLASSIFICATION",
+      "object": "concept:private-capital-classification",
+      "status": "SUPPORTED",
+      "confidence": "MEDIUM",
+      "evidenceRefs": [
+        "evidence:private-capital-boundaries-vary-reviewed-1",
+        "evidence:private-capital-boundaries-vary-reviewed-2"
+      ],
+      "supersedes": "claim:private-capital-boundaries-vary",
+      "context": {
+        "source_framework": "Editorial comparison of CFA and Preqin, not a universal hierarchy",
+        "reviewed_on": "2026-10-11"
+      }
+    },
+    {
+      "id": "claim:private-capital-private-access-reviewed",
+      "revision": 2,
+      "subject": "concept:private-capital",
+      "predicate": "CHARACTERIZED_BY",
+      "object": "concept:private-market-access",
+      "status": "SUPPORTED",
+      "confidence": "HIGH",
+      "evidenceRefs": [
+        "evidence:private-capital-private-access-reviewed-1",
+        "evidence:private-capital-private-access-reviewed-2"
+      ],
+      "supersedes": "claim:private-capital-private-access",
+      "context": {
+        "source_framework": "Access methods vary; no universal investor exclusion",
+        "reviewed_on": "2026-10-11"
+      }
+    },
+    {
+      "id": "claim:private-credit-and-private-equity-linked-reviewed",
+      "revision": 2,
+      "subject": "concept:private-credit",
+      "predicate": "LINKED_TO",
+      "object": "concept:private-equity",
+      "status": "SUPPORTED",
+      "confidence": "HIGH",
+      "evidenceRefs": [
+        "evidence:private-credit-and-private-equity-linked-reviewed-1"
+      ],
+      "supersedes": "claim:private-credit-and-private-equity-linked",
+      "context": {
+        "source_framework": "ECB: financing links, not equivalence of asset classes",
+        "reviewed_on": "2026-10-11"
+      }
+    },
+    {
+      "id": "claim:ali-sanginian-ceo-amin-investment-bank-observed-1395",
+      "revision": 2,
+      "subject": "person:ali-sanginian",
+      "predicate": "CEO_OF",
+      "object": "organization:amin-investment-bank",
+      "temporal": {
+        "start": null,
+        "end": null,
+        "precision": "day",
+        "status": "observed"
+      },
+      "status": "SUPPORTED",
+      "confidence": "HIGH",
+      "evidenceRefs": [
+        "evidence:ali-ceo-amin-observed-1395"
+      ],
+      "supersedes": "claim:ali-sanginian-ceo-amin-investment-bank",
+      "context": {
+        "observation_date": "1395-04-09",
+        "scope_note": "سمت در تاریخ گزارش مشاهده شده؛ آغاز و پایان دوره احراز نشده است."
+      }
+    }
+  ]
+}

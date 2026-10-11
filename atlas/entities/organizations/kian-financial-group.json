@@ -7,8 +7,21 @@
     "en": "Kian Financial Group"
   },
   "aliases": [],
-  "lifecycleStatus": "REVIEW",
+  "lifecycleStatus": "PUBLISHED",
   "organization_type": "financial_group",
   "national_id": null,
-  "registration_number": null
+  "registration_number": null,
+  "metadata": {
+    "public_profile": {
+      "text": "گروه مالی کیان در وب‌سایت خود خدمات صندوق‌های سرمایه‌گذاری، سبدگردانی، کارگزاری، بانکداری سرمایه‌گذاری و مدیریت سرمایه خصوصی را معرفی می‌کند. این پروفایل، هویت حقوقی مستقل شرکت مدیریت سهام خصوصی کیان را احراز نمی‌کند.",
+      "sourceRefs": [
+        "source:kian-official-profile"
+      ],
+      "locators": [
+        "خدمات گروه مالی کیان در یک قاب"
+      ],
+      "origin": "sourced_profile",
+      "reviewed_on": "2026-10-11"
+    }
+  }
 }

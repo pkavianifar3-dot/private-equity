@@ -7,5 +7,20 @@
     "en": "Private Market Access"
   },
   "aliases": [],
-  "lifecycleStatus": "REVIEW"
+  "lifecycleStatus": "PUBLISHED",
+  "metadata": {
+    "public_profile": {
+      "text": "این مدخل جنبهٔ دسترسی به سرمایه‌گذاری در بازار خصوصی را توضیح می‌دهد: صندوق‌ها، سرمایه‌گذاری مستقیم و هم‌سرمایه‌گذاری مسیرهای متفاوت‌اند. محدودیت دسترسی معمول است و قاعدهٔ مطلق برای همهٔ ساختارها نیست.",
+      "sourceRefs": [
+        "source:cfa-alternative-investment-features-2026",
+        "source:preqin-what-is-private-capital"
+      ],
+      "locators": [
+        "Overview; investing methods",
+        "Private Capital Fund Structures"
+      ],
+      "origin": "editorial_synthesis",
+      "reviewed_on": "2026-10-11"
+    }
+  }
 }

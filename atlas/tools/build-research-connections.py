@@ -6,6 +6,7 @@ import re
 from pathlib import Path
 
 import research_connections as connections
+import exploration
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -30,12 +31,22 @@ def updated_article(path, panel):
 def main():
     catalog = load_catalog().collect_entities()
     index = connections.reverse_index(ROOT, catalog)
+    related_selector = connections.research_selector(ROOT, catalog)
     updates = []
     for article in connections.eligible_articles(ROOT):
         path = connections.article_path(ROOT, article["url"], article["id"])
-        updated = updated_article(
-            path, connections.render_article_context(article, catalog, ROOT)
-        )
+        if article.get("presentation", {}).get("referenceStyle") == "inline-collapsible":
+            routes = {entity["id"]: entity for entity in catalog}
+            resolver = lambda ref, kind: routes.get(ref, {}).get("route") if routes.get(ref, {}).get("type") == kind else None
+            original = path.read_text(encoding="utf-8")
+            composed = exploration.research_page(
+                original, article, catalog, ROOT, resolver, related_selector,
+            )
+            updated = composed if composed != original else None
+        else:
+            updated = updated_article(
+                path, connections.render_article_context(article, catalog, ROOT, related_selector=related_selector)
+            )
         if updated is not None:
             updates.append((path, updated))
     connections.INDEX_PATH.write_text(

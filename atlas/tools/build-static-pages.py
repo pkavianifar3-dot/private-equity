@@ -137,6 +137,9 @@ def load_sources():
 def load_content(entity):
     entity_id = entity.get("id", "")
 
+    profile = entity.get("metadata", {}).get("public_profile")
+    if profile:
+        return {"summary": profile["text"], "sections": [{"id": "reviewed-profile", "title_fa": "معرفی و دامنه", "paragraphs": [{"text": profile["text"], "sourceRefs": profile["sourceRefs"]}]}]}
     if not entity_id.startswith("person:"):
         return None
 
@@ -367,6 +370,7 @@ def render_claims(
             f'<div class="atlas-claim-label">{esc(relation["label"])}</div>'
             f"<h3>{target}</h3>"
             + temporal_html
+            + (f'<p class="atlas-claim-meta">{esc(claim.get("context", {}).get("source_framework") or claim.get("context", {}).get("scope_note"))}</p>' if claim.get("context", {}).get("source_framework") or claim.get("context", {}).get("scope_note") else '')
             + summary
             + "</article>"
         )

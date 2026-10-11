@@ -4,7 +4,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-RESEARCH_PATH = ROOT / "research" / "content" / "private-capital.json"
+RESEARCH_PATH = ROOT / "research" / "content" / "private-markets" / "private-capital" / "research.json"
 ARTICLE_PATH = ROOT / "articles" / "private-capital.html"
 
 
@@ -172,7 +172,7 @@ class ArticleRendererBoundaryTests(unittest.TestCase):
         import json
 
         research = json.loads(
-            (ROOT / "research" / "content" / "private-capital.json")
+            (ROOT / "research" / "content" / "private-markets" / "private-capital" / "research.json")
             .read_text(encoding="utf-8")
         )
 
@@ -341,7 +341,7 @@ class ArticleRendererIntegrationTests(unittest.TestCase):
 
     def test_article_keeps_presentation_shell(self):
         for marker in (
-            'class="article-author"',
+            'class="article-author research-byline"',
             'class="article-date"',
             "data-article-renderer-citations",
             'class="article-copyright"',
@@ -358,9 +358,9 @@ class ArticleRendererIntroductionBoundaryTests(unittest.TestCase):
             ROOT / "articles" / "private-capital.html"
         ).read_text(encoding="utf-8")
 
-        self.assertIn(
-            '<h2>سرمایه خصوصی چیست؟</h2>',
+        self.assertRegex(
             article,
+            r'<h2(?:\s[^>]*)?>سرمایه خصوصی چیست؟</h2>',
         )
         self.assertIn(
             "data-article-renderer-citations",
@@ -406,7 +406,7 @@ class ArticleRendererMigrationBoundaryTests(unittest.TestCase):
                 ROOT
                 / "research"
                 / "content"
-                / "private-capital.json"
+                / "private-markets" / "private-capital" / "research.json"
             ).read_text(encoding="utf-8")
         )
 
@@ -431,7 +431,7 @@ class ArticleRendererResearchSourceContractTests(unittest.TestCase):
             ROOT
             / "research"
             / "content"
-            / "private-capital.json"
+            / "private-markets" / "private-capital" / "research.json"
         )
 
         self.assertTrue(
@@ -440,7 +440,7 @@ class ArticleRendererResearchSourceContractTests(unittest.TestCase):
         )
 
         self.assertNotIn(
-            "research/content/private-capital.json",
+            "research/content/private-markets/private-capital/research.json",
             article,
             "Research source should not be hardcoded into article HTML yet",
         )
@@ -463,18 +463,12 @@ class ArticleRendererPageIntegrationTests(unittest.TestCase):
             "const loadJSON = dataLoader.loadJSON;",
             integration,
         )
-        self.assertIn(
-            "function getArticleSlug()",
-            integration,
-        )
+        self.assertNotIn("function getArticleSlug()", integration)
         self.assertIn(
             'function getResearchPath()',
             integration,
         )
-        self.assertIn(
-            '`../research/content/${getArticleSlug()}.json`',
-            integration,
-        )
+        self.assertIn("article[data-research-source]", integration)
 
     def test_article_page_integration_uses_shared_data_loader(self):
         integration = (
@@ -645,7 +639,7 @@ class ArticleRendererPageIntegrationTests(unittest.TestCase):
         )
         section = html[start:end]
 
-        self.assertGreater(section.count("<h3>"), 0)
+        self.assertRegex(section, r"<h3(?:\s[^>]*)?>")
         self.assertGreater(section.count("<p>"), 0)
 
     def test_private_capital_private_equity_ends_before_private_credit(self):
@@ -695,15 +689,17 @@ class ArticleRendererPageIntegrationTests(unittest.TestCase):
         start = html.index(
             '<div data-article-renderer-section="introduction">'
         )
-        end = html.index(
-            '<h2>سرمایه خصوصی چیست؟</h2>',
-            start,
-        )
+        import re
+        following = re.search(r'<h2(?:\s[^>]*)?>سرمایه خصوصی چیست؟</h2>', html[start:])
+        self.assertIsNotNone(following)
+        end = start + following.start()
         section = html[start:end]
 
+        self.assertIn('<figure class="research-cover explore-lead-media">', section)
+        self.assertIn('../assets/images/private-capital.png', section)
         before = html[:start]
         self.assertNotIn(
-            "<figure>",
+            "<figure",
             before,
             "Introduction figure must not remain outside its renderer boundary",
         )

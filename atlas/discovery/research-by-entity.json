@@ -1,4 +1,65 @@
 {
   "version": "1.0",
-  "entities": {}
+  "entities": {
+    "concept:growth-capital": [
+      {
+        "id": "research:private-capital",
+        "url": "/articles/private-capital.html",
+        "title": "سرمایه خصوصی (Private Capital) چیست؟ | راهنمای جامع مفهومی",
+        "datePublished": "2026-08-13T00:00:00+03:30"
+      }
+    ],
+    "concept:private-capital": [
+      {
+        "id": "research:private-capital",
+        "url": "/articles/private-capital.html",
+        "title": "سرمایه خصوصی (Private Capital) چیست؟ | راهنمای جامع مفهومی",
+        "datePublished": "2026-08-13T00:00:00+03:30"
+      },
+      {
+        "id": "research:private-capital-research",
+        "url": "/articles/private-capital-research.html",
+        "title": "سرمایه خصوصی (Private Capital) چیست؟ | مفهوم، دامنه، تمایز و سازوکار",
+        "datePublished": null
+      }
+    ],
+    "concept:private-credit": [
+      {
+        "id": "research:private-capital",
+        "url": "/articles/private-capital.html",
+        "title": "سرمایه خصوصی (Private Capital) چیست؟ | راهنمای جامع مفهومی",
+        "datePublished": "2026-08-13T00:00:00+03:30"
+      }
+    ],
+    "concept:private-equity": [
+      {
+        "id": "research:private-capital",
+        "url": "/articles/private-capital.html",
+        "title": "سرمایه خصوصی (Private Capital) چیست؟ | راهنمای جامع مفهومی",
+        "datePublished": "2026-08-13T00:00:00+03:30"
+      },
+      {
+        "id": "research:private-capital-research",
+        "url": "/articles/private-capital-research.html",
+        "title": "سرمایه خصوصی (Private Capital) چیست؟ | مفهوم، دامنه، تمایز و سازوکار",
+        "datePublished": null
+      }
+    ],
+    "concept:real-assets": [
+      {
+        "id": "research:private-capital",
+        "url": "/articles/private-capital.html",
+        "title": "سرمایه خصوصی (Private Capital) چیست؟ | راهنمای جامع مفهومی",
+        "datePublished": "2026-08-13T00:00:00+03:30"
+      }
+    ],
+    "concept:venture-capital": [
+      {
+        "id": "research:private-capital",
+        "url": "/articles/private-capital.html",
+        "title": "سرمایه خصوصی (Private Capital) چیست؟ | راهنمای جامع مفهومی",
+        "datePublished": "2026-08-13T00:00:00+03:30"
+      }
+    ]
+  }
 }

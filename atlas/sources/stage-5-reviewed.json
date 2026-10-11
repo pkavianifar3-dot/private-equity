@@ -1,0 +1,41 @@
+{
+  "version": "1.0",
+  "sources": [
+    {
+      "id": "source:achareh-official-profile",
+      "type": "Source",
+      "source_type": "official_corporate",
+      "title_fa": "خدمات آنلاین و تعمیرات در منزل با آچاره",
+      "publisher": "آچاره",
+      "publication_date": null,
+      "url": "https://achareh.co/"
+    },
+    {
+      "id": "source:amin-official-profile",
+      "type": "Source",
+      "source_type": "official_corporate",
+      "title_fa": "خدمات تأمین سرمایه امین",
+      "publisher": "تأمین سرمایه امین",
+      "publication_date": null,
+      "url": "https://aminib.com/"
+    },
+    {
+      "id": "source:kian-official-profile",
+      "type": "Source",
+      "source_type": "official_corporate",
+      "title_fa": "خدمات گروه مالی کیان",
+      "publisher": "گروه مالی کیان",
+      "publication_date": null,
+      "url": "https://kiangroup.com/"
+    },
+    {
+      "id": "source:sanginian-market-capital-interview-1391",
+      "type": "Source",
+      "source_type": "news_media",
+      "title_fa": "از پرواز تا تالار بورس؛ مصاحبه با علی سنگینیان",
+      "publisher": "بازار و سرمایه",
+      "publication_date": "1391-09",
+      "url": "https://sanginian.com/wp-content/uploads/2023/07/886162d0-0524-403f-bd0e-39e1c1e52c5c.pdf"
+    }
+  ]
+}

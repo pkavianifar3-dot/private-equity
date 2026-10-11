@@ -8,6 +8,7 @@ import argparse
 import importlib.util
 import json
 import re
+import subprocess
 import tempfile
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -66,52 +67,23 @@ def showcase_article(output_root, index, catalog):
     return destination
 
 
-def preview_research_page(page, article, catalog):
+def preview_research_page(page, article, catalog, related_selector=None):
     """Compose a reading-first rail from the built article, only in memory."""
-    marker = '<div data-research-connections>'
-    end_marker = '</div><!-- research-connections -->'
-    start = page.find(marker)
-    end = page.find(end_marker, start)
-    if start < 0 or end < 0:
-        raise ValueError(f"{article['id']}: Research connections target missing")
-    page = page[:start] + page[end + len(end_marker):]
-    opening, closing = '<article>', '</article>'
-    start, end = page.find(opening), page.find(closing)
-    if start < 0 or end < start:
-        raise ValueError(f"{article['id']}: article element missing")
-    body = page[start + len(opening):end]
-    # Keep the authored lead text and image together, without modifying the article source.
-    lead = re.compile(r'<div data-article-renderer-section="introduction">(.*?)'
-                      r'(<figure>.*?</figure>)</div>', re.S)
-    body, replaced = lead.subn(
-        lambda match: ('<div class="explore-lead"><div class="explore-lead-text" '
-                       'data-article-renderer-section="introduction">' + match.group(1)
-                       + '</div>' + match.group(2).replace('<figure>',
-                                                           '<figure class="explore-lead-media">', 1)
-                       + '</div>'), body, count=1,
+    page = exploration.research_page(
+        page, article, catalog, SITE_ROOT, preview_entity_url,
+        related_selector or static_builder.research_connections.editorial_related, preview=True,
     )
-    if replaced != 1:
-        raise ValueError(f"{article['id']}: lead introduction/figure contract missing")
-    body, headings = exploration.article_toc(body)
-    rail = exploration.research_rail(
-        article, catalog, SITE_ROOT, preview_entity_url,
-        static_builder.research_connections.editorial_related, headings,
-    )
-    layout = ('<div class="explore-reading-layout"><article class="explore-reading">'
-              + body
-              + '</article>' + rail + '</div>')
-    page = page[:start] + layout + page[end + len(closing):]
     # The static article is complete. Its client re-render would discard H3 IDs.
     runtime_script = '<script src="../assets/js/article-page.js"></script>'
-    if page.count(runtime_script) != 1:
-        raise ValueError(f"{article['id']}: unexpected Article enhancement script")
     page = page.replace(runtime_script, '')
     page = page.replace('</head>',
                         '<link rel="stylesheet" href="/assets/css/exploration-preview.css">\n</head>', 1)
     canonical = '<link rel="canonical" href="https://privatecapital.ir' + article["url"] + '">'
-    if page.count(canonical) != 1:
-        raise ValueError(f"{article['id']}: preview requires one canonical link to replace")
-    return page.replace(canonical, '<meta name="robots" content="noindex,nofollow">')
+    if page.count(canonical) == 1:
+        return page.replace(canonical, '<meta name="robots" content="noindex,nofollow">')
+    if page.count('<meta name="robots" content="noindex,nofollow">') != 1 or 'rel="canonical"' in page:
+        raise ValueError(f"{article['id']}: preview requires noindex without canonical")
+    return page
 
 
 def preview_atlas_page(page, entity_id, claims, entities, relation_contract, research_index):
@@ -165,6 +137,7 @@ def build_preview(output_root, *, showcase=False):
     relation_contract = static_builder.load_relation_contract()
     catalog = catalog_builder.collect_entities()
     catalog_builder.validate_unique_ids(catalog)
+    related_selector = static_builder.research_connections.research_selector(SITE_ROOT, catalog)
 
     for entry in catalog:
         if entry["type"] in PREVIEW_TYPES:
@@ -172,8 +145,17 @@ def build_preview(output_root, *, showcase=False):
             if not entry["route"]:
                 raise ValueError(f"Invalid preview Entity ID/type: {entry['id']} / {entry['type']}")
     catalog.sort(key=lambda entry: entry["id"])
+    subprocess.run(["node", str(TOOLS_DIR / "build-research-pages.js"),
+                    "--preview-dir=" + str(output_root)], check=True, cwd=SITE_ROOT)
+    review_articles = [article for article in
+                       static_builder.research_connections.structured_articles(SITE_ROOT).values()
+                       if article.get("status") == "REVIEW"]
+    for article in review_articles:
+        if not (output_root / "__preview" / article["url"].lstrip("/")).is_file():
+            raise ValueError(f"{article['id']}: preview article missing")
     research_index = static_builder.research_connections.reverse_index(
         SITE_ROOT, catalog, preview=True, preview_resolver=preview_entity_url,
+        preview_articles=review_articles,
     )
     generated = []
     if showcase:
@@ -188,7 +170,7 @@ def build_preview(output_root, *, showcase=False):
 
     preview_css = output_root / "assets/css/exploration-preview.css"
     preview_css.parent.mkdir(parents=True, exist_ok=True)
-    preview_css.write_bytes((TOOLS_DIR / "exploration-preview.css").read_bytes())
+    preview_css.write_bytes((SITE_ROOT / "assets/css/exploration.css").read_bytes())
     for entry in catalog:
         route = entry.get("route")
         if not route:
@@ -214,9 +196,14 @@ def build_preview(output_root, *, showcase=False):
         source = static_builder.research_connections.article_path(
             SITE_ROOT, article["url"], article["id"]
         )
-        page = preview_research_page(source.read_text(encoding="utf-8"), article, catalog)
+        page = preview_research_page(source.read_text(encoding="utf-8"), article, catalog, related_selector)
         destination = output_root / article["url"].lstrip("/")
         destination.parent.mkdir(parents=True, exist_ok=True)
+        destination.write_text(page, encoding="utf-8")
+        generated.append(destination)
+    for article in review_articles:
+        destination = output_root / "__preview" / article["url"].lstrip("/")
+        page = preview_research_page(destination.read_text(encoding="utf-8"), article, catalog, related_selector)
         destination.write_text(page, encoding="utf-8")
         generated.append(destination)
     return generated

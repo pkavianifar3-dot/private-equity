@@ -51,12 +51,36 @@ class ResearchEntityReferenceTests(unittest.TestCase):
             "research/content/sample.json:research:sample:opening: unknown entityRef person:missing",
         ])
 
+    def test_primary_is_optional_known_and_declared_at_article_level(self):
+        data={"id":"research:sample","entityRefs":["concept:known"],"sections":[]}
+        for value in [None,"concept:known"]:
+            sample={**data,**({"primaryEntityRef":value} if value else {})}
+            errors=[]
+            validator.validate_research_entity_refs(sample,{"concept:known"},errors,"sample.json")
+            self.assertEqual(errors,[])
+        errors=[]
+        validator.validate_research_entity_refs({**data,"primaryEntityRef":"concept:missing"},
+                                               {"concept:known"},errors,"sample.json")
+        self.assertEqual(errors,["sample.json:research:sample: unknown primaryEntityRef concept:missing",
+                                 "sample.json:research:sample: primaryEntityRef concept:missing must be in article entityRefs"])
+        errors=[]
+        validator.validate_research_entity_refs({**data,"primaryEntityRef":"concept:other"},
+                                               {"concept:known","concept:other"},errors,"sample.json")
+        self.assertEqual(errors,["sample.json:research:sample: primaryEntityRef concept:other must be in article entityRefs"])
+
+    def test_primary_schema_rejects_bad_type_and_identifier(self):
+        schema=json.loads((ROOT/"research/schemas/research-schema-v2.json").read_text(encoding="utf-8"))
+        article=json.loads((ROOT/"research/content/private-markets/private-capital/research.json").read_text(encoding="utf-8"))
+        for value in [None,[],42,"","claim:subject","concept:INVALID"]:
+            errors=list(Draft202012Validator(schema).iter_errors({**article,"primaryEntityRef":value}))
+            self.assertTrue(any(list(error.path)==["primaryEntityRef"] for error in errors),value)
+
     def test_schema_already_rejects_duplicate_article_refs(self):
         schema = json.loads(
             (ROOT / "research/schemas/research-schema-v2.json").read_text(encoding="utf-8")
         )
         article = json.loads(
-            (ROOT / "research/content/private-capital.json").read_text(encoding="utf-8")
+            (ROOT / "research/content/private-markets/private-capital/research.json").read_text(encoding="utf-8")
         )
         article["entityRefs"].append(article["entityRefs"][0])
         errors = list(Draft202012Validator(schema).iter_errors(article))

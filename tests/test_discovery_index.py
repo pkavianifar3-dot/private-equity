@@ -63,12 +63,14 @@ class DiscoveryIndexIntegrityTest(unittest.TestCase):
                         self.assertIn(research_id, self.research_by_id)
 
                         content_path = (
-                            RESEARCH_CONTENT_DIR
-                            / f"{research_id.split(':', 1)[1]}.json"
+                            next(p for p in RESEARCH_CONTENT_DIR.rglob("research.json")
+                                 if load_json(p)["id"] == research_id)
                         )
                         self.assertTrue(content_path.exists())
 
                         research = load_json(content_path)
+                        self.assertEqual(self.research_by_id[research_id]["status"], "PUBLISHED")
+                        self.assertEqual(research["status"], "PUBLISHED")
 
                         sections = {
                             section["id"]: section
@@ -114,6 +116,20 @@ class DiscoveryIndexIntegrityTest(unittest.TestCase):
                             mention["contentBlockId"],
                             content_block_id,
                         )
+
+    def test_review_research_is_absent_from_public_index(self):
+        indexed = {ref["researchId"] for entry in self.discovery["entities"].values()
+                   for ref in entry["researchMentions"]}
+        for research_id, record in self.research_by_id.items():
+            if record["status"] != "PUBLISHED":
+                self.assertNotIn(research_id, indexed)
+
+    def test_new_article_cannot_expand_review_discovery(self):
+        lifecycle = {entity["id"]: entity["lifecycleStatus"] for entity in self.entities["entities"]}
+        for entity_id, entry in self.discovery["entities"].items():
+            for mention in entry["researchMentions"]:
+                if mention["researchId"] != "research:private-capital":
+                    self.assertEqual(lifecycle[entity_id], "PUBLISHED")
 
     def test_discovery_reference_count(self):
         total_references = sum(

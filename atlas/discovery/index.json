@@ -24,6 +24,108 @@
           "sectionId": "introduction",
           "contentBlockId": "intro-paragraph-01",
           "mentionId": "mention-introduction-private-capital"
+        },
+        {
+          "researchId": "research:private-capital-research",
+          "sectionId": "section-0002",
+          "contentBlockId": "block-0002",
+          "mentionId": "mention-02-001"
+        },
+        {
+          "researchId": "research:private-capital-research",
+          "sectionId": "section-0002",
+          "contentBlockId": "block-0004",
+          "mentionId": "mention-02-002"
+        },
+        {
+          "researchId": "research:private-capital-research",
+          "sectionId": "section-0002",
+          "contentBlockId": "block-0008",
+          "mentionId": "mention-02-004"
+        },
+        {
+          "researchId": "research:private-capital-research",
+          "sectionId": "section-0002",
+          "contentBlockId": "block-0009",
+          "mentionId": "mention-02-005"
+        },
+        {
+          "researchId": "research:private-capital-research",
+          "sectionId": "section-0002",
+          "contentBlockId": "block-0016",
+          "mentionId": "mention-02-007"
+        },
+        {
+          "researchId": "research:private-capital-research",
+          "sectionId": "section-0002",
+          "contentBlockId": "block-0019",
+          "mentionId": "mention-02-008"
+        },
+        {
+          "researchId": "research:private-capital-research",
+          "sectionId": "section-0002",
+          "contentBlockId": "block-0024",
+          "mentionId": "mention-02-010"
+        },
+        {
+          "researchId": "research:private-capital-research",
+          "sectionId": "section-0002",
+          "contentBlockId": "block-0025",
+          "mentionId": "mention-02-011"
+        },
+        {
+          "researchId": "research:private-capital-research",
+          "sectionId": "section-0002",
+          "contentBlockId": "block-0027",
+          "mentionId": "mention-02-013"
+        },
+        {
+          "researchId": "research:private-capital-research",
+          "sectionId": "section-0003",
+          "contentBlockId": "block-0030",
+          "mentionId": "mention-03-001"
+        },
+        {
+          "researchId": "research:private-capital-research",
+          "sectionId": "section-0003",
+          "contentBlockId": "block-0031",
+          "mentionId": "mention-03-002"
+        },
+        {
+          "researchId": "research:private-capital-research",
+          "sectionId": "section-0004",
+          "contentBlockId": "block-0032",
+          "mentionId": "mention-04-001"
+        },
+        {
+          "researchId": "research:private-capital-research",
+          "sectionId": "section-0004",
+          "contentBlockId": "block-0034",
+          "mentionId": "mention-04-002"
+        },
+        {
+          "researchId": "research:private-capital-research",
+          "sectionId": "section-0004",
+          "contentBlockId": "block-0035",
+          "mentionId": "mention-04-004"
+        },
+        {
+          "researchId": "research:private-capital-research",
+          "sectionId": "section-0004",
+          "contentBlockId": "block-0036",
+          "mentionId": "mention-04-006"
+        },
+        {
+          "researchId": "research:private-capital-research",
+          "sectionId": "section-0004",
+          "contentBlockId": "block-0037",
+          "mentionId": "mention-04-007"
+        },
+        {
+          "researchId": "research:private-capital-research",
+          "sectionId": "section-0005",
+          "contentBlockId": "block-0038",
+          "mentionId": "mention-05-001"
         }
       ]
     },
@@ -50,6 +152,60 @@
           "sectionId": "private-credit",
           "contentBlockId": "private-credit-paragraph-05",
           "mentionId": "mention-private-credit-private-equity"
+        },
+        {
+          "researchId": "research:private-capital-research",
+          "sectionId": "section-0002",
+          "contentBlockId": "block-0004",
+          "mentionId": "mention-02-003"
+        },
+        {
+          "researchId": "research:private-capital-research",
+          "sectionId": "section-0002",
+          "contentBlockId": "block-0009",
+          "mentionId": "mention-02-006"
+        },
+        {
+          "researchId": "research:private-capital-research",
+          "sectionId": "section-0002",
+          "contentBlockId": "block-0019",
+          "mentionId": "mention-02-009"
+        },
+        {
+          "researchId": "research:private-capital-research",
+          "sectionId": "section-0002",
+          "contentBlockId": "block-0025",
+          "mentionId": "mention-02-012"
+        },
+        {
+          "researchId": "research:private-capital-research",
+          "sectionId": "section-0002",
+          "contentBlockId": "block-0027",
+          "mentionId": "mention-02-014"
+        },
+        {
+          "researchId": "research:private-capital-research",
+          "sectionId": "section-0003",
+          "contentBlockId": "block-0031",
+          "mentionId": "mention-03-003"
+        },
+        {
+          "researchId": "research:private-capital-research",
+          "sectionId": "section-0004",
+          "contentBlockId": "block-0034",
+          "mentionId": "mention-04-003"
+        },
+        {
+          "researchId": "research:private-capital-research",
+          "sectionId": "section-0004",
+          "contentBlockId": "block-0035",
+          "mentionId": "mention-04-005"
+        },
+        {
+          "researchId": "research:private-capital-research",
+          "sectionId": "section-0004",
+          "contentBlockId": "block-0037",
+          "mentionId": "mention-04-008"
         }
       ]
     },

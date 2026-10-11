@@ -8,10 +8,17 @@
       "status": "PUBLISHED"
     },
     {
+      "id": "research:private-capital-research",
+      "type": "Research",
+      "url": "/articles/private-capital-research.html",
+      "status": "PUBLISHED"
+    },
+    {
       "id": "research:private-equity",
       "type": "Research",
       "url": "/articles/what-is-private-equity.html",
-      "status": "PUBLISHED"
+      "status": "PUBLISHED",
+      "sourceMode": "legacy-html"
     }
   ]
 }

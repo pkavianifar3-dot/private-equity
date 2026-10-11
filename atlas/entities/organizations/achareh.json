@@ -7,5 +7,18 @@
     "en": "Achareh"
   },
   "aliases": [],
-  "lifecycleStatus": "REVIEW"
+  "lifecycleStatus": "PUBLISHED",
+  "metadata": {
+    "public_profile": {
+      "text": "آچاره یک پلتفرم سفارش خدمات در محل است. وب‌سایت آن دسته‌هایی مانند نظافت، تعمیرات، ساختمان و اسباب‌کشی را معرفی می‌کند. این پروفایل، هویت عملیاتی آچاره را توصیف می‌کند و طرف حقوقی معاملهٔ کیسون را احراز نمی‌کند.",
+      "sourceRefs": [
+        "source:achareh-official-profile"
+      ],
+      "locators": [
+        "خدمات آنلاین و تعمیرات در منزل با آچاره؛ دسته‌بندی خدمات"
+      ],
+      "origin": "sourced_profile",
+      "reviewed_on": "2026-10-11"
+    }
+  }
 }

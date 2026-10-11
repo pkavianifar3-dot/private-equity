@@ -20,7 +20,7 @@
         return (Array.isArray(citations) ? citations : []).filter(c => c && c.contentBlockId === blockId && typeof c.sourceRef === "string" && typeof c.start === "number" && typeof c.end === "number" && c.start >= 0 && c.end > c.start && c.end <= textLength).sort((a, b) => a.start - b.start);
     }
 
-    function renderCitationMarker(citation, citationIndex) {
+    function renderCitationMarker(citation, citationIndex, options = {}) {
         const number =
             citationIndex &&
             citationIndex.get(citation && citation.sourceRef);
@@ -34,7 +34,9 @@
                 ? citation.id
                 : `citation-${number}`;
 
-        return ` <sup class="citation" id="citation-location-${escapeHtml(citationId)}"><a href="#citation-source-${number}">[${number}]</a></sup>`;
+        const tag = options.referenceStyle === "inline-collapsible" ? "span" : "sup";
+        const className = tag === "span" ? "citation citation-inline" : "citation";
+        return ` <${tag} class="${className}" id="citation-location-${escapeHtml(citationId)}"><a href="#citation-source-${number}">[${number}]</a></${tag}>`;
     }
 
     function renderCitationBibliography(citations, sources, citationIndex) {
@@ -75,7 +77,7 @@
         return entries;
     }
 
-    function renderCitationBibliographyHtml(citations, sources, citationIndex) {
+    function renderCitationBibliographyHtml(citations, sources, citationIndex, options = {}) {
         const entries = renderCitationBibliography(
             citations,
             sources,
@@ -99,9 +101,10 @@
                     ? entry.source.publisher
                     : "";
 
+            const direction = /[\u0600-\u06FF]/.test(title) ? "rtl" : "ltr";
             const sourceMetadata = [
                 publisher
-                    ? `<bdi dir="ltr">${escapeHtml(publisher)}</bdi>`
+                    ? `<bdi dir="${/[\u0600-\u06FF]/.test(publisher) ? "rtl" : "ltr"}">${escapeHtml(publisher)}</bdi>`
                     : "",
                 typeof entry.source.publication_date === "string" &&
                         entry.source.publication_date
@@ -110,8 +113,8 @@
             ].filter(Boolean).join(" · ");
 
             const sourceContent = `
-                <span class="citation-title" dir="rtl">${escapeHtml(title)}</span>
-                ${sourceMetadata ? `<span class="citation-meta" dir="rtl">${sourceMetadata}</span>` : ""}
+                <span class="citation-title" dir="${direction}">${escapeHtml(title)}</span>
+                ${sourceMetadata ? `<span class="citation-meta" dir="${direction}">${sourceMetadata}</span>` : ""}
             `;
 
             const locations = (Array.isArray(citations) ? citations : [])
@@ -127,11 +130,11 @@
 
             const sourceLink =
                 typeof entry.source.url === "string" && entry.source.url
-                    ? `<a class="citation-source" href="${escapeHtml(entry.source.url)}" target="_blank" rel="noopener noreferrer" dir="rtl">${sourceContent}</a>`
+                    ? `<a class="citation-source" href="${escapeHtml(entry.source.url)}" target="_blank" rel="noopener noreferrer" dir="${direction}">${sourceContent}</a>`
                     : sourceContent;
 
             return `
-                <li id="citation-source-${entry.number}" dir="rtl">
+                <li id="citation-source-${entry.number}" dir="${direction}"${direction === "ltr" ? ' lang="en"' : ""}>
                     <span class="citation-number" dir="ltr">[${entry.number}]</span>
                     ${sourceLink}
                     ${locations ? `<span class="citation-backlinks" dir="ltr">${locations}</span>` : ""}
@@ -139,6 +142,10 @@
             `;
         });
 
+        if (options.referenceStyle === "inline-collapsible") {
+            return `<details class="research-bibliography research-endmatter"><summary>منابع (${items.length})</summary>` +
+                `<div class="research-panel-body article-citations"><ul>${items.join("\n")}</ul></div></details>`;
+        }
         return `<div class="article-citations"><p>منابع</p><ul>${items.join("\n")}</ul></div>`;
     }
 

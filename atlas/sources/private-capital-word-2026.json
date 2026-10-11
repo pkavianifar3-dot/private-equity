@@ -1,0 +1,84 @@
+{
+  "version": "1.0",
+  "sources": [
+    {
+      "id": "source:cfa-alternative-investment-features-2026",
+      "type": "Source",
+      "source_type": "research",
+      "title_fa": "Alternative investment features, methods, and structures",
+      "title_en": "Alternative investment features, methods, and structures",
+      "publisher": "CFA Institute",
+      "publication_date": "2026",
+      "url": "https://www.cfainstitute.org/insights/professional-learning/refresher-readings/2026/alternative-investment-features-methods-and-structures"
+    },
+    {
+      "id": "source:cfa-sovereign-wealth-funds-private-markets-2026",
+      "type": "Source",
+      "source_type": "research",
+      "title_fa": "The rise of sovereign wealth funds in private markets",
+      "title_en": "The rise of sovereign wealth funds in private markets",
+      "publisher": "CFA Institute",
+      "publication_date": "2026",
+      "url": "https://www.cfainstitute.org/insights/articles/sovereign-wealth-funds-investment-private-markets"
+    },
+    {
+      "id": "source:cfa-private-real-estate-investments-2026",
+      "type": "Source",
+      "source_type": "research",
+      "title_fa": "Private real estate investments",
+      "title_en": "Private real estate investments",
+      "publisher": "CFA Institute",
+      "publication_date": "2026",
+      "url": "https://www.cfainstitute.org/insights/professional-learning/refresher-readings/2026/private-real-estate-investments"
+    },
+    {
+      "id": "source:cfa-general-partner-investor-perspectives-2026",
+      "type": "Source",
+      "source_type": "research",
+      "title_fa": "General partner and investor perspectives and the investment process",
+      "title_en": "General partner and investor perspectives and the investment process",
+      "publisher": "CFA Institute",
+      "publication_date": "2026",
+      "url": "https://www.cfainstitute.org/insights/professional-learning/refresher-readings/2026/general-partner-investor-perspectives-and-investment-process"
+    },
+    {
+      "id": "source:cfa-investments-private-capital-equity-debt-2026",
+      "type": "Source",
+      "source_type": "research",
+      "title_fa": "Investments in private capital: Equity & debt",
+      "title_en": "Investments in private capital: Equity & debt",
+      "publisher": "CFA Institute",
+      "publication_date": "2026",
+      "url": "https://www.cfainstitute.org/insights/professional-learning/refresher-readings/2026/investments-in-private-capital-equity-debt"
+    },
+    {
+      "id": "source:preqin-what-is-private-capital",
+      "type": "Source",
+      "source_type": "research",
+      "title_fa": "What is private capital?",
+      "title_en": "What is private capital?",
+      "publisher": "Preqin",
+      "publication_date": null,
+      "url": "https://www.preqin.com/academy/lesson-2-private-capital/what-is-private-capital"
+    },
+    {
+      "id": "source:deloitte-asian-investment",
+      "type": "Source",
+      "source_type": "research",
+      "title_fa": "تغییر جریان سرمایه‌گذاری آسیایی",
+      "title_en": "Shifting tides of Asian investment",
+      "publisher": "Deloitte",
+      "publication_date": null,
+      "url": "https://www.deloitte.com/global/en/industries/investment-management/perspectives/shifting-tides-of-asian-investment.html"
+    },
+    {
+      "id": "source:globalswf-reports",
+      "type": "Source",
+      "source_type": "secondary",
+      "title_fa": "فهرست گزارش‌های Global SWF؛ دادهٔ اولیهٔ نمودار مستقیماً احراز نشده",
+      "publisher": "Global SWF",
+      "publication_date": null,
+      "url": "https://globalswf.com/reports"
+    }
+  ]
+}

@@ -1,15 +1,26 @@
 """Publication-aware, article-level Research ↔ Atlas projections.
 
 Research content owns entityRefs; relatedResearchRefs is an independent,
-editorial Research → Research reference. Mentions are text occurrences and do
+editorial Research → Research reference. primaryEntityRef declares the whole
+article's reviewed subject and supports exact same-subject navigation. Mentions are text occurrences and do
 not contribute to this index. Preview projections are never written publicly.
 """
 
 import html
+from itertools import chain
 import json
 from pathlib import PurePosixPath
 from html.parser import HTMLParser
 from pathlib import Path
+
+import importlib.util
+
+_package_spec = importlib.util.spec_from_file_location(
+    "research_packages", Path(__file__).resolve().parent / "research_packages.py"
+)
+_packages = importlib.util.module_from_spec(_package_spec)
+_package_spec.loader.exec_module(_packages)
+content_files = _packages.content_files
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -56,7 +67,7 @@ def published_registry(root):
 
 def structured_articles(root):
     articles = {}
-    for path in sorted((root / "research/content").glob("*.json")):
+    for path in sorted(content_files(root / "research/content")):
         article = read_json(path)
         article_id = article["id"]
         if article_id in articles:
@@ -72,11 +83,11 @@ def eligible_articles(root):
         entry = registry.get(article_id)
         if entry is None:
             raise ValueError(f"research/content/{article_id}: missing registry entry")
-        if article.get("status") != "PUBLISHED" or entry.get("status") != "PUBLISHED":
-            continue
         url = article.get("url")
-        if url != entry.get("url"):
-            raise ValueError(f"{article_id}: published Research URL differs from registry")
+        if url != entry.get("url") or article.get("status") != entry.get("status"):
+            raise ValueError(f"{article_id}: Research URL/status differs from registry")
+        if article.get("status") != "PUBLISHED":
+            continue
         article_path(root, url, article_id)
         yield article
 
@@ -89,14 +100,16 @@ def entity_route(entity, preview=False, preview_resolver=None):
     return entity.get("route")
 
 
-def reverse_index(root, catalog, *, preview=False, preview_resolver=None):
+def reverse_index(root, catalog, *, preview=False, preview_resolver=None, preview_articles=()):
     by_id = {item["id"]: item for item in catalog}
     result = {}
-    for article in eligible_articles(root):
+    for article in list(eligible_articles(root)) + list(preview_articles if preview else ()):
         article_id = article["id"]
+        if article.get("status") != "PUBLISHED" and not preview:
+            continue
         item = {
             "id": article_id,
-            "url": article["url"],
+            "url": "/__preview" + article["url"] if article.get("status") == "REVIEW" else article["url"],
             "title": article["title"]["fa"],
             "datePublished": article["publication"]["datePublished"],
         }
@@ -155,37 +168,78 @@ class FirstHeading(HTMLParser):
             self.parts.append(data)
 
 
-def editorial_related(article, root):
-    """Curated Research → Research links; never feed the Entity reverse index."""
+def research_selector(root, catalog=None):
+    """Load one build snapshot and group published Research by confirmed subject.
+
+    Editorial refs retain author order; exact same-subject peers follow by ID.
+    A shared mention, broad entityRef, similar title or semantic score is never
+    enough. The main subject need not have a public Entity page: these links
+    connect published Research only and do not expose or promote the Entity.
+    """
     registry = published_registry(root)
     structured = structured_articles(root)
-    result = []
-    for ref in dict.fromkeys(article.get("relatedResearchRefs", [])):
-        target = registry.get(ref)
-        if target is None:
-            raise ValueError(f"{article['id']}: relatedResearchRefs missing {ref}")
-        if target.get("status") != "PUBLISHED":
+    canonical_ids = {entity["id"] for entity in catalog} if catalog is not None else None
+    topics = {}
+    for identity, data in sorted(structured.items()):
+        target = registry.get(identity)
+        if not target or target.get("url") != data.get("url") or target.get("status") != data.get("status"):
+            raise ValueError(f"{identity}: Research URL/status differs from registry")
+        primary = data.get("primaryEntityRef")
+        if primary is None:
             continue
-        other = structured.get(ref)
-        if other and other.get("status") != "PUBLISHED":
-            continue
-        url = target.get("url", "")
-        path = article_path(root, url, article["id"])
-        if other and other.get("url") != url:
-            raise ValueError(f"{article['id']}: related Research URL differs from {ref}")
-        if other:
-            title = other["title"]["fa"]
-        else:
-            parser = FirstHeading()
-            parser.feed(path.read_text(encoding="utf-8"))
-            title = "".join(parser.parts).strip()
-            if not title:
-                raise ValueError(f"{article['id']}: related Research page has no title {url}")
-        result.append({"url": url, "title": title})
-    return result
+        if not isinstance(primary, str) or not isinstance(data.get("entityRefs"), list) or primary not in data["entityRefs"]:
+            raise ValueError(f"{identity}: primaryEntityRef {primary!r} must be in article entityRefs")
+        if canonical_ids is not None and primary not in canonical_ids:
+            raise ValueError(f"{identity}: unknown primaryEntityRef {primary}")
+        if data.get("status") == "PUBLISHED":
+            topics.setdefault(primary, []).append(identity)
+
+    def select(article, _root):
+        editorial = list(dict.fromkeys(article.get("relatedResearchRefs", [])))
+        peers = topics.get(article.get("primaryEntityRef"), [])
+        # Check editorial references even if the display limit is reached.
+        for ref in editorial:
+            if ref not in registry:
+                raise ValueError(f"{article['id']}: relatedResearchRefs missing {ref}")
+        result = []
+        seen = set()
+        for ref in chain(editorial, peers):
+            if ref in seen:
+                continue
+            seen.add(ref)
+            if ref == article["id"]:
+                continue
+            target = registry.get(ref)
+            if target is None:
+                raise ValueError(f"{article['id']}: relatedResearchRefs missing {ref}")
+            if target.get("status") != "PUBLISHED":
+                continue
+            other = structured.get(ref)
+            url = target.get("url", "")
+            path = article_path(root, url, article["id"])
+            if other:
+                title = other["title"]["fa"]
+            else:
+                parser = FirstHeading()
+                parser.feed(path.read_text(encoding="utf-8"))
+                title = "".join(parser.parts).strip()
+                if not title:
+                    raise ValueError(f"{article['id']}: related Research page has no title {url}")
+            result.append({"url": url, "title": title,
+                           "reason": "editorial" if ref in editorial else "same-primary-entity"})
+            if len(result) == 8:
+                break
+        return result
+
+    return select
 
 
-def render_article_context(article, catalog, root, *, preview=False, preview_resolver=None):
+def editorial_related(article, root):
+    """Compatibility entry point; builds reuse research_selector's one snapshot."""
+    return research_selector(root)(article, root)
+
+
+def render_article_context(article, catalog, root, *, preview=False, preview_resolver=None, related_selector=None):
     by_id = {item["id"]: item for item in catalog}
     entities = []
     for entity_id in dict.fromkeys(article.get("entityRefs", [])):
@@ -195,7 +249,7 @@ def render_article_context(article, catalog, root, *, preview=False, preview_res
         route = entity_route(entity, preview, preview_resolver)
         if route:
             entities.append((entity, route))
-    related = editorial_related(article, root)
+    related = (related_selector or editorial_related)(article, root)
     if not entities and not related:
         return ""
     blocks = []

@@ -7,5 +7,20 @@
     "en": "Private Capital Classification"
   },
   "aliases": [],
-  "lifecycleStatus": "REVIEW"
+  "lifecycleStatus": "PUBLISHED",
+  "metadata": {
+    "public_profile": {
+      "text": "طبقه‌بندی سرمایه خصوصی در این اطلس، مدخلی برای مقایسهٔ چارچوب منابع است: CFA سرمایه مالکانه و بدهی را در private capital می‌آورد؛ Preqin دامنهٔ وسیع‌تری دارد. این مدخل جمع‌بندی تحریریه‌ای تفاوت تعاریف است.",
+      "sourceRefs": [
+        "source:cfa-alternative-investment-features-2026",
+        "source:preqin-what-is-private-capital"
+      ],
+      "locators": [
+        "Overview",
+        "The Definition of Private Capital"
+      ],
+      "origin": "editorial_synthesis",
+      "reviewed_on": "2026-10-11"
+    }
+  }
 }

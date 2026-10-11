@@ -1,4 +1,4 @@
-"""Local-only Entity preview must leave the public build and URLs intact."""
+﻿"""Local-only Entity preview must leave the public build and URLs intact."""
 
 import importlib.util
 import json
@@ -77,11 +77,31 @@ class EntityPreviewTests(unittest.TestCase):
             catalog = json.loads((output / "atlas/catalog/index.json").read_text(encoding="utf-8"))
             entries = {item["id"]: item for item in catalog["entities"]}
             self.assertEqual(len(entries), 27)
-            self.assertEqual(len(generated), 24)
+            self.assertEqual(len(generated), 25)
+            draft = output / "articles/private-capital-research.html"
+            self.assertTrue(draft.is_file())
+            self.assertIn('name="robots" content="noindex,nofollow"', draft.read_text(encoding="utf-8"))
+            draft_html = draft.read_text(encoding="utf-8")
+            self.assertIn('class="research-article-header"', draft_html)
+            self.assertLess(draft_html.index('class="research-article-header"'), draft_html.index('class="explore-reading-layout" data-research-exploration'))
+            self.assertIn('class="article-author research-byline"', draft_html)
+            self.assertIn('/assets/images/private-capital.png', draft_html)
+            self.assertIn('<details class="research-notes research-endmatter">', draft_html)
+            self.assertEqual(draft_html.count('class="research-note-ref"'), 20)
+            self.assertIn('پانوشت‌ها و یادداشت‌ها (20)', draft_html)
+            self.assertIn('<details class="research-bibliography research-endmatter">', draft_html)
+            self.assertNotIn('<sup class="citation"', draft_html)
+            self.assertIn('<th scope="col">مفهوم</th>', draft_html)
+            self.assertIn('id="citation-source-1" dir="ltr" lang="en"', draft_html)
+            self.assertIn('class="research-caption"', draft_html)
+            self.assertIn('class="research-credit"', draft_html)
+            self.assertTrue((ROOT / "articles/private-capital-research.html").is_file())
+            concept_preview = (output / "atlas/concept/private-capital/index.html").read_text(encoding="utf-8")
+            self.assertIn('href="/articles/private-capital-research.html"', concept_preview)
             article = output / "articles/private-capital.html"
             preview_article = article.read_text(encoding="utf-8")
             self.assertIn('href="/atlas/concept/private-capital/"', preview_article)
-            self.assertIn('class="explore-reading-layout"', preview_article)
+            self.assertIn('class="explore-reading-layout" data-research-exploration', preview_article)
             self.assertIn('class="explore-rail"', preview_article)
             self.assertIn('class="explore-mobile-toc"', preview_article)
             self.assertNotIn('data-research-connections', preview_article)
@@ -96,7 +116,7 @@ class EntityPreviewTests(unittest.TestCase):
             self.assertIn('href="/articles.html"', rail)
             self.assertIn('href="/atlas/"', rail)
             self.assertIn('class="explore-card explore-mobile-card"', rail)
-            self.assertIn('class="explore-lead"', preview_article)
+            self.assertIn('class="research-opening explore-lead"', preview_article)
             self.assertNotIn('پیش‌نمایش محلیِ مسیرهای کاوش', preview_article)
             heading_ids = re.findall(r'<h[23][^>]* id="(research-section-[^"]+)"', preview_article)
             toc_targets = re.findall(r'href="#(research-section-[^"]+)"', preview_article)
@@ -175,7 +195,7 @@ class EntityPreviewTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp_dir:
             overlay = Path(temp_dir)
             generated = preview.build_preview(overlay, showcase=True)
-            self.assertEqual(len(generated), 25)
+            self.assertEqual(len(generated), 26)
             concept = (overlay / "atlas/concept/private-capital/index.html").read_text(encoding="utf-8")
             self.assertIn('href="/articles/private-capital.html"', concept)
             self.assertIn('href="/articles/_preview/private-capital-note.html"', concept)

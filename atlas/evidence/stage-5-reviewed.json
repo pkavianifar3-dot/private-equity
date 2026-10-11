@@ -1,0 +1,173 @@
+{
+  "version": "2.0",
+  "evidence": [
+    {
+      "id": "evidence:private-capital-includes-private-equity-reviewed-1",
+      "claimRef": "claim:private-capital-includes-private-equity-reviewed",
+      "sourceRef": "source:cfa-alternative-investment-features-2026",
+      "evidenceType": "authoritative_publication",
+      "strength": "strong",
+      "locator": {
+        "section": "Overview: private capital includes private equity and private debt",
+        "scope": "CFA / Preqin",
+        "reviewed_on": "2026-10-11"
+      }
+    },
+    {
+      "id": "evidence:private-capital-includes-private-equity-reviewed-2",
+      "claimRef": "claim:private-capital-includes-private-equity-reviewed",
+      "sourceRef": "source:preqin-what-is-private-capital",
+      "evidenceType": "authoritative_publication",
+      "strength": "strong",
+      "locator": {
+        "section": "The Definition of Private Capital",
+        "scope": "CFA / Preqin",
+        "reviewed_on": "2026-10-11"
+      }
+    },
+    {
+      "id": "evidence:private-capital-includes-private-credit-reviewed-1",
+      "claimRef": "claim:private-capital-includes-private-credit-reviewed",
+      "sourceRef": "source:cfa-alternative-investment-features-2026",
+      "evidenceType": "authoritative_publication",
+      "strength": "strong",
+      "locator": {
+        "section": "Overview: private debt",
+        "scope": "CFA / Preqin; private credit corresponds to the credit segment described by ECB",
+        "reviewed_on": "2026-10-11"
+      }
+    },
+    {
+      "id": "evidence:private-capital-includes-private-credit-reviewed-2",
+      "claimRef": "claim:private-capital-includes-private-credit-reviewed",
+      "sourceRef": "source:preqin-what-is-private-capital",
+      "evidenceType": "authoritative_publication",
+      "strength": "strong",
+      "locator": {
+        "section": "The Definition of Private Capital: private debt",
+        "scope": "CFA / Preqin; private credit corresponds to the credit segment described by ECB",
+        "reviewed_on": "2026-10-11"
+      }
+    },
+    {
+      "id": "evidence:private-capital-includes-real-assets-reviewed-1",
+      "claimRef": "claim:private-capital-includes-real-assets-reviewed",
+      "sourceRef": "source:cfa-alternative-investment-features-2026",
+      "evidenceType": "editorial_comparison",
+      "strength": "moderate",
+      "locator": {
+        "section": "Overview: real assets categories",
+        "scope": "Preqin scope; grouping as real assets is an editorial synthesis, not the CFA hierarchy",
+        "reviewed_on": "2026-10-11"
+      }
+    },
+    {
+      "id": "evidence:private-capital-includes-real-assets-reviewed-2",
+      "claimRef": "claim:private-capital-includes-real-assets-reviewed",
+      "sourceRef": "source:preqin-what-is-private-capital",
+      "evidenceType": "editorial_comparison",
+      "strength": "moderate",
+      "locator": {
+        "section": "The Definition of Private Capital: real estate, infrastructure, natural resources",
+        "scope": "Preqin scope; grouping as real assets is an editorial synthesis, not the CFA hierarchy",
+        "reviewed_on": "2026-10-11"
+      }
+    },
+    {
+      "id": "evidence:private-capital-includes-venture-capital-reviewed-1",
+      "claimRef": "claim:private-capital-includes-venture-capital-reviewed",
+      "sourceRef": "source:preqin-what-is-private-capital",
+      "evidenceType": "authoritative_publication",
+      "strength": "strong",
+      "locator": {
+        "section": "The Definition of Private Capital: venture capital",
+        "scope": "Preqin; ECB instead describes venture capital as a private-equity strategy",
+        "reviewed_on": "2026-10-11"
+      }
+    },
+    {
+      "id": "evidence:private-capital-includes-growth-capital-reviewed-1",
+      "claimRef": "claim:private-capital-includes-growth-capital-reviewed",
+      "sourceRef": "source:ecb-private-markets-public-risk",
+      "evidenceType": "authoritative_publication",
+      "strength": "strong",
+      "locator": {
+        "section": "Overview of private market segments and strategies: private equity strategies, growth capital",
+        "scope": "ECB; growth capital is a private-equity strategy; inclusion here denotes scope, not a peer asset class",
+        "reviewed_on": "2026-10-11"
+      }
+    },
+    {
+      "id": "evidence:private-capital-boundaries-vary-reviewed-1",
+      "claimRef": "claim:private-capital-boundaries-vary-reviewed",
+      "sourceRef": "source:cfa-alternative-investment-features-2026",
+      "evidenceType": "editorial_comparison",
+      "strength": "moderate",
+      "locator": {
+        "section": "Overview: private capital versus real assets",
+        "scope": "Editorial comparison of CFA and Preqin, not a universal hierarchy",
+        "reviewed_on": "2026-10-11"
+      }
+    },
+    {
+      "id": "evidence:private-capital-boundaries-vary-reviewed-2",
+      "claimRef": "claim:private-capital-boundaries-vary-reviewed",
+      "sourceRef": "source:preqin-what-is-private-capital",
+      "evidenceType": "editorial_comparison",
+      "strength": "moderate",
+      "locator": {
+        "section": "The Definition of Private Capital",
+        "scope": "Editorial comparison of CFA and Preqin, not a universal hierarchy",
+        "reviewed_on": "2026-10-11"
+      }
+    },
+    {
+      "id": "evidence:private-capital-private-access-reviewed-1",
+      "claimRef": "claim:private-capital-private-access-reviewed",
+      "sourceRef": "source:cfa-alternative-investment-features-2026",
+      "evidenceType": "authoritative_publication",
+      "strength": "strong",
+      "locator": {
+        "section": "Overview: fund investing, co-investing, direct investing",
+        "scope": "Access methods vary; no universal investor exclusion",
+        "reviewed_on": "2026-10-11"
+      }
+    },
+    {
+      "id": "evidence:private-capital-private-access-reviewed-2",
+      "claimRef": "claim:private-capital-private-access-reviewed",
+      "sourceRef": "source:preqin-what-is-private-capital",
+      "evidenceType": "authoritative_publication",
+      "strength": "strong",
+      "locator": {
+        "section": "Private Capital Fund Structures",
+        "scope": "Access methods vary; no universal investor exclusion",
+        "reviewed_on": "2026-10-11"
+      }
+    },
+    {
+      "id": "evidence:private-credit-and-private-equity-linked-reviewed-1",
+      "claimRef": "claim:private-credit-and-private-equity-linked-reviewed",
+      "sourceRef": "source:ecb-private-markets-public-risk",
+      "evidenceType": "authoritative_publication",
+      "strength": "strong",
+      "locator": {
+        "section": "Overview of private market segments and strategies: lending to private-equity-owned companies",
+        "scope": "ECB: financing links, not equivalence of asset classes",
+        "reviewed_on": "2026-10-11"
+      }
+    },
+    {
+      "id": "evidence:ali-ceo-amin-observed-1395",
+      "claimRef": "claim:ali-sanginian-ceo-amin-investment-bank-observed-1395",
+      "sourceRef": "source:tehran-chamber-independent-report",
+      "evidenceType": "contemporaneous_media_report",
+      "strength": "strong",
+      "locator": {
+        "section": "معرفی سمت‌های علی سنگینیان در ابتدای گزارش",
+        "publication_date": "2016-06-29",
+        "scope": "مدیرعاملی در مقطع گزارش، نه کل دوره"
+      }
+    }
+  ]
+}

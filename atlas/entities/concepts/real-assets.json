@@ -7,5 +7,20 @@
     "en": "Real Assets"
   },
   "aliases": [],
-  "lifecycleStatus": "REVIEW"
+  "lifecycleStatus": "PUBLISHED",
+  "metadata": {
+    "public_profile": {
+      "text": "در طبقه‌بندی CFA، دارایی‌های واقعی شامل املاک، زیرساخت و منابع طبیعی‌اند و جدا از private capital فهرست می‌شوند. در دامنهٔ گسترده‌تر Preqin، سرمایه‌گذاری خصوصی در همین حوزه‌ها نیز در private capital قرار می‌گیرد.",
+      "sourceRefs": [
+        "source:cfa-alternative-investment-features-2026",
+        "source:preqin-what-is-private-capital"
+      ],
+      "locators": [
+        "Overview",
+        "The Definition of Private Capital"
+      ],
+      "origin": "editorial_synthesis",
+      "reviewed_on": "2026-10-11"
+    }
+  }
 }

@@ -1,0 +1,9 @@
+# Constraints for the already declared dependencies and their transitive closure.
+# Verified locally with Python 3.14.0; no new project dependency is introduced.
+jsonschema==4.26.0
+jdatetime==6.1.0
+attrs==26.1.0
+jsonschema-specifications==2025.9.1
+referencing==0.37.0
+rpds-py==2026.6.3
+jalali-core==1.0.0

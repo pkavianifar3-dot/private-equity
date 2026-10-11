@@ -10,5 +10,18 @@
     "تأمین سرمایه امین",
     "Amin"
   ],
-  "lifecycleStatus": "REVIEW"
+  "lifecycleStatus": "PUBLISHED",
+  "metadata": {
+    "public_profile": {
+      "text": "تأمین سرمایه امین خدماتی مانند تأمین مالی از بازار سرمایه، مشاورهٔ مالی شرکتی، مدیریت دارایی و ارزش‌گذاری را در وب‌سایت خود معرفی می‌کند. این معرفی، تأیید همهٔ سوابق مدیریتی یا تاریخ‌های آن‌ها نیست.",
+      "sourceRefs": [
+        "source:amin-official-profile"
+      ],
+      "locators": [
+        "خدمات"
+      ],
+      "origin": "sourced_profile",
+      "reviewed_on": "2026-10-11"
+    }
+  }
 }

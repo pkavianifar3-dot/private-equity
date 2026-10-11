@@ -7,5 +7,20 @@
     "en": "Venture Capital"
   },
   "aliases": [],
-  "lifecycleStatus": "REVIEW"
+  "lifecycleStatus": "PUBLISHED",
+  "metadata": {
+    "public_profile": {
+      "text": "سرمایه‌گذاری خطرپذیر در چارچوب ECB، راهبردی از سرمایه‌گذاری مالکانه برای بنگاه‌های نوپا است؛ Preqin آن را در فهرست طبقات سرمایه خصوصی به‌صورت جداگانه می‌آورد.",
+      "sourceRefs": [
+        "source:ecb-private-markets-public-risk",
+        "source:preqin-what-is-private-capital"
+      ],
+      "locators": [
+        "Overview of private market segments and strategies; private equity paragraph",
+        "The Definition of Private Capital"
+      ],
+      "origin": "editorial_synthesis",
+      "reviewed_on": "2026-10-11"
+    }
+  }
 }

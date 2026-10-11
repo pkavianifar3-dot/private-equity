@@ -18,7 +18,7 @@
         "fa": "سرمایه رشد",
         "en": "Growth Capital"
       },
-      "lifecycleStatus": "REVIEW",
+      "lifecycleStatus": "PUBLISHED",
       "route": "/atlas/concept/growth-capital/"
     },
     {
@@ -48,7 +48,7 @@
         "fa": "سرمایه خصوصی",
         "en": "Private Capital"
       },
-      "lifecycleStatus": "REVIEW",
+      "lifecycleStatus": "PUBLISHED",
       "route": "/atlas/concept/private-capital/"
     },
     {
@@ -58,7 +58,7 @@
         "fa": "طبقه‌بندی سرمایه خصوصی",
         "en": "Private Capital Classification"
       },
-      "lifecycleStatus": "REVIEW",
+      "lifecycleStatus": "PUBLISHED",
       "route": "/atlas/concept/private-capital-classification/"
     },
     {
@@ -68,7 +68,7 @@
         "fa": "اعتبار خصوصی",
         "en": "Private Credit"
       },
-      "lifecycleStatus": "REVIEW",
+      "lifecycleStatus": "PUBLISHED",
       "route": "/atlas/concept/private-credit/"
     },
     {
@@ -78,7 +78,7 @@
         "fa": "سرمایه‌گذاری خصوصی",
         "en": "Private Equity"
       },
-      "lifecycleStatus": "REVIEW",
+      "lifecycleStatus": "PUBLISHED",
       "route": "/atlas/concept/private-equity/"
     },
     {
@@ -88,7 +88,7 @@
         "fa": "دسترسی به بازارهای خصوصی",
         "en": "Private Market Access"
       },
-      "lifecycleStatus": "REVIEW",
+      "lifecycleStatus": "PUBLISHED",
       "route": "/atlas/concept/private-market-access/"
     },
     {
@@ -98,7 +98,7 @@
         "fa": "دارایی‌های واقعی",
         "en": "Real Assets"
       },
-      "lifecycleStatus": "REVIEW",
+      "lifecycleStatus": "PUBLISHED",
       "route": "/atlas/concept/real-assets/"
     },
     {
@@ -108,7 +108,7 @@
         "fa": "سرمایه‌گذاری خطرپذیر",
         "en": "Venture Capital"
       },
-      "lifecycleStatus": "REVIEW",
+      "lifecycleStatus": "PUBLISHED",
       "route": "/atlas/concept/venture-capital/"
     },
     {
@@ -128,7 +128,7 @@
         "fa": "آچاره",
         "en": "Achareh"
       },
-      "lifecycleStatus": "REVIEW",
+      "lifecycleStatus": "PUBLISHED",
       "route": "/atlas/organization/achareh/"
     },
     {
@@ -138,7 +138,7 @@
         "fa": "شرکت تأمین سرمایه امین",
         "en": "Amin Investment Bank"
       },
-      "lifecycleStatus": "REVIEW",
+      "lifecycleStatus": "PUBLISHED",
       "aliases": [
         "تأمین سرمایه امین",
         "Amin"
@@ -179,7 +179,7 @@
         "fa": "گروه مالی کیان",
         "en": "Kian Financial Group"
       },
-      "lifecycleStatus": "REVIEW",
+      "lifecycleStatus": "PUBLISHED",
       "route": "/atlas/organization/kian-financial-group/"
     },
     {
