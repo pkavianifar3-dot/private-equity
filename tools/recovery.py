@@ -14,6 +14,7 @@ from urllib.request import Request, build_opener, HTTPRedirectHandler
 import zipfile
 
 import site_release as site
+import emergency_release as emergency
 
 REPOSITORY = 'pkavianifar3-dot/private-equity'
 WORKFLOW = '.github/workflows/validate-atlas.yml'
@@ -30,11 +31,15 @@ def workflow_hash(root):
     return sha256((root / WORKFLOW).read_bytes().replace(b'\r\n', b'\n')).hexdigest()
 
 
-def artifact_name(sha, run, attempt):
-    return f'public-recovery-{sha}-{run}-{attempt}'
+def artifact_name(sha, run, attempt, kind='public'):
+    require(kind in ('public', 'emergency'), 'Unknown bundle kind')
+    return f'{kind}-recovery-{sha}-{run}-{attempt}'
 
 
-def publication(root, output, current_root=None):
+def publication(root, output, current_root=None, kind='public'):
+    require(kind in ('public', 'emergency'), 'Unknown bundle kind')
+    if kind == 'emergency':
+        return emergency.check(root, output)
     result = site.check_artifact(root, output, public=True)
     blockers = site.publication_blockers(root, output)
     if current_root is not None:
@@ -58,14 +63,22 @@ def publication(root, output, current_root=None):
     return result
 
 
-def create(root, output, bundle, report_path):
+def create(root, output, bundle, report_path=None, kind='public'):
     require(not bundle.exists(), 'Bundle destination already exists')
-    report = site.read_json(report_path)
     sha = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=root, text=True).strip()
+    if kind == 'emergency':
+        require(not subprocess.check_output(['git', 'status', '--porcelain'], cwd=root, text=True).strip(),
+                'Emergency bundle requires a clean source checkout')
+        emergency.build(root, output)
+        report = dict(commit=sha, working_tree_dirty=False,
+                      files=site.digest_files(output, sorted(emergency.FILES)))
+    else:
+        report = site.read_json(report_path)
     require(report.get('commit') == sha and HEX.fullmatch(sha), 'Build SHA mismatch')
     require(not report.get('working_tree_dirty'), 'Dirty-source reports cannot become recovery bundles')
-    result = publication(root, output)
-    files = site.digest_files(output, site.package_paths(root, public=True))
+    result = publication(root, output, kind=kind)
+    paths = sorted(emergency.FILES) if kind == 'emergency' else site.package_paths(root, public=True)
+    files = site.digest_files(output, paths)
     require(files == report.get('files'), 'Build manifest/file hash mismatch')
     run = os.environ.get('GITHUB_RUN_ID', '')
     attempt = os.environ.get('GITHUB_RUN_ATTEMPT', '')
@@ -79,10 +92,10 @@ def create(root, output, bundle, report_path):
             info.compress_type = zipfile.ZIP_DEFLATED
             info.external_attr = (stat.S_IFREG | 0o644) << 16
             archive.writestr(info, site.safe_file(output, name).read_bytes())
-    manifest = dict(version=1, repository=REPOSITORY, workflow=WORKFLOW,
+    manifest = dict(version=1, kind=kind, repository=REPOSITORY, workflow=WORKFLOW,
                     workflow_sha256=workflow_hash(root), sha=sha, run_id=int(run), run_attempt=int(attempt),
                     ref=os.environ.get('GITHUB_REF'), event=os.environ.get('GITHUB_EVENT_NAME'),
-                    artifact_name=artifact_name(sha, run, attempt), retention_days=30,
+                    artifact_name=artifact_name(sha, run, attempt, kind), retention_days=30,
                     publication='passed', file_count=len(files), files=files, checks=result,
                     archive_sha256=sha256((bundle / 'site.zip').read_bytes()).hexdigest(),
                     created_at=datetime.now(timezone.utc).isoformat())
@@ -119,7 +132,8 @@ def manifest(bundle):
     require(type(m.get('run_id')) is int and m['run_id'] > 0 and type(m.get('run_attempt')) is int and m['run_attempt'] > 0,
             'Invalid manifest run identity')
     require(m.get('publication') == 'passed' and m.get('retention_days', 0) >= 30, 'Manifest publication/retention invalid')
-    require(m.get('artifact_name') == artifact_name(m['sha'], m['run_id'], m['run_attempt']), 'Artifact name mismatch')
+    kind = m.get('kind', 'public')
+    require(m.get('artifact_name') == artifact_name(m['sha'], m['run_id'], m['run_attempt'], kind), 'Artifact name/kind mismatch')
     require(isinstance(m.get('files'), dict) and m.get('file_count') == len(m['files']) and m['files'], 'Invalid manifest files')
     require(sha256((bundle / 'site.zip').read_bytes()).hexdigest() == m.get('archive_sha256'), 'Archive SHA-256 mismatch')
     return m
@@ -144,7 +158,7 @@ def restore(root, bundle, output, current_root=None):
             path = output / name
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_bytes(data)
-    return publication(root, output, current_root)
+    return publication(root, output, current_root, kind=m.get('kind', 'public'))
 
 
 def authorize(flag, ref, source, head, expected_head):
@@ -213,13 +227,14 @@ def unpack_download(artifact, raw, bundle):
     return manifest(bundle)
 
 
-def fetch(root, run_id, artifact_id, sha, bundle):
+def fetch(root, run_id, artifact_id, sha, bundle, kind='public'):
     require(run_id > 0 and artifact_id > 0 and HEX.fullmatch(sha or ''), 'Invalid requested source identity')
     base = '/repos/' + REPOSITORY
     run = api(f'{base}/actions/runs/{run_id}')
     artifact = api(f'{base}/actions/artifacts/{artifact_id}')
     raw = api(f'{base}/actions/artifacts/{artifact_id}/zip', binary=True)
     m = unpack_download(artifact, raw, bundle)
+    require(m.get('kind', 'public') == kind, 'Requested bundle kind mismatch')
     workflow = api(f'{base}/actions/workflows/{run["workflow_id"]}')
     jobs = api(f'{base}/actions/runs/{run_id}/attempts/{run["run_attempt"]}/jobs?per_page=100')
     check_origin(root, m, run, artifact, workflow, jobs, sha, artifact_id)
@@ -277,6 +292,7 @@ def main():
     p.add_argument('--run-id', type=int)
     p.add_argument('--artifact-id', type=int)
     p.add_argument('--sha')
+    p.add_argument('--kind', choices=('public', 'emergency'), default='public')
     a = p.parse_args()
     try:
         if a.command == 'gate': gate()
@@ -296,9 +312,9 @@ def main():
             print(json.dumps(dict(artifact_id=artifact['id'], expires_at=artifact['expires_at'],
                                   retention_verified=True, hosted_download_rehearsal=True, deploy_authorized=False)))
         elif a.command == 'create':
-            print(json.dumps(create(a.root, a.output, a.bundle, a.report)['checks']))
+            print(json.dumps(create(a.root, a.output, a.bundle, a.report, a.kind)['checks']))
         elif a.command == 'fetch':
-            fetch(a.root, a.run_id, a.artifact_id, a.sha, a.bundle)
+            fetch(a.root, a.run_id, a.artifact_id, a.sha, a.bundle, a.kind)
         else:
             result = restore(a.source_root or a.root, a.bundle, a.output, a.root)
             if a.command == 'rehearse':

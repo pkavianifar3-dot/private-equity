@@ -86,14 +86,13 @@ healthy Actions deployment. Republishing the same candidate cannot repair a bug
 in that candidate. The code does not label candidate validation as production
 health or imply retention creates a known-good prior release.
 
-Therefore first cutover still needs an explicitly approved contingency: a
-separately reviewed minimal public fallback built and archived by this pipeline,
-or acceptance that a faulty initial candidate requires a fix PR and controlled
-deployment while the last served site is preserved as far as possible. Producing
-that fallback changes the chosen public content and is a separate decision. Once
-a clean deployment has passed real-site checks, record its source run/artifact/SHA
-as the known-good recovery baseline. Never restore `main/root`, waive publication
-checks, overwrite Git history, or blindly revert the pipeline itself.
+An independent four-file emergency fallback is now implemented and separately
+archived/rehearsed through the same pipeline; see `stage-5-emergency-cutover.md`.
+It restores only standalone Home/404 and deliberately omits normal features.
+This is not restoration of the old full site or proof of production recovery.
+A successful main-source emergency bundle and main recovery dry-run must exist
+before the first deploy. Once a full clean deployment passes real-site checks,
+record it as the full recovery baseline. Never return to main/root or waive gates.
 
 ## Verification boundary
 

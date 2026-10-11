@@ -25,6 +25,11 @@ on:
         description: "Full SHA of the approved source bundle"
         type: string
         default: ""
+      recovery_kind:
+        description: "Approved bundle kind; emergency restores only standalone Home/404"
+        type: choice
+        options: [public, emergency]
+        default: public
       recovery_dry_run:
         description: "Verify/prepare recovery without authorizing upload/deploy"
         type: boolean
@@ -93,6 +98,28 @@ jobs:
           BUNDLE_ID: ${{ steps.archive.outputs.artifact-id }}
         run: python tools/recovery.py retention --artifact-id "$BUNDLE_ID" --bundle "$RUNNER_TEMP/public-recovery"
 
+      - name: Build and rehearse independent emergency bundle (not the normal site)
+        env:
+          PYTHONDONTWRITEBYTECODE: "1"
+        run: |
+          python tools/recovery.py create --kind emergency --output "$RUNNER_TEMP/emergency-site" --bundle "$RUNNER_TEMP/emergency-recovery"
+          python tools/recovery.py rehearse --bundle "$RUNNER_TEMP/emergency-recovery" --output "$RUNNER_TEMP/emergency-rehearsal"
+
+      - name: Retain separate emergency bundle and manifest
+        id: emergency-archive
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: emergency-recovery-${{ github.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/emergency-recovery
+          retention-days: 30
+          if-no-files-found: error
+
+      - name: Download and verify emergency bundle retention and recovery
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BUNDLE_ID: ${{ steps.emergency-archive.outputs.artifact-id }}
+        run: python tools/recovery.py retention --artifact-id "$BUNDLE_ID" --bundle "$RUNNER_TEMP/emergency-recovery"
+
       - name: Report candidate eligibility without exposing its files
         run: |
           python - <<'PY'
@@ -157,7 +184,8 @@ jobs:
           SOURCE_RUN: ${{ inputs.recovery_run_id }}
           SOURCE_ARTIFACT: ${{ inputs.recovery_artifact_id }}
           SOURCE_SHA: ${{ inputs.recovery_sha }}
-        run: python tools/recovery.py fetch --run-id "$SOURCE_RUN" --artifact-id "$SOURCE_ARTIFACT" --sha "$SOURCE_SHA" --bundle "$RUNNER_TEMP/recovery-input"
+          SOURCE_KIND: ${{ inputs.recovery_kind }}
+        run: python tools/recovery.py fetch --run-id "$SOURCE_RUN" --artifact-id "$SOURCE_ARTIFACT" --sha "$SOURCE_SHA" --kind "$SOURCE_KIND" --bundle "$RUNNER_TEMP/recovery-input"
       - name: Checkout only the verified historical source for content checks
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
