@@ -140,6 +140,9 @@ for (const e of entities.filter(e=>e.lifecycleStatus!=="PUBLISHED" && e.type==="
       `${e.id}: non-public concepts must not gain Research links`);
 }
 assert.strictEqual((newPage.match(/class="research-note-ref"/g)||[]).length,20);
-assert(fs.readFileSync("articles.html","utf8").includes('href="articles/private-capital-research.html"'));
+// Stage 6 builds discovery from the approved registry into the public artifact.
+const generatedHome = require("node:child_process").execFileSync("python", ["-B", "-c",
+    "from pathlib import Path;import sys;sys.path.insert(0,'tools');import search;sys.stdout.buffer.write(search.files(Path('.').resolve())['articles.html'])"], {encoding:"utf8"});
+assert(generatedHome.includes('href="/articles/private-capital-research.html"'));
 assert(fs.readFileSync("sitemap.xml","utf8").includes('https://privatecapital.ir/articles/private-capital-research.html'));
 console.log("Research static HTML contract PASSED");

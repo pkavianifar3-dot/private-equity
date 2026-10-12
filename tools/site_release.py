@@ -14,6 +14,7 @@ from xml.etree import ElementTree as ET
 import json
 import re
 import public_projection
+import search as public_search
 
 ORIGIN = "https://privatecapital.ir"
 ROOT = Path(__file__).resolve().parents[1]
@@ -142,7 +143,7 @@ def asset_allowed(relative):
     return relative in ("assets/Vazirmatn-Regular.woff2", "assets/Vazirmatn-Bold.woff2")
 
 
-def package_paths(root, public=False):
+def package_paths(root, public=False, include_search=True):
     config = policy(root)
     indexed = read_json(root / "atlas/entities/index.json")["entities"]
     for entity in indexed:
@@ -193,6 +194,8 @@ def package_paths(root, public=False):
         # Each family index and file is regenerated as a closed snapshot.
         result = {p for p in result if not any(p.startswith('atlas/'+f+'/') for f in ('claims','evidence','sources'))}
         result.update(overrides)
+        if include_search and (root / "tools/search.py").is_file():
+            result.update(public_search.files(root))
     return sorted(result)
 
 
@@ -200,14 +203,16 @@ def digest_files(root, paths):
     return {p: sha256(safe_file(root, p).read_bytes()).hexdigest() for p in sorted(paths)}
 
 
-def package(root, output, public=False):
+def package(root, output, public=False, include_search=True):
     output = output.resolve()
     if output.is_relative_to(root.resolve()) or root.resolve().is_relative_to(output) or output.is_symlink():
         raise ValueError("Artifact directory must be isolated from the repository root")
     if output.exists() and any(output.iterdir()):
         raise ValueError(f"Artifact directory is not empty; use a fresh directory: {output}")
-    paths = package_paths(root, public=public)
+    paths = package_paths(root, public=public, include_search=include_search)
     overrides = public_projection.overrides(root) if public else {}
+    if public and include_search and (root / "tools/search.py").is_file():
+        overrides.update(public_search.files(root))
     output.mkdir(parents=True, exist_ok=True)
     for relative in paths:
         target = output / relative
@@ -273,6 +278,8 @@ def check_artifact(root, output, public=False):
     """Check the actual bytes to be uploaded, including link/asset closure."""
     expected = set(package_paths(root, public=public))
     overrides = public_projection.overrides(root) if public else {}
+    if public and (root / "tools/search.py").is_file():
+        overrides.update(public_search.files(root))
     actual = {p.relative_to(output).as_posix() for p in output.rglob("*") if p.is_file()}
     errors = []
     if actual != expected:
@@ -376,6 +383,8 @@ def publication_blockers(root, output):
         if article.get("status") != "PUBLISHED" and (output / url_file(article["url"])).exists():
             blockers.append(f"{article['id']}: unpublished Research page in artifact")
     blockers.extend(public_projection.check(root, output))
+    if (output / "search/documents.json").exists():
+        blockers.extend(public_search.check(root, output, require_coverage=False))
     return sorted(set(blockers))
 
 

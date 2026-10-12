@@ -1,0 +1,379 @@
+[
+  {
+    "n": 1,
+    "query": "سرمایه خصوصی",
+    "scope": "atlas",
+    "expected": [
+      "concept:private-capital"
+    ],
+    "maxRank": 1,
+    "forbidden": [],
+    "empty": false
+  },
+  {
+    "n": 2,
+    "query": "Private Capital",
+    "scope": "atlas",
+    "expected": [
+      "concept:private-capital"
+    ],
+    "maxRank": 1,
+    "forbidden": [],
+    "empty": false
+  },
+  {
+    "n": 3,
+    "query": "سرمايه خصوصي",
+    "scope": "atlas",
+    "expected": [
+      "concept:private-capital"
+    ],
+    "maxRank": 1,
+    "forbidden": [],
+    "empty": false
+  },
+  {
+    "n": 4,
+    "query": "سرمایه‌خصوصی",
+    "scope": "atlas",
+    "expected": [
+      "concept:private-capital"
+    ],
+    "maxRank": 1,
+    "forbidden": [],
+    "empty": false
+  },
+  {
+    "n": 5,
+    "query": "سرمایه‌گذاری خصوصی",
+    "scope": "atlas",
+    "expected": [
+      "concept:private-equity"
+    ],
+    "maxRank": 1,
+    "forbidden": [],
+    "empty": false
+  },
+  {
+    "n": 6,
+    "query": "سرمایه گذاری خصوصی",
+    "scope": "atlas",
+    "expected": [
+      "concept:private-equity"
+    ],
+    "maxRank": 1,
+    "forbidden": [],
+    "empty": false
+  },
+  {
+    "n": 7,
+    "query": "سرمایهگذاری خصوصی",
+    "scope": "atlas",
+    "expected": [
+      "concept:private-equity"
+    ],
+    "maxRank": 1,
+    "forbidden": [],
+    "empty": false
+  },
+  {
+    "n": 8,
+    "query": "سرمایه‌گذاری خُصوصی",
+    "scope": "atlas",
+    "expected": [
+      "concept:private-equity"
+    ],
+    "maxRank": 1,
+    "forbidden": [],
+    "empty": false
+  },
+  {
+    "n": 9,
+    "query": "private equity",
+    "scope": "atlas",
+    "expected": [
+      "concept:private-equity"
+    ],
+    "maxRank": 1,
+    "forbidden": [],
+    "empty": false
+  },
+  {
+    "n": 10,
+    "query": "Equi",
+    "scope": "atlas",
+    "expected": [
+      "concept:private-equity"
+    ],
+    "maxRank": 1,
+    "forbidden": [],
+    "empty": false
+  },
+  {
+    "n": 11,
+    "query": "Venture Capital",
+    "scope": "atlas",
+    "expected": [
+      "concept:venture-capital"
+    ],
+    "maxRank": 1,
+    "forbidden": [],
+    "empty": false
+  },
+  {
+    "n": 12,
+    "query": "سرمایه‌گذاری خطرپذیر",
+    "scope": "atlas",
+    "expected": [
+      "concept:venture-capital"
+    ],
+    "maxRank": 1,
+    "forbidden": [],
+    "empty": false
+  },
+  {
+    "n": 13,
+    "query": "سرمایه رشد",
+    "scope": "atlas",
+    "expected": [
+      "concept:growth-capital"
+    ],
+    "maxRank": 1,
+    "forbidden": [],
+    "empty": false
+  },
+  {
+    "n": 14,
+    "query": "Growth",
+    "scope": "atlas",
+    "expected": [
+      "concept:growth-capital"
+    ],
+    "maxRank": 1,
+    "forbidden": [],
+    "empty": false
+  },
+  {
+    "n": 15,
+    "query": "دارایی‌های واقعی",
+    "scope": "atlas",
+    "expected": [
+      "concept:real-assets"
+    ],
+    "maxRank": 1,
+    "forbidden": [],
+    "empty": false
+  },
+  {
+    "n": 16,
+    "query": "دارايي‌هاي واقعي",
+    "scope": "atlas",
+    "expected": [
+      "concept:real-assets"
+    ],
+    "maxRank": 1,
+    "forbidden": [],
+    "empty": false
+  },
+  {
+    "n": 17,
+    "query": "طبقه‌بندی سرمایه خصوصی",
+    "scope": "atlas",
+    "expected": [
+      "concept:private-capital-classification"
+    ],
+    "maxRank": 1,
+    "forbidden": [],
+    "empty": false
+  },
+  {
+    "n": 18,
+    "query": "طبقه بندی سرمایه خصوصی",
+    "scope": "atlas",
+    "expected": [
+      "concept:private-capital-classification"
+    ],
+    "maxRank": 1,
+    "forbidden": [],
+    "empty": false
+  },
+  {
+    "n": 19,
+    "query": "تأمین سرمایه امین",
+    "scope": "atlas",
+    "expected": [
+      "organization:amin-investment-bank"
+    ],
+    "maxRank": 1,
+    "forbidden": [],
+    "empty": false
+  },
+  {
+    "n": 20,
+    "query": "Amin",
+    "scope": "atlas",
+    "expected": [
+      "organization:amin-investment-bank"
+    ],
+    "maxRank": 1,
+    "forbidden": [],
+    "empty": false
+  },
+  {
+    "n": 21,
+    "query": "سرمایه خصوصی Private Capital",
+    "scope": "all",
+    "expected": [
+      "concept:private-capital",
+      "research:private-capital",
+      "research:private-capital-research"
+    ],
+    "maxRank": 4,
+    "forbidden": [],
+    "empty": false
+  },
+  {
+    "n": 22,
+    "query": "علي سنگينيان",
+    "scope": "atlas",
+    "expected": [
+      "person:ali-sanginian"
+    ],
+    "maxRank": 1,
+    "forbidden": [],
+    "empty": false
+  },
+  {
+    "n": 23,
+    "query": "آچاره",
+    "scope": "atlas",
+    "expected": [
+      "organization:achareh"
+    ],
+    "maxRank": 1,
+    "forbidden": [],
+    "empty": false
+  },
+  {
+    "n": 24,
+    "query": "Kian",
+    "scope": "atlas",
+    "expected": [
+      "organization:kian-financial-group"
+    ],
+    "maxRank": 1,
+    "forbidden": [],
+    "empty": false
+  },
+  {
+    "n": 25,
+    "query": "Deal Sourcing",
+    "scope": "research",
+    "expected": [
+      "research:private-equity"
+    ],
+    "maxRank": 1,
+    "forbidden": [],
+    "empty": false
+  },
+  {
+    "n": 26,
+    "query": "Carried Interest",
+    "scope": "research",
+    "expected": [
+      "research:private-equity"
+    ],
+    "maxRank": 1,
+    "forbidden": [],
+    "empty": false
+  },
+  {
+    "n": 27,
+    "query": "High-Net-Worth Individuals",
+    "scope": "research",
+    "expected": [
+      "research:private-equity"
+    ],
+    "maxRank": 1,
+    "forbidden": [],
+    "empty": false
+  },
+  {
+    "n": 28,
+    "query": "ECB",
+    "scope": "atlas",
+    "expected": [
+      "concept:private-equity"
+    ],
+    "maxRank": 6,
+    "forbidden": [],
+    "empty": false
+  },
+  {
+    "n": 29,
+    "query": "سازوکار تأمین مالی",
+    "scope": "research",
+    "expected": [
+      "research:private-capital-research"
+    ],
+    "maxRank": 1,
+    "forbidden": [],
+    "empty": false
+  },
+  {
+    "n": 30,
+    "query": "xyzq987noresult",
+    "scope": "all",
+    "expected": [],
+    "maxRank": 1,
+    "forbidden": [],
+    "empty": true
+  },
+  {
+    "n": 31,
+    "query": "گروه کیسون",
+    "scope": "all",
+    "expected": [],
+    "maxRank": 1,
+    "forbidden": [
+      "organization:kayson-group"
+    ],
+    "empty": false
+  },
+  {
+    "n": 32,
+    "query": "دادمان",
+    "scope": "all",
+    "expected": [],
+    "maxRank": 1,
+    "forbidden": [
+      "project:dadman"
+    ],
+    "empty": true,
+    "note": "Actual approved article text does not contain Dadman. Earlier default prefix hit was not evidence of literal presence. No Entity identity or article text match is expected."
+  },
+  {
+    "n": 33,
+    "query": "اجزای قراردادی",
+    "scope": "all",
+    "expected": [
+      "research:private-capital"
+    ],
+    "maxRank": 1,
+    "forbidden": [
+      "concept:contractual-components"
+    ],
+    "empty": false
+  },
+  {
+    "n": 34,
+    "query": "گروه مالي كيان",
+    "scope": "atlas",
+    "expected": [
+      "organization:kian-financial-group"
+    ],
+    "maxRank": 1,
+    "forbidden": [],
+    "empty": false
+  }
+]

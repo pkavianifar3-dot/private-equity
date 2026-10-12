@@ -1,0 +1,7 @@
+{
+  "name": "privatecapital-static-build",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Pinned build-only dependency for approved public search",
+  "devDependencies": { "pagefind": "1.5.2" }
+}

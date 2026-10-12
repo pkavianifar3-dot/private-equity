@@ -1,0 +1,5 @@
+{
+  "version": 1,
+  "featuredResearchRef": "research:private-capital-research",
+  "conceptOrder": ["concept:private-capital", "concept:private-equity", "concept:private-credit", "concept:real-assets", "concept:venture-capital", "concept:growth-capital"]
+}
