@@ -57,6 +57,8 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1, Node 24
         with:
           ref: ${{ github.sha }}
+          # Historical public-bundle regression needs the actual baseline tree.
+          fetch-depth: 0
           persist-credentials: false
 
       - name: Set up Python

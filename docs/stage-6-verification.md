@@ -200,3 +200,12 @@ Future typo-tolerant/semantic search must keep match labels and relevance tests 
 No backend/AI, Topic landing pages, Similarity, Watch changes or Stage 7 work.
 Performance should be sampled on production/mobile networks after a separately
 authorized release. No production deployment or protected recovery was tested here.
+
+## Remote checkout correction
+
+Initial push/PR CI for 3f8e17efb762f896b1c2ee9d494679024a1dfdd9 failed in the
+validation step. Existing depth-1 checkout lacks the actual Stage 5 baseline
+commit required by the historical recovery regression. This was reproduced in
+an isolated depth-1 clone (baseline object unavailable). Validation checkout
+now fetches history; the test, publication rules and deployment gates remain
+enabled. Follow-up push/PR CI must succeed independently for the corrected SHA.
