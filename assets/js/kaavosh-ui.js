@@ -21,6 +21,8 @@
         const status = document.getElementById(form.dataset.status);
         const filters = document.getElementById(form.dataset.filters);
         const discovery = document.querySelector("[data-discovery-content]");
+        const feature = document.querySelector("[data-discovery-feature]");
+        function showDiscovery(show) { if (discovery) discovery.hidden = !show; if (feature) feature.hidden = !show; }
         let state = core.stateFromURL(location.search, defaults), sequence = 0, timer;
         function sync() { input.value = state.query; scope.value = state.scope; }
         function url(replace = false) {
@@ -37,9 +39,9 @@
             const request = ++sequence, requested = { ...state };
             const isResearchHome = !!discovery;
             if (isResearchHome && !core.normalize(requested.query) && !requested.type && !requested.group) {
-                discovery.hidden = false; panel.hidden = true; status.textContent = ""; if (filters) filters.hidden = true; return;
+                showDiscovery(true); panel.hidden = true; status.textContent = ""; if (filters) filters.hidden = true; return;
             }
-            if (discovery) discovery.hidden = true;
+            showDiscovery(false);
             panel.hidden = false; if (filters) filters.hidden = false;
             panel.setAttribute("aria-busy", "true"); status.textContent = "در حال کاوش…";
             try {
@@ -66,7 +68,7 @@
                 if (request !== sequence) return;
                 status.textContent = "کاوش در دسترس نیست.";
                 panel.innerHTML = '<div class="kaavosh-empty"><h2>بارگذاری کاوش کامل نشد</h2><p>دوباره تلاش کنید. مسیرهای مطالعه همچنان در دسترس‌اند.</p><button type="button" data-retry>تلاش دوباره</button></div>';
-                if (discovery) discovery.hidden = false;
+                showDiscovery(true);
                 console.error("Kaavosh:", error);
             } finally { if (request === sequence) panel.setAttribute("aria-busy", "false"); }
         }

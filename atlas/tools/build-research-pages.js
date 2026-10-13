@@ -245,7 +245,7 @@ function createShell(research) {
         `<link rel="stylesheet" href="/assets/css/style.css">` +
         `<link rel="icon" href="/assets/images/favicon.ico">` +
         `<script type="application/ld+json">${jsonLd}</script></head><body>` +
-        `<header><div class="container"><div class="logo">Private Capital</div>` +
+        `<header><div class="container"><a class="logo" href="/" aria-label="Private Capital — صفحهٔ اصلی"><img src="/assets/images/privatecapital.png" alt="" width="43" height="52"><span dir="ltr">Private Capital</span></a>` +
         `<nav><a href="/">خانه</a><a href="/watch.html">دیده‌بان</a>` +
         `<a href="/articles.html">پژوهش‌ها</a><a href="/atlas/">اطلس</a>` +
         `<a href="/services.html">خدمات</a><a href="/membership.html">عضویت ویژه</a>` +

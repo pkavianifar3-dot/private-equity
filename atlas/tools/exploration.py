@@ -8,6 +8,12 @@ no title inference or similarity-based association is created here.
 import hashlib
 import html
 import re
+import importlib.util
+from pathlib import Path
+
+_search_spec = importlib.util.spec_from_file_location("kaavosh_markup", Path(__file__).resolve().parents[2] / "tools/kaavosh_markup.py")
+search_markup = importlib.util.module_from_spec(_search_spec)
+_search_spec.loader.exec_module(search_markup)
 from html.parser import HTMLParser
 
 
@@ -127,9 +133,9 @@ def card(title, items, all_url, *, empty="هنوز موردی ثبت نشده ا
     limit = 4
     def rows(values):
         return '<ul class="explore-items">' + "".join(
-            '<li><a href="' + esc(item["url"]) + '"><span class="explore-item-title">'
-            + esc(item["title"]) + '</span>'
-            + (f'<small>{esc(item["meta"])}</small>' if item.get("meta") else '')
+            '<li><a href="' + esc(item["url"]) + '">'
+            + (f'<small class="explore-item-relation">{esc(item["meta"])}</small>' if item.get("meta") else '')
+            + '<span class="explore-item-title">' + esc(item["title"]) + '</span>'
             + '</a></li>' for item in values
         ) + '</ul>'
 
@@ -149,7 +155,7 @@ def card(title, items, all_url, *, empty="هنوز موردی ثبت نشده ا
 
 def rail(headings, cards, *, context):
     return (f'<aside class="explore-rail" aria-label="کاوش در {esc(context)}">'
-            '<div class="explore-rail-inner"><div class="explore-toc">'
+            '<div class="explore-rail-inner">' + search_markup.search_form(compact=True) + '<div class="explore-toc">'
             '<h2>راهنمای مطالعه</h2>' + toc_nav(headings) + '</div>'
             + toc_nav(headings, mobile=True) + ''.join(cards) + '</div></aside>')
 
@@ -205,6 +211,8 @@ def research_page(page, article, catalog, root, resolver, editorial_related, *, 
                 '<article class="explore-reading">' + body + '</article>' + cards
                 + '</div><!-- research-exploration -->')
     page = page[:start] + composed + page[end + len('</article>'):]
+    search_style = '<link rel="stylesheet" href="/assets/css/kaavosh.css">'
+    if search_style not in page:page=page.replace('</head>',search_style+'\n</head>',1)
     style = '<link rel="stylesheet" href="/assets/css/exploration.css">'
     if style not in page:
         page = page.replace('</head>', style + '\n</head>', 1)
@@ -233,6 +241,8 @@ def atlas_page(page, entity_id, claims, entities, relation_contract, resolver,
                 '<div class="atlas-primary">' + content + '</div>' + cards
                 + '</div><!-- atlas-exploration -->')
     page = page[:hero_end] + composed + page[root_end:]
+    search_style = '<link rel="stylesheet" href="/assets/css/kaavosh.css">'
+    if search_style not in page:page=page.replace('</head>',search_style+'\n</head>',1)
     style = '<link rel="stylesheet" href="/assets/css/exploration.css">'
     if style not in page:
         page = page.replace('</head>', style + '\n</head>', 1)

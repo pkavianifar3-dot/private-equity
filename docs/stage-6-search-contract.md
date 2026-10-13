@@ -5,7 +5,7 @@ Baseline: origin/main e9edde57303ad3de573da68a1ba29817b04b6936.
 ## Product and source boundary
 Search-first, guided discovery; Atlas is entity-first and Research is editorial.
 No new public route, canonical model, publication status, backend or AI API.
-`/atlas/explore/` defaults to Atlas; `/articles.html` defaults to Research.
+`/atlas/` and `/atlas/explore/` default to all scope; `/articles.html` defaults to Research.
 Both accept q, scope (atlas/research/all), type, group, page. Existing q/type/group/page links remain supported.
 
 The release packager first stages the existing approved public projection.
@@ -59,3 +59,15 @@ unknown type/group, stale requests, unpublished Research and REVIEW fixtures are
 additional regressions. Full release checks remain mandatory. Pagefind presence
 alone is not relevance proof. Browser/network measurements and screenshots are
 recorded after implementation; no merge/deploy is authorized.
+
+## Homepage refinement — 2026-10-13
+
+Discovery homes and Explore reuse the established site header/logo/navigation and full footer. Research uses a responsive split hero with one editorial feature; Atlas uses a compact category strip. Reciprocal crosslinks derive from the existing entityRefs reverse index and are resolved against the approved public document set. Fixed ceilings: six curated Concepts, six editorially curated Research cards, six semantic links per cross-lens section. Full discovery remains available through the existing paginated search routes. See `stage-6-discovery-editorial.md` for the editorial controls and deterministic ordering.
+
+Search presentation now shares one native markup helper and stylesheet across home, discovery and reading rails. Atlas and Explore default to all scope; Research defaults to research. Atlas home accepts shareable search parameters without renaming its route. Research feature images use contain, editorial labels precede images, and relation labels precede Entity names in the rail.
+
+## Final signature and entry points — 2026-10-13
+
+All current discovery/search forms omit the redundant Kaavosh badge, keep a white native search field and place the visible scope control below-left. The homepage and both reading rails submit to /articles.html with explicit scope=all. Direct /articles.html still defaults to research; existing Atlas and Explore routes retain their query contracts and all defaults. Compact sizing belongs only to reading rails, independently of badge visibility.
+
+All existing headers link their wordmark and logo to /. Navigation stays in Persian order on the right on desktop; brand sits left. Responsive mobile navigation wraps without reversing tab order. Static/Research builders preserve this contract on regeneration.

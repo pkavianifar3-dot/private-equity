@@ -1,5 +1,22 @@
 {
   "version": 1,
   "featuredResearchRef": "research:private-capital-research",
-  "conceptOrder": ["concept:private-capital", "concept:private-equity", "concept:private-credit", "concept:real-assets", "concept:venture-capital", "concept:growth-capital"]
+  "conceptOrder": [
+    "concept:private-capital",
+    "concept:private-equity",
+    "concept:private-credit",
+    "concept:real-assets",
+    "concept:venture-capital",
+    "concept:growth-capital"
+  ],
+  "limits": {
+    "concepts": 6,
+    "research": 6,
+    "connections": 6
+  },
+  "featuredConceptRef": "concept:private-capital",
+  "researchOrder": [
+    "research:private-capital",
+    "research:private-equity"
+  ]
 }

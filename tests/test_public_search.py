@@ -96,4 +96,90 @@ class PublicSearchTests(unittest.TestCase):
         self.assertNotIn('KAAVOSH_',atlas+research)
         self.assertLess(atlas.index('سرمایه خصوصی</h3>'),atlas.index('سرمایه رشد</h3>'))
 
+class HomeCurationTests(unittest.TestCase):
+    def setUp(self):
+        self.config=search.read(ROOT/'tools/search-home.json')
+        self.docs=[dict(id=f'concept:c{i}',kind='concept',scope='atlas',type='Concept',title=f'Concept {i}',url=f'/atlas/concept/c{i}/',summary='Approved') for i in range(10)]
+        self.docs += [dict(id=f'research:r{i:02}',kind='research',scope='research',type='Research',title=f'Research {i}',url=f'/articles/r{i}.html',summary='Approved') for i in range(14)]
+        self.config['featuredResearchRef']='research:r00'
+        self.config['featuredConceptRef']='concept:c0'
+        self.config['researchOrder']=[f'research:r{i:02}' for i in range(1,14)]
+        self.config['conceptOrder']=[f'concept:c{i}' for i in range(10)]
+        self.edges={'entities':{f'concept:c{i}':[{'id':f'research:r{j:02}','url':'/UNTRUSTED-INDEX-URL/'} for j in range(14)] for i in range(10)}}
+
+    def select(self, docs=None, edges=None):
+        with patch.object(search,'read',return_value=self.config):
+            return search.home_selection(ROOT,self.docs if docs is None else docs,self.edges if edges is None else edges)
+
+    def test_home_bounds_and_stable_order_at_scale(self):
+        chosen=self.select()
+        self.assertEqual([len(chosen[k]) for k in ('concepts','research','relatedResearch','relatedEntities')],[6,6,6,6])
+        self.assertEqual(chosen['relatedResearch'][0]['id'],'research:r00')
+        self.assertEqual([d['id'] for d in chosen['research']],[f'research:r{i:02}' for i in range(1,7)])
+        self.assertEqual(chosen,self.select(list(reversed(self.docs))))
+
+    def test_limits_reject_unbounded_invalid_values(self):
+        for value in (0,-1,7,True,'6',None):
+            with self.subTest(value=value):
+                self.config['limits']['concepts']=value
+                with self.assertRaisesRegex(ValueError,'bounded presentation'):self.select()
+        self.config['limits']={'concepts':6,'research':4}
+        with self.assertRaisesRegex(ValueError,'bounded presentation'):self.select()
+
+    def test_curation_cannot_promote_missing_or_private_identity(self):
+        self.config['conceptOrder'].insert(0,'concept:private-review')
+        self.edges['entities']['concept:private-review']=[{'id':'research:r00'}]
+        self.edges['entities']['concept:c0'].append({'id':'research:private-review'})
+        selected=self.select()
+        self.assertNotIn('concept:private-review',{d['id'] for d in selected['relatedEntities']+selected['concepts']})
+        self.assertNotIn('research:private-review',{d['id'] for d in selected['relatedResearch']})
+        self.config['featuredResearchRef']='research:private-review'
+        with self.assertRaisesRegex(ValueError,'not approved/public'):self.select()
+
+    def test_connections_only_from_real_index_and_canonical_public_urls(self):
+        self.assertEqual(self.select(edges={'entities':{}})['relatedResearch'],[])
+        self.assertEqual(self.select(edges={'entities':{}})['relatedEntities'],[])
+        with patch.object(search,'read',return_value=self.config):
+            pages=search.home_html(ROOT,self.docs,self.edges)
+        rendered=''.join(v.decode() for v in pages.values())
+        self.assertNotIn('UNTRUSTED-INDEX-URL',rendered)
+        self.assertIn('/atlas/concept/c0/',rendered)
+        self.assertIn('/articles/r0.html',rendered)
+        self.assertNotIn('KAAVOSH_',rendered)
+
+    def test_connection_requires_a_visible_home_context(self):
+        # A relation to an article outside the bounded selection must not leak into the bridge.
+        selected=self.select(edges={'entities':{'concept:c0':[{'id':'research:r13'}]}})
+        self.assertEqual(selected['relatedEntities'],[])
+        self.assertEqual([d['id'] for d in selected['relatedResearch']],['research:r13'])
+
+    def test_duplicate_or_wrong_kind_curation_rejected(self):
+        self.config['conceptOrder']=['concept:c0','concept:c0']
+        with self.assertRaisesRegex(ValueError,'unique Concept'):self.select()
+        self.config['conceptOrder']=['person:someone']
+        with self.assertRaisesRegex(ValueError,'unique Concept'):self.select()
+
+    def test_editorial_research_order_does_not_fill_with_uncurated_articles(self):
+        self.config['researchOrder']=['research:r03','research:withdrawn','research:r01']
+        self.assertEqual([d['id'] for d in self.select()['research']],['research:r03','research:r01'])
+        self.config['researchOrder']=['research:r01','research:r01']
+        with self.assertRaisesRegex(ValueError,'unique Research'):self.select()
+
+    def test_featured_concept_cannot_promote_unpublished_identity(self):
+        self.config['featuredConceptRef']='concept:review'
+        with self.assertRaisesRegex(ValueError,'Featured Concept is not approved'):self.select()
+
+    def test_shared_site_chrome_on_all_discovery_pages(self):
+        main=search.Tree((ROOT/'index.html').read_text(encoding='utf-8')).root
+        def region(tree,tag):return tree.find(lambda e:e.tag==tag)[0]
+        def links(tree):return [e.attrs['href'].lstrip('/') for e in tree.find(lambda e:e.tag=='a' and 'href' in e.attrs)]
+        for file in ('atlas/index.html','articles.html','atlas/explore/index.html'):
+            with self.subTest(file=file):
+                tree=search.Tree((ROOT/file).read_text(encoding='utf-8')).root
+                self.assertEqual(links(region(tree,'header')),links(region(main,'header')))
+                self.assertEqual(links(region(tree,'footer')),links(region(main,'footer')))
+                logo=region(tree,'header').find(lambda e:e.tag=='img')[0]
+                self.assertEqual(logo.attrs['src'],'/assets/images/privatecapital.png')
+                self.assertEqual(len(region(tree,'header').find(lambda e:e.tag=='nav')),1)
+
 if __name__=='__main__':unittest.main()

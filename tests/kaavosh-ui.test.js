@@ -4,7 +4,7 @@ const vm = require("node:vm");
 const core = require("../assets/js/kaavosh-core.js");
 const pending = new Map();
 const panel = {hidden:true,attributes:{},innerHTML:"",setAttribute(k,v){this.attributes[k]=v;},querySelector(){return null;},addEventListener(){}};
-const status = {textContent:""}, discovery = {hidden:false};
+const status = {textContent:""}, discovery = {hidden:false}, feature = {hidden:false};
 const input = {value:"",addEventListener(){},focus(){}};
 const scope = {value:"research",addEventListener(){}};
 const events = {};
@@ -12,12 +12,12 @@ const form = {dataset:{results:"results",status:"status",defaultScope:"research"
 const row = title => ({id:"research:test",type:"Research",title,summary:"Approved",url:"/articles/test.html",scope:"research",matchType:"exact"});
 const location={pathname:"/articles.html",search:"?q=first"};
 const history={pushState(a,b,url){location.search=url.includes("?")?"?"+url.split("?")[1]:"";},replaceState(a,b,url){this.pushState(a,b,url);}};
-const document={getElementById(id){return id==="results"?panel:id==="status"?status:null;},querySelector(){return discovery;},querySelectorAll(){return [form];},addEventListener(){}};
+const document={getElementById(id){return id==="results"?panel:id==="status"?status:null;},querySelector(selector){return selector==="[data-discovery-feature]"?feature:discovery;},querySelectorAll(){return [form];},addEventListener(){}};
 const api={...core,createClient(){return {search(query){return new Promise(resolve=>pending.set(query,resolve));},documents(){return Promise.resolve([]);}};}};
 const window={KaavoshCore:api,addEventListener(){}};
 vm.runInNewContext(fs.readFileSync(require.resolve("../assets/js/kaavosh-ui.js"),"utf8"),{window,document,location,history,console,setTimeout,clearTimeout,DOMParser:class {}});
 (async()=>{
-    assert(pending.has("first"));
+    assert(pending.has("first"));assert.equal(feature.hidden,true);assert.equal(discovery.hidden,true);
     input.value="second";events.submit({preventDefault(){}});
     assert(pending.has("second"));
     pending.get("second")([row("LATEST")]);await new Promise(resolve=>setImmediate(resolve));
@@ -26,5 +26,8 @@ vm.runInNewContext(fs.readFileSync(require.resolve("../assets/js/kaavosh-ui.js")
     assert(panel.innerHTML.includes("LATEST"));assert(!panel.innerHTML.includes("STALE"));
     assert(status.textContent.includes("second"));assert.equal(input.value,"second");
     assert.strictEqual(form.elements.q,input,"result updates keep the mounted input");
+    input.value="";events.submit({preventDefault(){}});
+    assert.equal(feature.hidden,false);assert.equal(discovery.hidden,false);assert.equal(panel.hidden,true);
+    assert.strictEqual(form.elements.q,input);
     console.log("Kaavosh UI: late response cannot overwrite newer query or mounted input PASSED");
 })().catch(error=>{console.error(error);process.exitCode=1;});

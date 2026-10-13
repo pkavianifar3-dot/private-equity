@@ -2167,3 +2167,11 @@ article figure img{
 .research-page-section .research-endmatter .article-citations ul{margin:0}
 .research-page-section .citation-inline{font-size:.88em;vertical-align:baseline;direction:ltr;unicode-bidi:isolate;white-space:nowrap}
 .research-page-section .citation-inline a{color:#C9A227}
+
+/* Persian navigation on the right; home-linked brand on the left. */
+header .logo{color:#C9A227;text-decoration:none;flex-shrink:0}
+header .logo:hover{color:#e2c263}
+header .logo:focus-visible{outline:2px solid #d7b85b;outline-offset:6px;border-radius:4px}
+header .logo img{object-fit:contain}
+@media(min-width:901px){header>.container{flex-direction:row-reverse}header nav{direction:rtl}}
+@media(max-width:900px){header .logo{align-self:flex-end}header nav{width:100%;justify-content:flex-start;direction:rtl}}

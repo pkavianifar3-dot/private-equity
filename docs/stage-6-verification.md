@@ -209,3 +209,52 @@ commit required by the historical recovery regression. This was reproduced in
 an isolated depth-1 clone (baseline object unavailable). Validation checkout
 now fetches history; the test, publication rules and deployment gates remain
 enabled. Follow-up push/PR CI must succeed independently for the corrected SHA.
+
+## Homepage refinement verification — 2026-10-13
+
+- Local `tools/release.py verify`: Atlas validator passed; 231 Python tests and all 23 JavaScript test files passed, including 34/34 grounded Pagefind queries. All index/catalog/Research/connections/static builders and generated drift checks passed.
+- Added seven focused homepage tests: fixed ceilings on a larger synthetic corpus; stable ordering; invalid/bool/over-limit config rejection; nonpublic and missing identities excluded; semantic index required; trusted public URLs used instead of index URLs; shared header/footer parity. Search UI regression also checks feature hiding/restoration.
+- Final responsive CSS fixes were followed by a fresh exact artifact build/check, publication check and HTTP smoke: 114 files, 31 HTML pages, 25 sitemap URLs, 1,035 link/runtime checks, 158 HTTP checks, zero publication blockers.
+- Chrome desktop: split Research hero, three distinct Atlas category cards, 30px bridge padding and real reciprocal cards confirmed. Search `Private Equity` produced three results, hid both discovery sections and feature, and expanded the search area. Escape restored discovery; Tab moved from search input to scope selector. No browser console errors on either homepage.
+- Chrome narrow viewport: both pages had equal clientWidth/scrollWidth (345px during the check), one-column category/bridge layout, 20px bridge padding and retained discovery cards. Mobile screenshot capture timed out on two attempts; mobile geometry/DOM were verified, but a captured mobile visual review is not claimed. Desktop capture succeeded before the final spacing refinement.
+- Preview uses the actual isolated approved public artifact at `http://127.0.0.1:8787/atlas/` and `/articles.html`; it does not serve raw canonical inputs. No canonical data, publication statuses, public URLs, sitemap URLs or deployment workflow changed. The URL disposition document changed only to record restored existing header/footer inbound links.
+- These refinements remain local and uncommitted pending visual review. Previous remote CI success does not verify these new working-tree changes. No merge, deploy or release-gate change was performed.
+
+## Shared signature and compact discovery — 2026-10-13
+
+This revision supersedes the earlier four/three-item caps and screenshot limitations above.
+
+- Full local release verification passed: Atlas validator, 238 Python tests, all 23 JavaScript test files, 34/34 grounded search queries, all builders and deterministic drift checks. One image HTTP timeout retried successfully; no validation was skipped.
+- Added shared search markup tests for exact form/helper parity, native GET actions and default scopes, accessible SVG submit and escaping, compact rail placement, relation-label ordering and editorial label placement. Added six-item editorial curation and nonpublic-feature rejection regressions.
+- Chrome screenshots succeeded for both discovery homes on desktop/mobile. The Research feature is dark and its full image uses contain. Actual browser inspection caught a missing display:grid on the compact Research list; that was corrected and verified before final artifact checks. With two articles the grid fits two cards; with more it supports three columns and at most six cards.
+- Actual public artifact: 115 files, 31 HTML pages, 25 sitemap URLs, 1,056 link/runtime checks, zero publication blockers. The final CSS-only/grid and label changes were followed by a fresh artifact build/check and focused markup tests; final publication/HTTP smoke are reported after completion below.
+- Real home search `Deal Sourcing` reached `/atlas/?q=Deal+Sourcing&scope=all` and found the approved Private Equity article. Real Entity rail search `Carried Interest` reached the same Atlas route with scope=all. The Research rail contains no brand/filter and begins with search before TOC. Entity relation labels precede their target names and keep the target links.
+- Narrow viewport inspection: clientWidth=scrollWidth=375px on Atlas, Research, root home and structured article; category strip about 55px high; discovery grids and crosslinks use one column; reading rail becomes static; home search field remains about 266px with the brand to its left. Desktop category strip about 60px. Mobile screenshots were saved outside the repository.
+- Source review verified 23 regenerated reading pages differ only in their exploration rails and the new search stylesheet link; article/Entity main content was unchanged. Canonical data, statuses, IDs, publication boundary, sitemap URL set and deployment workflows were unchanged.
+- New shared CSS is a public asset; the Python helper and editorial settings are build inputs and are not copied into the public artifact. Changes are local and uncommitted; prior remote CI results do not cover this revision. No merge/deploy or gate/settings change occurred.
+
+Final exact-artifact checks passed: publication eligibility and all 159 HTTP smoke requests. The final smoke retried one private-capital.png timeout successfully (bounded 1/1); no missing asset was ignored. git diff --check passed. Final desktop Research screenshot confirms the corrected grid; browser console errors were empty on both discovery homes. Local preview remains at port 8788.
+
+## Centered discovery introductions — 2026-10-13
+
+Supersedes the previous root search presentation with a brand-free, selector-free native form; its hidden scope remains all. Both discovery homes retain their native scope selector, placed below-left. Intro text, decorative quotation and themed lens labels follow the approved wording. Atlas editorial feature is left, intro right. Desktop Atlas rail adds 30px above its search.
+
+- Full local release verification passed: Atlas validator, 239 Python tests, all 23 JavaScript test files, 34/34 grounded ranked queries, builders and deterministic drift checks. Test HTTP transport retried atlas.js within the existing bounded policy; all tests passed.
+- Exact public artifact: 115 files, 31 HTML pages, 25 sitemap URLs, 1,056 link/runtime checks, 159 HTTP requests, zero publication blockers. Final artifact HTTP verification needed no transport retries.
+- Actual Chrome desktop screenshots reviewed both discovery introductions; Atlas feature is left and intro right. Root field center deviation: 0px horizontal, 0.5px vertical. Atlas rail gap: 30px.
+- Mobile viewport 390px (375px content area): root, both discovery homes and Atlas Entity had no horizontal overflow; both hero headlines occupied one line. Research and Atlas mobile screenshots reviewed.
+- Native root submission of Deal Sourcing navigated to /atlas/ and found the approved Research result with default all scope. Native selector changed Research scope to all and back, and Tab advanced to the next link. Research console had no errors. Native OS dropdown appearance cannot be fully captured/controlled by page CSS.
+- Preview: http://127.0.0.1:8788/ from the verified artifact privatecapital-kaavosh-centered-20261013. No commit, push, deploy, workflow or publication-policy changes. Prior remote CI does not cover these local edits.
+
+## Unified signature, Research entry point and Persian header — 2026-10-13
+
+- Removed residual badge in Explore; made scope placement shared. Corrected helper compact CSS coupling: only actual rails get compact sizing. Homepage search measured 760x64px desktop, 58px high mobile, with proportionate input and magnifier.
+- Root and both rail native forms submit to /articles.html with scope=all. Direct Research default and existing Atlas/Explore routing remain unchanged. Header wordmark/image is a native accessible home link; static and Research builders generate it.
+- Focused presentation/search/exploration tests: 31 passed. Full release verification: validator, 241 Python tests, all 23 JS test files, 34/34 grounded ranked queries, builders/drift all passed. Initial partial rebuilding left old Research TOC anchors; running the existing connection builder reconciled them before the successful full verification. No checks were disabled.
+- Verified public artifact: 115 files, 31 HTML pages, 25 sitemap URLs, 1,103 link/runtime checks, 159 HTTP smoke requests, zero blockers. Artifact digest e1ae9b3404acc315fd65bbd327736754719f2afb4fb971ffc6f46e5a0e1179ea. Final smoke needed no retries; two existing test-only atlas.js transport retries recovered within their bounded policy.
+- Chrome actual root, Atlas rail and Research rail submissions reached Research with explicit all scope. Actual wordmark click returned to /. Desktop screenshot confirmed nav right, brand left, no Explore badge, scope below-left. 1024px viewport had no header overlap. 390px viewport (375px content): root and Explore had no horizontal overflow; root mobile screenshot reviewed. Explore screenshot bridge scaled inconsistently despite DOM width 375px and correct 32px heading style; DOM geometry was verified, final mobile visual review remains available in preview.
+- No browser console errors observed on Explore. Temporary viewport reset. Local preview port 8788 uses privatecapital-kaavosh-unified-20261013. No commit/push/merge/deploy or settings/publication-policy changes. Prior remote CI does not cover these local edits.
+
+## Authorized final registration checkpoint — 2026-10-13
+
+Fetched main e9edde57303ad3de573da68a1ba29817b04b6936; feature head 6060ab931f8bf0389d48c3e83d27a8a7bcf9886c is two ahead, zero behind. GitHub PR 18 is open to main and repository gate reads false. User explicitly authorized this feature commit/push and PR update, excluding merge/deploy/settings changes. Final repeat of full local release verification passed (241 Python tests, 23 JS test files, 34 ranked queries, validator/build/drift, 115 files, 31 HTML pages, 25 sitemap URLs, 1,103 link/runtime and 159 HTTP checks, zero blockers). npm.ps1 was blocked by local execution policy; npm.cmd ci --ignore-scripts succeeded without policy change. Search tests and exact artifact/publication checks passed after the clean install. Remote CI for the new registration must be verified separately and its run links recorded in the PR/final response.

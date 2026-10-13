@@ -104,24 +104,66 @@ def card(d, extra=''):
     english=f'<bdi dir="ltr">{escape(d["english"])}</bdi>' if d.get('english') and d['scope']=='atlas' else ''
     return f'<a class="discovery-card {extra}" href="{escape(d["url"])}"><span class="discovery-card-meta">{label} {english}</span><h3>{escape(d["title"])}</h3><p>{escape(d["summary"])}</p><span class="discovery-card-link">{ "مطالعه پژوهش" if d["scope"]=="research" else "شناخت این مدخل" } <span aria-hidden="true">←</span></span></a>'
 
-def home_html(root, docs):
-    config=read(root/'tools/search-home.json');by_id={d['id']:d for d in docs}
+def search_icon():
+    import kaavosh_markup
+    return kaavosh_markup.ICON
+
+def crosslink(d):
+    label={'Concept':'مفهوم','Person':'شخص','Organization':'سازمان','Investment':'سرمایه‌گذاری','Research':'پژوهش'}[d['type']]
+    return f'<li><a href="{escape(d["url"])}"><small>{label}</small><span>{escape(d["title"])}</span><span class="discovery-crosslink-arrow" aria-hidden="true">←</span></a></li>'
+
+HOME_LIMITS = {'concepts': 6, 'research': 6, 'connections': 6}
+
+def home_selection(root, docs, connections):
+    """Curation orders presentation; public staging alone grants eligibility."""
+    config=read(root/'tools/search-home.json')
+    limits=config.get('limits', HOME_LIMITS)
+    if set(limits)!=set(HOME_LIMITS) or any(type(limits[k]) is not int or not 1<=limits[k]<=ceiling for k,ceiling in HOME_LIMITS.items()):
+        raise ValueError('Home limits must be integers within the bounded presentation contract')
+    order=config['conceptOrder']
+    if not isinstance(order,list) or any(not isinstance(eid,str) or not eid.startswith('concept:') for eid in order) or len(order)!=len(set(order)):
+        raise ValueError('Home conceptOrder must contain unique Concept IDs')
+    by_id={d['id']:d for d in docs}
     featured=by_id.get(config['featuredResearchRef'])
     if not featured or featured['scope']!='research':raise ValueError('Featured Research is not approved/public')
-    concepts=[by_id[eid] for eid in config['conceptOrder'] if eid in by_id and by_id[eid]['kind']=='concept']
-    # A withdrawn concept is omitted; curation never grants publication.
-    related=[d for d in docs if d.get('primaryEntityId')=='concept:private-capital']
-    paths=[]
-    for t,label,description in [('Concept','مفاهیم','تعریف‌ها، دامنه و تمایزها'),('Organization','سازمان‌ها','شناخت بازیگران و ساختارها'),('Person','اشخاص','افراد و ارتباط‌های مستند')]:
+    concepts=[by_id[eid] for eid in order if eid in by_id and by_id[eid]['kind']=='concept'][:limits['concepts']]
+    # Missing/withdrawn concepts are omitted, never promoted by editorial config.
+    concept=by_id.get(config['featuredConceptRef'])
+    if not concept or concept['kind']!='concept':raise ValueError('Featured Concept is not approved/public')
+    research_order=config.get('researchOrder',[])
+    if not isinstance(research_order,list) or any(not isinstance(rid,str) or not rid.startswith('research:') for rid in research_order) or len(research_order)!=len(set(research_order)):
+        raise ValueError('Home researchOrder must contain unique Research IDs')
+    # Selected articles are genuinely curated; unselected articles remain in search.
+    research=[by_id[rid] for rid in research_order if rid in by_id and by_id[rid]['scope']=='research' and rid!=featured['id']][:limits['research']]
+    edges=connections.get('entities',{})
+    # Existing reverse index derives from entityRefs, not mentions or title guesses.
+    related_ids={r['id'] for concept in concepts for r in edges.get(concept['id'],[]) if r.get('id') in by_id and by_id[r['id']]['scope']=='research'}
+    related_research=sorted((by_id[rid] for rid in related_ids),key=lambda d:(d['id']!=featured['id'],d['id']))[:limits['connections']]
+    visible_research={d['id'] for d in [featured,*research]}
+    related_entities=[d for d in docs if d['scope']=='atlas' and any(r.get('id') in visible_research for r in edges.get(d['id'],[]))]
+    priority={eid:i for i,eid in enumerate(order)}
+    related_entities.sort(key=lambda d:(priority.get(d['id'],len(order)),d['id']))
+    return dict(featured=featured,featuredConcept=concept,concepts=concepts,research=research,relatedResearch=related_research,relatedEntities=related_entities[:limits['connections']])
+
+def home_html(root, docs, connections=None):
+    selected=home_selection(root,docs,connections or {'entities':{}})
+    featured=selected['featured'];paths=[]
+    for t,label,description in [('Concept','مفاهیم','تعریف‌ها، دامنه و تمایزها'),('Organization','سازمان‌ها','شناخت بازیگران و ساختارها'),('Person','اشخاص','افراد و ارتباط‌های مستند'),('Investment','سرمایه‌گذاری‌ها','طرح‌ها و سرمایه‌گذاری‌های مستند')]:
         count=sum(d['type']==t for d in docs)
-        if count:paths.append(f'<a class="discovery-path" href="/atlas/explore/?type={t}"><span>{label}</span><span class="discovery-path-count">{count}</span><p>{description}</p></a>')
-    atlas=(root/'atlas/index.html').read_text(encoding='utf-8').replace('<!--KAAVOSH_PATHS-->',''.join(paths)).replace('<!--KAAVOSH_CONCEPTS-->',''.join(card(d) for d in concepts))
-    atlas=atlas.replace('<!--KAAVOSH_RESEARCH-->',''.join(f'<a class="discovery-reading-link" href="{escape(d["url"])}">{escape(d["title"])} <span aria-hidden="true">←</span></a>' for d in related))
+        if count:paths.append(f'<a class="discovery-path" href="/atlas/explore/?type={t}"><span class="discovery-path-label">{label}</span><span class="discovery-path-count">{count}</span><p>{description}</p><span class="discovery-path-action">{search_icon()}</span></a>')
+    atlas=(root/'atlas/index.html').read_text(encoding='utf-8').replace('<!--KAAVOSH_PATHS-->',''.join(paths)).replace('<!--KAAVOSH_CONCEPTS-->',''.join(card(d) for d in selected['concepts']))
+    related=''.join(crosslink(d) for d in selected['relatedResearch']) or '<li class="discovery-empty">پژوهش مرتبطی ثبت نشده است.</li>'
+    atlas=atlas.replace('<!--KAAVOSH_RESEARCH-->',related)
+    concept=selected['featuredConcept']
+    concept_feature=f'<span class="feature-editorial-label">مفهوم برگزیده · انتخاب تحریریه</span><div class="concept-feature-body"><bdi dir="ltr" class="concept-feature-english">{escape(concept.get("english",""))}</bdi><h2><a href="{escape(concept["url"])}">{escape(concept["title"])}</a></h2><p>{escape(concept["summary"])}</p><a class="discovery-primary-link" href="{escape(concept["url"])}">شناخت این مفهوم <span aria-hidden="true">←</span></a></div>'
+    atlas=atlas.replace('<!--KAAVOSH_CONCEPT_FEATURE-->',concept_feature)
     cover=f'<figure class="research-feature-cover"><img src="{escape(featured["cover"])}" alt="{escape(featured.get("coverAlt",""))}" width="800" height="560"></figure>' if featured.get('cover') else ''
     byline=f'<p class="discovery-byline">{escape(featured["byline"])}</p>' if featured.get('byline') else ''
-    feature=f'<div class="research-feature-text"><span class="discovery-eyebrow">پژوهش منتخب · انتخاب تحریریه</span><h2><a href="{escape(featured["url"])}">{escape(featured["title"])}</a></h2><p>{escape(featured["summary"])}</p>{byline}<a class="discovery-primary-link" href="{escape(featured["url"])}">مطالعه پژوهش <span aria-hidden="true">←</span></a></div>{cover}'
+    feature=f'<span class="feature-editorial-label">پژوهش برتر · انتخاب تحریریه</span>{cover}<div class="research-feature-text"><h2><a href="{escape(featured["url"])}">{escape(featured["title"])}</a></h2><p>{escape(featured["summary"])}</p>{byline}<a class="discovery-primary-link" href="{escape(featured["url"])}">مطالعه پژوهش <span aria-hidden="true">←</span></a></div>'
     research=(root/'articles.html').read_text(encoding='utf-8').replace('<!--KAAVOSH_FEATURE-->',feature)
-    research=research.replace('<!--KAAVOSH_ARTICLES-->',''.join(card(d,'research-list-card') for d in docs if d['scope']=='research' and d['id']!=featured['id']))
+    research=research.replace('<!--KAAVOSH_ARTICLES-->',''.join(card(d,'research-list-card') for d in selected['research']))
+    related=''.join(crosslink(d) for d in selected['relatedEntities']) or '<li class="discovery-empty">مدخل مرتبطی تأیید نشده است.</li>'
+    research=research.replace('<!--KAAVOSH_ATLAS-->',related)
     return {'atlas/index.html':atlas.encode('utf-8'),'articles.html':research.encode('utf-8')}
 
 def compile_index(root, docs, bodies):
@@ -162,7 +204,8 @@ def files(root):
         stage=Path(temp)/'public'
         site.package(root,stage,public=True,include_search=False)
         docs,bodies=documents(root,stage)
-    return {**compile_index(root,docs,bodies),**home_html(root,docs)}
+        connections=read(root/"atlas/discovery/research-by-entity.json")
+    return {**compile_index(root,docs,bodies),**home_html(root,docs,connections)}
 
 def check(root, output, require_coverage=True):
     import public_projection
