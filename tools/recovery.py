@@ -31,6 +31,16 @@ def workflow_hash(root):
     return sha256((root / WORKFLOW).read_bytes().replace(b'\r\n', b'\n')).hexdigest()
 
 
+def historical_workflow_hash(root, source_sha):
+    """Trust only immutable workflow bytes from an ancestor of this checkout."""
+    require(isinstance(source_sha, str) and HEX.fullmatch(source_sha), 'Invalid historical SHA')
+    ancestor = subprocess.run(['git', 'merge-base', '--is-ancestor', source_sha, 'HEAD'],
+                              cwd=root, capture_output=True)
+    require(ancestor.returncode == 0, 'Historical source is not an ancestor of approved checkout')
+    data = subprocess.check_output(['git', 'show', source_sha + ':' + WORKFLOW], cwd=root)
+    return sha256(data.replace(b'\r\n', b'\n')).hexdigest()
+
+
 def artifact_name(sha, run, attempt, kind='public'):
     require(kind in ('public', 'emergency'), 'Unknown bundle kind')
     return f'{kind}-recovery-{sha}-{run}-{attempt}'
@@ -200,7 +210,7 @@ def check_origin(root, m, run, artifact, workflow, jobs, sha, artifact_id):
     require(run.get('id') == m['run_id'] and run.get('run_attempt') == m['run_attempt'], 'Run ID/attempt mismatch')
     require(workflow.get('path') == WORKFLOW and workflow.get('id') == run.get('workflow_id')
             and run.get('path') == WORKFLOW, 'Unapproved workflow')
-    require(m.get('workflow_sha256') == workflow_hash(root), 'Source workflow is not the approved implementation')
+    require(m.get('workflow_sha256') == historical_workflow_hash(root, sha), 'Source workflow is not the approved historical implementation')
     require(any(j.get('name') == 'validate-atlas' and j.get('conclusion') == 'success' for j in jobs.get('jobs', [])),
             'Successful validation job missing')
     require(artifact.get('id') == artifact_id and artifact.get('name') == m['artifact_name'], 'Artifact ID/name mismatch')

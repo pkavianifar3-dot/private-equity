@@ -97,7 +97,8 @@ class EmergencyRecoveryTests(unittest.TestCase):
 
     def test_verified_emergency_api_download(self):
         destination=self.base/'downloaded'
-        with patch.object(rec,'api',side_effect=self.api_fixture()):
+        with patch.object(rec,'api',side_effect=self.api_fixture()), \
+             patch.object(rec,'historical_workflow_hash',return_value=self.m['workflow_sha256']):
             result=rec.fetch(ROOT,101,77,self.sha,destination,kind='emergency')
         self.assertEqual(result['kind'],'emergency')
         rec.restore(ROOT,destination,self.output,ROOT)
@@ -106,7 +107,8 @@ class EmergencyRecoveryTests(unittest.TestCase):
         fixture=list(self.api_fixture());fixture[0]['head_branch']='feature'
         with patch.object(rec,'api',side_effect=fixture):
             with self.assertRaisesRegex(ValueError,'source branch'):rec.fetch(ROOT,101,77,self.sha,self.base/'wrong-branch',kind='emergency')
-        with patch.object(rec,'api',side_effect=self.api_fixture()):
+        with patch.object(rec,'api',side_effect=self.api_fixture()), \
+             patch.object(rec,'historical_workflow_hash',return_value=self.m['workflow_sha256']):
             with self.assertRaisesRegex(ValueError,'kind mismatch'):rec.fetch(ROOT,101,77,self.sha,self.base/'wrong-kind',kind='public')
         self.m['kind']='public'
         (self.bundle/'manifest.json').write_text(json.dumps(self.m),encoding='utf-8')
