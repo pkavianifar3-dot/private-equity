@@ -35,6 +35,9 @@ class RecoveryTests(unittest.TestCase):
         cls.bundle = Path(cls.base.name) / 'bundle'
         with patch.dict(os.environ, cls.env):
             cls.m = rec.create(ROOT, cls.site, cls.bundle, cls.report)
+        # Synthetic dirty-worktree fixtures use HEAD's immutable workflow for provenance.
+        cls.origin_m = deepcopy(cls.m)
+        cls.origin_m['workflow_sha256'] = rec.historical_workflow_hash(ROOT, cls.sha)
 
     @classmethod
     def tearDownClass(cls):
@@ -70,7 +73,10 @@ class RecoveryTests(unittest.TestCase):
 
     def check_origin(self, run=None, artifact=None, workflow=None, jobs=None, sha=None):
         originals = self.origin()
-        return rec.check_origin(ROOT, self.m, run or originals[0], artifact or originals[1],
+        m = deepcopy(self.m)
+        if m['workflow_sha256'] == rec.workflow_hash(ROOT):
+            m['workflow_sha256'] = type(self).origin_m['workflow_sha256']
+        return rec.check_origin(ROOT, m, run or originals[0], artifact or originals[1],
             workflow or originals[2], jobs or originals[3], sha or self.sha, 77)
 
     def test_real_public_bundle_recovery_and_pages_format(self):
@@ -145,7 +151,8 @@ class RecoveryTests(unittest.TestCase):
         raw=stream.getvalue();run,artifact,workflow,jobs=self.origin()
         artifact['digest']='sha256:'+sha256(raw).hexdigest()
         destination=Path(self.temp.name)/'downloaded'
-        with patch.object(rec,'api',side_effect=[run,artifact,raw,workflow,jobs]):
+        with patch.object(rec,'api',side_effect=[run,artifact,raw,workflow,jobs]), \
+             patch.object(rec,'historical_workflow_hash',return_value=self.m['workflow_sha256']):
             m=rec.fetch(ROOT,101,77,self.sha,destination)
         self.assertEqual(m['sha'],self.sha)
         rec.restore(ROOT,destination,self.output,ROOT)
@@ -223,6 +230,21 @@ class RecoveryTests(unittest.TestCase):
     def test_current_publication_revocation_blocks_historical_package(self):
         with patch.object(site,'publication_blockers',side_effect=[[],['Entity is now REVIEW']]):
             with self.assertRaisesRegex(ValueError,'now REVIEW'):rec.restore(ROOT,self.bundle,self.output,ROOT)
+
+    def test_historical_workflow_accepts_changed_current_workflow(self):
+        m = deepcopy(self.m)
+        m['workflow_sha256'] = rec.historical_workflow_hash(ROOT, self.sha)
+        with patch.object(rec, 'workflow_hash', return_value='f' * 64):
+            rec.check_origin(ROOT, m, *self.origin(), self.sha, 77)
+
+    def test_historical_workflow_rejects_nonancestor_and_unknown_sha(self):
+        with patch.object(rec.subprocess, 'run', return_value=subprocess.CompletedProcess([], 1)):
+            with self.assertRaisesRegex(ValueError, 'ancestor'):
+                rec.historical_workflow_hash(ROOT, self.sha)
+        with self.assertRaisesRegex(ValueError, 'historical SHA'):
+            rec.historical_workflow_hash(ROOT, 'invalid')
+        with self.assertRaisesRegex(ValueError, 'ancestor'):
+            rec.historical_workflow_hash(ROOT, '0' * 40)
 
     def test_workflow_deployment_and_retention_contract(self):
         text=(ROOT/rec.WORKFLOW).read_text(encoding='utf-8')
