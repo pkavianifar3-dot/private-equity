@@ -55,6 +55,8 @@ def publication(root, output, current_root=None, kind='public'):
         old_sources, _ = site.public_projection.records(output, 'sources')
         if not old_claims.keys() <= approved_claims.keys() or not old_sources.keys() <= approved_sources.keys():
             blockers.append('Historical Claim/Source approval is no longer current')
+        if (output / 'search/documents.json').exists():
+            blockers += site.public_search.check(current_root, output, require_coverage=False)
         allowed_articles = {site.url_file(r['url']) for r in site.articles(current_root)}
         for path in output.glob('articles/*.html'):
             if path.relative_to(output).as_posix() not in allowed_articles:

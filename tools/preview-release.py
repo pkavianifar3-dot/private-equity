@@ -87,12 +87,13 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--artifact", type=Path, required=True)
     parser.add_argument("--port", type=int, default=8780)
+    parser.add_argument("--public", action="store_true", help="Inspect the approved public projection, including Kaavosh")
     args = parser.parse_args()
     if not 1024 <= args.port <= 65535:
         parser.error("Choose an unprivileged local port (1024–65535)")
     if not args.artifact.is_dir():
         parser.error("Artifact directory does not exist")
-    site.check_artifact(site.ROOT, args.artifact)
+    site.check_artifact(site.ROOT, args.artifact, public=args.public)
     handler = partial(CandidateHandler, directory=str(args.artifact.resolve()))
     server = ThreadingHTTPServer(("127.0.0.1", args.port), handler)
     print(f"Local candidate inspection: http://127.0.0.1:{args.port}/ (noindex, loopback only)", flush=True)
