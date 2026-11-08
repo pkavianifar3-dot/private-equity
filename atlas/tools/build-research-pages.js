@@ -242,19 +242,20 @@ function createShell(research) {
         `<meta name="viewport" content="width=device-width, initial-scale=1">` +
         `<title>${title} | Private Capital</title><meta name="description" content="${summary}">` +
         `<link rel="canonical" href="https://privatecapital.ir${url}">` +
-        `<link rel="stylesheet" href="/assets/css/style.css">` +
+        `<link rel="stylesheet" href="/assets/css/style.css"><link rel="stylesheet" href="/assets/css/site-footer.css">` +
         `<link rel="icon" href="/assets/images/favicon.ico">` +
         `<script type="application/ld+json">${jsonLd}</script></head><body>` +
         `<header><div class="container"><a class="logo" href="/" aria-label="Private Capital — صفحهٔ اصلی"><img src="/assets/images/privatecapital.png" alt="" width="43" height="52"><span dir="ltr">Private Capital</span></a>` +
         `<nav><a href="/">خانه</a><a href="/watch.html">دیده‌بان</a>` +
         `<a href="/articles.html">پژوهش‌ها</a><a href="/atlas/">اطلس</a>` +
-        `<a href="/services.html">خدمات</a><a href="/membership.html">عضویت ویژه</a>` +
+        `${fs.readFileSync(path.join(ROOT,"tools/templates/development-menu.html"),"utf8").trim()}<a href="/membership.html">عضویت</a>` +
         `<a href="/about.html">درباره ما</a><a href="/contact.html">تماس</a></nav></div></header>` +
         `<main><section class="research-page-section"><div class="container">` +
         `<div class="research-article-header"><h1>${title}</h1>${author}<hr></div>` +
         `<article>${opening}${sections}<div data-article-renderer-citations></div><br>` +
         `<div data-research-connections></div><!-- research-connections -->` +
         `</article></div></section></main>` +
+        fs.readFileSync(path.join(ROOT,"tools/templates/site-footer.html"),"utf8").trim() +
         `<script src="/assets/js/research-notes.js"></script>` +
         `</body></html>\n`;
 }
@@ -338,7 +339,12 @@ function buildArticle(researchPath, entities, sourceIndex, collisionMap = new Ma
             options
         );
 
-    let html = originalHtml;
+    const sharedFooter=fs.readFileSync(path.join(ROOT,"tools/templates/site-footer.html"),"utf8").trim();
+    let html = /<footer\b/.test(originalHtml)
+        ? originalHtml.replace(/<footer\b[^>]*>[\s\S]*?<\/footer>/,()=>sharedFooter)
+        : originalHtml.replace('</body>',sharedFooter+'\n</body>');
+    if(!html.includes('href="/assets/css/site-footer.css"'))
+        html=html.replace('</head>','<link rel="stylesheet" href="/assets/css/site-footer.css">\n</head>');
 
     for (const section of research.sections) {
         let sectionHtml =

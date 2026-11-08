@@ -301,8 +301,15 @@ def check_artifact(root, output, public=False):
             target = aliases.get(url, url)
             if page.canonicals != [ORIGIN + target]:
                 errors.append(f"{relative}: canonical mismatch: {page.canonicals}; expected {ORIGIN+target}")
-        if relative != "404.html" and any("noindex" in r for r in page.robots):
+        if relative != "404.html" and url not in config.get("development_pages", []) and any("noindex" in r for r in page.robots):
             errors.append(f"{relative}: preview/noindex leaked into production candidate")
+        if url in config.get("development_pages", []):
+            if not any("noindex" in r for r in page.robots) or url in config["sitemap_pages"]:
+                errors.append(f"{relative}: development destination must be noindex and outside sitemap")
+            tree = public_search.Tree((output / relative).read_text(encoding="utf-8")).root
+            mains = tree.find(lambda element: element.tag == "main")
+            if len(mains) != 1 or not mains[0].find(lambda element: element.attrs.get("data-development-status") == "in-progress"):
+                errors.append(f"{relative}: development destination requires an explicit in-progress notice")
         if len(page.ids) != len(set(page.ids)):
             errors.append(f"{relative}: duplicate HTML IDs")
         if page.research_sources:

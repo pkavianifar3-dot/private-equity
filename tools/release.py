@@ -20,9 +20,13 @@ BUILD_COMMANDS = [
     ["node", "atlas/tools/build-research-pages.js"],
     [sys.executable, "atlas/tools/build-research-connections.py"],
     [sys.executable, "atlas/tools/build-static-pages.py"],
+    ["node", "atlas/tools/build-services-pages.js"],
+    [sys.executable, "tools/build-platform-pages.py"],
+    [sys.executable, "tools/build-legacy-service-aliases.py"],
+    [sys.executable, "tools/build-site-footer.py"],
 ]
-GENERATED = ["atlas/entities/index.json", "atlas/claims/index.json", "atlas/evidence/index.json", "atlas/sources/index.json",
-             "atlas/discovery", "atlas/catalog", "atlas/person", "atlas/organization", "atlas/investment", "atlas/concept", "articles", "assets/images/research", "sitemap.xml", "docs/stage-5-url-disposition.md"]
+GENERATED = ['resources.html', 'index.html', 'about.html', 'articles.html', 'atlas/index.html', 'atlas/explore/index.html', 'contact.html', 'copyright.html', 'membership.html', 'watch.html', 'atlas/person.html', 'atlas/organization.html', 'atlas/investment.html', 'atlas/concept.html', '404.html'] + ["atlas/entities/index.json", "atlas/claims/index.json", "atlas/evidence/index.json", "atlas/sources/index.json",
+             "atlas/discovery", "atlas/catalog", "atlas/person", "atlas/organization", "atlas/investment", "atlas/concept", "articles", "assets/images/research", "services.html", "corporate/index.html", "corporate/capital-and-ownership/index.html", "corporate/transactions-and-acquisitions/index.html", "corporate/value-creation-and-governance/index.html", "corporate/investment-research-and-assessment/index.html", "corporate/partners/index.html", "corporate/team/index.html", "corporate/solutions/index.html", "corporate/collaboration/index.html", "ventures/index.html", "developers/index.html", "services/capital-and-ownership/index.html", "services/transactions-and-acquisitions/index.html", "services/value-creation-and-governance/index.html", "services/investment-research-and-assessment/index.html", "services/partners/index.html", "services/team/index.html", "services/solutions/index.html", "services/collaboration/index.html", "sitemap.xml", "docs/stage-5-url-disposition.md"]
 
 
 def run(args, root):

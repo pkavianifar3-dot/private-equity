@@ -915,7 +915,7 @@ def render_entity(
 <meta name="description" content="{esc(description)}">
 {seo_link}
 
-<link rel="stylesheet" href="/assets/css/style.css">
+<link rel="stylesheet" href="/assets/css/style.css"><link rel="stylesheet" href="/assets/css/site-footer.css">
 
 <link rel="icon" type="image/x-icon" href="/assets/images/favicon.ico">
 <link rel="icon" type="image/png" sizes="96x96" href="/assets/images/favicon-96x96.png">
@@ -937,8 +937,8 @@ def render_entity(
 <a href="/watch.html">دیده‌بان</a>
 <a href="/articles.html">پژوهش‌ها</a>
 <a href="/atlas/">اطلس</a>
-<a href="/services.html">خدمات</a>
-<a href="/membership.html">عضویت ویژه</a>
+{(Path(__file__).resolve().parents[2] / "tools/templates/development-menu.html").read_text(encoding="utf-8").strip()}
+<a href="/membership.html">عضویت</a>
 <a href="/about.html">درباره ما</a>
 <a href="/contact.html">تماس</a>
 </nav>
@@ -975,33 +975,7 @@ def render_entity(
 
 </main>
 
-<footer>
-<div class="container">
-
-<p>Private Capital</p>
-
-<p>مرجع تخصصی سرمایه خصوصی در ایران</p>
-
-<p>
-<a href="mailto:info@privatecapital.ir">
-    info@privatecapital.ir
-</a>
-</p>
-
-<p>
-<a href="tel:+982165512094">
-    021-6551-2094
-</a>
-</p>
-
-<p>© 2026 Private Capital</p>
-
-<p>
-<a href="/copyright.html">حقوق محتوا و شرایط استفاده</a>
-</p>
-
-</div>
-</footer>
+{(ROOT.parent / 'tools/templates/site-footer.html').read_text(encoding='utf-8').strip()}
 
 <script src="/assets/js/main.js"></script>
 <script src="/assets/js/core/url-resolver.js"></script>

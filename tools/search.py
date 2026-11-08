@@ -30,7 +30,7 @@ class Element:
     def text(self):
         if self.tag in {'nav','aside','script','style','footer','form','button'} or EXCLUDE.intersection(self.attrs.get('class','').split()):return ''
         if self.attrs.get('id') in {'research-bibliography','research-sources'}:return ''
-        if self.tag=='a' and self.attrs.get('href','').split('?')[0] in {'/contact.html','../contact.html','/services.html','../services.html','/articles.html','../articles.html'}:return ''
+        if self.tag=='a' and self.attrs.get('href','').split('?')[0] in {'/contact.html','../contact.html','/corporate/','/services.html','../services.html','/articles.html','../articles.html'}:return ''
         return ' '.join(c.text() if isinstance(c,Element) else c for c in self.children)
 
 class Tree(HTMLParser):

@@ -2175,3 +2175,92 @@ header .logo:focus-visible{outline:2px solid #d7b85b;outline-offset:6px;border-r
 header .logo img{object-fit:contain}
 @media(min-width:901px){header>.container{flex-direction:row-reverse}header nav{direction:rtl}}
 @media(max-width:900px){header .logo{align-self:flex-end}header nav{width:100%;justify-content:flex-start;direction:rtl}}
+
+/* Compact public header: a centered identity row and persistent navigation. */
+body:not(.services-page){--site-header-height:98px}
+body:not(.services-page)>header>.container{
+  display:grid;grid-template-columns:minmax(0,1fr);justify-items:center;
+  min-height:0;gap:4px;padding:6px 0 0;
+}
+body:not(.services-page)>header .logo{
+  display:flex;align-items:center;justify-self:center;align-self:center;
+  min-height:42px;gap:8px;font-size:19px;line-height:1.4;letter-spacing:.4px;direction:ltr;
+}
+body:not(.services-page)>header .logo img{width:28px;height:36px}
+body:not(.services-page)>header nav{
+  display:flex;align-items:center;justify-content:center;flex-wrap:nowrap;
+  gap:24px;width:100%;max-width:none;margin:0;padding:0;
+  border-top:1px solid rgba(151,173,194,.15);direction:rtl;
+}
+body:not(.services-page)>header nav>a,
+body:not(.services-page)>header nav>.development-menu>summary{
+  display:flex;align-items:center;justify-content:center;min-width:0;
+  min-height:44px;padding:6px 4px;font-size:14px;line-height:1.5;
+  white-space:nowrap;border-radius:5px;transition:color .16s,background .16s;
+}
+body:not(.services-page)>header nav a::after{bottom:2px}
+body:not(.services-page)>header nav a:hover,
+body:not(.services-page)>header nav a[aria-current="page"]{
+  color:#E2C263;background:rgba(201,162,39,.07);
+}
+body:not(.services-page)>header nav :is(a,summary):focus-visible{
+  outline:2px solid #D7B85B;outline-offset:0;
+}
+body:not(.services-page) .explore-reading-layout :is(h2,h3)[id]{
+  scroll-margin-top:calc(var(--site-header-height) + 16px);
+}
+@media(min-width:981px){
+  body:not(.services-page) .explore-rail-inner{
+    top:calc(var(--site-header-height) + 12px);
+    max-height:calc(100dvh - var(--site-header-height) - 24px);
+  }
+}
+@media(max-width:760px){
+  body:not(.services-page){--site-header-height:134px}
+  body:not(.services-page)>header .logo{min-height:38px;font-size:18px;gap:7px}
+  body:not(.services-page)>header .logo img{width:25px;height:32px}
+  body:not(.services-page)>header nav{flex-wrap:wrap;gap:0;padding-top:4px}
+  body:not(.services-page)>header nav>a,
+  body:not(.services-page)>header nav>.development-menu>summary{min-height:40px;padding:4px 0}
+  body:not(.services-page)>header nav>:is(a,.development-menu):nth-child(-n+4){flex:0 0 25%}
+  body:not(.services-page)>header nav>:is(a,.development-menu):nth-child(5){flex:1.6 0 calc(100% * 1.6 / 4.2)}
+  body:not(.services-page)>header nav>:is(a,.development-menu):nth-child(6){flex:1.15 0 calc(100% * 1.15 / 4.2)}
+  body:not(.services-page)>header nav>:is(a,.development-menu):nth-child(7){flex:.85 0 calc(100% * .85 / 4.2)}
+  body:not(.services-page)>header nav>:is(a,.development-menu):nth-child(8){flex:.6 0 calc(100% * .6 / 4.2)}
+}
+
+/* Development Platform uses the same native disclosure language as Services. */
+header .development-menu{position:relative;flex-shrink:0}
+header .development-menu>summary{display:flex;align-items:center;gap:6px;padding:6px 0;cursor:pointer;list-style:none;color:#fff;white-space:nowrap;transition:color .16s,background .16s}
+header .development-menu>summary::-webkit-details-marker{display:none}
+header .development-menu>summary>span{font-size:12px;line-height:1;transition:transform .18s ease}
+header .development-menu[open]>summary>span{transform:rotate(180deg)}
+header .development-menu>summary:hover,header .development-menu[data-current]>summary{color:#e2c263}
+header .development-menu>summary:focus-visible{outline:2px solid #d7b85b;outline-offset:3px;border-radius:5px}
+header .development-submenu{position:absolute;right:0;top:100%;z-index:2;width:max-content;max-width:min(244px,calc(100vw - 32px));padding:6px 8px;border:1px solid #3f576c;border-radius:8px;background:#102233;box-shadow:0 18px 40px #0005;display:grid;direction:rtl}
+body:not(.services-page)>header .development-submenu a{display:block;flex:none;min-height:0;margin:0;padding:9px 10px;border-radius:4px;border-bottom:1px solid #294052;font-size:13px;line-height:1.8;text-align:right;white-space:nowrap;transition:background .16s,color .16s,transform .16s}
+body:not(.services-page)>header .development-submenu a:last-child{border-bottom:0}
+body:not(.services-page)>header .development-submenu a::after{display:none}
+body:not(.services-page)>header .development-submenu a:hover,body:not(.services-page)>header .development-submenu a:focus-visible{background:#23445c80;color:#f0d475;transform:translateX(-2px)}
+.platform-placeholder main{min-height:calc(100dvh - 136px)}
+@supports (interpolate-size:allow-keywords) and (transition-behavior:allow-discrete){
+ header .development-menu::details-content{opacity:0;transition:opacity .18s ease,content-visibility .2s allow-discrete}
+ header .development-menu[open]::details-content{opacity:1}
+ header .development-submenu{transform:translateY(-5px);transition:transform .2s cubic-bezier(.2,.7,.2,1)}
+ header .development-menu[open]>.development-submenu{transform:translateY(0)}
+}
+@media(max-width:600px){
+ body:not(.services-page)>header .development-menu{min-width:0}
+ body:not(.services-page)>header .development-menu>summary{height:40px}
+ body:not(.services-page)>header .development-submenu{max-height:min(300px,calc(100dvh - 160px));overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin}
+}
+@media(prefers-reduced-motion:reduce){
+ header .development-menu::details-content,header .development-menu>summary,header .development-menu>summary>span,header .development-submenu,body:not(.services-page)>header .development-submenu a{transition:none!important}
+ header .development-submenu,body:not(.services-page)>header .development-submenu a:hover,body:not(.services-page)>header .development-submenu a:focus-visible{transform:none!important}
+}
+
+@media(max-width:760px){
+  body>header[data-scroll-header]{transition:top .24s cubic-bezier(.2,.7,.2,1)}
+  body>header[data-scroll-header][data-brand-hidden]{top:calc(0px - var(--header-brand-offset))}
+}
+@media(prefers-reduced-motion:reduce){body>header[data-scroll-header]{transition:none}}
