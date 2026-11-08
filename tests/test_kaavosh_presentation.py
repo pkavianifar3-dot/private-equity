@@ -47,8 +47,15 @@ class SearchPresentationTests(unittest.TestCase):
                 self.assertEqual(len(brands[0].find(lambda e:e.tag=='img')),1)
                 nav=headers[0].find(lambda e:e.tag=='nav')
                 if nav:
-                    labels=[''.join(c for c in e.children if isinstance(c,str)).strip() for e in nav[0].find(lambda e:e.tag=='a')]
-                    self.assertEqual(labels[:4],['خانه','دیده‌بان','پژوهش‌ها','اطلس'])
+                    labels=[e.attrs.get('aria-label') or ''.join(c for c in e.children if isinstance(c,str)).strip() for e in nav[0].find(lambda e:e.tag=='a')]
+                    if path == ROOT/'corporate/index.html':
+                        self.assertEqual(labels[:2],['شرکای ما','تیم ما'])
+                        self.assertIn('همکاری و طرح مسئله',labels)
+                        self.assertIn('خدمات پیشرفتۀ اکسین',labels)
+                        self.assertTrue(nav[0].find(lambda e:e.tag=='summary' and 'راهکارها' in ''.join(c for c in e.children if isinstance(c,str))))
+                        self.assertEqual(nav[0].attrs.get('aria-label'),'پیمایش خدمات شرکتی')
+                    else:
+                        self.assertEqual(labels[:4],['خانه','دیده‌بان','پژوهش‌ها','اطلس'])
 
     def test_compact_is_independent_of_brand_visibility(self):
         self.assertNotIn('kaavosh-form-compact',markup.search_form())

@@ -86,6 +86,18 @@ class ReleaseTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "watch.html: preview/noindex"):
             site.check_artifact(ROOT, self.output)
 
+    def test_development_destination_requires_noindex(self):
+        path = self.output / "ventures/index.html"
+        path.write_text(path.read_text(encoding="utf-8").replace('content="noindex,follow"', 'content="index,follow"'), encoding="utf-8")
+        with self.assertRaisesRegex(ValueError, "development destination must be noindex"):
+            site.check_artifact(ROOT, self.output)
+
+    def test_development_destination_requires_explicit_notice(self):
+        path = self.output / "developers/index.html"
+        path.write_text(path.read_text(encoding="utf-8").replace('data-development-status="in-progress"', ''), encoding="utf-8")
+        with self.assertRaisesRegex(ValueError, "development destination requires an explicit in-progress notice"):
+            site.check_artifact(ROOT, self.output)
+
     def test_wrong_canonical_is_rejected(self):
         path = self.output / "articles/private-capital.html"
         path.write_text(path.read_text(encoding="utf-8").replace('https://privatecapital.ir/articles/private-capital.html', 'https://privatecapital.ir/articles/wrong.html'), encoding="utf-8")

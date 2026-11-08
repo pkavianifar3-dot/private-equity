@@ -1,0 +1,36 @@
+@font-face{font-family:Vazirmatn;src:url("/assets/Vazirmatn-Regular.woff2") format("woff2");font-weight:400;font-display:swap}
+@font-face{font-family:Vazirmatn;src:url("/assets/Vazirmatn-Bold.woff2") format("woff2");font-weight:700;font-display:swap}
+/* One shared footer for the main site and development platform. */
+footer.site-footer{margin:0;padding:28px 0 16px;background:#07111f;border-top:1px solid #294052;color:#b7c6d3;font:14px/1.8 Vazirmatn,Tahoma,sans-serif;text-align:center;direction:rtl}
+.site-footer,.site-footer *{box-sizing:border-box}
+.site-footer .site-footer-wrap{width:90%;max-width:1200px;margin:0 auto;padding:0;background:transparent}
+.site-footer .site-footer-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;align-items:start}
+.site-footer .site-footer-brand>a{font-size:19px;font-weight:700;color:#f3f6f8}
+.site-footer p{margin:5px 0;color:#aebfce;font-size:13px;line-height:1.9}
+.site-footer p.site-footer-topics{font-size:11px;text-align:center;color:#8fa4b7;margin-top:10px}
+.site-footer a,.site-footer a:visited{color:#c3d1dd;text-decoration:none;padding:0}
+.site-footer a:hover{color:#e4c66d;text-decoration:none}
+.site-footer a::after{display:none}
+.site-footer a:focus-visible{outline:2px solid #d7b85b;outline-offset:3px;border-radius:3px}
+.site-footer .site-footer-nav{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0 12px;margin:0;font-size:13px;width:100%;max-width:360px;justify-self:center}
+.site-footer-nav a{display:flex;align-items:center;justify-content:center;min-height:36px;white-space:nowrap}
+.site-footer .site-footer-contact{display:flex;flex-direction:column;gap:4px;align-items:center;font-style:normal;font-size:13px}
+.site-footer-contact a{display:flex;align-items:center;min-height:32px;white-space:nowrap}
+.site-footer-contact span{font-size:12px;color:#8fa4b7}
+.site-footer .site-footer-bottom{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;margin-top:18px;padding-top:10px;border-top:1px solid #23384d;font-size:12px}
+.site-footer-bottom small{font-size:11px;color:#8fa4b7;line-height:1.8}
+.site-footer-bottom a{display:flex;align-items:center;justify-content:center;min-height:28px}
+@media(max-width:760px){
+ footer.site-footer{padding:20px 0 12px}
+ .site-footer .site-footer-grid{grid-template-columns:1fr;gap:10px}
+ .site-footer .site-footer-brand>a{font-size:17px}
+ .site-footer p{font-size:12px;margin:3px 0}
+ .site-footer p.site-footer-topics{font-size:10px;margin-top:5px;line-height:1.8}
+ .site-footer .site-footer-nav{gap:0 8px;font-size:13px}
+ .site-footer-nav a{min-height:36px}
+ .site-footer .site-footer-contact{gap:0;font-size:12px}
+ .site-footer-contact a{min-height:32px}
+ .site-footer-contact span{font-size:11px}
+ .site-footer .site-footer-bottom{margin-top:10px;padding-top:8px;gap:2px;font-size:11px}
+ .site-footer-bottom a{min-height:28px}
+}

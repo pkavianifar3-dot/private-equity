@@ -17,7 +17,26 @@
     "/atlas/organization.html",
     "/atlas/investment.html",
     "/atlas/concept.html",
-    "/404.html"
+    "/404.html",
+    "/corporate/capital-and-ownership/",
+    "/corporate/transactions-and-acquisitions/",
+    "/corporate/value-creation-and-governance/",
+    "/corporate/investment-research-and-assessment/",
+    "/corporate/partners/",
+    "/corporate/team/",
+    "/corporate/solutions/",
+    "/corporate/collaboration/",
+    "/corporate/",
+    "/ventures/",
+    "/developers/",
+    "/services/capital-and-ownership/",
+    "/services/transactions-and-acquisitions/",
+    "/services/value-creation-and-governance/",
+    "/services/investment-research-and-assessment/",
+    "/services/partners/",
+    "/services/team/",
+    "/services/solutions/",
+    "/services/collaboration/"
   ],
   "dynamic_templates": [
     "/atlas/person.html",
@@ -26,7 +45,16 @@
     "/atlas/concept.html"
   ],
   "canonical_aliases": {
-    "/resources.html": "/atlas/"
+    "/resources.html": "/atlas/",
+    "/services.html": "/corporate/",
+    "/services/capital-and-ownership/": "/corporate/capital-and-ownership/",
+    "/services/transactions-and-acquisitions/": "/corporate/transactions-and-acquisitions/",
+    "/services/value-creation-and-governance/": "/corporate/value-creation-and-governance/",
+    "/services/investment-research-and-assessment/": "/corporate/investment-research-and-assessment/",
+    "/services/partners/": "/corporate/partners/",
+    "/services/team/": "/corporate/team/",
+    "/services/solutions/": "/corporate/solutions/",
+    "/services/collaboration/": "/corporate/collaboration/"
   },
   "sitemap_pages": [
     "/",
@@ -37,8 +65,16 @@
     "/contact.html",
     "/copyright.html",
     "/membership.html",
-    "/services.html",
-    "/watch.html"
+    "/corporate/",
+    "/watch.html",
+    "/corporate/capital-and-ownership/",
+    "/corporate/transactions-and-acquisitions/",
+    "/corporate/value-creation-and-governance/",
+    "/corporate/investment-research-and-assessment/",
+    "/corporate/partners/",
+    "/corporate/team/",
+    "/corporate/solutions/",
+    "/corporate/collaboration/"
   ],
   "legacy_review_entity_ids": [
     "concept:contractual-components",
@@ -67,5 +103,9 @@
     "sector:corporate-investment",
     "sector:investment-banking",
     "sector:private-equity"
+  ],
+  "development_pages": [
+    "/ventures/",
+    "/developers/"
   ]
 }
